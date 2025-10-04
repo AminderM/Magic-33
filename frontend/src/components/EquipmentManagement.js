@@ -378,7 +378,7 @@ const EquipmentManagement = ({ onStatsUpdate }) => {
               <SelectValue placeholder="Filter by type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Types</SelectItem>
+              <SelectItem value="all">All Types</SelectItem>
               {equipmentTypes.map(type => (
                 <SelectItem key={type.value} value={type.value}>
                   <i className={`fas ${type.icon} mr-2`}></i>
