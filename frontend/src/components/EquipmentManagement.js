@@ -149,7 +149,7 @@ const EquipmentManagement = ({ onStatsUpdate }) => {
     const matchesSearch = eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          eq.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          eq.location_address.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = !filterType || eq.equipment_type === filterType;
+    const matchesType = !filterType || filterType === 'all' || eq.equipment_type === filterType;
     return matchesSearch && matchesType;
   });
 
