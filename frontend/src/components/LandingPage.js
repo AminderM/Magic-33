@@ -1,0 +1,263 @@
+import React from 'react';
+import { Button } from '@/components/ui/button';
+
+const LandingPage = () => {
+  const handleGetStarted = () => {
+    window.location.href = '/auth';
+  };
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="hero-section py-20">
+        <div className="hero-content container mx-auto px-4">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              Connect Your Fleet with the 
+              <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                {" "}Supply Chain
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto">
+              The ultimate marketplace connecting manufacturers, fleet owners, and drivers. 
+              Streamline equipment rental, fleet management, and real-time tracking in one platform.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                onClick={handleGetStarted}
+                className="btn-primary text-lg px-8 py-4"
+                data-testid="get-started-btn"
+              >
+                <i className="fas fa-rocket mr-2"></i>
+                Get Started Today
+              </Button>
+              <Button 
+                variant="outline" 
+                className="btn-secondary text-lg px-8 py-4"
+                data-testid="learn-more-btn"
+              >
+                <i className="fas fa-play-circle mr-2"></i>
+                Watch Demo
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Everything You Need</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Comprehensive tools for fleet owners, manufacturers, and drivers to collaborate efficiently
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Fleet Management */}
+            <div className="feature-card fade-in">
+              <div className="feature-icon">
+                <i className="fas fa-truck"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Fleet Management</h3>
+              <p className="text-gray-600 mb-4">
+                Manage your entire fleet of trucks, cranes, and specialized equipment from one dashboard.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time tracking</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Driver management</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Maintenance scheduling</li>
+              </ul>
+            </div>
+
+            {/* Equipment Marketplace */}
+            <div className="feature-card fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-search"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Equipment Marketplace</h3>
+              <p className="text-gray-600 mb-4">
+                Browse and book specialized equipment including HVAC trucks, cranes, and big rigs.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Advanced filtering</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Instant availability</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Competitive pricing</li>
+              </ul>
+            </div>
+
+            {/* Real-time Tracking */}
+            <div className="feature-card fade-in" style={{ animationDelay: '0.4s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-map-marker-alt"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Live Location Tracking</h3>
+              <p className="text-gray-600 mb-4">
+                Track your fleet in real-time with GPS integration and route optimization.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>GPS integration</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Route history</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Geofencing alerts</li>
+              </ul>
+            </div>
+
+            {/* Document Management */}
+            <div className="feature-card fade-in" style={{ animationDelay: '0.6s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-file-alt"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Document Management</h3>
+              <p className="text-gray-600 mb-4">
+                Store and manage insurance certificates, maintenance records, and compliance documents.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Secure storage</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Compliance tracking</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Easy sharing</li>
+              </ul>
+            </div>
+
+            {/* Booking System */}
+            <div className="feature-card fade-in" style={{ animationDelay: '0.8s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-calendar-check"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Smart Booking</h3>
+              <p className="text-gray-600 mb-4">
+                Streamlined booking system with real-time availability and automated scheduling.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time availability</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Automated invoicing</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Payment processing</li>
+              </ul>
+            </div>
+
+            {/* Multi-Role Access */}
+            <div className="feature-card fade-in" style={{ animationDelay: '1.0s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-users"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Multi-Role Platform</h3>
+              <p className="text-gray-600 mb-4">
+                Designed for manufacturers, fleet owners, drivers, and construction companies.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Role-based access</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Company verification</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Custom workflows</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Equipment Types Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Equipment We Support</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              From box trucks to specialized equipment, find exactly what you need
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {[
+              { icon: 'fa-truck', name: 'Box Trucks', type: 'BOX_TRUCK' },
+              { icon: 'fa-shuttle-van', name: 'Sprinter Vans', type: 'SPRINTER_VAN' },
+              { icon: 'fa-tools', name: 'HVAC Trucks', type: 'HVAC_TRUCK' },
+              { icon: 'fa-crane', name: 'Cranes', type: 'CRANE' },
+              { icon: 'fa-truck-flatbed', name: 'Flatbed Trucks', type: 'FLATBED_TRUCK' },
+              { icon: 'fa-truck-container', name: 'Dry Vans', type: 'DRY_VAN' },
+              { icon: 'fa-snowflake', name: 'Reefers', type: 'REEFER' },
+              { icon: 'fa-truck-moving', name: 'Big Rigs', type: 'BIG_RIG' },
+              { icon: 'fa-forklift', name: 'Forklifts', type: 'FORKLIFT' },
+              { icon: 'fa-hard-hat', name: 'Excavators', type: 'EXCAVATOR' }
+            ].map((equipment, index) => (
+              <div key={equipment.type} className="text-center p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
+                <div className="text-3xl mb-3 text-blue-600">
+                  <i className={`fas ${equipment.icon}`}></i>
+                </div>
+                <h4 className="font-semibold text-gray-900 text-sm">{equipment.name}</h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-slate-800 to-slate-900 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Fleet Operations?</h2>
+          <p className="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
+            Join thousands of fleet owners, manufacturers, and drivers who trust our platform
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              onClick={handleGetStarted}
+              className="btn-primary text-lg px-8 py-4"
+              data-testid="cta-get-started-btn"
+            >
+              Start Free Trial
+            </Button>
+            <Button 
+              variant="outline" 
+              className="btn-secondary text-lg px-8 py-4"
+              data-testid="contact-sales-btn"
+            >
+              Contact Sales
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">Fleet Marketplace</h3>
+              <p className="text-gray-400">
+                Connecting the supply chain through intelligent fleet management and equipment rental solutions.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Platform</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Fleet Management</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Equipment Rental</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Driver Management</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Real-time Tracking</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Support</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 Fleet Marketplace. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default LandingPage;
