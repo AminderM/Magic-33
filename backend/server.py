@@ -141,6 +141,9 @@ class Equipment(EquipmentBase):
     insurance_documents: List[str] = []
     maintenance_records: List[str] = []
     current_driver_id: Optional[str] = None
+    current_latitude: Optional[float] = None
+    current_longitude: Optional[float] = None
+    last_location_update: Optional[datetime] = None
 
 class LocationUpdate(BaseModel):
     equipment_id: str
