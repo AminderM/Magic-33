@@ -415,6 +415,9 @@ const LocationTracking = () => {
           </div>
         </CardContent>
       </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
