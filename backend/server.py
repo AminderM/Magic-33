@@ -91,6 +91,9 @@ class User(UserBase):
     is_active: bool = True
     registration_status: RegistrationStatus = RegistrationStatus.PENDING
     fleet_owner_id: Optional[str] = None  # For drivers
+    email_verified: bool = False
+    verification_token: Optional[str] = None
+    token_expires_at: Optional[datetime] = None
     password_hash: Optional[str] = None  # For storing hashed password
 
 class CompanyBase(BaseModel):
