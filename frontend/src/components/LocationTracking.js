@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
+import LiveTrackingMap from './LiveTrackingMap';
 
 const LocationTracking = () => {
   const { user, fetchWithAuth } = useAuth();
