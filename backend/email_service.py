@@ -104,6 +104,79 @@ class EmailService:
 # Global email service instance
 email_service = EmailService()
 
+# WebSocket Connection Manager for Live Tracking
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: Dict[str, List[WebSocket]] = {}
+        self.fleet_connections: List[WebSocket] = []
+    
+    async def connect_vehicle(self, websocket: WebSocket, vehicle_id: str):
+        await websocket.accept()
+        if vehicle_id not in self.active_connections:
+            self.active_connections[vehicle_id] = []
+        self.active_connections[vehicle_id].append(websocket)
+        logger.info(f"Vehicle {vehicle_id} connected. Total connections: {len(self.active_connections.get(vehicle_id, []))}")
+    
+    async def connect_fleet(self, websocket: WebSocket):
+        await websocket.accept()
+        self.fleet_connections.append(websocket)
+        logger.info(f"Fleet manager connected. Total fleet connections: {len(self.fleet_connections)}")
+    
+    def disconnect_vehicle(self, websocket: WebSocket, vehicle_id: str):
+        if vehicle_id in self.active_connections:
+            self.active_connections[vehicle_id] = [
+                ws for ws in self.active_connections[vehicle_id] if ws != websocket
+            ]
+            if not self.active_connections[vehicle_id]:
+                del self.active_connections[vehicle_id]
+        logger.info(f"Vehicle {vehicle_id} disconnected")
+    
+    def disconnect_fleet(self, websocket: WebSocket):
+        self.fleet_connections = [ws for ws in self.fleet_connections if ws != websocket]
+        logger.info("Fleet manager disconnected")
+    
+    async def send_to_vehicle(self, message: str, vehicle_id: str):
+        if vehicle_id in self.active_connections:
+            dead_connections = []
+            for connection in self.active_connections[vehicle_id]:
+                try:
+                    await connection.send_text(message)
+                except:
+                    dead_connections.append(connection)
+            
+            # Remove dead connections
+            for dead_conn in dead_connections:
+                self.disconnect_vehicle(dead_conn, vehicle_id)
+    
+    async def broadcast_to_fleet(self, message: str):
+        dead_connections = []
+        for connection in self.fleet_connections:
+            try:
+                await connection.send_text(message)
+            except:
+                dead_connections.append(connection)
+        
+        # Remove dead connections
+        for dead_conn in dead_connections:
+            self.disconnect_fleet(dead_conn)
+    
+    async def broadcast_location_update(self, location_data: dict):
+        message = json.dumps({
+            "type": "location_update",
+            "payload": location_data
+        })
+        await self.broadcast_to_fleet(message)
+    
+    async def broadcast_status_update(self, status_data: dict):
+        message = json.dumps({
+            "type": "vehicle_status", 
+            "payload": status_data
+        })
+        await self.broadcast_to_fleet(message)
+
+# Global connection manager instance
+manager = ConnectionManager()
+
 # Helper functions for specific email types
 async def send_verification_email(
     background_tasks: BackgroundTasks,
