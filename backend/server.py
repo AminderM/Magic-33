@@ -294,7 +294,11 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
 
 # Company Routes
 @api_router.post("/companies", response_model=dict)
-async def create_company(company_data: CompanyCreate, current_user: User = Depends(get_current_user)):
+async def create_company(company_data: CompanyCreate, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
+    # Check if user's email is verified
+    if not current_user.email_verified:
+        raise HTTPException(status_code=400, detail="Please verify your email address first")
+    
     # Check if user already has a company
     existing_company = await db.companies.find_one({"owner_id": current_user.id})
     if existing_company:
@@ -308,7 +312,25 @@ async def create_company(company_data: CompanyCreate, current_user: User = Depen
     # Insert company
     await db.companies.insert_one(company_obj.dict())
     
-    return {"message": "Company registered successfully", "company_id": company_obj.id, "status": "pending_verification"}
+    # For demo purposes, auto-verify the company and send notification
+    await db.companies.update_one(
+        {"id": company_obj.id},
+        {"$set": {"verification_status": RegistrationStatus.VERIFIED}}
+    )
+    
+    # Send company verification email
+    await send_company_verification_email(
+        background_tasks,
+        current_user.email,
+        current_user.full_name,
+        company_data.name
+    )
+    
+    return {
+        "message": "Company registered and verified successfully! Check your email for confirmation.", 
+        "company_id": company_obj.id, 
+        "status": "verified"
+    }
 
 @api_router.get("/companies/my", response_model=Company)
 async def get_my_company(current_user: User = Depends(get_current_user)):
