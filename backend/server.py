@@ -538,6 +538,179 @@ async def get_booking_requests(current_user: User = Depends(get_current_user)):
     bookings = await db.bookings.find({"equipment_owner_id": current_user.id}).to_list(length=None)
     return [Booking(**booking) for booking in bookings]
 
+# WebSocket Routes for Real-Time Tracking
+
+@app.websocket("/ws/fleet-tracking")
+async def fleet_tracking_websocket(websocket: WebSocket):
+    """WebSocket endpoint for fleet managers to receive real-time updates"""
+    await manager.connect_fleet(websocket)
+    try:
+        # Send initial connection confirmation
+        await websocket.send_text(json.dumps({
+            "type": "connection_established",
+            "message": "Fleet tracking connected"
+        }))
+        
+        # Keep connection alive and handle any incoming messages
+        while True:
+            try:
+                data = await websocket.receive_text()
+                message = json.loads(data)
+                
+                # Handle different message types from fleet managers
+                if message.get("type") == "ping":
+                    await websocket.send_text(json.dumps({"type": "pong"}))
+                elif message.get("type") == "request_status":
+                    # Send current status of all vehicles
+                    vehicles = await db.equipment.find({"is_available": {"$ne": None}}).to_list(length=None)
+                    vehicle_statuses = []
+                    for vehicle in vehicles:
+                        status_info = {
+                            "vehicle_id": vehicle["id"],
+                            "name": vehicle["name"],
+                            "status": "active" if vehicle.get("is_available") else "idle",
+                            "latitude": vehicle.get("current_latitude"),
+                            "longitude": vehicle.get("current_longitude"),
+                            "last_update": vehicle.get("last_location_update").isoformat() if vehicle.get("last_location_update") else None
+                        }
+                        vehicle_statuses.append(status_info)
+                    
+                    await websocket.send_text(json.dumps({
+                        "type": "fleet_status",
+                        "payload": vehicle_statuses
+                    }))
+                    
+            except WebSocketDisconnect:
+                break
+            except json.JSONDecodeError:
+                await websocket.send_text(json.dumps({"type": "error", "message": "Invalid JSON"}))
+            except Exception as e:
+                logger.error(f"Error in fleet tracking websocket: {e}")
+                
+    except WebSocketDisconnect:
+        pass
+    finally:
+        manager.disconnect_fleet(websocket)
+
+@app.websocket("/ws/vehicle/{vehicle_id}")
+async def vehicle_tracking_websocket(websocket: WebSocket, vehicle_id: str):
+    """WebSocket endpoint for mobile devices to send location updates"""
+    await manager.connect_vehicle(websocket, vehicle_id)
+    try:
+        # Send initial connection confirmation
+        await websocket.send_text(json.dumps({
+            "type": "connection_established",
+            "vehicle_id": vehicle_id,
+            "message": f"Vehicle {vehicle_id} tracking connected"
+        }))
+        
+        while True:
+            try:
+                # Receive location update from mobile device
+                data = await websocket.receive_text()
+                message = json.loads(data)
+                
+                if message.get("type") == "location_update":
+                    location_data = message.get("payload", {})
+                    
+                    # Validate location data
+                    try:
+                        location_update = LocationUpdate(
+                            equipment_id=vehicle_id,
+                            latitude=location_data["latitude"],
+                            longitude=location_data["longitude"],
+                            speed=location_data.get("speed"),
+                            heading=location_data.get("heading"),
+                            accuracy=location_data.get("accuracy")
+                        )
+                        
+                        # Store location in database
+                        await db.location_history.insert_one(location_update.dict())
+                        
+                        # Update equipment current location
+                        await db.equipment.update_one(
+                            {"id": vehicle_id},
+                            {
+                                "$set": {
+                                    "current_latitude": location_update.latitude,
+                                    "current_longitude": location_update.longitude,
+                                    "last_location_update": location_update.timestamp
+                                }
+                            }
+                        )
+                        
+                        # Broadcast to fleet managers
+                        broadcast_data = {
+                            "vehicle_id": vehicle_id,
+                            "latitude": location_update.latitude,
+                            "longitude": location_update.longitude,
+                            "speed": location_update.speed,
+                            "heading": location_update.heading,
+                            "timestamp": location_update.timestamp.isoformat()
+                        }
+                        await manager.broadcast_location_update(broadcast_data)
+                        
+                        # Send confirmation back to vehicle
+                        await websocket.send_text(json.dumps({
+                            "type": "location_received",
+                            "timestamp": location_update.timestamp.isoformat()
+                        }))
+                        
+                    except Exception as e:
+                        logger.error(f"Error processing location update for vehicle {vehicle_id}: {e}")
+                        await websocket.send_text(json.dumps({
+                            "type": "error",
+                            "message": "Invalid location data"
+                        }))
+                
+                elif message.get("type") == "status_update":
+                    status_data = message.get("payload", {})
+                    
+                    try:
+                        status_update = VehicleStatus(
+                            vehicle_id=vehicle_id,
+                            status=status_data.get("status", "active"),
+                            battery=status_data.get("battery"),
+                            signal_strength=status_data.get("signal_strength")
+                        )
+                        
+                        # Store status update
+                        await db.vehicle_status.insert_one({
+                            **status_update.dict(),
+                            "timestamp": datetime.now(timezone.utc)
+                        })
+                        
+                        # Broadcast to fleet managers
+                        await manager.broadcast_status_update(status_update.dict())
+                        
+                        # Send confirmation
+                        await websocket.send_text(json.dumps({
+                            "type": "status_received",
+                            "timestamp": datetime.now(timezone.utc).isoformat()
+                        }))
+                        
+                    except Exception as e:
+                        logger.error(f"Error processing status update for vehicle {vehicle_id}: {e}")
+                        await websocket.send_text(json.dumps({
+                            "type": "error",
+                            "message": "Invalid status data"
+                        }))
+                
+                elif message.get("type") == "ping":
+                    await websocket.send_text(json.dumps({"type": "pong"}))
+                    
+            except WebSocketDisconnect:
+                break
+            except json.JSONDecodeError:
+                await websocket.send_text(json.dumps({"type": "error", "message": "Invalid JSON"}))
+            except Exception as e:
+                logger.error(f"Error in vehicle websocket {vehicle_id}: {e}")
+                
+    except WebSocketDisconnect:
+        pass
+    finally:
+        manager.disconnect_vehicle(websocket, vehicle_id)
+
 # Health check
 @api_router.get("/health")
 async def health_check():
