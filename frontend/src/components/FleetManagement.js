@@ -544,7 +544,7 @@ const FleetManagement = () => {
               <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4\">
                 {Object.entries(
                   equipment.reduce((acc, item) => {
-                    const type = item.equipment_type?.replace('_', ' ').toUpperCase();
+                    const type = item.equipment_type?.replace('_', ' ').toUpperCase() || 'UNKNOWN';
                     acc[type] = (acc[type] || 0) + 1;
                     return acc;
                   }, {})
