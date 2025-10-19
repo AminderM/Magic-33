@@ -555,7 +555,7 @@ const FleetManagement = () => {
                       <p className=\"text-sm text-gray-500\">{count} units</p>
                     </div>
                     <div className=\"text-2xl font-bold text-blue-600\">
-                      {Math.round((count / fleetStats.totalEquipment) * 100)}%
+                      {fleetStats.totalEquipment > 0 ? Math.round((count / fleetStats.totalEquipment) * 100) : 0}%
                     </div>
                   </div>
                 ))}
