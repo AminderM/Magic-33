@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, File, UploadFile, status
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, File, UploadFile, status, BackgroundTasks
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -13,6 +13,9 @@ from datetime import datetime, timezone, timedelta
 import jwt
 import bcrypt
 from enum import Enum
+import secrets
+import hashlib
+from email_service import send_verification_email, send_company_verification_email, send_booking_confirmation_emails
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
