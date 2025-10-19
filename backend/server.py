@@ -147,10 +147,19 @@ class Equipment(EquipmentBase):
 
 class LocationUpdate(BaseModel):
     equipment_id: str
-    latitude: float
-    longitude: float
+    latitude: float = Field(..., ge=-90, le=90)
+    longitude: float = Field(..., ge=-180, le=180)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     driver_id: Optional[str] = None
+    speed: Optional[float] = Field(None, ge=0)
+    heading: Optional[float] = Field(None, ge=0, lt=360)
+    accuracy: Optional[float] = None
+    
+class VehicleStatus(BaseModel):
+    vehicle_id: str
+    status: Literal["active", "idle", "offline", "maintenance"] = "active"
+    battery: Optional[int] = Field(None, ge=0, le=100)
+    signal_strength: Optional[int] = Field(None, ge=0, le=100)
 
 class BookingBase(BaseModel):
     equipment_id: str
