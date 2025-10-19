@@ -154,7 +154,7 @@ class ConnectionManager:
         for connection in self.fleet_connections:
             try:
                 await connection.send_text(message)
-            except:
+            except Exception:
                 dead_connections.append(connection)
         
         # Remove dead connections
