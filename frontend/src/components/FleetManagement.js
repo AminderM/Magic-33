@@ -143,8 +143,8 @@ const FleetManagement = () => {
 
   if (loading) {
     return (
-      <div className=\"flex items-center justify-center py-12\">
-        <div className=\"loading-spinner w-12 h-12\"></div>
+      <div className="flex items-center justify-center py-12">
+        <div className="loading-spinner w-12 h-12"></div>
       </div>
     );
   }
