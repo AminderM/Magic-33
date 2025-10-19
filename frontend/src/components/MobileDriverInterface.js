@@ -8,7 +8,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import useWebSocket from 'use-websocket';
 
-const MobileDriverInterface = ({ vehicleId }) => {
+const MobileDriverInterface = () => {
+  const { vehicleId } = useParams();
   const { user } = useAuth();
   const [isTracking, setIsTracking] = useState(false);
   const [locationData, setLocationData] = useState(null);
