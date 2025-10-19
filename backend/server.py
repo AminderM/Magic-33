@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, File, UploadFile, status, BackgroundTasks
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, File, UploadFile, status, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -7,7 +7,7 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Dict
 import uuid
 from datetime import datetime, timezone, timedelta
 import jwt
@@ -15,6 +15,8 @@ import bcrypt
 from enum import Enum
 import secrets
 import hashlib
+import json
+import asyncio
 from email_service import send_verification_email, send_company_verification_email, send_booking_confirmation_emails
 
 ROOT_DIR = Path(__file__).parent
