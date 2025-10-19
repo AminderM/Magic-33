@@ -142,7 +142,7 @@ class ConnectionManager:
             for connection in self.active_connections[vehicle_id]:
                 try:
                     await connection.send_text(message)
-                except:
+                except Exception:
                     dead_connections.append(connection)
             
             # Remove dead connections
