@@ -9,20 +9,33 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Email configuration
-conf = ConnectionConfig(
-    MAIL_USERNAME=os.environ.get('MAIL_USERNAME', ''),
-    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD', ''),
-    MAIL_FROM=os.environ.get('MAIL_FROM', ''),
-    MAIL_PORT=int(os.environ.get('MAIL_PORT', 587)),
-    MAIL_SERVER=os.environ.get('MAIL_SERVER', 'smtp.gmail.com'),
-    MAIL_FROM_NAME=os.environ.get('MAIL_FROM_NAME', 'Fleet Marketplace'),
-    MAIL_STARTTLS=True,
-    MAIL_SSL_TLS=False,
-    USE_CREDENTIALS=True,
-    VALIDATE_CERTS=True,
-    TEMPLATE_FOLDER=Path(__file__).parent / 'templates'
+# Check if email is configured
+EMAIL_CONFIGURED = bool(
+    os.environ.get('MAIL_USERNAME') and 
+    os.environ.get('MAIL_PASSWORD') and 
+    os.environ.get('MAIL_FROM')
 )
+
+# Email configuration - only create if properly configured
+conf = None
+if EMAIL_CONFIGURED:
+    try:
+        conf = ConnectionConfig(
+            MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
+            MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
+            MAIL_FROM=os.environ.get('MAIL_FROM'),
+            MAIL_PORT=int(os.environ.get('MAIL_PORT', 587)),
+            MAIL_SERVER=os.environ.get('MAIL_SERVER', 'smtp.gmail.com'),
+            MAIL_FROM_NAME=os.environ.get('MAIL_FROM_NAME', 'Fleet Marketplace'),
+            MAIL_STARTTLS=True,
+            MAIL_SSL_TLS=False,
+            USE_CREDENTIALS=True,
+            VALIDATE_CERTS=True,
+            TEMPLATE_FOLDER=Path(__file__).parent / 'templates'
+        )
+    except Exception as e:
+        logger.error(f"Failed to configure email: {e}")
+        EMAIL_CONFIGURED = False
 
 # Jinja2 environment for email templates
 templates_dir = Path(__file__).parent / 'templates'
