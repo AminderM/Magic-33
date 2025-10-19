@@ -256,6 +256,38 @@ async def login_user(login_data: UserLogin):
         "registration_status": user["registration_status"]
     }
 
+@api_router.get("/verify-email/{token}")
+async def verify_email(token: str):
+    # Hash the provided token
+    hashed_token = hashlib.sha256(token.encode()).hexdigest()
+    
+    # Find user with matching token
+    user = await db.users.find_one({
+        "verification_token": hashed_token,
+        "email_verified": False,
+        "token_expires_at": {"$gt": datetime.now(timezone.utc)}
+    })
+    
+    if not user:
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid or expired verification token"
+        )
+    
+    # Update user as verified
+    await db.users.update_one(
+        {"_id": user["_id"]},
+        {
+            "$set": {
+                "email_verified": True,
+                "verified_at": datetime.now(timezone.utc)
+            },
+            "$unset": {"verification_token": "", "token_expires_at": ""}
+        }
+    )
+    
+    return {"message": "Email verified successfully! You can now complete your company registration."}
+
 @api_router.get("/auth/me", response_model=User)
 async def get_current_user_info(current_user: User = Depends(get_current_user)):
     return current_user
