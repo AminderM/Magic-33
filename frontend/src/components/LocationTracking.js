@@ -178,14 +178,44 @@ const LocationTracking = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header and Controls */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Location Tracking</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Fleet Location Tracking</h2>
           <p className="text-gray-600">
             {user?.role === 'fleet_owner' 
-              ? 'Monitor your equipment locations in real-time'
+              ? 'Monitor your fleet with live GPS tracking and route history'
               : 'Update your current location for fleet tracking'}
+          </p>
+        </div>
+      </div>
+
+      {/* Tabs for different tracking views */}
+      <Tabs defaultValue="live-map" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="live-map" data-testid="live-map-tab">
+            <i className="fas fa-map mr-2"></i>
+            Live Map View
+          </TabsTrigger>
+          <TabsTrigger value="manual-tracking" data-testid="manual-tracking-tab">
+            <i className="fas fa-mobile-alt mr-2"></i>
+            Manual Tracking
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Live Map Tab */}
+        <TabsContent value="live-map" className="mt-6">
+          <LiveTrackingMap />
+        </TabsContent>
+
+        {/* Manual Tracking Tab */}
+        <TabsContent value="manual-tracking" className="mt-6">
+          <div className="space-y-6">
+            {/* Header and Controls */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">\n        <div>
+          <h3 className="text-xl font-bold text-gray-900">Manual Location Updates</h3>
+          <p className=\"text-gray-600\">
+            Use this interface when GPS tracking is unavailable
           </p>
         </div>
         
