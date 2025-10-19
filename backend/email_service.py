@@ -1,11 +1,12 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
-from fastapi import BackgroundTasks
-from typing import List, Optional
+from fastapi import BackgroundTasks, WebSocket
+from typing import List, Optional, Dict
 from pydantic import EmailStr
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 import os
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
