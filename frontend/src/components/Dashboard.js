@@ -9,6 +9,7 @@ import EquipmentManagement from './EquipmentManagement';
 import DriverManagement from './DriverManagement';
 import BookingManagement from './BookingManagement';
 import LocationTracking from './LocationTracking';
+import FleetManagement from './FleetManagement';
 
 const Dashboard = () => {
   const { user, logout, fetchWithAuth } = useAuth();
