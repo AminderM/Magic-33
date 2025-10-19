@@ -1,1 +1,364 @@
-import React, { useState, useEffect, useRef } from 'react';\nimport { Button } from '@/components/ui/button';\nimport { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';\nimport { Badge } from '@/components/ui/badge';\nimport { Switch } from '@/components/ui/switch';\nimport { useAuth } from '../contexts/AuthContext';\nimport { toast } from 'sonner';\nimport useWebSocket from 'use-websocket';\n\nconst MobileDriverInterface = ({ vehicleId }) => {\n  const { user } = useAuth();\n  const [isTracking, setIsTracking] = useState(false);\n  const [locationData, setLocationData] = useState(null);\n  const [connectionStatus, setConnectionStatus] = useState('disconnected');\n  const [battery, setBattery] = useState(100);\n  const [signalStrength, setSignalStrength] = useState(100);\n  const watchIdRef = useRef(null);\n  const lastSentRef = useRef(0);\n\n  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;\n  const WS_URL = BACKEND_URL ? BACKEND_URL.replace('https://', 'wss://').replace('http://', 'ws://') : 'ws://localhost:8001';\n\n  // WebSocket connection for sending location data\n  const { sendJsonMessage, lastMessage, connectionStatus: wsStatus } = useWebSocket(\n    vehicleId ? `${WS_URL}/ws/vehicle/${vehicleId}` : null,\n    {\n      onOpen: () => {\n        console.log('Vehicle WebSocket connected');\n        setConnectionStatus('connected');\n        toast.success('Connected to fleet tracking');\n      },\n      onClose: () => {\n        console.log('Vehicle WebSocket disconnected');\n        setConnectionStatus('disconnected');\n        toast.info('Disconnected from fleet tracking');\n      },\n      onError: (error) => {\n        console.error('WebSocket error:', error);\n        setConnectionStatus('error');\n        toast.error('Connection error');\n      },\n      shouldReconnect: (closeEvent) => true,\n      reconnectAttempts: 10,\n      reconnectInterval: 3000\n    }\n  );\n\n  // Monitor battery level (Web API)\n  useEffect(() => {\n    const updateBattery = async () => {\n      if ('getBattery' in navigator) {\n        try {\n          const battery = await navigator.getBattery();\n          setBattery(Math.round(battery.level * 100));\n          \n          battery.addEventListener('levelchange', () => {\n            setBattery(Math.round(battery.level * 100));\n          });\n        } catch (error) {\n          console.log('Battery API not available');\n        }\n      }\n    };\n    \n    updateBattery();\n  }, []);\n\n  // Monitor network connection\n  useEffect(() => {\n    const updateNetworkStatus = () => {\n      if ('connection' in navigator) {\n        const connection = navigator.connection;\n        // Simulate signal strength based on connection type\n        const strengthMap = {\n          'cellular': 80,\n          'wifi': 95,\n          'ethernet': 100,\n          'none': 0\n        };\n        setSignalStrength(strengthMap[connection.effectiveType] || 75);\n      }\n    };\n\n    updateNetworkStatus();\n    window.addEventListener('online', updateNetworkStatus);\n    window.addEventListener('offline', updateNetworkStatus);\n\n    return () => {\n      window.removeEventListener('online', updateNetworkStatus);\n      window.removeEventListener('offline', updateNetworkStatus);\n    };\n  }, []);\n\n  const startLocationTracking = () => {\n    if (!navigator.geolocation) {\n      toast.error('Geolocation is not supported by this device');\n      return;\n    }\n\n    const options = {\n      enableHighAccuracy: true,\n      timeout: 10000,\n      maximumAge: 5000 // 5 seconds\n    };\n\n    const successCallback = (position) => {\n      const now = Date.now();\n      const coords = position.coords;\n      \n      const newLocationData = {\n        latitude: coords.latitude,\n        longitude: coords.longitude,\n        accuracy: coords.accuracy,\n        speed: coords.speed || 0,\n        heading: coords.heading || 0,\n        timestamp: new Date().toISOString()\n      };\n      \n      setLocationData(newLocationData);\n      \n      // Send location update every 10 seconds to avoid spam\n      if (now - lastSentRef.current > 10000) {\n        sendLocationUpdate(newLocationData);\n        lastSentRef.current = now;\n      }\n    };\n\n    const errorCallback = (error) => {\n      console.error('Geolocation error:', error);\n      let message = 'Unable to get your location.';\n      \n      switch (error.code) {\n        case error.PERMISSION_DENIED:\n          message = 'Location access denied. Please enable location permissions.';\n          break;\n        case error.POSITION_UNAVAILABLE:\n          message = 'Location information unavailable.';\n          break;\n        case error.TIMEOUT:\n          message = 'Location request timed out.';\n          break;\n      }\n      \n      toast.error(message);\n      setIsTracking(false);\n    };\n\n    watchIdRef.current = navigator.geolocation.watchPosition(\n      successCallback,\n      errorCallback,\n      options\n    );\n    \n    setIsTracking(true);\n    toast.success('GPS tracking started');\n  };\n\n  const stopLocationTracking = () => {\n    if (watchIdRef.current) {\n      navigator.geolocation.clearWatch(watchIdRef.current);\n      watchIdRef.current = null;\n    }\n    setIsTracking(false);\n    toast.info('GPS tracking stopped');\n  };\n\n  const sendLocationUpdate = (locationData) => {\n    if (connectionStatus === 'connected' && vehicleId) {\n      sendJsonMessage({\n        type: 'location_update',\n        payload: {\n          latitude: locationData.latitude,\n          longitude: locationData.longitude,\n          speed: locationData.speed,\n          heading: locationData.heading,\n          accuracy: locationData.accuracy\n        }\n      });\n    }\n  };\n\n  const sendStatusUpdate = (status) => {\n    if (connectionStatus === 'connected' && vehicleId) {\n      sendJsonMessage({\n        type: 'status_update',\n        payload: {\n          status: status,\n          battery: battery,\n          signal_strength: signalStrength\n        }\n      });\n      toast.success(`Status updated: ${status}`);\n    }\n  };\n\n  const toggleTracking = () => {\n    if (isTracking) {\n      stopLocationTracking();\n    } else {\n      startLocationTracking();\n    }\n  };\n\n  return (\n    <div className=\"max-w-md mx-auto space-y-4 p-4\">\n      {/* Header */}\n      <Card>\n        <CardHeader className=\"text-center\">\n          <CardTitle className=\"flex items-center justify-center space-x-2\">\n            <i className=\"fas fa-mobile-alt text-blue-600\"></i>\n            <span>Driver Mobile Interface</span>\n          </CardTitle>\n          <p className=\"text-sm text-gray-600\">\n            Connected as: {user?.full_name}\n          </p>\n        </CardHeader>\n      </Card>\n\n      {/* Connection Status */}\n      <Card>\n        <CardContent className=\"p-4\">\n          <div className=\"flex items-center justify-between mb-4\">\n            <span className=\"font-medium\">Connection Status</span>\n            <Badge className={connectionStatus === 'connected' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>\n              {connectionStatus === 'connected' ? 'Connected' : 'Disconnected'}\n            </Badge>\n          </div>\n          \n          <div className=\"grid grid-cols-2 gap-4 text-sm\">\n            <div className=\"text-center\">\n              <div className=\"text-lg font-bold text-blue-600\">{battery}%</div>\n              <div className=\"text-gray-600\">Battery</div>\n            </div>\n            <div className=\"text-center\">\n              <div className=\"text-lg font-bold text-green-600\">{signalStrength}%</div>\n              <div className=\"text-gray-600\">Signal</div>\n            </div>\n          </div>\n        </CardContent>\n      </Card>\n\n      {/* GPS Tracking Control */}\n      <Card>\n        <CardContent className=\"p-4\">\n          <div className=\"flex items-center justify-between mb-4\">\n            <div>\n              <h3 className=\"font-medium\">GPS Tracking</h3>\n              <p className=\"text-sm text-gray-600\">\n                {isTracking ? 'Sending live location' : 'Location tracking off'}\n              </p>\n            </div>\n            <Switch\n              checked={isTracking}\n              onCheckedChange={toggleTracking}\n              disabled={connectionStatus !== 'connected'}\n            />\n          </div>\n          \n          {locationData && (\n            <div className=\"space-y-2 text-xs text-gray-600 bg-gray-50 p-3 rounded\">\n              <div className=\"grid grid-cols-2 gap-2\">\n                <div>Lat: {locationData.latitude.toFixed(6)}</div>\n                <div>Lng: {locationData.longitude.toFixed(6)}</div>\n                <div>Speed: {Math.round(locationData.speed * 2.237)} mph</div>\n                <div>Accuracy: {Math.round(locationData.accuracy)}m</div>\n              </div>\n              <div className=\"text-center text-xs\">\n                Last update: {new Date(locationData.timestamp).toLocaleTimeString()}\n              </div>\n            </div>\n          )}\n        </CardContent>\n      </Card>\n\n      {/* Quick Status Updates */}\n      <Card>\n        <CardHeader>\n          <CardTitle className=\"text-lg\">Quick Status Update</CardTitle>\n        </CardHeader>\n        <CardContent className=\"p-4\">\n          <div className=\"grid grid-cols-2 gap-2\">\n            <Button\n              onClick={() => sendStatusUpdate('active')}\n              className=\"bg-green-600 hover:bg-green-700 text-white\"\n              size=\"sm\"\n              disabled={connectionStatus !== 'connected'}\n            >\n              <i className=\"fas fa-play mr-2\"></i>\n              Active\n            </Button>\n            \n            <Button\n              onClick={() => sendStatusUpdate('idle')}\n              className=\"bg-yellow-600 hover:bg-yellow-700 text-white\"\n              size=\"sm\"\n              disabled={connectionStatus !== 'connected'}\n            >\n              <i className=\"fas fa-pause mr-2\"></i>\n              Idle\n            </Button>\n            \n            <Button\n              onClick={() => sendStatusUpdate('maintenance')}\n              className=\"bg-purple-600 hover:bg-purple-700 text-white\"\n              size=\"sm\"\n              disabled={connectionStatus !== 'connected'}\n            >\n              <i className=\"fas fa-tools mr-2\"></i>\n              Service\n            </Button>\n            \n            <Button\n              onClick={() => sendStatusUpdate('offline')}\n              className=\"bg-red-600 hover:bg-red-700 text-white\"\n              size=\"sm\"\n              disabled={connectionStatus !== 'connected'}\n            >\n              <i className=\"fas fa-stop mr-2\"></i>\n              Offline\n            </Button>\n          </div>\n        </CardContent>\n      </Card>\n\n      {/* Emergency Actions */}\n      <Card>\n        <CardHeader>\n          <CardTitle className=\"text-lg text-red-600\">\n            <i className=\"fas fa-exclamation-triangle mr-2\"></i>\n            Emergency\n          </CardTitle>\n        </CardHeader>\n        <CardContent className=\"p-4\">\n          <Button\n            className=\"w-full bg-red-600 hover:bg-red-700 text-white\"\n            onClick={() => {\n              sendStatusUpdate('emergency');\n              toast.error('Emergency alert sent to fleet manager!');\n            }}\n            disabled={connectionStatus !== 'connected'}\n          >\n            <i className=\"fas fa-exclamation-circle mr-2\"></i>\n            Send Emergency Alert\n          </Button>\n        </CardContent>\n      </Card>\n\n      {/* Help */}\n      <Card>\n        <CardContent className=\"p-4 text-center text-sm text-gray-600\">\n          <p className=\"mb-2\">\n            <i className=\"fas fa-info-circle mr-2\"></i>\n            Keep this app open for continuous tracking\n          </p>\n          <p>\n            For technical support, contact your fleet manager\n          </p>\n        </CardContent>\n      </Card>\n    </div>\n  );\n};\n\nexport default MobileDriverInterface;"
+import React, { useState, useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { useAuth } from '../contexts/AuthContext';
+import { toast } from 'sonner';
+import useWebSocket from 'use-websocket';
+
+const MobileDriverInterface = ({ vehicleId }) => {
+  const { user } = useAuth();
+  const [isTracking, setIsTracking] = useState(false);
+  const [locationData, setLocationData] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState('disconnected');
+  const [battery, setBattery] = useState(100);
+  const [signalStrength, setSignalStrength] = useState(100);
+  const watchIdRef = useRef(null);
+  const lastSentRef = useRef(0);
+
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const WS_URL = BACKEND_URL ? BACKEND_URL.replace('https://', 'wss://').replace('http://', 'ws://') : 'ws://localhost:8001';
+
+  // WebSocket connection for sending location data
+  const { sendJsonMessage, lastMessage, connectionStatus: wsStatus } = useWebSocket(
+    vehicleId ? `${WS_URL}/ws/vehicle/${vehicleId}` : null,
+    {
+      onOpen: () => {
+        console.log('Vehicle WebSocket connected');
+        setConnectionStatus('connected');
+        toast.success('Connected to fleet tracking');
+      },
+      onClose: () => {
+        console.log('Vehicle WebSocket disconnected');
+        setConnectionStatus('disconnected');
+        toast.info('Disconnected from fleet tracking');
+      },
+      onError: (error) => {
+        console.error('WebSocket error:', error);
+        setConnectionStatus('error');
+        toast.error('Connection error');
+      },
+      shouldReconnect: (closeEvent) => true,
+      reconnectAttempts: 10,
+      reconnectInterval: 3000
+    }
+  );
+
+  // Monitor battery level (Web API)
+  useEffect(() => {
+    const updateBattery = async () => {
+      if ('getBattery' in navigator) {
+        try {
+          const battery = await navigator.getBattery();
+          setBattery(Math.round(battery.level * 100));
+          
+          battery.addEventListener('levelchange', () => {
+            setBattery(Math.round(battery.level * 100));
+          });
+        } catch (error) {
+          console.log('Battery API not available');
+        }
+      }
+    };
+    
+    updateBattery();
+  }, []);
+
+  // Monitor network connection
+  useEffect(() => {
+    const updateNetworkStatus = () => {
+      if ('connection' in navigator) {
+        const connection = navigator.connection;
+        // Simulate signal strength based on connection type
+        const strengthMap = {
+          'cellular': 80,
+          'wifi': 95,
+          'ethernet': 100,
+          'none': 0
+        };
+        setSignalStrength(strengthMap[connection.effectiveType] || 75);
+      }
+    };
+
+    updateNetworkStatus();
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
+
+    return () => {
+      window.removeEventListener('online', updateNetworkStatus);
+      window.removeEventListener('offline', updateNetworkStatus);
+    };
+  }, []);
+
+  const startLocationTracking = () => {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by this device');
+      return;
+    }
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 5000 // 5 seconds
+    };
+
+    const successCallback = (position) => {
+      const now = Date.now();
+      const coords = position.coords;
+      
+      const newLocationData = {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        accuracy: coords.accuracy,
+        speed: coords.speed || 0,
+        heading: coords.heading || 0,
+        timestamp: new Date().toISOString()
+      };
+      
+      setLocationData(newLocationData);
+      
+      // Send location update every 10 seconds to avoid spam
+      if (now - lastSentRef.current > 10000) {
+        sendLocationUpdate(newLocationData);
+        lastSentRef.current = now;
+      }
+    };
+
+    const errorCallback = (error) => {
+      console.error('Geolocation error:', error);
+      let message = 'Unable to get your location.';
+      
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          message = 'Location access denied. Please enable location permissions.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          message = 'Location information unavailable.';
+          break;
+        case error.TIMEOUT:
+          message = 'Location request timed out.';
+          break;
+      }
+      
+      toast.error(message);
+      setIsTracking(false);
+    };
+
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      successCallback,
+      errorCallback,
+      options
+    );
+    
+    setIsTracking(true);
+    toast.success('GPS tracking started');
+  };
+
+  const stopLocationTracking = () => {
+    if (watchIdRef.current) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    setIsTracking(false);
+    toast.info('GPS tracking stopped');
+  };
+
+  const sendLocationUpdate = (locationData) => {
+    if (connectionStatus === 'connected' && vehicleId) {
+      sendJsonMessage({
+        type: 'location_update',
+        payload: {
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+          speed: locationData.speed,
+          heading: locationData.heading,
+          accuracy: locationData.accuracy
+        }
+      });
+    }
+  };
+
+  const sendStatusUpdate = (status) => {
+    if (connectionStatus === 'connected' && vehicleId) {
+      sendJsonMessage({
+        type: 'status_update',
+        payload: {
+          status: status,
+          battery: battery,
+          signal_strength: signalStrength
+        }
+      });
+      toast.success(`Status updated: ${status}`);
+    }
+  };
+
+  const toggleTracking = () => {
+    if (isTracking) {
+      stopLocationTracking();
+    } else {
+      startLocationTracking();
+    }
+  };
+
+  return (
+    <div className=\"max-w-md mx-auto space-y-4 p-4\">
+      {/* Header */}
+      <Card>
+        <CardHeader className=\"text-center\">
+          <CardTitle className=\"flex items-center justify-center space-x-2\">
+            <i className=\"fas fa-mobile-alt text-blue-600\"></i>
+            <span>Driver Mobile Interface</span>
+          </CardTitle>
+          <p className=\"text-sm text-gray-600\">
+            Connected as: {user?.full_name}
+          </p>
+        </CardHeader>
+      </Card>
+
+      {/* Connection Status */}
+      <Card>
+        <CardContent className=\"p-4\">
+          <div className=\"flex items-center justify-between mb-4\">
+            <span className=\"font-medium\">Connection Status</span>
+            <Badge className={connectionStatus === 'connected' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+              {connectionStatus === 'connected' ? 'Connected' : 'Disconnected'}
+            </Badge>
+          </div>
+          
+          <div className=\"grid grid-cols-2 gap-4 text-sm\">
+            <div className=\"text-center\">
+              <div className=\"text-lg font-bold text-blue-600\">{battery}%</div>
+              <div className=\"text-gray-600\">Battery</div>
+            </div>
+            <div className=\"text-center\">
+              <div className=\"text-lg font-bold text-green-600\">{signalStrength}%</div>
+              <div className=\"text-gray-600\">Signal</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* GPS Tracking Control */}
+      <Card>
+        <CardContent className=\"p-4\">
+          <div className=\"flex items-center justify-between mb-4\">
+            <div>
+              <h3 className=\"font-medium\">GPS Tracking</h3>
+              <p className=\"text-sm text-gray-600\">
+                {isTracking ? 'Sending live location' : 'Location tracking off'}
+              </p>
+            </div>
+            <Switch
+              checked={isTracking}
+              onCheckedChange={toggleTracking}
+              disabled={connectionStatus !== 'connected'}
+            />
+          </div>
+          
+          {locationData && (
+            <div className=\"space-y-2 text-xs text-gray-600 bg-gray-50 p-3 rounded\">
+              <div className=\"grid grid-cols-2 gap-2\">
+                <div>Lat: {locationData.latitude.toFixed(6)}</div>
+                <div>Lng: {locationData.longitude.toFixed(6)}</div>
+                <div>Speed: {Math.round(locationData.speed * 2.237)} mph</div>
+                <div>Accuracy: {Math.round(locationData.accuracy)}m</div>
+              </div>
+              <div className=\"text-center text-xs\">
+                Last update: {new Date(locationData.timestamp).toLocaleTimeString()}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Quick Status Updates */}
+      <Card>
+        <CardHeader>
+          <CardTitle className=\"text-lg\">Quick Status Update</CardTitle>
+        </CardHeader>
+        <CardContent className=\"p-4\">
+          <div className=\"grid grid-cols-2 gap-2\">
+            <Button
+              onClick={() => sendStatusUpdate('active')}
+              className=\"bg-green-600 hover:bg-green-700 text-white\"
+              size=\"sm\"
+              disabled={connectionStatus !== 'connected'}
+            >
+              <i className=\"fas fa-play mr-2\"></i>
+              Active
+            </Button>
+            
+            <Button
+              onClick={() => sendStatusUpdate('idle')}
+              className=\"bg-yellow-600 hover:bg-yellow-700 text-white\"
+              size=\"sm\"
+              disabled={connectionStatus !== 'connected'}
+            >
+              <i className=\"fas fa-pause mr-2\"></i>
+              Idle
+            </Button>
+            
+            <Button
+              onClick={() => sendStatusUpdate('maintenance')}
+              className=\"bg-purple-600 hover:bg-purple-700 text-white\"
+              size=\"sm\"
+              disabled={connectionStatus !== 'connected'}
+            >
+              <i className=\"fas fa-tools mr-2\"></i>
+              Service
+            </Button>
+            
+            <Button
+              onClick={() => sendStatusUpdate('offline')}
+              className=\"bg-red-600 hover:bg-red-700 text-white\"
+              size=\"sm\"
+              disabled={connectionStatus !== 'connected'}
+            >
+              <i className=\"fas fa-stop mr-2\"></i>
+              Offline
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Emergency Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className=\"text-lg text-red-600\">
+            <i className=\"fas fa-exclamation-triangle mr-2\"></i>
+            Emergency
+          </CardTitle>
+        </CardHeader>
+        <CardContent className=\"p-4\">
+          <Button
+            className=\"w-full bg-red-600 hover:bg-red-700 text-white\"
+            onClick={() => {
+              sendStatusUpdate('emergency');
+              toast.error('Emergency alert sent to fleet manager!');
+            }}
+            disabled={connectionStatus !== 'connected'}
+          >
+            <i className=\"fas fa-exclamation-circle mr-2\"></i>
+            Send Emergency Alert
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Help */}
+      <Card>
+        <CardContent className=\"p-4 text-center text-sm text-gray-600\">
+          <p className=\"mb-2\">
+            <i className=\"fas fa-info-circle mr-2\"></i>
+            Keep this app open for continuous tracking
+          </p>
+          <p>
+            For technical support, contact your fleet manager
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default MobileDriverInterface;"
