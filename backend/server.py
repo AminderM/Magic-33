@@ -199,11 +199,15 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 
 # Authentication Routes
 @api_router.post("/auth/register", response_model=dict)
-async def register_user(user_data: UserCreate):
+async def register_user(user_data: UserCreate, background_tasks: BackgroundTasks):
     # Check if user already exists
     existing_user = await db.users.find_one({"email": user_data.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Generate email verification token
+    token = secrets.token_urlsafe(32)
+    hashed_token = hashlib.sha256(token.encode()).hexdigest()
     
     # Hash password
     hashed_password = hash_password(user_data.password)
@@ -212,12 +216,28 @@ async def register_user(user_data: UserCreate):
     user_dict = user_data.dict()
     user_dict.pop("password")
     user_dict["password_hash"] = hashed_password
+    user_dict["verification_token"] = hashed_token
+    user_dict["token_expires_at"] = datetime.now(timezone.utc) + timedelta(hours=24)
+    user_dict["email_verified"] = False
     user_obj = User(**user_dict)
     
     # Insert user
     result = await db.users.insert_one(user_obj.dict())
     
-    return {"message": "User registered successfully", "user_id": user_obj.id, "status": "pending_company_registration"}
+    # Send verification email
+    verification_url = f"https://freight-fleet.preview.emergentagent.com/verify-email/{token}"
+    await send_verification_email(
+        background_tasks,
+        user_data.email,
+        user_data.full_name,
+        verification_url
+    )
+    
+    return {
+        "message": "User registered successfully! Please check your email to verify your account.", 
+        "user_id": user_obj.id, 
+        "status": "email_verification_sent"
+    }
 
 @api_router.post("/auth/login", response_model=dict)
 async def login_user(login_data: UserLogin):
