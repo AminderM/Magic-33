@@ -542,12 +542,6 @@ const FleetManagement = () => {
             </CardHeader>
             <CardContent>
               <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4\">
-                {equipment.reduce((acc, item) => {
-                  const type = item.equipment_type?.replace('_', ' ').toUpperCase();
-                  acc[type] = (acc[type] || 0) + 1;
-                  return acc;
-                }, {})}
-                
                 {Object.entries(
                   equipment.reduce((acc, item) => {
                     const type = item.equipment_type?.replace('_', ' ').toUpperCase();
