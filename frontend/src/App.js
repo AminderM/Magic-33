@@ -7,6 +7,7 @@ import './App.css';
 import LandingPage from './components/LandingPage';
 import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
+import MobileDriverInterface from './components/MobileDriverInterface';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Protected Route Component
