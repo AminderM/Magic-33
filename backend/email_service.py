@@ -43,8 +43,8 @@ env = Environment(loader=FileSystemLoader(str(templates_dir)))
 
 class EmailService:
     def __init__(self):
-        self.fastmail = FastMail(conf)
-        self.enabled = bool(os.environ.get('MAIL_USERNAME') and os.environ.get('MAIL_PASSWORD'))
+        self.fastmail = FastMail(conf) if conf else None
+        self.enabled = EMAIL_CONFIGURED
         
     async def send_email(
         self, 
