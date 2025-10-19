@@ -41,6 +41,14 @@ function AppRoutes() {
           </ProtectedRoute>
         } 
       />
+      <Route 
+        path="/mobile/:vehicleId" 
+        element={
+          <ProtectedRoute>
+            <MobileDriverInterface />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
