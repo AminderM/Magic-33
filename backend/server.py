@@ -458,7 +458,7 @@ async def get_equipment_locations(equipment_id: str, current_user: User = Depend
 
 # Booking Routes
 @api_router.post("/bookings", response_model=dict)
-async def create_booking(booking_data: BookingCreate, current_user: User = Depends(get_current_user)):
+async def create_booking(booking_data: BookingCreate, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
     # Get equipment details
     equipment = await db.equipment.find_one({"id": booking_data.equipment_id})
     if not equipment:
@@ -466,6 +466,11 @@ async def create_booking(booking_data: BookingCreate, current_user: User = Depen
     
     if not equipment["is_available"]:
         raise HTTPException(status_code=400, detail="Equipment is not available")
+    
+    # Get equipment owner details
+    provider = await db.users.find_one({"id": equipment["owner_id"]})
+    if not provider:
+        raise HTTPException(status_code=404, detail="Equipment owner not found")
     
     # Calculate total cost
     duration_days = (booking_data.end_date - booking_data.start_date).days
@@ -482,7 +487,32 @@ async def create_booking(booking_data: BookingCreate, current_user: User = Depen
     
     await db.bookings.insert_one(booking_obj.dict())
     
-    return {"message": "Booking request created successfully", "booking_id": booking_obj.id, "total_cost": total_cost}
+    # Send booking confirmation emails
+    booking_details = {
+        "equipment_name": equipment["name"],
+        "start_date": booking_data.start_date.strftime("%B %d, %Y at %I:%M %p"),
+        "end_date": booking_data.end_date.strftime("%B %d, %Y at %I:%M %p"),
+        "pickup_location": booking_data.pickup_location,
+        "delivery_location": booking_data.delivery_location,
+        "total_cost": total_cost,
+        "booking_id": booking_obj.id[:8] + "...",
+        "notes": booking_data.notes or "No special requirements"
+    }
+    
+    await send_booking_confirmation_emails(
+        background_tasks,
+        current_user.email,
+        current_user.full_name,
+        provider["email"],
+        provider["full_name"],
+        booking_details
+    )
+    
+    return {
+        "message": "Booking request created successfully! Confirmation emails sent.", 
+        "booking_id": booking_obj.id, 
+        "total_cost": total_cost
+    }
 
 @api_router.get("/bookings/my", response_model=List[Booking])
 async def get_my_bookings(current_user: User = Depends(get_current_user)):
