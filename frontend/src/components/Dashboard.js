@@ -217,8 +217,14 @@ const Dashboard = () => {
         {/* Main Content Tabs */}
         <Card className="dashboard-card">
           <CardContent className="p-6">
-            <Tabs defaultValue="equipment" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
+            <Tabs defaultValue={user?.role === 'fleet_owner' ? 'fleet' : 'equipment'} className="w-full">
+              <TabsList className={`grid w-full ${user?.role === 'fleet_owner' ? 'grid-cols-5' : 'grid-cols-3'}`}>
+                {user?.role === 'fleet_owner' && (
+                  <TabsTrigger value="fleet" data-testid="fleet-tab">
+                    <i className="fas fa-tachometer-alt mr-2"></i>
+                    Fleet
+                  </TabsTrigger>
+                )}
                 <TabsTrigger value="equipment" data-testid="equipment-tab">
                   <i className="fas fa-truck mr-2"></i>
                   Equipment
@@ -238,6 +244,12 @@ const Dashboard = () => {
                   Tracking
                 </TabsTrigger>
               </TabsList>
+
+              {user?.role === 'fleet_owner' && (
+                <TabsContent value="fleet" className="mt-6">
+                  <FleetManagement />
+                </TabsContent>
+              )}
 
               <TabsContent value="equipment" className="mt-6">
                 <EquipmentManagement onStatsUpdate={setStats} />
