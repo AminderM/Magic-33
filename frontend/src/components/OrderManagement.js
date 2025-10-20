@@ -247,7 +247,13 @@ const OrderManagement = () => {
       formDataUpload.append('file', uploadedFile);
 
       // Use fetch directly with Authorization header for file upload
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
+      
+      if (!token) {
+        toast.error('Authentication required. Please log in again.');
+        return;
+      }
+      
       const response = await fetch(`${BACKEND_URL}/api/bookings/parse-rate-confirmation`, {
         method: 'POST',
         body: formDataUpload,
