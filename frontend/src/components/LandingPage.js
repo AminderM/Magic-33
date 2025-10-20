@@ -34,10 +34,10 @@ const LandingPage = () => {
               <Button 
                 variant="outline" 
                 className="btn-secondary text-lg px-8 py-4"
-                data-testid="learn-more-btn"
+                onClick={() => navigate('/apps')}
               >
-                <i className="fas fa-play-circle mr-2"></i>
-                Watch Demo
+                <i className="fas fa-th mr-2"></i>
+                Browse Apps
               </Button>
             </div>
           </div>
