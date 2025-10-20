@@ -36,6 +36,9 @@ JWT_EXPIRATION_HOURS = 24
 # Security
 security = HTTPBearer()
 
+# WebSocket Manager
+manager = ConnectionManager()
+
 # Create the main app without a prefix
 app = FastAPI(title="Fleet Marketplace API")
 
