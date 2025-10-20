@@ -222,7 +222,7 @@ const Dashboard = () => {
                 {user?.role === 'fleet_owner' && (
                   <TabsTrigger value="fleet" data-testid="fleet-tab">
                     <i className="fas fa-tachometer-alt mr-2"></i>
-                    Fleet
+                    Transport Hub - TMS
                   </TabsTrigger>
                 )}
                 <TabsTrigger value="equipment" data-testid="equipment-tab">
