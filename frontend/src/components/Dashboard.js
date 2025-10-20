@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import EquipmentManagement from './EquipmentManagement';
 import DriverManagement from './DriverManagement';
-import BookingManagement from './BookingManagement';
+import OrderManagement from './OrderManagement';
 import LocationTracking from './LocationTracking';
 import FleetManagement from './FleetManagement';
 
