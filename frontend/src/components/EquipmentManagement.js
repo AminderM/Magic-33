@@ -39,7 +39,8 @@ const EquipmentManagement = ({ onStatsUpdate }) => {
     { value: 'reefer', label: 'Reefer', icon: 'fa-snowflake' },
     { value: 'big_rig', label: 'Big Rig', icon: 'fa-truck-moving' },
     { value: 'forklift', label: 'Forklift', icon: 'fa-forklift' },
-    { value: 'excavator', label: 'Excavator', icon: 'fa-hard-hat' }
+    { value: 'excavator', label: 'Excavator', icon: 'fa-hard-hat' },
+    { value: 'tractor', label: 'Tractor', icon: 'fa-tractor' }
   ];
 
   useEffect(() => {
