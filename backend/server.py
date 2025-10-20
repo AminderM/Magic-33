@@ -663,8 +663,21 @@ Return the data in JSON format with these exact field names:
   "driver_id": "driver ID if available",
   "pickup_time_planned": "planned pickup date and time in ISO format (YYYY-MM-DDTHH:MM:SS)",
   "delivery_time_planned": "planned delivery date and time in ISO format (YYYY-MM-DDTHH:MM:SS)",
+  "confirmed_rate": "the confirmed rate or total charge amount in dollars (number only, extract from fields like 'Rate', 'Total', 'Charge', 'Amount', or similar)",
   "notes": "any additional notes or special instructions"
 }
+
+IMPORTANT: For confirmed_rate, look for monetary values labeled as:
+- "Rate"
+- "Total Rate"
+- "Confirmed Rate" 
+- "Total Charge"
+- "Amount"
+- "Total Amount"
+- "Line Haul"
+- Any dollar amount that represents the shipping cost
+
+Extract only the numeric value without dollar signs or commas.
 
 If a field is not found in the document, set it to null. 
 Return ONLY the JSON object, no additional text or explanation.
