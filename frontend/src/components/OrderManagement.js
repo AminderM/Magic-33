@@ -140,6 +140,7 @@ const OrderManagement = () => {
         ...formData,
         weight: formData.weight ? parseFloat(formData.weight) : null,
         cubes: formData.cubes ? parseFloat(formData.cubes) : null,
+        confirmed_rate: formData.confirmed_rate ? parseFloat(formData.confirmed_rate) : null,
         pickup_time_planned: formData.pickup_time_planned || null,
         delivery_time_planned: formData.delivery_time_planned || null,
         start_date: new Date(formData.start_date).toISOString(),
