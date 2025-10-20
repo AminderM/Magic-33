@@ -30,16 +30,16 @@ const EquipmentManagement = ({ onStatsUpdate }) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const equipmentTypes = [
-    { value: 'box_truck', label: 'Box Truck', icon: 'fa-truck' },
-    { value: 'sprinter_van', label: 'Sprinter Van', icon: 'fa-shuttle-van' },
-    { value: 'hvac_truck', label: 'HVAC Truck', icon: 'fa-tools' },
-    { value: 'crane', label: 'Crane', icon: 'fa-crane' },
-    { value: 'flatbed_truck', label: 'Flatbed Truck', icon: 'fa-truck-flatbed' },
-    { value: 'dry_van', label: 'Dry Van', icon: 'fa-truck-container' },
-    { value: 'reefer', label: 'Reefer', icon: 'fa-snowflake' },
     { value: 'big_rig', label: 'Big Rig', icon: 'fa-truck-moving' },
-    { value: 'forklift', label: 'Forklift', icon: 'fa-forklift' },
+    { value: 'box_truck', label: 'Box Truck', icon: 'fa-truck' },
+    { value: 'crane', label: 'Crane', icon: 'fa-crane' },
+    { value: 'dry_van', label: 'Dry Van', icon: 'fa-truck-container' },
     { value: 'excavator', label: 'Excavator', icon: 'fa-hard-hat' },
+    { value: 'flatbed_truck', label: 'Flatbed Truck', icon: 'fa-truck-flatbed' },
+    { value: 'forklift', label: 'Forklift', icon: 'fa-forklift' },
+    { value: 'hvac_truck', label: 'HVAC Truck', icon: 'fa-tools' },
+    { value: 'reefer', label: 'Reefer', icon: 'fa-snowflake' },
+    { value: 'sprinter_van', label: 'Sprinter Van', icon: 'fa-shuttle-van' },
     { value: 'tractor', label: 'Tractor', icon: 'fa-tractor' }
   ];
 
