@@ -160,20 +160,56 @@ const OrderManagement = () => {
     }
   };
 
-  const getStatusBadge = (status) => {
-    const statusStyles = {
+  const statusOptions = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'planned', label: 'Planned' },
+    { value: 'in_transit_pickup', label: 'In-Transit Pick up' },
+    { value: 'at_pickup', label: 'At Pick up' },
+    { value: 'in_transit_delivery', label: 'In Transit to Delivery' },
+    { value: 'at_delivery', label: 'At Delivery' },
+    { value: 'delivered', label: 'Delivered' },
+    { value: 'invoiced', label: 'Invoiced' },
+    { value: 'payment_overdue', label: 'Payment OverDue' },
+    { value: 'paid', label: 'Paid' }
+  ];
+
+  const getStatusColor = (status) => {
+    const statusColors = {
       pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      approved: 'bg-blue-100 text-blue-800 border-blue-300',
-      completed: 'bg-green-100 text-green-800 border-green-300',
-      cancelled: 'bg-red-100 text-red-800 border-red-300',
-      rejected: 'bg-gray-100 text-gray-800 border-gray-300'
+      planned: 'bg-blue-100 text-blue-800 border-blue-300',
+      in_transit_pickup: 'bg-purple-100 text-purple-800 border-purple-300',
+      at_pickup: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+      in_transit_delivery: 'bg-purple-100 text-purple-800 border-purple-300',
+      at_delivery: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+      delivered: 'bg-green-100 text-green-800 border-green-300',
+      invoiced: 'bg-cyan-100 text-cyan-800 border-cyan-300',
+      payment_overdue: 'bg-red-100 text-red-800 border-red-300',
+      paid: 'bg-emerald-100 text-emerald-800 border-emerald-300'
     };
-    
-    return (
-      <Badge className={`${statusStyles[status] || statusStyles.pending} border`}>
-        {status?.toUpperCase()}
-      </Badge>
-    );
+    return statusColors[status] || statusColors.pending;
+  };
+
+  const getStatusLabel = (status) => {
+    const option = statusOptions.find(opt => opt.value === status);
+    return option ? option.label : status;
+  };
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${orderId}/status?status=${newStatus}`, {
+        method: 'PATCH'
+      });
+
+      if (response.ok) {
+        toast.success('Status updated successfully');
+        loadOrders();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update status');
+      }
+    } catch (error) {
+      toast.error('Error updating status');
+    }
   };
 
   const formatDateTime = (dateTime) => {
