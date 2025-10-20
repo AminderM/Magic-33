@@ -594,6 +594,43 @@ async def update_booking_status(
     
     return {"message": "Status updated successfully", "status": status}
 
+@api_router.put("/bookings/{booking_id}", response_model=Booking)
+async def update_booking(
+    booking_id: str,
+    booking_update: BookingCreate,
+    current_user: User = Depends(get_current_user)
+):
+    # Find the booking
+    booking = await db.bookings.find_one({"id": booking_id})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    # Check if user has permission to update
+    if booking["requester_id"] != current_user.id and booking["equipment_owner_id"] != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this booking")
+    
+    # Only allow editing if status is pending
+    if booking.get("status") != "pending":
+        raise HTTPException(status_code=400, detail="Only bookings with 'pending' status can be edited")
+    
+    # Update the booking
+    update_data = booking_update.dict(exclude_unset=True)
+    
+    # Convert datetime fields to ISO format strings for MongoDB
+    for field in ['pickup_time_planned', 'delivery_time_planned', 'start_date', 'end_date']:
+        if field in update_data and update_data[field]:
+            if isinstance(update_data[field], datetime):
+                update_data[field] = update_data[field].isoformat()
+    
+    await db.bookings.update_one(
+        {"id": booking_id},
+        {"$set": update_data}
+    )
+    
+    # Get updated booking
+    updated_booking = await db.bookings.find_one({"id": booking_id})
+    return Booking(**updated_booking)
+
 @api_router.post("/bookings/parse-rate-confirmation", response_model=dict)
 async def parse_rate_confirmation(
     file: UploadFile = File(...),
