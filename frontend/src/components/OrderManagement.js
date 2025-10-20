@@ -148,23 +148,82 @@ const OrderManagement = () => {
         end_date: new Date(formData.end_date).toISOString()
       };
 
-      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings`, {
-        method: 'POST',
+      // Determine if we're creating or updating
+      const isEditing = editingOrder !== null;
+      const url = isEditing 
+        ? `${BACKEND_URL}/api/bookings/${editingOrder.id}`
+        : `${BACKEND_URL}/api/bookings`;
+      
+      const response = await fetchWithAuth(url, {
+        method: isEditing ? 'PUT' : 'POST',
         body: JSON.stringify(orderData)
       });
 
       if (response.ok) {
-        toast.success('Order created successfully!');
+        toast.success(isEditing ? 'Order updated successfully!' : 'Order created successfully!');
         setShowOrderForm(false);
+        setEditingOrder(null);
         resetForm();
         loadOrders();
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to create order');
+        toast.error(error.detail || (isEditing ? 'Failed to update order' : 'Failed to create order'));
       }
     } catch (error) {
-      toast.error('Error creating order');
+      toast.error(isEditing ? 'Error updating order' : 'Error creating order');
     }
+  };
+
+  const handleEditOrder = (order) => {
+    // Only allow editing if order is pending
+    if (order.status !== 'pending') {
+      toast.error('Only orders with "Pending" status can be edited');
+      return;
+    }
+
+    // Convert datetime fields for form inputs
+    const formatDateForInput = (dateTime) => {
+      if (!dateTime) return '';
+      const date = new Date(dateTime);
+      return date.toISOString().slice(0, 10);
+    };
+
+    const formatDateTimeForInput = (dateTime) => {
+      if (!dateTime) return '';
+      const date = new Date(dateTime);
+      return date.toISOString().slice(0, 16);
+    };
+
+    // Populate form with order data
+    setFormData({
+      equipment_id: order.equipment_id || '',
+      shipper_name: order.shipper_name || '',
+      shipper_address: order.shipper_address || '',
+      pickup_location: order.pickup_location || '',
+      pickup_city: order.pickup_city || '',
+      pickup_state: order.pickup_state || '',
+      pickup_country: order.pickup_country || 'USA',
+      delivery_location: order.delivery_location || '',
+      delivery_city: order.delivery_city || '',
+      delivery_state: order.delivery_state || '',
+      delivery_country: order.delivery_country || 'USA',
+      commodity: order.commodity || '',
+      weight: order.weight || '',
+      cubes: order.cubes || '',
+      tractor_number: order.tractor_number || '',
+      trailer_number: order.trailer_number || '',
+      driver_name: order.driver_name || '',
+      driver_id: order.driver_id || '',
+      pickup_time_planned: formatDateTimeForInput(order.pickup_time_planned),
+      delivery_time_planned: formatDateTimeForInput(order.delivery_time_planned),
+      confirmed_rate: order.confirmed_rate || '',
+      notes: order.notes || '',
+      start_date: formatDateForInput(order.start_date),
+      end_date: formatDateForInput(order.end_date)
+    });
+
+    setEditingOrder(order);
+    setShowOrderForm(true);
   };
 
   const statusOptions = [
