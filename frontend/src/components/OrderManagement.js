@@ -637,7 +637,23 @@ const OrderManagement = () => {
                         {order.order_number || order.id.substring(0, 8).toUpperCase()}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        {getStatusBadge(order.status)}
+                        <Select 
+                          value={order.status} 
+                          onValueChange={(value) => handleStatusChange(order.id, value)}
+                        >
+                          <SelectTrigger className={`w-48 ${getStatusColor(order.status)} border`}>
+                            <SelectValue>
+                              {getStatusLabel(order.status)}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {statusOptions.map(option => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">{order.shipper_name || 'N/A'}</td>
                       <td className="px-4 py-3 whitespace-nowrap">{order.shipper_address || 'N/A'}</td>
