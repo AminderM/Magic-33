@@ -557,7 +557,7 @@ const OrderManagement = () => {
                 className="w-full"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button
                 variant={filterStatus === 'all' ? 'default' : 'outline'}
                 onClick={() => setFilterStatus('all')}
@@ -573,18 +573,32 @@ const OrderManagement = () => {
                 Pending
               </Button>
               <Button
-                variant={filterStatus === 'approved' ? 'default' : 'outline'}
-                onClick={() => setFilterStatus('approved')}
+                variant={filterStatus === 'planned' ? 'default' : 'outline'}
+                onClick={() => setFilterStatus('planned')}
                 size="sm"
               >
-                Approved
+                Planned
               </Button>
               <Button
-                variant={filterStatus === 'completed' ? 'default' : 'outline'}
-                onClick={() => setFilterStatus('completed')}
+                variant={filterStatus === 'in_transit_pickup' ? 'default' : 'outline'}
+                onClick={() => setFilterStatus('in_transit_pickup')}
                 size="sm"
               >
-                Completed
+                In-Transit
+              </Button>
+              <Button
+                variant={filterStatus === 'delivered' ? 'default' : 'outline'}
+                onClick={() => setFilterStatus('delivered')}
+                size="sm"
+              >
+                Delivered
+              </Button>
+              <Button
+                variant={filterStatus === 'paid' ? 'default' : 'outline'}
+                onClick={() => setFilterStatus('paid')}
+                size="sm"
+              >
+                Paid
               </Button>
             </div>
           </div>
