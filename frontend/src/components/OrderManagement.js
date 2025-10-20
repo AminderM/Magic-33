@@ -21,6 +21,7 @@ const OrderManagement = () => {
   const [showRateConfirmation, setShowRateConfirmation] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [parsingDocument, setParsingDocument] = useState(false);
+  const [editingOrder, setEditingOrder] = useState(null);
   const [formData, setFormData] = useState({
     equipment_id: '',
     shipper_name: '',
