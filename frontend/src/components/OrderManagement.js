@@ -805,6 +805,7 @@ const OrderManagement = () => {
                   <tr>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Order #</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Confirmed Rate</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Name</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Address</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
