@@ -173,12 +173,38 @@ class BookingBase(BaseModel):
     pickup_location: str
     delivery_location: str
     notes: Optional[str] = None
+    # Shipper information
+    shipper_name: Optional[str] = None
+    shipper_address: Optional[str] = None
+    # Pickup details
+    pickup_city: Optional[str] = None
+    pickup_state: Optional[str] = None
+    pickup_country: Optional[str] = "USA"
+    # Delivery details
+    delivery_city: Optional[str] = None
+    delivery_state: Optional[str] = None
+    delivery_country: Optional[str] = "USA"
+    # Cargo information
+    commodity: Optional[str] = None
+    weight: Optional[float] = None  # in lbs
+    cubes: Optional[float] = None  # cubic feet
+    # Vehicle and driver information
+    tractor_number: Optional[str] = None
+    trailer_number: Optional[str] = None
+    driver_name: Optional[str] = None
+    driver_id: Optional[str] = None
+    # Timing information
+    pickup_time_planned: Optional[datetime] = None
+    pickup_time_actual: Optional[datetime] = None
+    delivery_time_planned: Optional[datetime] = None
+    delivery_time_actual: Optional[datetime] = None
     
 class BookingCreate(BookingBase):
     pass
 
 class Booking(BookingBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    order_number: str = Field(default_factory=lambda: f"ORD-{str(uuid.uuid4())[:8].upper()}")
     requester_id: str
     equipment_owner_id: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
