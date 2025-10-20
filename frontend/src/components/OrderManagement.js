@@ -701,6 +701,17 @@ const OrderManagement = () => {
                         onChange={(e) => handleInputChange('end_date', e.target.value)}
                       />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmed_rate">Confirmed Rate ($)</Label>
+                      <Input
+                        id="confirmed_rate"
+                        type="number"
+                        step="0.01"
+                        value={formData.confirmed_rate}
+                        onChange={(e) => handleInputChange('confirmed_rate', e.target.value)}
+                        placeholder="Enter confirmed rate"
+                      />
+                    </div>
                     <div className="space-y-2 col-span-2">
                       <Label htmlFor="notes">Notes</Label>
                       <Textarea
