@@ -512,7 +512,7 @@ const OrderManagement = () => {
             </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Create New Order</DialogTitle>
+                <DialogTitle>{editingOrder ? 'Edit Order' : 'Create New Order'}</DialogTitle>
               </DialogHeader>
               <div className="space-y-6 py-4">
                 {/* Equipment Selection */}
