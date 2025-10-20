@@ -600,15 +600,18 @@ async def parse_rate_confirmation(
     """
     Parse a rate confirmation document using AI to extract order information
     """
+    logger.info(f"Parsing rate confirmation: filename={file.filename}, content_type={file.content_type}")
+    
     try:
         from emergentintegrations.llm.chat import LlmChat, UserMessage, FileContentWithMimeType
         import tempfile
         import shutil
         
         # Validate file type
-        allowed_types = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg']
+        allowed_types = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/webp']
         if file.content_type not in allowed_types:
-            raise HTTPException(status_code=400, detail="Only PDF and image files are supported")
+            logger.error(f"Invalid file type: {file.content_type}")
+            raise HTTPException(status_code=400, detail=f"Unsupported file type: {file.content_type}. Only PDF and image files (JPEG, PNG) are supported.")
         
         # Save uploaded file temporarily
         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
