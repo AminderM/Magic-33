@@ -569,6 +569,29 @@ async def get_booking_requests(current_user: User = Depends(get_current_user)):
     bookings = await db.bookings.find({"equipment_owner_id": current_user.id}).to_list(length=None)
     return [Booking(**booking) for booking in bookings]
 
+@api_router.patch("/bookings/{booking_id}/status", response_model=dict)
+async def update_booking_status(
+    booking_id: str, 
+    status: Literal["pending", "planned", "in_transit_pickup", "at_pickup", "in_transit_delivery", "at_delivery", "delivered", "invoiced", "payment_overdue", "paid"],
+    current_user: User = Depends(get_current_user)
+):
+    # Find the booking
+    booking = await db.bookings.find_one({"id": booking_id})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    # Check if user has permission to update (either requester or equipment owner)
+    if booking["requester_id"] != current_user.id and booking["equipment_owner_id"] != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this booking")
+    
+    # Update the status
+    await db.bookings.update_one(
+        {"id": booking_id},
+        {"$set": {"status": status}}
+    )
+    
+    return {"message": "Status updated successfully", "status": status}
+
 # WebSocket Routes for Real-Time Tracking
 
 @app.websocket("/ws/fleet-tracking")
