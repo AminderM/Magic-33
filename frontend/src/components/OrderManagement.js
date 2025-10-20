@@ -334,6 +334,86 @@ const OrderManagement = () => {
             <i className="fas fa-sync-alt mr-2"></i>
             Refresh
           </Button>
+          
+          {/* Rate Confirmation Dialog */}
+          <Dialog open={showRateConfirmation} onOpenChange={setShowRateConfirmation}>
+            <DialogTrigger asChild>
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                <i className="fas fa-file-invoice mr-2"></i>
+                Rate Confirmation
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Upload Rate Confirmation</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="text-sm text-gray-600">
+                  Upload a rate confirmation document (PDF or image) and our AI will automatically extract order details.
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="rate-confirmation-file">Document File</Label>
+                  <Input
+                    id="rate-confirmation-file"
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileUpload}
+                    disabled={parsingDocument}
+                  />
+                  {uploadedFile && (
+                    <div className="text-sm text-green-600 flex items-center">
+                      <i className="fas fa-check-circle mr-2"></i>
+                      {uploadedFile.name}
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
+                  <div className="flex items-start">
+                    <i className="fas fa-info-circle text-blue-600 mt-0.5 mr-2"></i>
+                    <div>
+                      <p className="font-semibold text-blue-900">AI-Powered Extraction</p>
+                      <p className="text-blue-700 mt-1">
+                        Our AI will extract shipper details, pickup/delivery locations, commodity info, and more from your document.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-2 pt-4 border-t">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setShowRateConfirmation(false);
+                      setUploadedFile(null);
+                    }}
+                    disabled={parsingDocument}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={handleParseRateConfirmation}
+                    disabled={!uploadedFile || parsingDocument}
+                    className="bg-purple-600 hover:bg-purple-700"
+                  >
+                    {parsingDocument ? (
+                      <>
+                        <i className="fas fa-spinner fa-spin mr-2"></i>
+                        Parsing Document...
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-magic mr-2"></i>
+                        Parse & Create Order
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
           <Dialog open={showOrderForm} onOpenChange={setShowOrderForm}>
             <DialogTrigger asChild>
               <Button className="btn-primary">
