@@ -225,7 +225,6 @@ const EquipmentManagement = ({ onStatsUpdate }) => {
                       <SelectContent>
                         {equipmentTypes.map(type => (
                           <SelectItem key={type.value} value={type.value}>
-                            <i className={`fas ${type.icon} mr-2`}></i>
                             {type.label}
                           </SelectItem>
                         ))}
