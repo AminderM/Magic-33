@@ -969,10 +969,17 @@ const OrderManagement = () => {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" title="View Order">
                             <i className="fas fa-eye"></i>
                           </Button>
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleEditOrder(order)}
+                            disabled={order.status !== 'pending'}
+                            title={order.status === 'pending' ? 'Edit Order' : 'Only pending orders can be edited'}
+                            className={order.status !== 'pending' ? 'opacity-50 cursor-not-allowed' : ''}
+                          >
                             <i className="fas fa-edit"></i>
                           </Button>
                         </div>
