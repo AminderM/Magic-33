@@ -113,6 +113,7 @@ const OrderManagement = () => {
       driver_id: '',
       pickup_time_planned: '',
       delivery_time_planned: '',
+      confirmed_rate: '',
       notes: '',
       start_date: '',
       end_date: ''
