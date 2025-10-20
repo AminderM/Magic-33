@@ -48,6 +48,7 @@ const OrderManagement = () => {
 
   useEffect(() => {
     loadOrders();
+    loadEquipment();
   }, [user]);
 
   const loadOrders = async () => {
@@ -67,6 +68,95 @@ const OrderManagement = () => {
       toast.error('Error loading orders');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadEquipment = async () => {
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/equipment/my`);
+      if (response.ok) {
+        const data = await response.json();
+        setEquipment(data);
+      }
+    } catch (error) {
+      console.error('Error loading equipment:', error);
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      equipment_id: '',
+      shipper_name: '',
+      shipper_address: '',
+      pickup_location: '',
+      pickup_city: '',
+      pickup_state: '',
+      pickup_country: 'USA',
+      delivery_location: '',
+      delivery_city: '',
+      delivery_state: '',
+      delivery_country: 'USA',
+      commodity: '',
+      weight: '',
+      cubes: '',
+      tractor_number: '',
+      trailer_number: '',
+      driver_name: '',
+      driver_id: '',
+      pickup_time_planned: '',
+      delivery_time_planned: '',
+      notes: '',
+      start_date: '',
+      end_date: ''
+    });
+  };
+
+  const handleSubmitOrder = async () => {
+    try {
+      // Validate required fields
+      if (!formData.equipment_id) {
+        toast.error('Please select equipment');
+        return;
+      }
+      if (!formData.pickup_location || !formData.delivery_location) {
+        toast.error('Please provide pickup and delivery locations');
+        return;
+      }
+      if (!formData.start_date || !formData.end_date) {
+        toast.error('Please provide start and end dates');
+        return;
+      }
+
+      const orderData = {
+        ...formData,
+        weight: formData.weight ? parseFloat(formData.weight) : null,
+        cubes: formData.cubes ? parseFloat(formData.cubes) : null,
+        pickup_time_planned: formData.pickup_time_planned || null,
+        delivery_time_planned: formData.delivery_time_planned || null,
+        start_date: new Date(formData.start_date).toISOString(),
+        end_date: new Date(formData.end_date).toISOString()
+      };
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings`, {
+        method: 'POST',
+        body: JSON.stringify(orderData)
+      });
+
+      if (response.ok) {
+        toast.success('Order created successfully!');
+        setShowOrderForm(false);
+        resetForm();
+        loadOrders();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to create order');
+      }
+    } catch (error) {
+      toast.error('Error creating order');
     }
   };
 
