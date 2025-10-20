@@ -33,6 +33,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
+      <Route path="/apps" element={<AppsPage />} />
       <Route path="/auth" element={user ? <Navigate to="/dashboard" /> : <AuthPage />} />
       <Route 
         path="/dashboard" 
