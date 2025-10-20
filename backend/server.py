@@ -71,6 +71,7 @@ class EquipmentType(str, Enum):
     BIG_RIG = "big_rig"
     FORKLIFT = "forklift"
     EXCAVATOR = "excavator"
+    TRACTOR = "tractor"
 
 class RegistrationStatus(str, Enum):
     PENDING = "pending"
