@@ -676,6 +676,8 @@ Return ONLY the JSON object, no additional text or explanation.
             
             response = await chat.send_message(user_message)
             
+            logger.info(f"AI response received, length: {len(response)}")
+            
             # Parse the AI response
             response_text = response.strip()
             
