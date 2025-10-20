@@ -198,6 +198,8 @@ class BookingBase(BaseModel):
     pickup_time_actual: Optional[datetime] = None
     delivery_time_planned: Optional[datetime] = None
     delivery_time_actual: Optional[datetime] = None
+    # Rate information
+    confirmed_rate: Optional[float] = None
     
 class BookingCreate(BookingBase):
     pass
