@@ -2,16 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 
 const OrderManagement = () => {
   const { user, fetchWithAuth } = useAuth();
   const [orders, setOrders] = useState([]);
+  const [equipment, setEquipment] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [formData, setFormData] = useState({
+    equipment_id: '',
+    shipper_name: '',
+    shipper_address: '',
+    pickup_location: '',
+    pickup_city: '',
+    pickup_state: '',
+    pickup_country: 'USA',
+    delivery_location: '',
+    delivery_city: '',
+    delivery_state: '',
+    delivery_country: 'USA',
+    commodity: '',
+    weight: '',
+    cubes: '',
+    tractor_number: '',
+    trailer_number: '',
+    driver_name: '',
+    driver_id: '',
+    pickup_time_planned: '',
+    delivery_time_planned: '',
+    notes: '',
+    start_date: '',
+    end_date: ''
+  });
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
