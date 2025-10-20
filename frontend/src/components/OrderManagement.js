@@ -18,6 +18,9 @@ const OrderManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showOrderForm, setShowOrderForm] = useState(false);
+  const [showRateConfirmation, setShowRateConfirmation] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [parsingDocument, setParsingDocument] = useState(false);
   const [formData, setFormData] = useState({
     equipment_id: '',
     shipper_name: '',
