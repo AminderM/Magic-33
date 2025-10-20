@@ -291,11 +291,26 @@ const OrderManagement = () => {
         }
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to parse document');
+        
+        // Handle different error formats
+        let errorMessage = 'Failed to parse document';
+        
+        if (error.detail) {
+          if (typeof error.detail === 'string') {
+            errorMessage = error.detail;
+          } else if (Array.isArray(error.detail)) {
+            // Handle FastAPI validation errors
+            errorMessage = error.detail.map(err => err.msg || JSON.stringify(err)).join(', ');
+          } else if (typeof error.detail === 'object') {
+            errorMessage = JSON.stringify(error.detail);
+          }
+        }
+        
+        toast.error(errorMessage);
       }
     } catch (error) {
       console.error('Error parsing document:', error);
-      toast.error('Error parsing document');
+      toast.error(`Error parsing document: ${error.message || 'Unknown error'}`);
     } finally {
       setParsingDocument(false);
     }
