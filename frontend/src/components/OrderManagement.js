@@ -246,10 +246,14 @@ const OrderManagement = () => {
       const formDataUpload = new FormData();
       formDataUpload.append('file', uploadedFile);
 
-      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/parse-rate-confirmation`, {
+      // Use fetch directly with Authorization header for file upload
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${BACKEND_URL}/api/bookings/parse-rate-confirmation`, {
         method: 'POST',
         body: formDataUpload,
-        headers: {}  // Let browser set Content-Type with boundary
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (response.ok) {
