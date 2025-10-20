@@ -100,10 +100,10 @@ const FleetManagement = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900" data-testid="fleet-management-title">
-            Fleet Management Dashboard
+            Transport Hub - TMS Dashboard
           </h1>
           <p className="text-gray-600 mt-1">
-            Comprehensive overview and management of your fleet operations
+            Comprehensive Transportation Management System for your fleet operations
           </p>
         </div>
         
