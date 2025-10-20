@@ -256,7 +256,7 @@ const Dashboard = () => {
               </TabsContent>
 
               <TabsContent value="bookings" className="mt-6">
-                <BookingManagement />
+                <OrderManagement />
               </TabsContent>
 
               {user?.role === 'fleet_owner' && (
