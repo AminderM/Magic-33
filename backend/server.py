@@ -208,7 +208,7 @@ class Booking(BookingBase):
     requester_id: str
     equipment_owner_id: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    status: Literal["pending", "approved", "rejected", "completed", "cancelled"] = "pending"
+    status: Literal["pending", "planned", "in_transit_pickup", "at_pickup", "in_transit_delivery", "at_delivery", "delivered", "invoiced", "payment_overdue", "paid"] = "pending"
     total_cost: Optional[float] = None
 
 # Utility Functions
