@@ -708,7 +708,9 @@ Return ONLY the JSON object, no additional text or explanation.
     except HTTPException:
         raise
     except Exception as e:
+        import traceback
         logger.error(f"Error parsing rate confirmation: {e}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Error parsing document: {str(e)}")
 
 # WebSocket Routes for Real-Time Tracking
