@@ -592,6 +592,118 @@ async def update_booking_status(
     
     return {"message": "Status updated successfully", "status": status}
 
+@api_router.post("/bookings/parse-rate-confirmation", response_model=dict)
+async def parse_rate_confirmation(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Parse a rate confirmation document using AI to extract order information
+    """
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage, FileContentWithMimeType
+        import tempfile
+        import shutil
+        
+        # Validate file type
+        allowed_types = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg']
+        if file.content_type not in allowed_types:
+            raise HTTPException(status_code=400, detail="Only PDF and image files are supported")
+        
+        # Save uploaded file temporarily
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
+            shutil.copyfileobj(file.file, temp_file)
+            temp_file_path = temp_file.name
+        
+        try:
+            # Initialize AI chat with Gemini
+            api_key = os.environ.get('EMERGENT_LLM_KEY')
+            if not api_key:
+                raise HTTPException(status_code=500, detail="AI service not configured")
+            
+            chat = LlmChat(
+                api_key=api_key,
+                session_id=f"rate-conf-{current_user.id}",
+                system_message="You are an AI assistant specialized in extracting structured data from shipping and logistics documents."
+            ).with_model("gemini", "gemini-2.0-flash")
+            
+            # Prepare file for analysis
+            file_content = FileContentWithMimeType(
+                file_path=temp_file_path,
+                mime_type=file.content_type
+            )
+            
+            # Create detailed extraction prompt
+            extraction_prompt = """
+Analyze this rate confirmation or shipping document and extract the following information. 
+Return the data in JSON format with these exact field names:
+
+{
+  "shipper_name": "name of the shipper/sender",
+  "shipper_address": "full address of shipper",
+  "pickup_location": "pickup street address",
+  "pickup_city": "pickup city",
+  "pickup_state": "pickup state",
+  "pickup_country": "pickup country (default USA if not specified)",
+  "delivery_location": "delivery street address",
+  "delivery_city": "delivery city",
+  "delivery_state": "delivery state",
+  "delivery_country": "delivery country (default USA if not specified)",
+  "commodity": "type of goods being shipped",
+  "weight": "weight in pounds (number only)",
+  "cubes": "cubic feet (number only)",
+  "tractor_number": "tractor number if available",
+  "trailer_number": "trailer number if available",
+  "driver_name": "driver name if available",
+  "driver_id": "driver ID if available",
+  "pickup_time_planned": "planned pickup date and time in ISO format (YYYY-MM-DDTHH:MM:SS)",
+  "delivery_time_planned": "planned delivery date and time in ISO format (YYYY-MM-DDTHH:MM:SS)",
+  "notes": "any additional notes or special instructions"
+}
+
+If a field is not found in the document, set it to null. 
+Return ONLY the JSON object, no additional text or explanation.
+"""
+            
+            # Send message with file
+            user_message = UserMessage(
+                text=extraction_prompt,
+                file_contents=[file_content]
+            )
+            
+            response = await chat.send_message(user_message)
+            
+            # Parse the AI response
+            response_text = response.strip()
+            
+            # Try to extract JSON from response
+            if '```json' in response_text:
+                response_text = response_text.split('```json')[1].split('```')[0].strip()
+            elif '```' in response_text:
+                response_text = response_text.split('```')[1].split('```')[0].strip()
+            
+            try:
+                extracted_data = json.loads(response_text)
+            except json.JSONDecodeError:
+                raise HTTPException(status_code=500, detail="Failed to parse AI response")
+            
+            return {
+                "success": True,
+                "data": extracted_data,
+                "message": "Document parsed successfully"
+            }
+            
+        finally:
+            # Clean up temporary file
+            if os.path.exists(temp_file_path):
+                os.unlink(temp_file_path)
+                
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error parsing rate confirmation: {e}")
+        raise HTTPException(status_code=500, detail=f"Error parsing document: {str(e)}")
+
 # WebSocket Routes for Real-Time Tracking
 
 @app.websocket("/ws/fleet-tracking")
