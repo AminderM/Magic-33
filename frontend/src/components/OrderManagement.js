@@ -855,6 +855,9 @@ const OrderManagement = () => {
                           </SelectContent>
                         </Select>
                       </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-green-700">
+                        {order.confirmed_rate ? `$${order.confirmed_rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'N/A'}
+                      </td>
                       <td className="px-4 py-3 whitespace-nowrap">{order.shipper_name || 'N/A'}</td>
                       <td className="px-4 py-3 whitespace-nowrap">{order.shipper_address || 'N/A'}</td>
                       <td className="px-4 py-3 whitespace-nowrap">{order.pickup_location || 'N/A'}</td>
