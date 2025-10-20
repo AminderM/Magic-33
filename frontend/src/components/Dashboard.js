@@ -229,16 +229,16 @@ const Dashboard = () => {
                   <i className="fas fa-truck mr-2"></i>
                   Equipment
                 </TabsTrigger>
-                <TabsTrigger value="bookings" data-testid="bookings-tab">
-                  <i className="fas fa-calendar mr-2"></i>
-                  Bookings
-                </TabsTrigger>
                 {user?.role === 'fleet_owner' && (
                   <TabsTrigger value="drivers" data-testid="drivers-tab">
                     <i className="fas fa-users mr-2"></i>
                     Drivers
                   </TabsTrigger>
                 )}
+                <TabsTrigger value="bookings" data-testid="bookings-tab">
+                  <i className="fas fa-shopping-cart mr-2"></i>
+                  Orders
+                </TabsTrigger>
                 <TabsTrigger value="tracking" data-testid="tracking-tab">
                   <i className="fas fa-map-marker-alt mr-2"></i>
                   Tracking
