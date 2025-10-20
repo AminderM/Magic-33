@@ -18,6 +18,7 @@ import hashlib
 import json
 import asyncio
 from email_service import send_verification_email, send_company_verification_email, send_booking_confirmation_emails
+from websocket_manager import ConnectionManager
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
