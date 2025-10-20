@@ -221,10 +221,290 @@ const OrderManagement = () => {
             <i className="fas fa-sync-alt mr-2"></i>
             Refresh
           </Button>
-          <Button className="btn-primary">
-            <i className="fas fa-plus mr-2"></i>
-            New Order
-          </Button>
+          <Dialog open={showOrderForm} onOpenChange={setShowOrderForm}>
+            <DialogTrigger asChild>
+              <Button className="btn-primary">
+                <i className="fas fa-plus mr-2"></i>
+                New Order
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Create New Order</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6 py-4">
+                {/* Equipment Selection */}
+                <div className="space-y-2">
+                  <Label htmlFor="equipment_id">Equipment *</Label>
+                  <Select value={formData.equipment_id} onValueChange={(value) => handleInputChange('equipment_id', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select equipment" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {equipment.map(eq => (
+                        <SelectItem key={eq.id} value={eq.id}>
+                          {eq.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Shipper Information */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Shipper Information</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="shipper_name">Shipper Name</Label>
+                      <Input
+                        id="shipper_name"
+                        value={formData.shipper_name}
+                        onChange={(e) => handleInputChange('shipper_name', e.target.value)}
+                        placeholder="Enter shipper name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="shipper_address">Shipper Address</Label>
+                      <Input
+                        id="shipper_address"
+                        value={formData.shipper_address}
+                        onChange={(e) => handleInputChange('shipper_address', e.target.value)}
+                        placeholder="Enter shipper address"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pickup Information */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Pickup Details</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="pickup_location">Pickup Location *</Label>
+                      <Input
+                        id="pickup_location"
+                        value={formData.pickup_location}
+                        onChange={(e) => handleInputChange('pickup_location', e.target.value)}
+                        placeholder="Enter pickup address"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="pickup_city">Pickup City</Label>
+                      <Input
+                        id="pickup_city"
+                        value={formData.pickup_city}
+                        onChange={(e) => handleInputChange('pickup_city', e.target.value)}
+                        placeholder="Enter city"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="pickup_state">Pickup State</Label>
+                      <Input
+                        id="pickup_state"
+                        value={formData.pickup_state}
+                        onChange={(e) => handleInputChange('pickup_state', e.target.value)}
+                        placeholder="Enter state"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="pickup_country">Pickup Country</Label>
+                      <Input
+                        id="pickup_country"
+                        value={formData.pickup_country}
+                        onChange={(e) => handleInputChange('pickup_country', e.target.value)}
+                        placeholder="Enter country"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="pickup_time_planned">Planned Pickup Time</Label>
+                      <Input
+                        id="pickup_time_planned"
+                        type="datetime-local"
+                        value={formData.pickup_time_planned}
+                        onChange={(e) => handleInputChange('pickup_time_planned', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Delivery Information */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Delivery Details</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="delivery_location">Delivery Location *</Label>
+                      <Input
+                        id="delivery_location"
+                        value={formData.delivery_location}
+                        onChange={(e) => handleInputChange('delivery_location', e.target.value)}
+                        placeholder="Enter delivery address"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="delivery_city">Delivery City</Label>
+                      <Input
+                        id="delivery_city"
+                        value={formData.delivery_city}
+                        onChange={(e) => handleInputChange('delivery_city', e.target.value)}
+                        placeholder="Enter city"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="delivery_state">Delivery State</Label>
+                      <Input
+                        id="delivery_state"
+                        value={formData.delivery_state}
+                        onChange={(e) => handleInputChange('delivery_state', e.target.value)}
+                        placeholder="Enter state"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="delivery_country">Delivery Country</Label>
+                      <Input
+                        id="delivery_country"
+                        value={formData.delivery_country}
+                        onChange={(e) => handleInputChange('delivery_country', e.target.value)}
+                        placeholder="Enter country"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="delivery_time_planned">Planned Delivery Time</Label>
+                      <Input
+                        id="delivery_time_planned"
+                        type="datetime-local"
+                        value={formData.delivery_time_planned}
+                        onChange={(e) => handleInputChange('delivery_time_planned', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cargo Information */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Cargo Information</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="commodity">Commodity</Label>
+                      <Input
+                        id="commodity"
+                        value={formData.commodity}
+                        onChange={(e) => handleInputChange('commodity', e.target.value)}
+                        placeholder="Enter commodity type"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="weight">Weight (lbs)</Label>
+                      <Input
+                        id="weight"
+                        type="number"
+                        value={formData.weight}
+                        onChange={(e) => handleInputChange('weight', e.target.value)}
+                        placeholder="Enter weight"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="cubes">Cubes (cu ft)</Label>
+                      <Input
+                        id="cubes"
+                        type="number"
+                        value={formData.cubes}
+                        onChange={(e) => handleInputChange('cubes', e.target.value)}
+                        placeholder="Enter cubic feet"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Vehicle and Driver Information */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Vehicle & Driver Information</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="tractor_number">Tractor Number</Label>
+                      <Input
+                        id="tractor_number"
+                        value={formData.tractor_number}
+                        onChange={(e) => handleInputChange('tractor_number', e.target.value)}
+                        placeholder="Enter tractor number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="trailer_number">Trailer Number</Label>
+                      <Input
+                        id="trailer_number"
+                        value={formData.trailer_number}
+                        onChange={(e) => handleInputChange('trailer_number', e.target.value)}
+                        placeholder="Enter trailer number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="driver_name">Driver Name</Label>
+                      <Input
+                        id="driver_name"
+                        value={formData.driver_name}
+                        onChange={(e) => handleInputChange('driver_name', e.target.value)}
+                        placeholder="Enter driver name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="driver_id">Driver ID</Label>
+                      <Input
+                        id="driver_id"
+                        value={formData.driver_id}
+                        onChange={(e) => handleInputChange('driver_id', e.target.value)}
+                        placeholder="Enter driver ID"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Date and Notes */}
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Additional Information</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="start_date">Start Date *</Label>
+                      <Input
+                        id="start_date"
+                        type="date"
+                        value={formData.start_date}
+                        onChange={(e) => handleInputChange('start_date', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="end_date">End Date *</Label>
+                      <Input
+                        id="end_date"
+                        type="date"
+                        value={formData.end_date}
+                        onChange={(e) => handleInputChange('end_date', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2 col-span-2">
+                      <Label htmlFor="notes">Notes</Label>
+                      <Textarea
+                        id="notes"
+                        value={formData.notes}
+                        onChange={(e) => handleInputChange('notes', e.target.value)}
+                        placeholder="Enter any additional notes"
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Form Actions */}
+                <div className="flex justify-end space-x-2 pt-4 border-t">
+                  <Button variant="outline" onClick={() => setShowOrderForm(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmitOrder} className="btn-primary">
+                    Create Order
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
