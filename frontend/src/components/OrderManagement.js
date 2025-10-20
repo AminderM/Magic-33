@@ -788,11 +788,15 @@ const OrderManagement = () => {
 
                 {/* Form Actions */}
                 <div className="flex justify-end space-x-2 pt-4 border-t">
-                  <Button variant="outline" onClick={() => setShowOrderForm(false)}>
+                  <Button variant="outline" onClick={() => {
+                    setShowOrderForm(false);
+                    setEditingOrder(null);
+                    resetForm();
+                  }}>
                     Cancel
                   </Button>
                   <Button onClick={handleSubmitOrder} className="btn-primary">
-                    Create Order
+                    {editingOrder ? 'Update Order' : 'Create Order'}
                   </Button>
                 </div>
               </div>
