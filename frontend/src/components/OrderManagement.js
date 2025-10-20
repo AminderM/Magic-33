@@ -227,6 +227,80 @@ const OrderManagement = () => {
     });
   };
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+    }
+  };
+
+  const handleParseRateConfirmation = async () => {
+    if (!uploadedFile) {
+      toast.error('Please select a file to upload');
+      return;
+    }
+
+    setParsingDocument(true);
+
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', uploadedFile);
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/parse-rate-confirmation`, {
+        method: 'POST',
+        body: formDataUpload,
+        headers: {}  // Let browser set Content-Type with boundary
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          // Pre-fill the form with extracted data
+          const extractedData = result.data;
+          
+          setFormData(prev => ({
+            ...prev,
+            shipper_name: extractedData.shipper_name || '',
+            shipper_address: extractedData.shipper_address || '',
+            pickup_location: extractedData.pickup_location || '',
+            pickup_city: extractedData.pickup_city || '',
+            pickup_state: extractedData.pickup_state || '',
+            pickup_country: extractedData.pickup_country || 'USA',
+            delivery_location: extractedData.delivery_location || '',
+            delivery_city: extractedData.delivery_city || '',
+            delivery_state: extractedData.delivery_state || '',
+            delivery_country: extractedData.delivery_country || 'USA',
+            commodity: extractedData.commodity || '',
+            weight: extractedData.weight || '',
+            cubes: extractedData.cubes || '',
+            tractor_number: extractedData.tractor_number || '',
+            trailer_number: extractedData.trailer_number || '',
+            driver_name: extractedData.driver_name || '',
+            driver_id: extractedData.driver_id || '',
+            pickup_time_planned: extractedData.pickup_time_planned ? extractedData.pickup_time_planned.slice(0, 16) : '',
+            delivery_time_planned: extractedData.delivery_time_planned ? extractedData.delivery_time_planned.slice(0, 16) : '',
+            notes: extractedData.notes || ''
+          }));
+
+          toast.success('Document parsed successfully! Review and submit the order.');
+          setShowRateConfirmation(false);
+          setShowOrderForm(true);
+        } else {
+          toast.error('Failed to extract data from document');
+        }
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to parse document');
+      }
+    } catch (error) {
+      console.error('Error parsing document:', error);
+      toast.error('Error parsing document');
+    } finally {
+      setParsingDocument(false);
+    }
+  };
+
   const filteredOrders = orders.filter(order => {
     const matchesSearch = !searchTerm || 
       order.order_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
