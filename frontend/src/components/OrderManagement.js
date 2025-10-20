@@ -293,6 +293,7 @@ const OrderManagement = () => {
             driver_id: extractedData.driver_id || '',
             pickup_time_planned: extractedData.pickup_time_planned ? extractedData.pickup_time_planned.slice(0, 16) : '',
             delivery_time_planned: extractedData.delivery_time_planned ? extractedData.delivery_time_planned.slice(0, 16) : '',
+            confirmed_rate: extractedData.confirmed_rate || '',
             notes: extractedData.notes || ''
           }));
 
