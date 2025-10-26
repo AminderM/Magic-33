@@ -14,6 +14,7 @@ import CompanyProfile from './CompanyProfile';
 
 const Dashboard = () => {
   const { user, logout, fetchWithAuth } = useAuth();
+  const [activeTab, setActiveTab] = useState(user?.role === 'fleet_owner' ? 'fleet' : 'equipment');
   const [stats, setStats] = useState({
     totalEquipment: 0,
     activeBookings: 0,
