@@ -132,15 +132,35 @@ const Dashboard = () => {
                 <div className="font-semibold">{company?.name || 'No Company'}</div>
                 {company && getStatusBadge(company.verification_status)}
               </div>
-              <Button 
-                onClick={logout}
-                variant="outline" 
-                className="text-white border-white hover:bg-white hover:text-gray-900"
-                data-testid="logout-btn"
-              >
-                <i className="fas fa-sign-out-alt mr-2"></i>
-                Logout
-              </Button>
+              
+              {/* Company Profile Dropdown */}
+              <div className="relative group">
+                <Button 
+                  variant="outline" 
+                  className="text-white border-white hover:bg-white hover:text-gray-900"
+                >
+                  <i className="fas fa-building mr-2"></i>
+                  Company
+                  <i className="fas fa-chevron-down ml-2"></i>
+                </Button>
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                  <button
+                    onClick={() => setActiveTab('profile')}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <i className="fas fa-id-card mr-2"></i>
+                    Company Profile
+                  </button>
+                  <div className="border-t border-gray-100"></div>
+                  <button
+                    onClick={logout}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                  >
+                    <i className="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
