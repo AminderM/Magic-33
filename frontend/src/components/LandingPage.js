@@ -55,99 +55,115 @@ const LandingPage = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Fleet Management */}
+            {/* Transportation Management System */}
             <div className="feature-card fade-in">
               <div className="feature-icon">
                 <i className="fas fa-truck"></i>
               </div>
-              <h3 className="text-xl font-bold mb-3">Fleet Management</h3>
+              <h3 className="text-xl font-bold mb-3">Transportation Management System</h3>
               <p className="text-gray-600 mb-4">
-                Manage your entire fleet of trucks, cranes, and specialized equipment from one dashboard.
+                Complete fleet operations with real-time tracking, order management, and comprehensive analytics.
               </p>
               <ul className="text-sm text-gray-500 space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time tracking</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Driver management</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Maintenance scheduling</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time GPS tracking</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Order management</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>AI-powered tools</li>
               </ul>
             </div>
 
-            {/* Equipment Marketplace */}
+            {/* Heavy Transportation Management System */}
+            <div className="feature-card fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-truck-monster"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Heavy Transportation Management System</h3>
+              <p className="text-gray-600 mb-4">
+                Specialized for oversized loads, heavy equipment hauling, and permit management.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Oversized load management</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Permit tracking</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Route planning</li>
+              </ul>
+            </div>
+
+            {/* Broker Management System */}
             <div className="feature-card fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="feature-icon">
-                <i className="fas fa-search"></i>
+                <i className="fas fa-handshake"></i>
               </div>
-              <h3 className="text-xl font-bold mb-3">Equipment Marketplace</h3>
+              <h3 className="text-xl font-bold mb-3">Broker Management System</h3>
               <p className="text-gray-600 mb-4">
-                Browse and book specialized equipment including HVAC trucks, cranes, and big rigs.
+                Streamline freight brokerage with carrier management, load matching, and workflows.
               </p>
               <ul className="text-sm text-gray-500 space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Advanced filtering</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Instant availability</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Competitive pricing</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Carrier network</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Load matching</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Rate management</li>
               </ul>
             </div>
 
-            {/* Real-time Tracking */}
+            {/* Dispatch Management System */}
+            <div className="feature-card fade-in" style={{ animationDelay: '0.3s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-route"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Dispatch Management System</h3>
+              <p className="text-gray-600 mb-4">
+                Optimize dispatching with real-time load assignment and driver communication.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time dispatch</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Load optimization</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>ETA tracking</li>
+              </ul>
+            </div>
+
+            {/* Freight Management System */}
             <div className="feature-card fade-in" style={{ animationDelay: '0.4s' }}>
               <div className="feature-icon">
-                <i className="fas fa-map-marker-alt"></i>
+                <i className="fas fa-boxes"></i>
               </div>
-              <h3 className="text-xl font-bold mb-3">Live Location Tracking</h3>
+              <h3 className="text-xl font-bold mb-3">Freight Management System</h3>
               <p className="text-gray-600 mb-4">
-                Track your fleet in real-time with GPS integration and route optimization.
+                End-to-end freight operations covering shipment tracking and documentation.
               </p>
               <ul className="text-sm text-gray-500 space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>GPS integration</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Route history</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Geofencing alerts</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Shipment tracking</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Multi-modal transport</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Freight audit</li>
               </ul>
             </div>
 
-            {/* Document Management */}
+            {/* Vehicle Management System */}
+            <div className="feature-card fade-in" style={{ animationDelay: '0.5s' }}>
+              <div className="feature-icon">
+                <i className="fas fa-tools"></i>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Vehicle Management System</h3>
+              <p className="text-gray-600 mb-4">
+                Complete fleet maintenance including scheduling, inspections, and fuel management.
+              </p>
+              <ul className="text-sm text-gray-500 space-y-2">
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Preventive maintenance</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>DVIR inspections</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Fuel tracking</li>
+              </ul>
+            </div>
+
+            {/* Safety and Compliance System */}
             <div className="feature-card fade-in" style={{ animationDelay: '0.6s' }}>
               <div className="feature-icon">
-                <i className="fas fa-file-alt"></i>
+                <i className="fas fa-shield-alt"></i>
               </div>
-              <h3 className="text-xl font-bold mb-3">Document Management</h3>
+              <h3 className="text-xl font-bold mb-3">Safety and Compliance System</h3>
               <p className="text-gray-600 mb-4">
-                Store and manage insurance certificates, maintenance records, and compliance documents.
+                Ensure full regulatory compliance with DOT, FMCSA, and safety regulations.
               </p>
               <ul className="text-sm text-gray-500 space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Secure storage</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Compliance tracking</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Easy sharing</li>
-              </ul>
-            </div>
-
-            {/* Booking System */}
-            <div className="feature-card fade-in" style={{ animationDelay: '0.8s' }}>
-              <div className="feature-icon">
-                <i className="fas fa-calendar-check"></i>
-              </div>
-              <h3 className="text-xl font-bold mb-3">Smart Booking</h3>
-              <p className="text-gray-600 mb-4">
-                Streamlined booking system with real-time availability and automated scheduling.
-              </p>
-              <ul className="text-sm text-gray-500 space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time availability</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Automated invoicing</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Payment processing</li>
-              </ul>
-            </div>
-
-            {/* Multi-Role Access */}
-            <div className="feature-card fade-in" style={{ animationDelay: '1.0s' }}>
-              <div className="feature-icon">
-                <i className="fas fa-users"></i>
-              </div>
-              <h3 className="text-xl font-bold mb-3">Multi-Role Platform</h3>
-              <p className="text-gray-600 mb-4">
-                Designed for manufacturers, fleet owners, drivers, and construction companies.
-              </p>
-              <ul className="text-sm text-gray-500 space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Role-based access</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Company verification</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Custom workflows</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>DOT/FMCSA compliance</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Driver qualification</li>
+                <li><i className="fas fa-check text-green-500 mr-2"></i>Safety programs</li>
               </ul>
             </div>
           </div>
