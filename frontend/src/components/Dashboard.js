@@ -289,6 +289,10 @@ const Dashboard = () => {
               <TabsContent value="tracking" className="mt-6">
                 <LocationTracking />
               </TabsContent>
+
+              <TabsContent value="profile" className="mt-6">
+                <CompanyProfile />
+              </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
