@@ -10,6 +10,7 @@ import DriverManagement from './DriverManagement';
 import OrderManagement from './OrderManagement';
 import LocationTracking from './LocationTracking';
 import FleetManagement from './FleetManagement';
+import CompanyProfile from './CompanyProfile';
 
 const Dashboard = () => {
   const { user, logout, fetchWithAuth } = useAuth();
