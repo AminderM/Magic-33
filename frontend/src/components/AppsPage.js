@@ -11,8 +11,8 @@ const AppsPage = () => {
   const apps = [
     {
       id: 'tms',
-      name: 'Transport Hub - TMS',
-      tagline: 'Complete Transportation Management System',
+      name: 'Transportation Management System',
+      tagline: 'Complete Fleet & Logistics Solution',
       description: 'Manage your entire fleet operations with real-time tracking, order management, and comprehensive analytics. Perfect for trucking companies, fleet owners, and logistics providers.',
       icon: 'fa-truck',
       color: 'blue',
@@ -31,97 +31,116 @@ const AppsPage = () => {
       route: '/dashboard'
     },
     {
-      id: 'wms',
-      name: 'Warehouse Management System',
-      tagline: 'Optimize Your Warehouse Operations',
-      description: 'Streamline inventory management, order fulfillment, and warehouse operations with advanced automation and real-time visibility.',
-      icon: 'fa-warehouse',
-      color: 'green',
-      features: [
-        'Inventory Management',
-        'Order Fulfillment',
-        'Barcode & RFID Integration',
-        'Warehouse Optimization',
-        'Multi-location Support',
-        'Reporting & Analytics'
-      ],
-      pricing: '$249/month',
-      popular: false,
-      comingSoon: true
-    },
-    {
-      id: 'procurement',
-      name: 'Procurement Management',
-      tagline: 'Streamline Your Procurement Process',
-      description: 'Automate purchasing, vendor management, and procurement workflows to reduce costs and improve efficiency.',
-      icon: 'fa-shopping-cart',
-      color: 'purple',
-      features: [
-        'Purchase Order Management',
-        'Vendor Management',
-        'RFQ & Bidding',
-        'Contract Management',
-        'Approval Workflows',
-        'Spend Analytics'
-      ],
-      pricing: '$199/month',
-      popular: false,
-      comingSoon: true
-    },
-    {
-      id: 'manufacturing',
-      name: 'Manufacturing Operations',
-      tagline: 'Manufacturing Execution System',
-      description: 'Coordinate production planning, scheduling, and shop floor operations for maximum efficiency and quality control.',
-      icon: 'fa-industry',
+      id: 'heavy-tms',
+      name: 'Heavy Transportation Management System',
+      tagline: 'Specialized Heavy Haul Operations',
+      description: 'Purpose-built for oversized loads, heavy equipment hauling, and specialized transportation with permit management and route planning.',
+      icon: 'fa-truck-monster',
       color: 'orange',
       features: [
-        'Production Planning',
-        'Work Order Management',
-        'Quality Control',
-        'Equipment Maintenance',
-        'Material Tracking',
-        'Performance Metrics'
+        'Oversized Load Management',
+        'Permit Tracking & Management',
+        'Route Planning for Heavy Loads',
+        'Equipment Specifications',
+        'Weight & Dimension Tracking',
+        'Specialized Documentation'
+      ],
+      pricing: '$399/month',
+      popular: false,
+      comingSoon: true
+    },
+    {
+      id: 'broker',
+      name: 'Broker Management System',
+      tagline: 'Freight Brokerage Platform',
+      description: 'Streamline freight brokerage operations with carrier management, load matching, and automated workflows for brokers and freight forwarders.',
+      icon: 'fa-handshake',
+      color: 'green',
+      features: [
+        'Carrier Network Management',
+        'Load Board Integration',
+        'Automated Load Matching',
+        'Rate Management',
+        'Invoice & Payment Processing',
+        'Customer Portal'
       ],
       pricing: '$349/month',
       popular: false,
       comingSoon: true
     },
     {
-      id: 'supply-chain',
-      name: 'Supply Chain Analytics',
-      tagline: 'Data-Driven Supply Chain Insights',
-      description: 'Gain complete visibility into your supply chain with AI-powered analytics, forecasting, and optimization tools.',
-      icon: 'fa-chart-line',
-      color: 'indigo',
+      id: 'dispatch',
+      name: 'Dispatch Management System',
+      tagline: 'Intelligent Dispatch Operations',
+      description: 'Optimize dispatching with real-time load assignment, driver communication, and route optimization for maximum efficiency.',
+      icon: 'fa-route',
+      color: 'purple',
       features: [
-        'Demand Forecasting',
-        'Supply Chain Visibility',
-        'Performance Dashboards',
-        'Risk Management',
-        'AI-Powered Insights',
-        'Custom Reports'
+        'Real-time Dispatch Board',
+        'Load Assignment & Optimization',
+        'Driver Communication',
+        'Route Optimization',
+        'ETA Tracking',
+        'Performance Analytics'
       ],
       pricing: '$279/month',
       popular: false,
       comingSoon: true
     },
     {
-      id: 'compliance',
-      name: 'Compliance & Documentation',
-      tagline: 'Stay Compliant with Ease',
-      description: 'Manage regulatory compliance, certifications, and documentation requirements across your supply chain operations.',
+      id: 'freight',
+      name: 'Freight Management System',
+      tagline: 'End-to-End Freight Operations',
+      description: 'Complete freight management solution covering shipment tracking, carrier selection, documentation, and freight audit & payment.',
+      icon: 'fa-boxes',
+      color: 'indigo',
+      features: [
+        'Shipment Tracking & Visibility',
+        'Multi-Modal Transportation',
+        'Carrier Selection & Rating',
+        'BOL & Documentation',
+        'Freight Audit & Payment',
+        'Analytics & Reporting'
+      ],
+      pricing: '$329/month',
+      popular: false,
+      comingSoon: true
+    },
+    {
+      id: 'vehicle',
+      name: 'Vehicle Management System',
+      tagline: 'Complete Fleet Maintenance & Asset Management',
+      description: 'Comprehensive vehicle lifecycle management including maintenance scheduling, inspections, fuel management, and asset tracking.',
+      icon: 'fa-tools',
+      color: 'cyan',
+      features: [
+        'Preventive Maintenance Scheduling',
+        'Vehicle Inspections (DVIR)',
+        'Fuel Management & Tracking',
+        'Service History & Records',
+        'Asset Lifecycle Management',
+        'Cost Analysis & Reporting'
+      ],
+      pricing: '$249/month',
+      popular: false,
+      comingSoon: true
+    },
+    {
+      id: 'safety',
+      name: 'Safety and Compliance System',
+      tagline: 'DOT Compliance & Safety Management',
+      description: 'Ensure full regulatory compliance with DOT, FMCSA, and safety regulations. Manage driver qualifications, HOS, drug testing, and safety programs.',
       icon: 'fa-shield-alt',
       color: 'red',
       features: [
-        'Document Management',
-        'Compliance Tracking',
-        'Certification Management',
-        'Audit Trail',
-        'Automated Alerts',
-        'Regulatory Updates'
+        'DOT/FMCSA Compliance Tracking',
+        'Driver Qualification Files (DQF)',
+        'Hours of Service (HOS) Management',
+        'Drug & Alcohol Testing Programs',
+        'Safety Training & Certifications',
+        'Accident & Incident Reporting'
       ],
-      pricing: '$179/month',
+      pricing: '$199/month',
       popular: false,
       comingSoon: true
     }
