@@ -239,7 +239,7 @@ const Dashboard = () => {
         {/* Main Content Tabs */}
         <Card className="dashboard-card">
           <CardContent className="p-6">
-            <Tabs defaultValue={user?.role === 'fleet_owner' ? 'fleet' : 'equipment'} className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className={`grid w-full ${user?.role === 'fleet_owner' ? 'grid-cols-5' : 'grid-cols-3'}`}>
                 {user?.role === 'fleet_owner' && (
                   <TabsTrigger value="fleet" data-testid="fleet-tab">
