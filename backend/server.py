@@ -419,6 +419,154 @@ async def get_my_company(current_user: User = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="No company found for this user")
     return Company(**company)
 
+@api_router.put("/companies/my", response_model=Company)
+async def update_my_company(
+    company_update: CompanyUpdate,
+    current_user: User = Depends(get_current_user)
+):
+    # Only fleet owners can update company
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only company admins can update company profile")
+    
+    company = await db.companies.find_one({"owner_id": current_user.id})
+    if not company:
+        raise HTTPException(status_code=404, detail="No company found for this user")
+    
+    # Update company with only provided fields
+    update_data = company_update.dict(exclude_unset=True)
+    
+    if update_data:
+        await db.companies.update_one(
+            {"id": company["id"]},
+            {"$set": update_data}
+        )
+    
+    updated_company = await db.companies.find_one({"id": company["id"]})
+    return Company(**updated_company)
+
+@api_router.post("/companies/my/upload-logo")
+async def upload_company_logo(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    # Only fleet owners can upload logo
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only company admins can upload logo")
+    
+    company = await db.companies.find_one({"owner_id": current_user.id})
+    if not company:
+        raise HTTPException(status_code=404, detail="No company found")
+    
+    # Validate file type
+    allowed_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp']
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Only image files (JPEG, PNG, WebP) are supported")
+    
+    import tempfile
+    import shutil
+    import base64
+    
+    # Save file temporarily and convert to base64 for storage
+    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
+        shutil.copyfileobj(file.file, temp_file)
+        temp_file_path = temp_file.name
+    
+    try:
+        # Read file and convert to base64
+        with open(temp_file_path, 'rb') as f:
+            file_data = f.read()
+            base64_data = base64.b64encode(file_data).decode('utf-8')
+            logo_url = f"data:{file.content_type};base64,{base64_data}"
+        
+        # Update company with logo URL
+        await db.companies.update_one(
+            {"id": company["id"]},
+            {"$set": {"logo_url": logo_url}}
+        )
+        
+        return {"message": "Logo uploaded successfully", "logo_url": logo_url}
+    finally:
+        if os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
+
+@api_router.post("/companies/my/upload-document")
+async def upload_company_document(
+    document_type: Literal["mc_authority", "insurance_certificate", "w9"],
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    # Only fleet owners can upload documents
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only company admins can upload documents")
+    
+    company = await db.companies.find_one({"owner_id": current_user.id})
+    if not company:
+        raise HTTPException(status_code=404, detail="No company found")
+    
+    # Validate file type
+    allowed_types = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg']
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Only PDF and image files are supported")
+    
+    import tempfile
+    import shutil
+    import base64
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
+        shutil.copyfileobj(file.file, temp_file)
+        temp_file_path = temp_file.name
+    
+    try:
+        with open(temp_file_path, 'rb') as f:
+            file_data = f.read()
+            base64_data = base64.b64encode(file_data).decode('utf-8')
+            doc_url = f"data:{file.content_type};base64,{base64_data}"
+        
+        # Map document type to field name
+        field_map = {
+            "mc_authority": "mc_authority_doc",
+            "insurance_certificate": "insurance_certificate_doc",
+            "w9": "w9_doc"
+        }
+        
+        await db.companies.update_one(
+            {"id": company["id"]},
+            {"$set": {field_map[document_type]: doc_url}}
+        )
+        
+        return {"message": f"{document_type.replace('_', ' ').title()} uploaded successfully"}
+    finally:
+        if os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
+
+# User Management Routes
+@api_router.get("/users/company", response_model=List[User])
+async def get_company_users(current_user: User = Depends(get_current_user)):
+    # Get company
+    company = await db.companies.find_one({"owner_id": current_user.id})
+    if not company:
+        raise HTTPException(status_code=404, detail="No company found")
+    
+    # Get all users for this company (users who registered with this company)
+    users = await db.users.find({"company_id": company["id"]}).to_list(length=None)
+    return [User(**user) for user in users]
+
+@api_router.delete("/users/{user_id}")
+async def delete_user(user_id: str, current_user: User = Depends(get_current_user)):
+    # Only fleet owners can delete users
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only company admins can delete users")
+    
+    # Cannot delete yourself
+    if user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="Cannot delete your own account")
+    
+    result = await db.users.delete_one({"id": user_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"message": "User deleted successfully"}
+
 # Equipment Routes
 @api_router.post("/equipment", response_model=dict)
 async def create_equipment(equipment_data: EquipmentCreate, current_user: User = Depends(get_current_user)):
