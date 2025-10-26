@@ -110,10 +110,43 @@ class CompanyBase(BaseModel):
     city: str
     state: str
     zip_code: str
+    country: str = "USA"
     tax_id: Optional[str] = None
+    # Transportation credentials
+    mc_number: Optional[str] = None  # Motor Carrier Number
+    dot_number: Optional[str] = None  # Department of Transportation Number
+    nsc_number: Optional[str] = None  # National Safety Code (Canadian)
+    # Contact information
+    phone_number: Optional[str] = None
+    company_email: Optional[str] = None  # Linked with MC# account
+    correspondence_email: Optional[str] = None
+    website: Optional[str] = None
+    # Company branding
+    logo_url: Optional[str] = None
+    # Documents
+    mc_authority_doc: Optional[str] = None
+    insurance_certificate_doc: Optional[str] = None
+    w9_doc: Optional[str] = None
     
 class CompanyCreate(CompanyBase):
     pass
+
+class CompanyUpdate(BaseModel):
+    name: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
+    country: Optional[str] = None
+    tax_id: Optional[str] = None
+    mc_number: Optional[str] = None
+    dot_number: Optional[str] = None
+    nsc_number: Optional[str] = None
+    phone_number: Optional[str] = None
+    company_email: Optional[str] = None
+    correspondence_email: Optional[str] = None
+    website: Optional[str] = None
+    logo_url: Optional[str] = None
 
 class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
