@@ -1126,8 +1126,7 @@ const OrderManagement = () => {
                   <i className="fas fa-clipboard-list text-gray-400 text-5xl mb-4"></i>
                   <p className="text-gray-600">No active orders found</p>
                 </div>
-              ) : viewMode === 'list' ? (
-                // List View - Table
+              ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b-2 border-gray-200">
@@ -1136,10 +1135,26 @@ const OrderManagement = () => {
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Confirmed Rate</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Address</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Country</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Country</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Commodity</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Weight (lbs)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Cubes (cu ft)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Tractor #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Trailer #</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver ID</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Actual)</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
@@ -1172,10 +1187,36 @@ const OrderManagement = () => {
                             {order.confirmed_rate ? `$${order.confirmed_rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'N/A'}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.shipper_name || 'N/A'}</td>
-                          <td className="px-4 py-3 whitespace-nowrap">{`${order.pickup_city || ''}, ${order.pickup_state || ''}`}</td>
-                          <td className="px-4 py-3 whitespace-nowrap">{`${order.delivery_city || ''}, ${order.delivery_state || ''}`}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.shipper_address || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.pickup_location || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.pickup_city || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.pickup_state || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.pickup_country || 'USA'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.delivery_location || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.delivery_city || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.delivery_state || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.delivery_country || 'USA'}</td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.commodity || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-right">
+                            {order.weight ? order.weight.toLocaleString() : 'N/A'}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-right">{order.cubes || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.tractor_number || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.trailer_number || 'N/A'}</td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.driver_name || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{order.driver_id || 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {formatDateTime(order.pickup_time_planned)}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {formatDateTime(order.pickup_time_actual)}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {formatDateTime(order.delivery_time_planned)}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {formatDateTime(order.delivery_time_actual)}
+                          </td>
                           <td className="px-4 py-3 whitespace-nowrap">
                             <div className="flex items-center space-x-2">
                               <Button size="sm" variant="outline" title="View Order">
@@ -1197,110 +1238,6 @@ const OrderManagement = () => {
                       ))}
                     </tbody>
                   </table>
-                </div>
-              ) : (
-                // Tile View - Cards
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                  {activeOrders.map((order) => (
-                    <Card key={order.id} className="hover:shadow-lg transition-shadow">
-                      <CardContent className="p-4">
-                        <div className="space-y-3">
-                          {/* Header */}
-                          <div className="flex justify-between items-start pb-3 border-b">
-                            <div>
-                              <h3 className="font-bold text-lg text-blue-600">
-                                {order.order_number || order.id.substring(0, 8).toUpperCase()}
-                              </h3>
-                              <p className="text-xs text-gray-500">{order.commodity || 'N/A'}</p>
-                            </div>
-                            <div className="w-40">
-                              <Select 
-                                value={order.status} 
-                                onValueChange={(value) => handleStatusChange(order.id, value)}
-                              >
-                                <SelectTrigger className={`h-8 text-xs ${getStatusColor(order.status)} border`}>
-                                  <SelectValue>
-                                    {getStatusLabel(order.status)}
-                                  </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {statusOptions.map(option => (
-                                    <SelectItem key={option.value} value={option.value}>
-                                      {option.label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-
-                          {/* Rate */}
-                          {order.confirmed_rate && (
-                            <div className="bg-green-50 p-2 rounded">
-                              <p className="text-xs text-gray-600">Confirmed Rate</p>
-                              <p className="text-xl font-bold text-green-700">
-                                ${order.confirmed_rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Shipper */}
-                          <div>
-                            <p className="text-xs text-gray-500 font-semibold">SHIPPER</p>
-                            <p className="text-sm font-medium">{order.shipper_name || 'N/A'}</p>
-                          </div>
-
-                          {/* Route */}
-                          <div className="space-y-2">
-                            <div className="flex items-start">
-                              <i className="fas fa-circle text-green-500 text-xs mt-1 mr-2"></i>
-                              <div className="flex-1">
-                                <p className="text-xs text-gray-500">PICKUP</p>
-                                <p className="text-sm font-medium">{order.pickup_city || 'N/A'}, {order.pickup_state || 'N/A'}</p>
-                              </div>
-                            </div>
-                            <div className="flex items-start">
-                              <i className="fas fa-map-marker-alt text-red-500 text-xs mt-1 mr-2"></i>
-                              <div className="flex-1">
-                                <p className="text-xs text-gray-500">DELIVERY</p>
-                                <p className="text-sm font-medium">{order.delivery_city || 'N/A'}, {order.delivery_state || 'N/A'}</p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Driver */}
-                          {order.driver_name && (
-                            <div className="flex items-center bg-blue-50 p-2 rounded">
-                              <i className="fas fa-user-circle text-blue-600 mr-2"></i>
-                              <div>
-                                <p className="text-xs text-gray-500">Driver</p>
-                                <p className="text-sm font-medium">{order.driver_name}</p>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Actions */}
-                          <div className="flex space-x-2 pt-2 border-t">
-                            <Button size="sm" variant="outline" className="flex-1" title="View Order">
-                              <i className="fas fa-eye mr-1"></i>
-                              View
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              className="flex-1"
-                              onClick={() => handleEditOrder(order)}
-                              disabled={order.status !== 'pending'}
-                              title={order.status === 'pending' ? 'Edit Order' : 'Only pending orders can be edited'}
-                            >
-                              <i className="fas fa-edit mr-1"></i>
-                              Edit
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
                 </div>
               )}
             </CardContent>
