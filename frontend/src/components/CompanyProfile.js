@@ -706,7 +706,7 @@ const CompanyProfile = () => {
                           <tr key={user.id} className="hover:bg-gray-50">
                             <td className="px-4 py-3">{user.full_name}</td>
                             <td className="px-4 py-3">{user.email}</td>
-                            <td className="px-4 py-3 capitalize">{user.role?.replace('_', ' ')}</td>
+                            <td className="px-4 py-3">{formatRole(user.role)}</td>
                             <td className="px-4 py-3">
                               <Badge className="bg-green-100 text-green-800">Active</Badge>
                             </td>
