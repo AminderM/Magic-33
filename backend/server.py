@@ -1137,18 +1137,47 @@ async def fleet_tracking_websocket(websocket: WebSocket):
                 if message.get("type") == "ping":
                     await websocket.send_text(json.dumps({"type": "pong"}))
                 elif message.get("type") == "request_status":
-                    # Send current status of all vehicles
+                    # Send current status of all vehicles with driver and load info
                     vehicles = await db.equipment.find({"is_available": {"$ne": None}}).to_list(length=None)
                     vehicle_statuses = []
                     for vehicle in vehicles:
                         status_info = {
                             "vehicle_id": vehicle["id"],
                             "name": vehicle["name"],
+                            "asset_number": vehicle.get("id", "N/A"),
                             "status": "active" if vehicle.get("is_available") else "idle",
                             "latitude": vehicle.get("current_latitude"),
                             "longitude": vehicle.get("current_longitude"),
-                            "last_update": vehicle.get("last_location_update").isoformat() if vehicle.get("last_location_update") else None
+                            "last_update": vehicle.get("last_location_update").isoformat() if vehicle.get("last_location_update") else None,
+                            "driver_id": None,
+                            "driver_name": None,
+                            "driver_phone": None,
+                            "load_number": None
                         }
+                        
+                        # Get current driver information if assigned
+                        current_driver_id = vehicle.get("current_driver_id")
+                        if current_driver_id:
+                            driver = await db.users.find_one({"id": current_driver_id})
+                            if driver:
+                                status_info["driver_id"] = driver.get("id", "N/A")
+                                status_info["driver_name"] = driver.get("full_name", "N/A")
+                                status_info["driver_phone"] = driver.get("phone", "N/A")
+                        
+                        # Get current active load/booking for this equipment
+                        active_booking = await db.bookings.find_one({
+                            "equipment_id": vehicle["id"],
+                            "status": {"$in": ["planned", "in_transit_pickup", "at_pickup", "in_transit_delivery", "at_delivery"]}
+                        })
+                        
+                        if active_booking:
+                            status_info["load_number"] = active_booking.get("order_number", "N/A")
+                            # If driver info is in booking, use it (override if available)
+                            if active_booking.get("driver_name"):
+                                status_info["driver_name"] = active_booking.get("driver_name")
+                            if active_booking.get("driver_id"):
+                                status_info["driver_id"] = active_booking.get("driver_id")
+                        
                         vehicle_statuses.append(status_info)
                     
                     await websocket.send_text(json.dumps({
