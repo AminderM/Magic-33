@@ -431,6 +431,10 @@ const OrderManagement = () => {
     return matchesSearch && matchesStatus;
   });
 
+  // Split orders into active and paid
+  const activeOrders = filteredOrders.filter(order => order.status !== 'paid');
+  const paidOrders = filteredOrders.filter(order => order.status === 'paid');
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
