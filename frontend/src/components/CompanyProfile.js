@@ -210,7 +210,7 @@ const CompanyProfile = () => {
       if (response.ok) {
         toast.success('User added successfully');
         setShowAddUserDialog(false);
-        setNewUserData({ full_name: '', email: '', phone: '', role: 'manufacturer', password: '' });
+        setNewUserData({ full_name: '', email: '', phone: '', role: 'dispatcher', password: '' });
         loadCompanyUsers();
       } else {
         const error = await response.json();
