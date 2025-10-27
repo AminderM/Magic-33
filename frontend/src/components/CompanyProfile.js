@@ -649,14 +649,11 @@ const CompanyProfile = () => {
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="fleet_owner">Fleet Owner</SelectItem>
                                 <SelectItem value="dispatcher">Dispatcher</SelectItem>
+                                <SelectItem value="driver">Driver</SelectItem>
                                 <SelectItem value="accounts_receivable">Accounts Receivable</SelectItem>
                                 <SelectItem value="accounts_payable">Accounts Payable</SelectItem>
                                 <SelectItem value="hr">HR</SelectItem>
-                                <SelectItem value="manufacturer">Manufacturer</SelectItem>
-                                <SelectItem value="construction_company">Construction Company</SelectItem>
-                                <SelectItem value="warehouse">Warehouse</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
