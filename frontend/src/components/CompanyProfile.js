@@ -357,6 +357,21 @@ const CompanyProfile = () => {
     });
   };
 
+  const formatRole = (role) => {
+    const roleMap = {
+      'fleet_owner': 'Fleet Owner',
+      'dispatcher': 'Dispatcher',
+      'accounts_receivable': 'Accounts Receivable',
+      'accounts_payable': 'Accounts Payable',
+      'hr': 'HR',
+      'manufacturer': 'Manufacturer',
+      'construction_company': 'Construction Company',
+      'warehouse': 'Warehouse',
+      'driver': 'Driver'
+    };
+    return roleMap[role] || role;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
