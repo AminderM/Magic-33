@@ -190,14 +190,38 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
           </p>
         </div>
         
-        {user?.role === 'fleet_owner' && (
-          <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-            <DialogTrigger asChild>
-              <Button className="btn-primary" data-testid="add-equipment-btn">
-                <i className="fas fa-plus mr-2"></i>
-                Add Equipment
-              </Button>
-            </DialogTrigger>
+        <div className="flex items-center space-x-3">
+          {/* View Toggle */}
+          <div className="flex border rounded-md">
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className="rounded-r-none"
+            >
+              <i className="fas fa-list mr-2"></i>
+              List
+            </Button>
+            <Button
+              variant={viewMode === 'tile' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('tile')}
+              className="rounded-l-none"
+            >
+              <i className="fas fa-th-large mr-2"></i>
+              Tile
+            </Button>
+          </div>
+          
+          {/* Add Equipment Button */}
+          {user?.role === 'fleet_owner' && (
+            <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
+              <DialogTrigger asChild>
+                <Button className="btn-primary" data-testid="add-equipment-btn">
+                  <i className="fas fa-plus mr-2"></i>
+                  Add Equipment
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Equipment</DialogTitle>
