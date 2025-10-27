@@ -116,13 +116,37 @@ const DriverManagement = ({ onStatsUpdate }) => {
           </p>
         </div>
         
-        <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-          <DialogTrigger asChild>
-            <Button className="btn-primary" data-testid="add-driver-btn">
-              <i className="fas fa-user-plus mr-2"></i>
-              Add Driver
+        <div className="flex items-center space-x-3">
+          {/* View Toggle */}
+          <div className="flex border rounded-md">
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className="rounded-r-none"
+            >
+              <i className="fas fa-list mr-2"></i>
+              List
             </Button>
-          </DialogTrigger>
+            <Button
+              variant={viewMode === 'tile' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('tile')}
+              className="rounded-l-none"
+            >
+              <i className="fas fa-th-large mr-2"></i>
+              Tile
+            </Button>
+          </div>
+          
+          {/* Add Driver Button */}
+          <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
+            <DialogTrigger asChild>
+              <Button className="btn-primary" data-testid="add-driver-btn">
+                <i className="fas fa-user-plus mr-2"></i>
+                Add Driver
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>Add New Driver</DialogTitle>
