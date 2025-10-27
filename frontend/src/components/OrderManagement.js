@@ -420,6 +420,160 @@ const OrderManagement = () => {
     }
   };
 
+  // Export to CSV
+  const exportToCSV = (data, filename) => {
+    if (!data || data.length === 0) {
+      toast.error('No data to export');
+      return;
+    }
+
+    // Define columns to export
+    const columns = [
+      { key: 'order_number', label: 'Order #' },
+      { key: 'status', label: 'Status' },
+      { key: 'confirmed_rate', label: 'Confirmed Rate' },
+      { key: 'shipper_name', label: 'Shipper Name' },
+      { key: 'shipper_address', label: 'Shipper Address' },
+      { key: 'pickup_location', label: 'Pickup Location' },
+      { key: 'pickup_city', label: 'Pickup City' },
+      { key: 'pickup_state', label: 'Pickup State' },
+      { key: 'pickup_country', label: 'Pickup Country' },
+      { key: 'delivery_location', label: 'Delivery Location' },
+      { key: 'delivery_city', label: 'Delivery City' },
+      { key: 'delivery_state', label: 'Delivery State' },
+      { key: 'delivery_country', label: 'Delivery Country' },
+      { key: 'commodity', label: 'Commodity' },
+      { key: 'weight', label: 'Weight (lbs)' },
+      { key: 'cubes', label: 'Cubes (cu ft)' },
+      { key: 'tractor_number', label: 'Tractor #' },
+      { key: 'trailer_number', label: 'Trailer #' },
+      { key: 'driver_name', label: 'Driver Name' },
+      { key: 'driver_id', label: 'Driver ID' },
+      { key: 'pickup_time_planned', label: 'Pickup Time (Planned)' },
+      { key: 'pickup_time_actual', label: 'Pickup Time (Actual)' },
+      { key: 'delivery_time_planned', label: 'Delivery Time (Planned)' },
+      { key: 'delivery_time_actual', label: 'Delivery Time (Actual)' }
+    ];
+
+    // Create CSV header
+    const header = columns.map(col => col.label).join(',');
+
+    // Create CSV rows
+    const rows = data.map(order => {
+      return columns.map(col => {
+        let value = order[col.key] || '';
+        
+        // Format values
+        if (col.key === 'confirmed_rate' && value) {
+          value = `$${parseFloat(value).toFixed(2)}`;
+        } else if (col.key.includes('time') && value) {
+          value = new Date(value).toLocaleString();
+        } else if (col.key === 'status') {
+          value = getStatusLabel(value);
+        }
+        
+        // Escape commas and quotes in CSV
+        value = String(value).replace(/"/g, '""');
+        if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+          value = `"${value}"`;
+        }
+        
+        return value;
+      }).join(',');
+    });
+
+    // Combine header and rows
+    const csv = [header, ...rows].join('\n');
+
+    // Create download link
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${filename}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast.success(`Exported ${data.length} orders to CSV`);
+  };
+
+  // Export to Excel
+  const exportToExcel = (data, filename) => {
+    if (!data || data.length === 0) {
+      toast.error('No data to export');
+      return;
+    }
+
+    // Prepare data for Excel
+    const excelData = data.map(order => ({
+      'Order #': order.order_number || order.id?.substring(0, 8).toUpperCase() || 'N/A',
+      'Status': getStatusLabel(order.status),
+      'Confirmed Rate': order.confirmed_rate ? `$${parseFloat(order.confirmed_rate).toFixed(2)}` : 'N/A',
+      'Shipper Name': order.shipper_name || 'N/A',
+      'Shipper Address': order.shipper_address || 'N/A',
+      'Pickup Location': order.pickup_location || 'N/A',
+      'Pickup City': order.pickup_city || 'N/A',
+      'Pickup State': order.pickup_state || 'N/A',
+      'Pickup Country': order.pickup_country || 'USA',
+      'Delivery Location': order.delivery_location || 'N/A',
+      'Delivery City': order.delivery_city || 'N/A',
+      'Delivery State': order.delivery_state || 'N/A',
+      'Delivery Country': order.delivery_country || 'USA',
+      'Commodity': order.commodity || 'N/A',
+      'Weight (lbs)': order.weight || 'N/A',
+      'Cubes (cu ft)': order.cubes || 'N/A',
+      'Tractor #': order.tractor_number || 'N/A',
+      'Trailer #': order.trailer_number || 'N/A',
+      'Driver Name': order.driver_name || 'N/A',
+      'Driver ID': order.driver_id || 'N/A',
+      'Pickup Time (Planned)': order.pickup_time_planned ? new Date(order.pickup_time_planned).toLocaleString() : 'N/A',
+      'Pickup Time (Actual)': order.pickup_time_actual ? new Date(order.pickup_time_actual).toLocaleString() : 'N/A',
+      'Delivery Time (Planned)': order.delivery_time_planned ? new Date(order.delivery_time_planned).toLocaleString() : 'N/A',
+      'Delivery Time (Actual)': order.delivery_time_actual ? new Date(order.delivery_time_actual).toLocaleString() : 'N/A'
+    }));
+
+    // Create workbook and worksheet
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+
+    // Set column widths for better readability
+    const colWidths = [
+      { wch: 15 }, // Order #
+      { wch: 20 }, // Status
+      { wch: 15 }, // Confirmed Rate
+      { wch: 25 }, // Shipper Name
+      { wch: 30 }, // Shipper Address
+      { wch: 25 }, // Pickup Location
+      { wch: 15 }, // Pickup City
+      { wch: 10 }, // Pickup State
+      { wch: 10 }, // Pickup Country
+      { wch: 25 }, // Delivery Location
+      { wch: 15 }, // Delivery City
+      { wch: 10 }, // Delivery State
+      { wch: 10 }, // Delivery Country
+      { wch: 20 }, // Commodity
+      { wch: 12 }, // Weight
+      { wch: 12 }, // Cubes
+      { wch: 12 }, // Tractor #
+      { wch: 12 }, // Trailer #
+      { wch: 20 }, // Driver Name
+      { wch: 15 }, // Driver ID
+      { wch: 20 }, // Pickup Time Planned
+      { wch: 20 }, // Pickup Time Actual
+      { wch: 20 }, // Delivery Time Planned
+      { wch: 20 }  // Delivery Time Actual
+    ];
+    ws['!cols'] = colWidths;
+
+    // Generate Excel file
+    XLSX.writeFile(wb, `${filename}.xlsx`);
+
+    toast.success(`Exported ${data.length} orders to Excel`);
+  };
+
   const filteredOrders = orders.filter(order => {
     const matchesSearch = !searchTerm || 
       order.order_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
