@@ -1092,56 +1092,31 @@ const OrderManagement = () => {
             <CardHeader className="border-b">
               <div className="flex justify-between items-center">
                 <CardTitle>Active Loads</CardTitle>
-                <div className="flex items-center space-x-3">
-                  {/* View Toggle */}
-                  <div className="flex border rounded-md">
-                    <Button
-                      variant={viewMode === 'list' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setViewMode('list')}
-                      className="rounded-r-none"
-                    >
-                      <i className="fas fa-list mr-2"></i>
-                      List
-                    </Button>
-                    <Button
-                      variant={viewMode === 'tile' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setViewMode('tile')}
-                      className="rounded-l-none"
-                    >
-                      <i className="fas fa-th-large mr-2"></i>
-                      Tile
-                    </Button>
-                  </div>
-                  
-                  {/* Export Buttons */}
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        console.log('CSV Export clicked, orders:', activeOrders.length);
-                        exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`);
-                      }}
-                      disabled={activeOrders.length === 0}
-                    >
-                      <i className="fas fa-file-csv mr-2"></i>
-                      Export CSV
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        console.log('Excel Export clicked, orders:', activeOrders.length);
-                        exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`);
-                      }}
-                      disabled={activeOrders.length === 0}
-                    >
-                      <i className="fas fa-file-excel mr-2"></i>
-                      Export Excel
-                    </Button>
-                  </div>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      console.log('CSV Export clicked, orders:', activeOrders.length);
+                      exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`);
+                    }}
+                    disabled={activeOrders.length === 0}
+                  >
+                    <i className="fas fa-file-csv mr-2"></i>
+                    Export CSV
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      console.log('Excel Export clicked, orders:', activeOrders.length);
+                      exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`);
+                    }}
+                    disabled={activeOrders.length === 0}
+                  >
+                    <i className="fas fa-file-excel mr-2"></i>
+                    Export Excel
+                  </Button>
                 </div>
               </div>
             </CardHeader>
