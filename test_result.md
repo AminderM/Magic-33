@@ -216,20 +216,22 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "1.0"
+  version: "2.0"
   test_sequence: 0
   run_ui: true
-  last_update: "2025-10-20T00:15:00Z"
+  last_update: "2025-01-15T00:00:00Z"
 
 test_plan:
   current_focus:
-    - "WebSocket end-to-end communication testing"
-    - "Live vehicle tracking functionality"
-    - "Mobile driver interface GPS sending"
+    - "Backend API endpoints testing (users, drivers, document upload)"
+    - "Frontend currency validation in OrderManagement"
+    - "Company Profile split view layout and navigation"
+    - "User/Driver management forms and operations"
+    - "Document upload with file size validation and version history"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "Fixed critical compilation errors by properly recreating LiveTrackingMap.js and MobileDriverInterface.js files. Installed react-use-websocket package. Created WebSocket manager backend. Frontend now compiles successfully. Map displays correctly with OpenStreetMap. Ready for end-to-end WebSocket testing."
+    message: "Completed implementation of three major features: 1) Strict numerical currency validation for Confirmed Rate field 2) Complete rebuild of Company Profile with split view layout (left sidebar sticky, right panel switchable) 3) Full user/driver management with add/edit/delete operations 4) Document upload with 10MB size validation and version history tracking. Backend includes new Company model with document versioning, new user creation endpoint, driver update/delete endpoints. Frontend includes new split view layout, dialogs for user/driver management, and document version history display. Ready for backend testing first."
