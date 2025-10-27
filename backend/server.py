@@ -678,19 +678,49 @@ async def get_my_equipment(current_user: User = Depends(get_current_user)):
 
 @api_router.get("/equipment/my/locations", response_model=List[dict])
 async def get_my_equipment_locations(current_user: User = Depends(get_current_user)):
-    """Get all equipment with their current locations for fleet tracking"""
+    """Get all equipment with their current locations and associated driver/load info for fleet tracking"""
     equipment_list = await db.equipment.find({"owner_id": current_user.id}).to_list(length=None)
     
     result = []
     for equipment in equipment_list:
-        result.append({
+        vehicle_data = {
             "vehicle_id": equipment["id"],
             "name": equipment["name"],
+            "asset_number": equipment.get("id", "N/A"),
             "latitude": equipment.get("current_latitude") or equipment.get("location_lat"),
             "longitude": equipment.get("current_longitude") or equipment.get("location_lng"),
             "last_update": equipment.get("last_location_update").isoformat() if equipment.get("last_location_update") else None,
-            "status": "active" if equipment.get("is_available") else "idle"
+            "status": "active" if equipment.get("is_available") else "idle",
+            "driver_id": None,
+            "driver_name": None,
+            "driver_phone": None,
+            "load_number": None
+        }
+        
+        # Get current driver information if assigned
+        current_driver_id = equipment.get("current_driver_id")
+        if current_driver_id:
+            driver = await db.users.find_one({"id": current_driver_id})
+            if driver:
+                vehicle_data["driver_id"] = driver.get("id", "N/A")
+                vehicle_data["driver_name"] = driver.get("full_name", "N/A")
+                vehicle_data["driver_phone"] = driver.get("phone", "N/A")
+        
+        # Get current active load/booking for this equipment
+        active_booking = await db.bookings.find_one({
+            "equipment_id": equipment["id"],
+            "status": {"$in": ["planned", "in_transit_pickup", "at_pickup", "in_transit_delivery", "at_delivery"]}
         })
+        
+        if active_booking:
+            vehicle_data["load_number"] = active_booking.get("order_number", "N/A")
+            # If driver info is in booking, use it (override if available)
+            if active_booking.get("driver_name"):
+                vehicle_data["driver_name"] = active_booking.get("driver_name")
+            if active_booking.get("driver_id"):
+                vehicle_data["driver_id"] = active_booking.get("driver_id")
+        
+        result.append(vehicle_data)
     
     return result
 
