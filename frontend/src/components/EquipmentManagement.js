@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 
-const EquipmentManagement = ({ onStatsUpdate }) => {
+const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
   const { user, fetchWithAuth } = useAuth();
   const [equipment, setEquipment] = useState([]);
   const [loading, setLoading] = useState(true);
