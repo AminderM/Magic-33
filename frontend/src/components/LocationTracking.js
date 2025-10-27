@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import LiveTrackingMap from './LiveTrackingMap';
@@ -16,6 +18,14 @@ const LocationTracking = () => {
   const [loading, setLoading] = useState(true);
   const [trackingEnabled, setTrackingEnabled] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
+  
+  // Manual location update state
+  const [manualEquipmentId, setManualEquipmentId] = useState('');
+  const [citySearchTerm, setCitySearchTerm] = useState('');
+  const [cityResults, setCityResults] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [searchingCities, setSearchingCities] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
