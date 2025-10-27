@@ -486,6 +486,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                     <Button 
                       variant="outline" 
                       className="flex-1"
+                      onClick={() => onTrackEquipment && onTrackEquipment(item.id)}
                       data-testid={`track-equipment-btn-${item.id}`}
                     >
                       <i className="fas fa-map-marker-alt mr-2"></i>
