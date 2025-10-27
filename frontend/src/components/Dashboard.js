@@ -259,7 +259,7 @@ const Dashboard = () => {
                 )}
                 <TabsTrigger value="bookings" data-testid="bookings-tab">
                   <i className="fas fa-shopping-cart mr-2"></i>
-                  Orders
+                  Loads
                 </TabsTrigger>
                 <TabsTrigger value="tracking" data-testid="tracking-tab">
                   <i className="fas fa-map-marker-alt mr-2"></i>
