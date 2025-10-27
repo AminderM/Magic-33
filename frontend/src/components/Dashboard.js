@@ -150,6 +150,14 @@ const Dashboard = () => {
                 </Button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
                   <button
+                    onClick={() => navigate('/apps')}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <i className="fas fa-th mr-2"></i>
+                    Apps
+                  </button>
+                  <div className="border-t border-gray-100"></div>
+                  <button
                     onClick={() => setActiveTab('profile')}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
