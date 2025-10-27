@@ -295,7 +295,7 @@ const Dashboard = () => {
               )}
 
               <TabsContent value="tracking" className="mt-6">
-                <LocationTracking />
+                <LocationTracking selectedEquipmentId={selectedEquipmentForTracking} />
               </TabsContent>
 
               <TabsContent value="profile" className="mt-6">
