@@ -1225,7 +1225,7 @@ const OrderManagement = () => {
                   </table>
                 </div>
               ) : (
-                {/* Tile View - Cards */}
+                // Tile View - Cards
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                   {activeOrders.map((order) => (
                     <Card key={order.id} className="hover:shadow-lg transition-shadow">
