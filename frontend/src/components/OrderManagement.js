@@ -1089,6 +1089,31 @@ const OrderManagement = () => {
         {/* Active Loads Tab */}
         <TabsContent value="active-loads">
           <Card>
+            <CardHeader className="border-b">
+              <div className="flex justify-between items-center">
+                <CardTitle>Active Loads</CardTitle>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}
+                    disabled={activeOrders.length === 0}
+                  >
+                    <i className="fas fa-file-csv mr-2"></i>
+                    Export CSV
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}
+                    disabled={activeOrders.length === 0}
+                  >
+                    <i className="fas fa-file-excel mr-2"></i>
+                    Export Excel
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
             <CardContent className="p-0">
               {activeOrders.length === 0 ? (
                 <div className="text-center py-12">
