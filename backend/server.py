@@ -52,6 +52,10 @@ class UserRole(str, Enum):
     CONSTRUCTION_COMPANY = "construction_company"
     WAREHOUSE = "warehouse"
     DRIVER = "driver"
+    DISPATCHER = "dispatcher"
+    ACCOUNTS_RECEIVABLE = "accounts_receivable"
+    ACCOUNTS_PAYABLE = "accounts_payable"
+    HR = "hr"
 
 class CompanyType(str, Enum):
     TRUCKING = "trucking"
