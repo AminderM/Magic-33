@@ -238,6 +238,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Search */}
