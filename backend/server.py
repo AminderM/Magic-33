@@ -676,6 +676,24 @@ async def get_my_equipment(current_user: User = Depends(get_current_user)):
     equipment_list = await db.equipment.find({"owner_id": current_user.id}).to_list(length=None)
     return [Equipment(**equipment) for equipment in equipment_list]
 
+@api_router.get("/equipment/my/locations", response_model=List[dict])
+async def get_my_equipment_locations(current_user: User = Depends(get_current_user)):
+    """Get all equipment with their current locations for fleet tracking"""
+    equipment_list = await db.equipment.find({"owner_id": current_user.id}).to_list(length=None)
+    
+    result = []
+    for equipment in equipment_list:
+        result.append({
+            "vehicle_id": equipment["id"],
+            "name": equipment["name"],
+            "latitude": equipment.get("current_latitude") or equipment.get("location_lat"),
+            "longitude": equipment.get("current_longitude") or equipment.get("location_lng"),
+            "last_update": equipment.get("last_location_update").isoformat() if equipment.get("last_location_update") else None,
+            "status": "active" if equipment.get("is_available") else "idle"
+        })
+    
+    return result
+
 @api_router.get("/equipment/{equipment_id}", response_model=Equipment)
 async def get_equipment_details(equipment_id: str):
     equipment = await db.equipment.find_one({"id": equipment_id})
