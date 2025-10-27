@@ -189,6 +189,126 @@ const LocationTracking = () => {
     window.open(url, '_blank');
   };
 
+  // Search cities using OpenStreetMap Nominatim API
+  const searchCities = async (searchTerm) => {
+    if (!searchTerm || searchTerm.length < 3) {
+      setCityResults([]);
+      setShowCityDropdown(false);
+      return;
+    }
+
+    setSearchingCities(true);
+    try {
+      // Search for cities/towns in USA and Canada
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?` +
+        `q=${encodeURIComponent(searchTerm)}&` +
+        `countrycodes=us,ca&` +
+        `format=json&` +
+        `addressdetails=1&` +
+        `limit=10&` +
+        `featuretype=city`,
+        {
+          headers: {
+            'User-Agent': 'TransportCentral-TMS/1.0'
+          }
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        // Filter to only include cities, towns, and villages
+        const filtered = data.filter(place => 
+          place.type === 'city' || 
+          place.type === 'town' || 
+          place.type === 'village' ||
+          place.type === 'administrative' ||
+          place.class === 'place'
+        );
+        setCityResults(filtered);
+        setShowCityDropdown(filtered.length > 0);
+      }
+    } catch (error) {
+      console.error('Error searching cities:', error);
+      toast.error('Error searching cities');
+    } finally {
+      setSearchingCities(false);
+    }
+  };
+
+  // Debounce city search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (citySearchTerm) {
+        searchCities(citySearchTerm);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [citySearchTerm]);
+
+  const handleCitySelect = (city) => {
+    setSelectedCity(city);
+    setCitySearchTerm(formatCityName(city));
+    setShowCityDropdown(false);
+  };
+
+  const formatCityName = (city) => {
+    const address = city.address || {};
+    const parts = [];
+    
+    if (address.city) parts.push(address.city);
+    else if (address.town) parts.push(address.town);
+    else if (address.village) parts.push(address.village);
+    else if (city.name) parts.push(city.name);
+    
+    if (address.state) parts.push(address.state);
+    if (address.country) parts.push(address.country);
+    
+    return parts.join(', ');
+  };
+
+  const handleManualLocationUpdate = async () => {
+    if (!manualEquipmentId) {
+      toast.error('Please select equipment');
+      return;
+    }
+
+    if (!selectedCity) {
+      toast.error('Please select a city/location');
+      return;
+    }
+
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/locations`, {
+        method: 'POST',
+        body: JSON.stringify({
+          equipment_id: manualEquipmentId,
+          latitude: parseFloat(selectedCity.lat),
+          longitude: parseFloat(selectedCity.lon)
+        })
+      });
+
+      if (response.ok) {
+        toast.success(`Location updated to ${formatCityName(selectedCity)}`);
+        // Reset form
+        setManualEquipmentId('');
+        setCitySearchTerm('');
+        setSelectedCity(null);
+        setCityResults([]);
+        // Refresh location history if viewing the same equipment
+        if (selectedEquipment === manualEquipmentId) {
+          loadLocationHistory();
+        }
+      } else {
+        toast.error('Failed to update location');
+      }
+    } catch (error) {
+      console.error('Error updating location:', error);
+      toast.error('Error updating location');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
