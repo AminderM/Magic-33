@@ -443,7 +443,97 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
             )}
           </CardContent>
         </Card>
+      ) : viewMode === 'list' ? (
+        // List View - Table
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Name</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Type</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Location</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Hourly Rate</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Daily Rate</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredEquipment.map((item) => (
+                    <tr key={item.id} className="hover:bg-gray-50" data-testid={`equipment-row-${item.id}`}>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center">
+                          <i className={`fas ${getEquipmentIcon(item.equipment_type)} text-blue-600 mr-3 text-lg`}></i>
+                          <div>
+                            <p className="font-semibold">{item.name}</p>
+                            <p className="text-xs text-gray-500 line-clamp-1">{item.description}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge className="equipment-type">
+                          {getEquipmentLabel(item.equipment_type)}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge className={item.is_available ? 'status-available' : 'status-booked'}>
+                          {item.is_available ? 'Available' : 'Unavailable'}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <i className="fas fa-map-marker-alt mr-2"></i>
+                          {item.location_address}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-green-600">
+                        ${item.hourly_rate}/hr
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-green-600">
+                        ${item.daily_rate}/day
+                      </td>
+                      <td className="px-4 py-3">
+                        {user?.role !== 'fleet_owner' || item.owner_id !== user?.id ? (
+                          <Button 
+                            size="sm"
+                            className="btn-primary" 
+                            disabled={!item.is_available}
+                            data-testid={`book-equipment-btn-${item.id}`}
+                          >
+                            <i className="fas fa-calendar-plus mr-1"></i>
+                            {item.is_available ? 'Book' : 'Unavailable'}
+                          </Button>
+                        ) : (
+                          <div className="flex space-x-2">
+                            <Button 
+                              size="sm"
+                              variant="outline"
+                              data-testid={`edit-equipment-btn-${item.id}`}
+                            >
+                              <i className="fas fa-edit"></i>
+                            </Button>
+                            <Button 
+                              size="sm"
+                              variant="outline"
+                              onClick={() => onTrackEquipment && onTrackEquipment(item.id)}
+                              data-testid={`track-equipment-btn-${item.id}`}
+                            >
+                              <i className="fas fa-map-marker-alt"></i>
+                            </Button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       ) : (
+        // Tile View - Cards
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEquipment.map((item) => (
             <Card key={item.id} className="equipment-card" data-testid={`equipment-card-${item.id}`}>
