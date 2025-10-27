@@ -380,16 +380,33 @@ const LiveTrackingMap = () => {
                   }`}
                   onClick={() => setSelectedVehicle(vehicle)}
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <h4 className="font-semibold text-gray-900">{vehicle.name || `Vehicle ${vehicle.vehicle_id.substring(0, 8)}`}</h4>
-                      <p className="text-xs text-gray-500 mt-1">ID: {vehicle.vehicle_id.substring(0, 16)}...</p>
+                      <p className="text-xs text-gray-500 mt-1">Asset #: {vehicle.asset_number ? vehicle.asset_number.substring(0, 8) : 'N/A'}</p>
                     </div>
                     <Badge variant={vehicle.status === 'active' ? 'default' : 'secondary'}>
                       {vehicle.status || 'Active'}
                     </Badge>
                   </div>
-                  <div className="mt-3 space-y-1 text-sm text-gray-600">
+                  
+                  {vehicle.load_number && (
+                    <div className="bg-yellow-50 px-2 py-1 rounded mb-2 text-sm">
+                      <strong className="text-gray-700">Load #:</strong> {vehicle.load_number}
+                    </div>
+                  )}
+                  
+                  {vehicle.driver_name && (
+                    <div className="text-sm text-gray-700 mb-2 pb-2 border-b">
+                      <p className="font-semibold mb-1">Driver:</p>
+                      <p className="text-xs">{vehicle.driver_name}</p>
+                      {vehicle.driver_phone && (
+                        <p className="text-xs text-gray-600">{vehicle.driver_phone}</p>
+                      )}
+                    </div>
+                  )}
+                  
+                  <div className="mt-2 space-y-1 text-sm text-gray-600">
                     {vehicle.speed !== undefined && (
                       <p><i className="fas fa-tachometer-alt mr-2 text-blue-600"></i>{formatSpeed(vehicle.speed)}</p>
                     )}
