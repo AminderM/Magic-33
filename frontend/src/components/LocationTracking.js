@@ -10,7 +10,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import LiveTrackingMap from './LiveTrackingMap';
 
-const LocationTracking = () => {
+const LocationTracking = ({ selectedEquipmentId }) => {
   const { user, fetchWithAuth } = useAuth();
   const [equipment, setEquipment] = useState([]);
   const [selectedEquipment, setSelectedEquipment] = useState('');
@@ -36,6 +36,14 @@ const LocationTracking = () => {
       loadAllEquipment();
     }
   }, [user]);
+
+  // Set selected equipment when passed from Equipment Management
+  useEffect(() => {
+    if (selectedEquipmentId && equipment.length > 0) {
+      setSelectedEquipment(selectedEquipmentId);
+      toast.success('Equipment selected for tracking');
+    }
+  }, [selectedEquipmentId, equipment]);
 
   useEffect(() => {
     if (selectedEquipment) {
