@@ -26,7 +26,7 @@ const CompanyProfile = () => {
     full_name: '',
     email: '',
     phone: '',
-    role: 'manufacturer',
+    role: 'dispatcher',
     password: ''
   });
   const [newDriverData, setNewDriverData] = useState({
