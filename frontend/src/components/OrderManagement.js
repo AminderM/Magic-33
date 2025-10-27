@@ -1153,7 +1153,7 @@ const OrderManagement = () => {
                   <p className="text-gray-600">No active orders found</p>
                 </div>
               ) : viewMode === 'list' ? (
-                {/* List View - Table */}
+                // List View - Table
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b-2 border-gray-200">
