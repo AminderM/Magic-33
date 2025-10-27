@@ -269,23 +269,81 @@ const LiveTrackingMap = () => {
                     }}
                   >
                     <Popup>
-                      <div className="p-2">
-                        <h3 className="font-bold text-lg mb-2">{vehicle.name || `Vehicle ${vehicle.vehicle_id.substring(0, 8)}`}</h3>
-                        <div className="space-y-1 text-sm">
-                          <p><strong>ID:</strong> {vehicle.vehicle_id.substring(0, 8)}...</p>
-                          <p><strong>Position:</strong> {vehicle.latitude.toFixed(6)}, {vehicle.longitude.toFixed(6)}</p>
+                      <div className="p-2 min-w-[250px]">
+                        <h3 className="font-bold text-lg mb-3 text-blue-700 border-b pb-2">
+                          {vehicle.name || `Vehicle ${vehicle.vehicle_id.substring(0, 8)}`}
+                        </h3>
+                        <div className="space-y-2 text-sm">
+                          {/* Asset Number */}
+                          <div className="flex justify-between">
+                            <span className="font-semibold text-gray-700">Asset #:</span>
+                            <span className="text-gray-900">{vehicle.asset_number ? vehicle.asset_number.substring(0, 8) : 'N/A'}</span>
+                          </div>
+                          
+                          {/* Load Number */}
+                          {vehicle.load_number && (
+                            <div className="flex justify-between bg-yellow-50 px-2 py-1 rounded">
+                              <span className="font-semibold text-gray-700">Load #:</span>
+                              <span className="text-gray-900 font-bold">{vehicle.load_number}</span>
+                            </div>
+                          )}
+                          
+                          {/* Driver Information */}
+                          {vehicle.driver_name ? (
+                            <div className="border-t pt-2 mt-2">
+                              <p className="font-semibold text-gray-700 mb-1">Driver Information:</p>
+                              <div className="pl-2 space-y-1">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Driver #:</span>
+                                  <span className="text-gray-900">{vehicle.driver_id ? vehicle.driver_id.substring(0, 8) : 'N/A'}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Name:</span>
+                                  <span className="text-gray-900">{vehicle.driver_name}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Phone:</span>
+                                  <span className="text-gray-900">{vehicle.driver_phone || 'N/A'}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex justify-between text-gray-500 italic">
+                              <span>No driver assigned</span>
+                            </div>
+                          )}
+                          
+                          {/* Position */}
+                          <div className="border-t pt-2 mt-2">
+                            <div className="flex justify-between">
+                              <span className="font-semibold text-gray-700">Position:</span>
+                              <span className="text-gray-900 text-xs font-mono">{vehicle.latitude.toFixed(4)}, {vehicle.longitude.toFixed(4)}</span>
+                            </div>
+                          </div>
+                          
+                          {/* Speed */}
                           {vehicle.speed !== undefined && (
-                            <p><strong>Speed:</strong> {formatSpeed(vehicle.speed)}</p>
+                            <div className="flex justify-between">
+                              <span className="font-semibold text-gray-700">Speed:</span>
+                              <span className="text-gray-900">{formatSpeed(vehicle.speed)}</span>
+                            </div>
                           )}
+                          
+                          {/* Last Update */}
                           {vehicle.timestamp && (
-                            <p><strong>Last Update:</strong> {formatTimestamp(vehicle.timestamp)}</p>
+                            <div className="flex justify-between">
+                              <span className="font-semibold text-gray-700">Last Update:</span>
+                              <span className="text-gray-900">{formatTimestamp(vehicle.timestamp)}</span>
+                            </div>
                           )}
-                          <p>
-                            <strong>Status:</strong>{' '}
+                          
+                          {/* Status */}
+                          <div className="flex justify-between items-center pt-2 border-t">
+                            <span className="font-semibold text-gray-700">Status:</span>
                             <Badge variant={vehicle.status === 'active' ? 'default' : 'secondary'}>
                               {vehicle.status || 'Active'}
                             </Badge>
-                          </p>
+                          </div>
                         </div>
                       </div>
                     </Popup>
