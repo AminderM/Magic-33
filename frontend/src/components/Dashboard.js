@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,6 +15,7 @@ import CompanyProfile from './CompanyProfile';
 
 const Dashboard = () => {
   const { user, logout, fetchWithAuth } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(user?.role === 'fleet_owner' ? 'fleet' : 'equipment');
   const [stats, setStats] = useState({
     totalEquipment: 0,
