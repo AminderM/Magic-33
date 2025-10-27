@@ -51,6 +51,39 @@ const LiveTrackingMap = () => {
   const [isConnected, setIsConnected] = useState(false);
   const mapRef = useRef(null);
 
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+  // Fetch equipment locations via API (fallback/initial load)
+  const fetchEquipmentLocations = async () => {
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (!token) return;
+
+      const response = await fetch(`${BACKEND_URL}/api/equipment/my/locations`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Only update if we have data and filter out vehicles without coordinates
+        const validVehicles = data.filter(v => v.latitude && v.longitude);
+        if (validVehicles.length > 0) {
+          setVehicles(validVehicles);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching equipment locations:', error);
+    }
+  };
+
+  // Fetch locations on component mount
+  useEffect(() => {
+    fetchEquipmentLocations();
+  }, []);
+
   // Get WebSocket URL from environment
   const getWebSocketUrl = () => {
     const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
