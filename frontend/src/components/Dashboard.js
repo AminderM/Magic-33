@@ -279,7 +279,7 @@ const Dashboard = () => {
                   onStatsUpdate={setStats} 
                   onTrackEquipment={(equipmentId) => {
                     setSelectedEquipmentForTracking(equipmentId);
-                    setActiveTab('location-tracking');
+                    setActiveTab('tracking');
                   }}
                 />
               </TabsContent>
