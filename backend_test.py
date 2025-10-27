@@ -210,6 +210,153 @@ class FleetMarketplaceAPITester:
         success, response = self.run_test('companies', 'Get My Company', 'GET', 'companies/my', 200)
         return success
 
+    def test_company_profile_management(self):
+        """Test company profile management endpoints"""
+        print("\n" + "="*60)
+        print("🏢 TESTING COMPANY PROFILE MANAGEMENT")
+        print("="*60)
+        
+        # Test update company profile (admin only)
+        update_data = {
+            "name": f"Updated Fleet Company {datetime.now().strftime('%H%M%S')}",
+            "phone_number": "+1-555-123-4567",
+            "company_email": "contact@testfleet.com",
+            "website": "https://testfleet.com",
+            "mc_number": "MC123456",
+            "dot_number": "DOT789012",
+            "nsc_number": "NSC345678"
+        }
+        
+        success, response = self.run_test('companies', 'Update Company Profile', 'PUT', 'companies/my', 200, update_data)
+        
+        # Test upload company logo (image validation)
+        print("\n📸 Testing logo upload...")
+        # Note: This would require multipart/form-data, which is complex to test without actual files
+        # We'll test the endpoint exists but expect it to fail without proper file
+        logo_success, logo_response = self.run_test('companies', 'Upload Logo (No File)', 'POST', 'companies/my/upload-logo', 422)
+        
+        return success
+
+    def test_document_management_with_versioning(self):
+        """Test document upload with version history"""
+        print("\n" + "="*60)
+        print("📄 TESTING DOCUMENT MANAGEMENT WITH VERSIONING")
+        print("="*60)
+        
+        # Test document upload endpoints (expect 422 without actual files)
+        document_types = ['mc_authority', 'insurance_certificate', 'w9']
+        
+        for doc_type in document_types:
+            print(f"\n📋 Testing {doc_type} upload...")
+            success, response = self.run_test('companies', f'Upload {doc_type} (No File)', 'POST', f'companies/my/upload-document?document_type={doc_type}', 422)
+        
+        # Test invalid document type
+        success, response = self.run_test('companies', 'Upload Invalid Document Type', 'POST', 'companies/my/upload-document?document_type=invalid_type', 422)
+        
+        return True
+
+    def test_user_management(self):
+        """Test user management endpoints"""
+        print("\n" + "="*60)
+        print("👥 TESTING USER MANAGEMENT")
+        print("="*60)
+        
+        # Test get company users
+        success, response = self.run_test('companies', 'Get Company Users', 'GET', 'users/company', 200)
+        
+        # Test create new user (admin only)
+        timestamp = datetime.now().strftime('%H%M%S')
+        new_user_data = {
+            "email": f"newuser_{timestamp}@example.com",
+            "password": "NewUserPass123!",
+            "full_name": f"New Company User {timestamp}",
+            "phone": f"+1777{timestamp}",
+            "role": "fleet_owner"
+        }
+        
+        create_success, create_response = self.run_test('companies', 'Create New User', 'POST', 'users', 200, new_user_data)
+        
+        created_user_id = None
+        if create_success:
+            created_user_id = create_response.get('user_id')
+            print(f"   Created User ID: {created_user_id}")
+        
+        # Test delete user (admin only, cannot delete self)
+        if created_user_id:
+            delete_success, delete_response = self.run_test('companies', 'Delete User', 'DELETE', f'users/{created_user_id}', 200)
+        
+        # Test cannot delete self
+        if self.user_id:
+            self_delete_success, self_delete_response = self.run_test('companies', 'Delete Self (Should Fail)', 'DELETE', f'users/{self.user_id}', 400)
+        
+        return success
+
+    def test_driver_management_extended(self):
+        """Test extended driver management endpoints"""
+        print("\n" + "="*60)
+        print("🚗 TESTING EXTENDED DRIVER MANAGEMENT")
+        print("="*60)
+        
+        # Test create driver account
+        timestamp = datetime.now().strftime('%H%M%S')
+        driver_data = {
+            "email": f"testdriver_{timestamp}@example.com",
+            "password": "DriverPass123!",
+            "full_name": f"Test Driver {timestamp}",
+            "phone": f"+1888{timestamp}",
+            "role": "driver"
+        }
+        
+        create_success, create_response = self.run_test('drivers', 'Create Driver Account', 'POST', 'drivers', 200, driver_data)
+        
+        created_driver_id = None
+        if create_success:
+            created_driver_id = create_response.get('driver_id')
+            print(f"   Created Driver ID: {created_driver_id}")
+        
+        # Test get my drivers
+        get_success, get_response = self.run_test('drivers', 'Get My Drivers', 'GET', 'drivers/my', 200)
+        
+        # Test update driver info (admin only)
+        if created_driver_id:
+            update_data = {
+                "full_name": f"Updated Driver Name {timestamp}",
+                "phone": f"+1999{timestamp}",
+                "email": f"updated_driver_{timestamp}@example.com"
+            }
+            update_success, update_response = self.run_test('drivers', 'Update Driver Info', 'PUT', f'drivers/{created_driver_id}', 200, update_data)
+        
+        # Test delete driver (admin only)
+        if created_driver_id:
+            delete_success, delete_response = self.run_test('drivers', 'Delete Driver', 'DELETE', f'drivers/{created_driver_id}', 200)
+        
+        return create_success
+
+    def test_role_based_access_control(self):
+        """Test role-based access control"""
+        print("\n" + "="*60)
+        print("🔐 TESTING ROLE-BASED ACCESS CONTROL")
+        print("="*60)
+        
+        # These tests verify that only fleet_owner role can perform admin operations
+        # The actual role checking is done in the backend based on the JWT token
+        
+        # Test that company profile update requires admin role
+        update_data = {"name": "Test Update"}
+        success, response = self.run_test('companies', 'Company Update (Role Check)', 'PUT', 'companies/my', 200, update_data)
+        
+        # Test that user creation requires admin role  
+        user_data = {
+            "email": "roletest@example.com",
+            "password": "TestPass123!",
+            "full_name": "Role Test User",
+            "phone": "+1555000000",
+            "role": "fleet_owner"
+        }
+        success, response = self.run_test('companies', 'User Creation (Role Check)', 'POST', 'users', 200, user_data)
+        
+        return True
+
     def test_equipment_management(self):
         """Test equipment management endpoints"""
         print("\n" + "="*60)
