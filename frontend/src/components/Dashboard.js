@@ -275,7 +275,13 @@ const Dashboard = () => {
               )}
 
               <TabsContent value="equipment" className="mt-6">
-                <EquipmentManagement onStatsUpdate={setStats} />
+                <EquipmentManagement 
+                  onStatsUpdate={setStats} 
+                  onTrackEquipment={(equipmentId) => {
+                    setSelectedEquipmentForTracking(equipmentId);
+                    setActiveTab('location-tracking');
+                  }}
+                />
               </TabsContent>
 
               <TabsContent value="bookings" className="mt-6">
