@@ -394,7 +394,8 @@ class FleetMarketplaceAPITester:
             update_data = {
                 "full_name": f"Updated Driver Name {timestamp}",
                 "phone": f"+1999{timestamp}",
-                "email": f"updated_driver_{timestamp}@example.com"
+                "email": f"updated_driver_{timestamp}@example.com",
+                "role": "driver"  # Required field
             }
             update_success, update_response = self.run_test('drivers', 'Update Driver Info', 'PUT', f'drivers/{created_driver_id}', 200, update_data)
         
