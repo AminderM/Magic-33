@@ -103,6 +103,13 @@ class User(UserBase):
     token_expires_at: Optional[datetime] = None
     password_hash: Optional[str] = None  # For storing hashed password
 
+class DocumentVersion(BaseModel):
+    url: str
+    filename: str
+    uploaded_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    uploaded_by: str
+    file_size: int  # in bytes
+
 class CompanyBase(BaseModel):
     name: str
     company_type: CompanyType
@@ -123,10 +130,12 @@ class CompanyBase(BaseModel):
     website: Optional[str] = None
     # Company branding
     logo_url: Optional[str] = None
-    # Documents
-    mc_authority_doc: Optional[str] = None
-    insurance_certificate_doc: Optional[str] = None
-    w9_doc: Optional[str] = None
+    # Documents with version history
+    company_documents: Optional[Dict[str, List[dict]]] = Field(default_factory=lambda: {
+        "mc_authority": [],
+        "insurance_certificate": [],
+        "w9": []
+    })
     
 class CompanyCreate(CompanyBase):
     pass
