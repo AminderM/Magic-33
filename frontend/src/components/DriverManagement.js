@@ -276,7 +276,82 @@ const DriverManagement = ({ onStatsUpdate }) => {
             </Button>
           </CardContent>
         </Card>
+      ) : viewMode === 'list' ? (
+        // List View - Table
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Driver</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Email</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Phone</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Joined</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredDrivers.map((driver) => (
+                    <tr key={driver.id} className="hover:bg-gray-50" data-testid={`driver-row-${driver.id}`}>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                            {driver.full_name.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-semibold">{driver.full_name}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <i className="fas fa-envelope mr-2"></i>
+                          {driver.email}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <i className="fas fa-phone mr-2"></i>
+                          {driver.phone}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge className="status-verified">
+                          Active Driver
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600">
+                        {new Date(driver.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex space-x-2">
+                          <Button 
+                            size="sm"
+                            variant="outline"
+                            data-testid={`edit-driver-btn-${driver.id}`}
+                          >
+                            <i className="fas fa-edit"></i>
+                          </Button>
+                          <Button 
+                            size="sm"
+                            variant="outline"
+                            data-testid={`track-driver-btn-${driver.id}`}
+                          >
+                            <i className="fas fa-map-marker-alt"></i>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       ) : (
+        // Tile View - Cards
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDrivers.map((driver) => (
             <Card key={driver.id} className="dashboard-card" data-testid={`driver-card-${driver.id}`}>
