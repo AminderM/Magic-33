@@ -791,14 +791,33 @@ const OrderManagement = () => {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="confirmed_rate">Confirmed Rate ($)</Label>
-                      <Input
-                        id="confirmed_rate"
-                        type="number"
-                        step="0.01"
-                        value={formData.confirmed_rate}
-                        onChange={(e) => handleInputChange('confirmed_rate', e.target.value)}
-                        placeholder="Enter confirmed rate"
-                      />
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <Input
+                          id="confirmed_rate"
+                          type="text"
+                          value={formData.confirmed_rate}
+                          onChange={(e) => handleConfirmedRateChange(e.target.value)}
+                          onBlur={(e) => {
+                            // Format on blur
+                            if (formData.confirmed_rate) {
+                              const formatted = formatCurrency(formData.confirmed_rate);
+                              if (formatted) {
+                                setFormData(prev => ({ ...prev, confirmed_rate: parseFloat(formData.confirmed_rate).toFixed(2) }));
+                              }
+                            }
+                          }}
+                          onFocus={(e) => {
+                            // Remove formatting on focus for easier editing
+                            if (formData.confirmed_rate) {
+                              e.target.select();
+                            }
+                          }}
+                          placeholder="0.00"
+                          className="pl-8"
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500">Enter numeric value only (e.g., 1250.50)</p>
                     </div>
                     <div className="space-y-2 col-span-2">
                       <Label htmlFor="notes">Notes</Label>
