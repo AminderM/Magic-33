@@ -246,17 +246,76 @@ class FleetMarketplaceAPITester:
         print("📄 TESTING DOCUMENT MANAGEMENT WITH VERSIONING")
         print("="*60)
         
-        # Test document upload endpoints (expect 422 without actual files)
+        # Test document upload with actual file content
         document_types = ['mc_authority', 'insurance_certificate', 'w9']
         
         for doc_type in document_types:
-            print(f"\n📋 Testing {doc_type} upload...")
-            success, response = self.run_test('companies', f'Upload {doc_type} (No File)', 'POST', f'companies/my/upload-document?document_type={doc_type}', 422)
+            print(f"\n📋 Testing {doc_type} upload with file...")
+            success = self.test_file_upload(doc_type, small_file=True)
+        
+        # Test file size validation (>10MB should fail)
+        print(f"\n📋 Testing file size validation (>10MB)...")
+        large_file_success = self.test_file_upload('mc_authority', small_file=False)
         
         # Test invalid document type
         success, response = self.run_test('companies', 'Upload Invalid Document Type', 'POST', 'companies/my/upload-document?document_type=invalid_type', 422)
         
         return True
+
+    def test_file_upload(self, document_type: str, small_file: bool = True):
+        """Test file upload with actual file content"""
+        try:
+            # Create test file content
+            if small_file:
+                # Create a small PDF-like file (< 10MB)
+                file_content = b'%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n' + b'Test content ' * 1000
+                expected_status = 200
+                test_name = f'Upload {document_type} (Small File)'
+            else:
+                # Create a large file (> 10MB)
+                file_content = b'Large file content ' * (1024 * 1024)  # ~20MB
+                expected_status = 400  # Should fail due to size limit
+                test_name = f'Upload {document_type} (Large File >10MB)'
+            
+            # Prepare multipart form data
+            url = f"{self.base_url}/api/companies/my/upload-document?document_type={document_type}"
+            
+            headers = {}
+            if self.token:
+                headers['Authorization'] = f'Bearer {self.token}'
+            
+            files = {
+                'file': (f'test_{document_type}.pdf', file_content, 'application/pdf')
+            }
+            
+            print(f"   Uploading file size: {len(file_content) / (1024*1024):.2f}MB")
+            
+            response = requests.post(url, files=files, headers=headers, timeout=30)
+            
+            success = response.status_code == expected_status
+            
+            if success:
+                print(f"✅ PASSED - {test_name} - Status: {response.status_code}")
+                if small_file:
+                    try:
+                        response_data = response.json()
+                        print(f"   Version: {response_data.get('version', 'N/A')}")
+                        print(f"   Message: {response_data.get('message', 'N/A')}")
+                    except:
+                        pass
+            else:
+                print(f"❌ FAILED - {test_name} - Expected {expected_status}, got {response.status_code}")
+                try:
+                    error_data = response.json()
+                    print(f"   Error: {error_data}")
+                except:
+                    print(f"   Error: {response.text}")
+            
+            return success
+            
+        except Exception as e:
+            print(f"❌ FAILED - {test_name} - Exception: {str(e)}")
+            return False
 
     def test_user_management(self):
         """Test user management endpoints"""
