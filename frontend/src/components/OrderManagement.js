@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
+import * as XLSX from 'xlsx';
 
 const OrderManagement = () => {
   const { user, fetchWithAuth } = useAuth();
