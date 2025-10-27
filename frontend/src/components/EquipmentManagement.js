@@ -383,7 +383,8 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
               </form>
             </DialogContent>
           </Dialog>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Filters */}
