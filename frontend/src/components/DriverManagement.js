@@ -13,6 +13,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [viewMode, setViewMode] = useState('tile'); // 'list' or 'tile'
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
