@@ -92,6 +92,33 @@ const OrderManagement = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleConfirmedRateChange = (value) => {
+    // Remove all non-numeric characters except decimal point
+    let numericValue = value.replace(/[^\d.]/g, '');
+    
+    // Ensure only one decimal point
+    const decimalCount = (numericValue.match(/\./g) || []).length;
+    if (decimalCount > 1) {
+      const parts = numericValue.split('.');
+      numericValue = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // Limit to 2 decimal places
+    const decimalIndex = numericValue.indexOf('.');
+    if (decimalIndex !== -1 && numericValue.length - decimalIndex > 3) {
+      numericValue = numericValue.substring(0, decimalIndex + 3);
+    }
+    
+    setFormData(prev => ({ ...prev, confirmed_rate: numericValue }));
+  };
+
+  const formatCurrency = (value) => {
+    if (!value) return '';
+    const number = parseFloat(value);
+    if (isNaN(number)) return '';
+    return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   const resetForm = () => {
     setFormData({
       equipment_id: '',
