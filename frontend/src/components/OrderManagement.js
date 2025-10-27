@@ -20,7 +20,6 @@ const OrderManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [activeTab, setActiveTab] = useState('active-loads');
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'tile'
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [showRateConfirmation, setShowRateConfirmation] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
