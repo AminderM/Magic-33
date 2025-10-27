@@ -154,71 +154,65 @@ backend:
         comment: "Added PUT /api/drivers/{driver_id} for updating driver info and DELETE /api/drivers/{driver_id} for removing drivers. Only accessible to fleet_owner role."
 
 frontend:
-  - task: "Install react-use-websocket Package"
+  - task: "Confirmed Rate Currency Validation in OrderManagement"
     implemented: true
-    working: true
-    file: "/app/frontend/package.json"
+    working: "NA"
+    file: "/app/frontend/src/components/OrderManagement.js"
     stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "main"
-        comment: "Installed react-use-websocket@4.13.0 via yarn. Frontend now compiles successfully."
-        
-  - task: "LiveTrackingMap Component"
-    implemented: true
-    working: true
-    file: "/app/frontend/src/components/LiveTrackingMap.js"
-    stuck_count: 3
     priority: "high"
     needs_retesting: true
     status_history:
-      - working: false
+      - working: "NA"
         agent: "main"
-        comment: "Previous attempts failed due to Unicode escape sequence errors from literal \n characters in file content."
-      - working: true
-        agent: "main"
-        comment: "Successfully recreated LiveTrackingMap.js with proper line breaks. Component includes: OpenStreetMap with Leaflet, WebSocket connection via react-use-websocket, vehicle markers with popups, connection status display, real-time location updates handling, fleet status request functionality."
-        
-  - task: "MobileDriverInterface Component"
+        comment: "Added handleConfirmedRateChange function that strips non-numeric characters except decimal point, limits to 2 decimal places, and enforces single decimal point. Added formatCurrency helper. Updated input to type='text' with $ prefix, onBlur formatting, and onFocus selection. Includes validation helper text."
+
+  - task: "Company Profile Split View Layout"
     implemented: true
-    working: true
-    file: "/app/frontend/src/components/MobileDriverInterface.js"
-    stuck_count: 3
+    working: "NA"
+    file: "/app/frontend/src/components/CompanyProfile.js"
+    stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
-      - working: false
+      - working: "NA"
         agent: "main"
-        comment: "Previous attempts failed due to Unicode escape sequence errors from literal \n characters in file content."
-      - working: true
-        agent: "main"
-        comment: "Successfully recreated MobileDriverInterface.js with proper line breaks. Component includes: WebSocket connection for vehicle tracking, geolocation API integration, location update sending, status updates (battery, signal), location history display, vehicle controls UI."
-        
-  - task: "Fleet Management Page Integration"
+        comment: "Completely rebuilt CompanyProfile with split view layout. Left sidebar (1/3 width, sticky) shows company info: logo, name, MC#, DOT#, NSC#, phone, email, website with inline editing. Right panel (2/3 width) has switchable views via button tabs for Users/Drivers/Documents. Responsive grid layout."
+
+  - task: "User Management UI"
     implemented: true
-    working: true
-    file: "/app/frontend/src/components/FleetManagement.js"
+    working: "NA"
+    file: "/app/frontend/src/components/CompanyProfile.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
-      - working: true
+      - working: "NA"
         agent: "main"
-        comment: "FleetManagement component already exists and imports LocationTracking component properly. Dashboard navigation working correctly."
-        
-  - task: "Location Tracking Integration"
+        comment: "Added Users view with table display, 'Add User' dialog with form (name, email, phone, role dropdown, password), DELETE button for each user, admin-only permissions. Calls POST /api/users and DELETE /api/users/{id}."
+
+  - task: "Driver Management UI"
     implemented: true
-    working: true
-    file: "/app/frontend/src/components/LocationTracking.js"
+    working: "NA"
+    file: "/app/frontend/src/components/CompanyProfile.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
-      - working: true
+      - working: "NA"
         agent: "main"
-        comment: "LocationTracking component already exists and imports LiveTrackingMap component. Tab-based navigation working with Live Map View and Manual Tracking tabs."
+        comment: "Added Drivers view with table display, 'Add Driver' dialog, 'Edit Driver' dialog with form updates, DELETE button. Admin-only features. Calls POST /api/drivers, PUT /api/drivers/{id}, and DELETE /api/drivers/{id}."
+
+  - task: "Document Upload with Version History UI"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/CompanyProfile.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Documents view showing 3 document types (MC/NSC Authority, Certificate of Insurance, W-9). Each displays version history list with filename, upload date, file size, and download button. Frontend validates 10MB file size before upload. Shows version count badges."
 
 metadata:
   created_by: "main_agent"
