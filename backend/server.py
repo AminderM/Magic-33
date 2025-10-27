@@ -521,6 +521,18 @@ async def upload_company_document(
     import shutil
     import base64
     
+    # Read file content to check size
+    file_content = await file.read()
+    file_size = len(file_content)
+    
+    # Check file size limit (10MB = 10 * 1024 * 1024 bytes)
+    MAX_FILE_SIZE = 10 * 1024 * 1024
+    if file_size > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail=f"File size exceeds 10MB limit. Current size: {file_size / (1024 * 1024):.2f}MB")
+    
+    # Reset file pointer for reading
+    await file.seek(0)
+    
     with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
         shutil.copyfileobj(file.file, temp_file)
         temp_file_path = temp_file.name
@@ -531,19 +543,39 @@ async def upload_company_document(
             base64_data = base64.b64encode(file_data).decode('utf-8')
             doc_url = f"data:{file.content_type};base64,{base64_data}"
         
-        # Map document type to field name
-        field_map = {
-            "mc_authority": "mc_authority_doc",
-            "insurance_certificate": "insurance_certificate_doc",
-            "w9": "w9_doc"
+        # Create document version entry
+        document_version = {
+            "url": doc_url,
+            "filename": file.filename,
+            "uploaded_at": datetime.now(timezone.utc).isoformat(),
+            "uploaded_by": current_user.id,
+            "file_size": file_size
         }
         
+        # Get current company documents or initialize
+        company_docs = company.get("company_documents", {
+            "mc_authority": [],
+            "insurance_certificate": [],
+            "w9": []
+        })
+        
+        # Add new version to document history
+        if document_type not in company_docs:
+            company_docs[document_type] = []
+        
+        company_docs[document_type].append(document_version)
+        
+        # Update company with new document version
         await db.companies.update_one(
             {"id": company["id"]},
-            {"$set": {field_map[document_type]: doc_url}}
+            {"$set": {"company_documents": company_docs}}
         )
         
-        return {"message": f"{document_type.replace('_', ' ').title()} uploaded successfully"}
+        return {
+            "message": f"{document_type.replace('_', ' ').title()} uploaded successfully",
+            "version": len(company_docs[document_type]),
+            "document": document_version
+        }
     finally:
         if os.path.exists(temp_file_path):
             os.unlink(temp_file_path)
