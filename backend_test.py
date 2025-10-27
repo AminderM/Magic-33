@@ -145,6 +145,11 @@ class FleetMarketplaceAPITester:
             self.test_user_email = user_data['email']
             self.test_user_password = user_data['password']
             print(f"   User ID: {self.user_id}")
+            
+            # Since email service is not configured, we need to manually verify the user
+            # This is a workaround for testing purposes
+            print("   📧 Email verification required but service not configured")
+            print("   ⚠️  In production, user would need to verify email via link")
         
         return success
 
