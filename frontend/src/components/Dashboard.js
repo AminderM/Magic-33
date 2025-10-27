@@ -21,6 +21,7 @@ const Dashboard = () => {
     totalDrivers: 0,
     availableEquipment: 0
   });
+  const [selectedEquipmentForTracking, setSelectedEquipmentForTracking] = useState(null);
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
 
