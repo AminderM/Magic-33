@@ -352,12 +352,131 @@ const LocationTracking = () => {
         {/* Manual Tracking Tab */}
         <TabsContent value="manual-tracking" className="mt-6">
           <div className="space-y-6">
+            {/* Manual Location Update Card - Fleet Owner Only */}
+            {user?.role === 'fleet_owner' && (
+              <Card className="dashboard-card">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <i className="fas fa-map-pin mr-2 text-purple-600"></i>
+                    Manual Location Update
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Update the location of any asset in your fleet by selecting a city or town
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Equipment Selector */}
+                    <div className="space-y-2">
+                      <Label htmlFor="manual-equipment">Select Equipment *</Label>
+                      <Select value={manualEquipmentId} onValueChange={setManualEquipmentId}>
+                        <SelectTrigger id="manual-equipment">
+                          <SelectValue placeholder="Choose an asset" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {equipment.map(eq => (
+                            <SelectItem key={eq.id} value={eq.id}>
+                              {eq.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* City Search with Autocomplete */}
+                    <div className="space-y-2">
+                      <Label htmlFor="city-search">Search City/Town (USA/Canada) *</Label>
+                      <div className="relative">
+                        <div className="relative">
+                          <Input
+                            id="city-search"
+                            type="text"
+                            value={citySearchTerm}
+                            onChange={(e) => {
+                              setCitySearchTerm(e.target.value);
+                              setSelectedCity(null);
+                            }}
+                            onFocus={() => {
+                              if (cityResults.length > 0) {
+                                setShowCityDropdown(true);
+                              }
+                            }}
+                            placeholder="Type city name (e.g., Chicago, Toronto)"
+                            className="pr-10"
+                          />
+                          {searchingCities && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              <i className="fas fa-spinner fa-spin text-gray-400"></i>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Dropdown Results */}
+                        {showCityDropdown && cityResults.length > 0 && (
+                          <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                            {cityResults.map((city, index) => (
+                              <button
+                                key={index}
+                                type="button"
+                                onClick={() => handleCitySelect(city)}
+                                className="w-full text-left px-4 py-2 hover:bg-blue-50 flex items-start justify-between border-b last:border-b-0"
+                              >
+                                <div className="flex-1">
+                                  <div className="font-medium text-sm text-gray-900">
+                                    {formatCityName(city)}
+                                  </div>
+                                  <div className="text-xs text-gray-500 mt-0.5">
+                                    {city.display_name}
+                                  </div>
+                                </div>
+                                <i className="fas fa-map-marker-alt text-blue-500 ml-2 mt-1"></i>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {citySearchTerm && !searchingCities && cityResults.length === 0 && citySearchTerm.length >= 3 && (
+                          <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3">
+                            <p className="text-sm text-gray-600 text-center">
+                              <i className="fas fa-info-circle mr-2"></i>
+                              No cities found. Try a different search term.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {selectedCity && (
+                        <div className="flex items-center space-x-2 mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                          <i className="fas fa-check-circle text-green-600"></i>
+                          <span className="text-sm text-green-800">
+                            Selected: {formatCityName(selectedCity)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Update Button */}
+                  <div className="mt-4 flex justify-end">
+                    <Button 
+                      onClick={handleManualLocationUpdate}
+                      disabled={!manualEquipmentId || !selectedCity}
+                      className="btn-primary"
+                    >
+                      <i className="fas fa-map-marked-alt mr-2"></i>
+                      Update Location
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Header and Controls */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h3 className="text-xl font-bold text-gray-900">Manual Location Updates</h3>
+                <h3 className="text-xl font-bold text-gray-900">GPS Location Tracking</h3>
                 <p className="text-gray-600">
-                  Use this interface when GPS tracking is unavailable
+                  Use automatic GPS tracking when available
                 </p>
               </div>
               
