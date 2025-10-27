@@ -102,32 +102,56 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Fix persistent frontend compilation errors in LiveTrackingMap.js and MobileDriverInterface.js caused by incorrect file formatting (literal \n characters instead of line breaks) leading to Unicode escape sequence issues. Implement live vehicle tracking with OpenStreetMap and WebSockets."
+user_problem_statement: "Implement three features: 1) Add strict numerical validation with currency formatting for Confirmed Rate in OrderManagement.js 2) Complete Company Profile page with split view layout (left sidebar: always visible company info, right panel: switchable views for Users/Drivers/Documents) 3) Add user/driver management with version history for documents (10MB limit)"
 
 backend:
-  - task: "WebSocket Manager Implementation"
+  - task: "Company Model Update with Document Versioning"
     implemented: true
-    working: true
-    file: "/app/backend/websocket_manager.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: true
-        agent: "main"
-        comment: "Created websocket_manager.py with ConnectionManager class for handling fleet and vehicle WebSocket connections. Includes methods for broadcasting location updates and managing connections."
-      
-  - task: "WebSocket Integration in Backend"
-    implemented: true
-    working: true
+    working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
-      - working: true
+      - working: "NA"
         agent: "main"
-        comment: "Added import and initialization of ConnectionManager. WebSocket endpoints at /ws/fleet-tracking and /ws/vehicle/{vehicle_id} already exist and should now work with the manager."
+        comment: "Updated Company model to support document version history. Changed from single document fields to company_documents dict containing arrays of document versions with metadata (url, filename, uploaded_at, uploaded_by, file_size). Added DocumentVersion model."
+
+  - task: "Document Upload with Size Validation and Versioning"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated /api/companies/my/upload-document endpoint to enforce 10MB file size limit, store document versions with metadata, and append to version history array. Returns version number and document details."
+
+  - task: "User Management API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added POST /api/users endpoint for admins to create new company users. Users are auto-verified and linked to company. Only fleet_owner role can create users."
+
+  - task: "Driver Management API - Update and Delete"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added PUT /api/drivers/{driver_id} for updating driver info and DELETE /api/drivers/{driver_id} for removing drivers. Only accessible to fleet_owner role."
 
 frontend:
   - task: "Install react-use-websocket Package"
