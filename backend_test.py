@@ -7,6 +7,9 @@ Tests all API endpoints for the comprehensive fleet marketplace application
 import requests
 import sys
 import json
+import io
+import tempfile
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
