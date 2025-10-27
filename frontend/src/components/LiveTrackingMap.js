@@ -199,7 +199,9 @@ const LiveTrackingMap = () => {
       sendMessage(JSON.stringify({ type: 'request_status' }));
       toast.success('Refreshing fleet status...');
     } else {
-      toast.error('Not connected to tracking server');
+      // If WebSocket is not connected, fetch via API
+      fetchEquipmentLocations();
+      toast.success('Refreshing from API...');
     }
   };
 
