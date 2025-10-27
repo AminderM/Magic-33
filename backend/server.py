@@ -714,6 +714,39 @@ async def get_my_drivers(current_user: User = Depends(get_current_user)):
     drivers = await db.users.find({"fleet_owner_id": current_user.id}).to_list(length=None)
     return [User(**driver) for driver in drivers]
 
+@api_router.put("/drivers/{driver_id}", response_model=dict)
+async def update_driver(driver_id: str, driver_data: UserBase, current_user: User = Depends(get_current_user)):
+    # Only fleet owners can update drivers
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only fleet owners can update drivers")
+    
+    # Find driver
+    driver = await db.users.find_one({"id": driver_id, "fleet_owner_id": current_user.id})
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    # Update driver
+    update_data = driver_data.dict(exclude_unset=True)
+    if update_data:
+        await db.users.update_one(
+            {"id": driver_id},
+            {"$set": update_data}
+        )
+    
+    return {"message": "Driver updated successfully"}
+
+@api_router.delete("/drivers/{driver_id}")
+async def delete_driver(driver_id: str, current_user: User = Depends(get_current_user)):
+    # Only fleet owners can delete drivers
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only fleet owners can delete drivers")
+    
+    result = await db.users.delete_one({"id": driver_id, "fleet_owner_id": current_user.id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    return {"message": "Driver deleted successfully"}
+
 # Location Tracking Routes
 @api_router.post("/locations", response_model=dict)
 async def update_location(location_data: LocationUpdate, current_user: User = Depends(get_current_user)):
