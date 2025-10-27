@@ -649,6 +649,7 @@ class FleetMarketplaceAPITester:
             ('Booking Management', self.test_booking_management),
             ('Location Tracking', self.test_location_tracking),
             ('Equipment Filtering', self.test_equipment_types_and_filters),
+            ('Working Endpoints Summary', self.test_working_endpoints_summary),
         ]
         
         for test_name, test_func in test_sequence:
