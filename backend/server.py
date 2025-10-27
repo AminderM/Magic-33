@@ -770,6 +770,8 @@ async def update_location(location_data: LocationUpdate, current_user: User = De
             "$set": {
                 "location_lat": location_data.latitude,
                 "location_lng": location_data.longitude,
+                "current_latitude": location_data.latitude,
+                "current_longitude": location_data.longitude,
                 "last_location_update": datetime.now(timezone.utc)
             }
         }
@@ -777,6 +779,15 @@ async def update_location(location_data: LocationUpdate, current_user: User = De
     
     # Store location history
     await db.location_history.insert_one(location_data.dict())
+    
+    # Broadcast location update to WebSocket clients
+    broadcast_data = {
+        "vehicle_id": location_data.equipment_id,
+        "latitude": location_data.latitude,
+        "longitude": location_data.longitude,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+    await manager.broadcast_location_update(broadcast_data)
     
     return {"message": "Location updated successfully"}
 
