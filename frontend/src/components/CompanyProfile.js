@@ -1193,7 +1193,7 @@ const CompanyProfileInner = () => {
   );
 };
 
-export default CompanyProfile;
+// moved to the bottom with ErrorBoundary wrapper
 
 // Wrapper to catch any unexpected runtime errors in CompanyProfileInner
 import React from 'react';
