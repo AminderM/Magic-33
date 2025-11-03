@@ -388,6 +388,9 @@ const CompanyProfile = () => {
         <p className="text-gray-600">No company profile found</p>
       </div>
   // Adaptive Theme Hook: listen for apply event and compute theme from logo
+    );
+  }
+
   useEffect(() => {
     function handleApplyTheme() {
       if (!company?.logo_url) return;
