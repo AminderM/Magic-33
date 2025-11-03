@@ -387,7 +387,6 @@ const CompanyProfile = () => {
       <div className="text-center py-12">
         <p className="text-gray-600">No company profile found</p>
       </div>
-  // Adaptive Theme Hook: listen for apply event and compute theme from logo
     );
   }
 
