@@ -593,9 +593,13 @@ const OrderManagement = () => {
     ws['!cols'] = colWidths;
 
     // Generate Excel file
-    XLSX.writeFile(wb, `${filename}.xlsx`);
-
-    toast.success(`Exported ${data.length} orders to Excel`);
+    try {
+      XLSX.writeFile(wb, `${filename}.xlsx`);
+      toast.success(`Exported ${data.length} orders to Excel`);
+    } catch (e) {
+      console.error('Export Excel error', e);
+      toast.error('Failed to export Excel');
+    }
   };
 
   const filteredOrders = orders.filter(order => {
