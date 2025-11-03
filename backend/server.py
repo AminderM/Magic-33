@@ -456,6 +456,39 @@ async def update_my_company(
             {"$set": update_data}
         )
     
+
+@api_router.get("/companies/current", response_model=Company)
+async def get_current_company(current_user: User = Depends(get_current_user)):
+    """Return the company associated with the current user.
+    - For fleet_owner: company where owner_id == current_user.id
+    - For driver: company where owner_id == fleet_owner_id
+    - For other roles (dispatcher, AR/AP/HR): company by user's company_id
+    """
+    # Fleet owner
+    if current_user.role == UserRole.FLEET_OWNER:
+        company = await db.companies.find_one({"owner_id": current_user.id})
+        if not company:
+            raise HTTPException(status_code=404, detail="No company found for this user")
+        return Company(**company)
+
+    # Load full user record to access company_id/fleet_owner_id
+    user_record = await db.users.find_one({"id": current_user.id})
+    if not user_record:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    company = None
+    # Drivers are linked via fleet_owner_id
+    if user_record.get("fleet_owner_id"):
+        company = await db.companies.find_one({"owner_id": user_record["fleet_owner_id"]})
+    # Other roles use company_id
+    if not company and user_record.get("company_id"):
+        company = await db.companies.find_one({"id": user_record["company_id"]})
+
+    if not company:
+        raise HTTPException(status_code=404, detail="No company found for this user")
+
+    return Company(**company)
+
     updated_company = await db.companies.find_one({"id": company["id"]})
     return Company(**updated_company)
 
