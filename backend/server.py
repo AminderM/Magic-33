@@ -161,6 +161,7 @@ class CompanyUpdate(BaseModel):
     correspondence_email: Optional[str] = None
     website: Optional[str] = None
     logo_url: Optional[str] = None
+    theme: Optional[dict] = None
 
 class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
