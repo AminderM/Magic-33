@@ -142,6 +142,8 @@ const CompanyProfile = () => {
         setCompany(prev => ({ ...prev, logo_url: result.logo_url }));
         toast.success('Logo uploaded successfully');
         loadCompanyProfile();
+        // Auto-trigger brand theme adaptation after successful logo upload
+        window.dispatchEvent(new CustomEvent('tc:applyThemeFromLogo'));
       } else {
         const error = await response.json();
         toast.error(error.detail || 'Failed to upload logo');
