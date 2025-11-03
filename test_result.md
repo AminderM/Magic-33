@@ -243,6 +243,9 @@ metadata:
 test_plan:
   current_focus:
     - "Backend API endpoints testing (users, drivers, document upload)"
+  - agent: "main"
+    message: "Added brand-adaptive theming: when a company logo is uploaded, the app can compute a color palette client-side (node-vibrant + colord), map it to CSS variables (primary, secondary, accent, ring, and foregrounds) with WCAG AA contrast adjustments, apply globally, and persist to backend in company.theme. Added UI in Company Profile to Adapt from Logo and Reset Theme."
+
     - "Frontend currency validation in OrderManagement"
     - "Company Profile split view layout and navigation"
     - "User/Driver management forms and operations"
