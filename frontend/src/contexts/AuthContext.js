@@ -39,6 +39,33 @@ export const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
+  // Apply company theme on load if present
+  useEffect(() => {
+    async function applyStoredTheme() {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const storedToken = localStorage.getItem('auth_token');
+        const storedUser = localStorage.getItem('user_data');
+        if (!storedToken || !storedUser) return;
+        // Try to fetch company and apply theme
+        const res = await fetch(`${backendUrl}/api/companies/my`, {
+          headers: { 'Authorization': `Bearer ${storedToken}` }
+        });
+        if (res.ok) {
+          const company = await res.json();
+          if (company?.theme) {
+            Object.entries(company.theme).forEach(([k, v]) => {
+              document.documentElement.style.setProperty(k, v);
+            });
+          }
+        }
+      } catch (e) {
+        // non-blocking
+      }
+    }
+    applyStoredTheme();
+  }, []);
+
   }, []);
 
   const login = async (email, password) => {
