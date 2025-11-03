@@ -1264,6 +1264,36 @@ const OrderManagement = () => {
         {/* Load History Tab */}
         <TabsContent value="load-history">
           <Card>
+            <CardHeader className="border-b">
+              <div className="flex justify-between items-center">
+                <CardTitle>Load History</CardTitle>
+                <div className="flex space-x-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" disabled={paidOrders.length === 0}>
+                        <i className="fas fa-download mr-2"></i>
+                        Download
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => exportToCSV(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
+                        <i className="fas fa-file-csv text-gray-600"></i>
+                        Export CSV
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => exportToExcel(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
+                        <i className="fas fa-file-excel text-green-600"></i>
+                        Export Excel
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => exportToJSON(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
+                        <i className="fas fa-code text-blue-600"></i>
+                        Export JSON
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            </CardHeader>
+
             <CardContent className="p-0">
               {paidOrders.length === 0 ? (
                 <div className="text-center py-12">
