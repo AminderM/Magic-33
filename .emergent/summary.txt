@@ -1,71 +1,82 @@
 <analysis>
-The previous AI engineer successfully developed a full-stack marketplace application, starting from basic user and company registration to complex features like real-time fleet tracking and comprehensive order management. Initial efforts resolved critical frontend compilation errors and established WebSocket communication for live tracking. Significant feature additions included a detailed Order Management grid with editable statuses, an AI-powered rate confirmation document parser, and a Company Profile page with user/driver management capabilities. The engineer addressed several bugs, including authentication issues and environmental variable misconfigurations, demonstrating strong debugging skills. The work culminated in refining the UI by renaming tabs and app features on both the dashboard and landing page, followed by starting the Company Profile page.
+The previous AI engineer successfully initiated a full-stack marketplace application, Transport Central, designed for supply chain entities. Starting from basic framework setup, the engineer tackled a wide range of features. Key achievements included developing user and company registration, implementing real-time fleet tracking via WebSockets and OpenStreetMap, and creating a comprehensive Order Management (renamed to Loads) system with AI-powered rate confirmation document parsing. Significant effort was dedicated to the Company Profile page, integrating user/driver management and document upload functionalities. The engineer demonstrated strong debugging capabilities, resolving frontend compilation issues, WebSocket communication problems, and fixing map display discrepancies. The work culminated in refining UI elements, such as renaming tabs, adding advanced UI features like list/tile views, and providing detailed infrastructure scaling recommendations. The current task involves a minor UI refinement for export buttons.
 </analysis>
 
 <product_requirements>
-The application's core objective is to serve as a marketplace for supply chain entities (Manufacturers, Construction companies, Warehouses, Trucking companies, Special Equipment Fleet Owners). Key functionalities include:
--   **User Types**: Manufacturers (hiring trucks/equipment), Truckers/Fleet Owners (managing fleets/drivers).
--   **Registration**: Multi-step user and company registration with verification.
--   **Geolocation**: Driver/operator accounts with live location tracking for fleet owners via OpenStreetMap, Leaflet.js, and WebSockets.
--   **Equipment Management**: Basic info (type, availability, location), detailed specs (photos, insurance, maintenance), real-time availability.
--   **Fleet Management (now Transport Hub - TMS)**: Comprehensive dashboard with statistics, tab-based navigation for various fleet-related components.
--   **Order Management (now Orders)**: Display orders in a grid with detailed columns (Order #, Shipper Info, Locations, Commodity, Weight, Cubes, Vehicle/Driver Info, Times). Orders should be editable when Pending, and status should be a changeable dropdown with various states (Pending, Planned, In-Transit Pick up, At Pick up, In Transit to Delivery, At Delivery, Delivered, Invoiced, Payment OverDue, Paid).
--   **AI-Powered Rate Confirmation**: Button to upload documents for AI parsing (using Gemini via ) to auto-fill order creation forms.
--   **Apps Marketplace**: A dedicated page () to showcase different applications offered, branded with the company logo (Integrated Supply Chain Solutions LLC), with customizable app names.
--   **Company Profile**: A page accessible from the Dashboard (dropdown menu in header) viewable by all users, editable by admins. It should display company logo, name, MC#, DOT#, NSC#, phone, email (linked to MC# Account), correspondence email, website. It should also have the capability to add/delete user and driver accounts, and allow admins to upload/edit transportation-specific documents (MC/NSC Authority, Certificate of Insurance, W-9).
-
-Current implementation includes working user/company registration, email notifications, initial dashboard, functional Fleet/Transport Hub, Equipment Management, Orders Management grid with form, status dropdown, AI rate confirmation, and a Company Profile page with updated backend model and basic frontend scaffolding.
+The Transport Central application is a marketplace for supply chain entities. It supports user types like Manufacturers and Truckers/Fleet Owners, with multi-step registration and email verification. Core features include:
+-   **Geolocation:** Live location tracking for drivers/operators via OpenStreetMap, Leaflet.js, and WebSockets.
+-   **Equipment Management:** Basic equipment info and real-time availability.
+-   **Fleet Management (Transport Hub - TMS):** A comprehensive dashboard for fleet-related components.
+-   **Order Management (Loads):** A grid-based system for orders with detailed columns, editable statuses (Pending, In-Transit, Delivered, Paid, etc.), and a Load History for paid orders.
+-   **AI-Powered Rate Confirmation:** Allows uploading documents for AI parsing (Gemini via ) to auto-fill order creation forms.
+-   **Apps Marketplace:** A dedicated  page showcasing branded modular applications.
+-   **Company Profile:** An admin-editable page displaying company details (logo, name, MC#, DOT#, NSC#, contact info, website), with user/driver account management (roles: Dispatcher, Driver, Accounts Receivable, Accounts Payable, HR), and transportation document upload/management (MC/NSC Authority, Certificate of Insurance, W-9). Document uploads should have a 10MB limit and keep version history.
 </product_requirements>
 
 <key_technical_concepts>
--   **Frontend:** React.js, Shadcn UI, Tailwind CSS, Leaflet.js (), .
+-   **Frontend:** React.js, Shadcn UI, Tailwind CSS, Leaflet.js (), , .
 -   **Backend:** FastAPI, MongoDB (), PyJWT, , usage: websockets [--version | <uri>],  (for LLM with Gemini).
 -   **Email:** Nodemailer+SMTP via .
--   **Deployment:** Kubernetes, backend                          RUNNING   pid 41, uptime 0:00:03
-code-server                      RUNNING   pid 43, uptime 0:00:03
-frontend                         STOPPED   Oct 26 11:51 PM
-mongodb                          RUNNING   pid 45, uptime 0:00:03
+-   **Deployment:** Kubernetes, backend                          RUNNING   pid 29, uptime 0:00:03
+code-server                      RUNNING   pid 30, uptime 0:00:03
+frontend                         STOPPED   Nov 03 01:02 AM
+mongodb                          RUNNING   pid 36, uptime 0:00:03
 supervisor> .
+-   **External APIs:** OpenStreetMap Nominatim API (for location search).
 </key_technical_concepts>
 
 <code_architecture>
-The application uses a standard full-stack architecture:
+The application uses a standard full-stack architecture with FastAPI backend and React frontend.
 
 
 
--   ****: Main FastAPI app. Handles auth, company registration, data retrieval. Integrates , , and  for AI parsing. Modified to support new  model fields, company profile fields, and new API endpoints for order status updates, full booking updates, AI document parsing, and company profile management.
--   ****: Encapsulates Nodemailer+SMTP email sending.
--   ****: Manages active WebSocket connections; newly created and imported into .
--   ****: Contains , email config, and . Crucially debugged for correct  placement.
--   ****: Defines routing. Modified to include routes for  and the Dashboard  page.
--   ****: Central component for routing, navigation, and state management. Heavily modified to include Transport Hub - TMS tab, reorder tabs, rename Bookings to Orders, and integrate a header dropdown for Company Profile navigation. State management for tabs was adjusted.
--   ****: Provides fleet view. Renamed its header to Transport Hub - TMS Dashboard.
--   ****: Displays location info, integrates .
--   ****: Integrates OpenStreetMap/Leaflet.js for real-time tracking via WebSockets; newly created and debugged for file content issues.
--   ****: Simulates driver interface for sending GPS coordinates; newly created and debugged for file content issues.
--   ****: Manages equipment. Modified to add Tractor as an equipment type, remove icons, and sort equipment types alphabetically in dropdown.
--   ****: Replaced . Newly created. Displays orders in a grid, includes a New Order form, editable status dropdown, Confirmed Rate column, and + Rate Confirmation button for AI document parsing. Contains logic for form validation, submission, and error handling for AI responses.
--   ****: Newly created. Showcases modular applications with company branding and updated app names.
--   ****: Newly created. Component for displaying and editing company details, managing users/drivers, and handling document uploads.
--   ****: Manages authentication state. Modified to correctly retrieve  from .
--   ****: The entry page. Modified to include a link to the  page and to display updated app names in its features section.
+-   ****: Main FastAPI app.
+    -   **Importance**: Central API logic, authentication, data models, and WebSocket integration.
+    -   **Changes Made**: Expanded  model (MC#, DOT#, NSC#, phone, email, website, ). Added endpoints for company profile management (get/update company details, user/driver management, document uploads), and user/driver update/delete. Updated location endpoint () to broadcast via WebSocket. Added logic to include driver and current load information in WebSocket broadcasts and  endpoint. Updated to support new user roles (Dispatcher, Accounts Receivable, Accounts Payable, HR).
+-   ****: Manages WebSocket connections.
+    -   **Importance**: Facilitates real-time communication for live tracking.
+    -   **Changes Made**: No direct changes detailed, but integrated with  for location broadcasting.
+-   ****: Defines application routes.
+    -   **Importance**: Core routing configuration.
+    -   **Changes Made**: Modified to include routes for  and Dashboard .
+-   ****: Central component for routing and navigation.
+    -   **Importance**: Manages tab navigation and overall dashboard layout.
+    -   **Changes Made**: Renamed Orders tab to Loads. Integrated a header dropdown for Company Profile navigation and added a new Apps button for  page navigation. Passed  and  states/functions to  and .
+-   ****: Manages equipment view.
+    -   **Importance**: Displays and allows interaction with fleet equipment.
+    -   **Changes Made**: Added Track button functionality to navigate to  with selected equipment. Implemented List/Tile view toggle for equipment display.
+-   ****: Displays location info and integrates map.
+    -   **Importance**: Handles asset location display and manual updates.
+    -   **Changes Made**: Enhanced Manual Tracking to add a city/location selector with autocomplete using OpenStreetMap Nominatim API, and manual location update functions. Removed GPS Location Tracking section, keeping only manual update and history.
+-   ****: Integrates OpenStreetMap/Leaflet.js.
+    -   **Importance**: Provides real-time asset tracking visualization.
+    -   **Changes Made**: Modified to fetch initial equipment locations via API as a fallback and refresh button. Updated map markers to show detailed information (Load#, Driver#, Driver Name, Driver Phone#, Asset#) in popups and the vehicle list sidebar.
+-   ****: Replaced .
+    -   **Importance**: Manages customer orders/loads.
+    -   **Changes Made**: Added strict currency validation for . Split orders into Loads (active) and Load History (paid) tabs. Added Excel and CSV export functionality. List/Tile view toggle and JSON export were temporarily added, then removed and moved to other components.
+-   ****: Showcases modular applications.
+    -   **Importance**: Serves as a marketplace for other applications.
+    -   **Changes Made**: Newly created, but no specific functional changes detailed in the trajectory.
+-   ****: Component for company details.
+    -   **Importance**: Displays and allows editing of company details, user/driver management, and document uploads.
+    -   **Changes Made**: Rebuilt with a split view layout for company info, user/driver management, and document uploads. Updated to include new user roles (Dispatcher, Accounts Receivable, Accounts Payable, HR) in the dropdown and table display.
+-   ****: Manages driver accounts.
+    -   **Importance**: Allows fleet owners to manage drivers.
+    -   **Changes Made**: Added List/Tile view toggle for driver display. Fixed Dialog closing tag.
+-   ****: Frontend dependencies.
+    -   **Importance**: Manages React project dependencies.
+    -   **Changes Made**:  library was added.
 </code_architecture>
 
 <pending_tasks>
--   Ensure Confirmed Rate column input strictly validates for numerical values with currency formatting on the frontend.
+-   Implement the Download dropdown button with CSV, Excel, and JSON export options for the Loads tab.
+-   Fully implement and test the transportation document upload features within the Company Profile page, including the UI for file uploads, display of uploaded documents, and version history.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer had just completed the implementation of the Company Profile page. This involved:
-1.  **Backend Model Update ()**: Expanding the  model to include fields like MC#, DOT#, NSC#, phone, email, website, and .
-2.  **Backend Endpoints ()**: Adding new API routes for company profile management (get/update company details, user/driver management, document uploads).
-3.  **Frontend Component Creation ()**: Creating the React component to display and interact with company profile data.
-4.  **Dashboard Integration ()**: Modifying the Dashboard to include a dropdown menu in the header, allowing navigation to the new Company Profile page. The  component is rendered within a  section.
-5.  **Fixing Navigation**: Resolving an  error in  to ensure proper tab navigation and dynamic content display.
-
-The Company Profile page is now accessible via the Dashboard header dropdown and displays a basic structure for future enhancements, with the backend ready for data persistence and management.
+Immediately before this summary request, the AI engineer was tasked with refining the export functionality on the Loads tab. Currently, there are separate Export CSV and Export Excel buttons. The user requested these be consolidated into a single Download button. When clicked, this Download button should present a dropdown menu with three options: Export CSV, Export Excel, and Export JSON. The AI engineer acknowledged this request and stated the intention to update the  component to implement this UI/UX change. This involves modifying the existing buttons into a dropdown component and adding the JSON export logic.
 </current_work>
 
 <optional_next_step>
-Continue building out the Company Profile page by implementing user/driver account management and transportation document upload features.
+Update the  component to create a single Download dropdown button for CSV, Excel, and JSON exports.
 </optional_next_step>
