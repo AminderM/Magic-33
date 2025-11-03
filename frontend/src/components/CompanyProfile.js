@@ -439,6 +439,59 @@ const CompanyProfile = () => {
                     </Button>
                   </div>
                 )}
+
+              {/* Theme Preview and Actions */}
+              <div className="space-y-3 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs text-gray-500">Brand Theme</Label>
+                  {company.theme ? (
+                    <span className="text-xs text-gray-500">Applied</span>
+                  ) : (
+                    <span className="text-xs text-gray-400">Default</span>
+                  )}
+                </div>
+                {company.theme && (
+                  <div className="flex items-center gap-2">
+                    {Object.entries(company.theme).slice(0,6).map(([k,v]) => (
+                      <div key={k} className="w-6 h-6 rounded border" style={{ backgroundColor: `hsl(${v})` }} title={k}></div>
+                    ))}
+                  </div>
+                )}
+                {isAdmin && company.logo_url && (
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('tc:applyThemeFromLogo'))}>
+                      <i className="fas fa-palette mr-1"></i>
+                      Adapt from Logo
+                    </Button>
+                    {company.theme && (
+                      <Button size="sm" variant="ghost" onClick={async () => {
+                        // Reset to defaults by clearing theme field
+                        try {
+                          const response = await fetchWithAuth(`${BACKEND_URL}/api/companies/my`, {
+                            method: 'PUT',
+                            body: JSON.stringify({ theme: null })
+                          });
+                          if (response.ok) {
+                            toast.success('Theme reset to default');
+                            // reset CSS vars by removing inline styles for vars we set
+                            Object.keys(company.theme || {}).forEach(k => document.documentElement.style.removeProperty(k));
+                            loadCompanyProfile();
+                          } else {
+                            const err = await response.json();
+                            toast.error(err.detail || 'Failed to reset theme');
+                          }
+                        } catch(e) {
+                          toast.error('Error resetting theme');
+                        }
+                      }}>
+                        <i className="fas fa-undo mr-1"></i>
+                        Reset Theme
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+
               </div>
 
               {/* Company Details */}
