@@ -218,6 +218,18 @@ frontend:
         comment: "Replaced separate CSV/Excel buttons with a single Download dropdown offering CSV, Excel, and JSON. Export respects current filters/search within the active tab (Active Loads or Load History). Added exportToJSON utility and used shadcn DropdownMenu."
 
       - working: "NA"
+  - task: "Brand-Adaptive Theme (Logo-based)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/CompanyProfile.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Front-end adaptive theme implemented using node-vibrant + colord. New company.theme field added to backend models; theme persists via PUT /api/companies/my. On login, if company.theme exists, CSS vars are applied. Company Profile adds Adapt from Logo and Reset Theme controls."
+
         agent: "main"
         comment: "Added Drivers view with table display, 'Add Driver' dialog, 'Edit Driver' dialog with form updates, DELETE button. Admin-only features. Calls POST /api/drivers, PUT /api/drivers/{id}, and DELETE /api/drivers/{id}."
 
