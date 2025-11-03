@@ -243,6 +243,9 @@ frontend:
     status_history:
       - working: "NA"
         agent: "main"
+  - agent: "testing"
+    message: "Backend verification complete for new theme model field. Frontend compile error fixed; app loads. Ready for UI testing for Loads Download dropdown and theme adaptation flow."
+
         comment: "Front-end adaptive theme implemented using node-vibrant + colord. New company.theme field added to backend models; theme persists via PUT /api/companies/my. On login, if company.theme exists, CSS vars are applied. Company Profile adds Adapt from Logo and Reset Theme controls."
 
         agent: "main"
