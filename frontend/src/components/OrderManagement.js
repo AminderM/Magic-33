@@ -418,24 +418,29 @@ const OrderManagement = () => {
       toast.error(`Error parsing document: ${error.message || 'Unknown error'}`);
     } finally {
       setParsingDocument(false);
+    }
+  };
+
   // Export to JSON
   const exportToJSON = (data, filename) => {
     if (!data || data.length === 0) {
       toast.error('No data to export');
       return;
     }
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.json`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    toast.success(`Exported ${data.length} orders to JSON`);
-  };
-
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = `${filename}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast.success(`Exported ${data.length} orders to JSON`);
+    } catch (e) {
+      console.error('Export JSON error', e);
+      toast.error('Failed to export JSON');
     }
   };
 
