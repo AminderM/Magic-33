@@ -1196,8 +1196,6 @@ const CompanyProfileInner = () => {
 // moved to the bottom with ErrorBoundary wrapper
 
 // Wrapper to catch any unexpected runtime errors in CompanyProfileInner
-import React from 'react';
-
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
