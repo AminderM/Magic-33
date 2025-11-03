@@ -204,6 +204,19 @@ frontend:
     priority: "high"
     needs_retesting: true
     status_history:
+
+  - task: "Loads Download Dropdown (CSV/Excel/JSON)"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/OrderManagement.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Replaced separate CSV/Excel buttons with a single Download dropdown offering CSV, Excel, and JSON. Export respects current filters/search within the active tab (Active Loads or Load History). Added exportToJSON utility and used shadcn DropdownMenu."
+
       - working: "NA"
         agent: "main"
         comment: "Added Drivers view with table display, 'Add Driver' dialog, 'Edit Driver' dialog with form updates, DELETE button. Admin-only features. Calls POST /api/drivers, PUT /api/drivers/{id}, and DELETE /api/drivers/{id}."
