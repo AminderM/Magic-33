@@ -461,9 +461,6 @@ const CompanyProfile = () => {
     return () => window.removeEventListener('tc:applyThemeFromLogo', handleApplyTheme);
   }, [company, BACKEND_URL, fetchWithAuth]);
 
-    );
-  }
-
   return (
 
     <div className="space-y-6">
