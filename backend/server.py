@@ -318,6 +318,8 @@ async def register_user(user_data: UserCreate, background_tasks: BackgroundTasks
     
     # Insert user
     result = await db.users.insert_one(user_obj.dict())
+    # noinspection PyStatementEffect
+
     
     # Send verification email
     verification_url = f"https://transport-central-4.preview.emergentagent.com/verify-email/{token}"
