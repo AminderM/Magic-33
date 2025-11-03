@@ -382,7 +382,7 @@ const CompanyProfile = () => {
     );
   }
 
-  // Theme application effect
+  // Always register theme handler (hooks must not be conditional)
   useEffect(() => {
     function handleApplyTheme() {
       if (!company?.logo_url) return;
