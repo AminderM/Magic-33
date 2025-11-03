@@ -389,6 +389,82 @@ const CompanyProfile = () => {
   }
 
   return (
+  // Adaptive Theme Hook
+  // Attach a window event listener to trigger theme update after logo upload
+  useEffect(() => {
+    function handleApplyTheme() {
+      if (company?.logo_url) {
+        // Lazy import to avoid increasing initial bundle
+        import('../hooks/useAdaptiveTheme').then(({ default: useAdaptive }) => {
+          // Run a one-off compute-and-apply without mounting a component hook
+          // We'll directly use Vibrant here via a dynamic import to keep this simple
+          import('node-vibrant').then(async (mod) => {
+            try {
+              const Vibrant = mod.default || mod;
+              const palette = await Vibrant.from(company.logo_url).getPalette();
+              const { colord, extend } = await import('colord');
+              const mixPlugin = (await import('colord/plugins/mix')).default;
+              const labPlugin = (await import('colord/plugins/lab')).default;
+              extend([mixPlugin, labPlugin]);
+
+              const ensureContrast = (bgHex, fgHex, minRatio = 4.5) => {
+                let fg = colord(fgHex);
+                const bg = colord(bgHex);
+                if (!bg.isValid()) return fgHex;
+                if (!fg.isValid()) fg = colord('#111111');
+                let ratio = fg.contrast(bg);
+                if (ratio >= minRatio) return fg.toHex();
+                let adjusted = fg;
+                const isBgDark = bg.isDark();
+                for (let i = 0; i < 20 && adjusted.contrast(bg) < minRatio; i++) {
+                  adjusted = isBgDark ? adjusted.lighten(0.05) : adjusted.darken(0.05);
+                }
+                if (adjusted.contrast(bg) >= minRatio) return adjusted.toHex();
+                return isBgDark ? '#FFFFFF' : '#111111';
+              };
+
+              const primaryHex = palette.Vibrant?.hex || palette.Muted?.hex || '#2563eb';
+              const secondaryHex = palette.LightVibrant?.hex || colord(primaryHex).mix('#ffffff', 0.7).toHex();
+              const accentHex = palette.DarkVibrant?.hex || colord(primaryHex).mix('#000000', 0.7).toHex();
+
+              const toVar = (hex) => colord(hex).toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, '');
+
+              const vars = {
+                '--primary': toVar(primaryHex),
+                '--primary-foreground': toVar(ensureContrast(primaryHex, '#ffffff')),
+                '--secondary': toVar(secondaryHex),
+                '--secondary-foreground': toVar(ensureContrast(secondaryHex, '#0a0a0a')),
+                '--accent': toVar(accentHex),
+                '--accent-foreground': toVar(ensureContrast(accentHex, '#ffffff')),
+                '--ring': toVar(primaryHex),
+              };
+
+              Object.entries(vars).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
+
+              const res = await fetchWithAuth(`${BACKEND_URL}/api/companies/my`, {
+                method: 'PUT',
+                body: JSON.stringify({ theme: vars })
+              });
+              if (res.ok) {
+                toast.success('Brand theme applied');
+                loadCompanyProfile();
+              } else {
+                const err = await res.json();
+                toast.error(err.detail || 'Failed to save theme');
+              }
+            } catch (e) {
+              console.error('Theme apply error', e);
+              toast.error('Failed to adapt theme from logo');
+            }
+          });
+        });
+      }
+    }
+
+    window.addEventListener('tc:applyThemeFromLogo', handleApplyTheme);
+    return () => window.removeEventListener('tc:applyThemeFromLogo', handleApplyTheme);
+  }, [company, BACKEND_URL, fetchWithAuth]);
+
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
