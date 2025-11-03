@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 
-const CompanyProfile = () => {
+const CompanyProfileInner = () => {
   const { user, fetchWithAuth } = useAuth();
   const [company, setCompany] = useState(null);
   const [users, setUsers] = useState([]);
