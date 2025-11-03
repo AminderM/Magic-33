@@ -40,14 +40,21 @@ function mapPaletteToCSSVariables(palette) {
   const secondaryHex = secondary.toHex();
   const accentHex = accent.toHex();
 
+  const p = primary.toHsl();
+  const s = secondary.toHsl();
+  const a = accent.toHsl();
+  const pf = colord(ensureContrast(primaryHex, '#ffffff')).toHsl();
+  const sf = colord(ensureContrast(secondaryHex, '#0a0a0a')).toHsl();
+  const af = colord(ensureContrast(accentHex, '#ffffff')).toHsl();
+
   const vars = {
-    '--primary': primary.toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, ''),
-    '--primary-foreground': colord(ensureContrast(primaryHex, '#ffffff')).toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, ''),
-    '--secondary': secondary.toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, ''),
-    '--secondary-foreground': colord(ensureContrast(secondaryHex, '#0a0a0a')).toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, ''),
-    '--accent': accent.toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, ''),
-    '--accent-foreground': colord(ensureContrast(accentHex, '#ffffff')).toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, ''),
-    '--ring': primary.toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, ''),
+    '--primary': `${p.h} ${p.s}% ${p.l}%`,
+    '--primary-foreground': `${pf.h} ${pf.s}% ${pf.l}%`,
+    '--secondary': `${s.h} ${s.s}% ${s.l}%`,
+    '--secondary-foreground': `${sf.h} ${sf.s}% ${sf.l}%`,
+    '--accent': `${a.h} ${a.s}% ${a.l}%`,
+    '--accent-foreground': `${af.h} ${af.s}% ${af.l}%`,
+    '--ring': `${p.h} ${p.s}% ${p.l}%`,
   };
 
   return vars;
