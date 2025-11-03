@@ -243,6 +243,9 @@ frontend:
     stuck_count: 0
     priority: "medium"
     needs_retesting: true
+  - agent: "main"
+    message: "Fixed export runtime error: misplaced braces caused exportToJSON to be defined inside a finally block. Refactored export functions to create object URLs properly and revoke them. Added try/catch for Excel export. Users will see proper downloads (browser default Downloads folder)."
+
     status_history:
       - working: "NA"
         agent: "main"
