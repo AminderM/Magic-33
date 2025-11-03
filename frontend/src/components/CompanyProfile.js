@@ -382,14 +382,7 @@ const CompanyProfile = () => {
     );
   }
 
-  if (!company) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-gray-600">No company profile found</p>
-      </div>
-    );
-  }
-
+  // Theme application effect
   useEffect(() => {
     function handleApplyTheme() {
       if (!company?.logo_url) return;
@@ -460,6 +453,14 @@ const CompanyProfile = () => {
     window.addEventListener('tc:applyThemeFromLogo', handleApplyTheme);
     return () => window.removeEventListener('tc:applyThemeFromLogo', handleApplyTheme);
   }, [company, BACKEND_URL, fetchWithAuth]);
+
+  if (!company) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-600">No company profile found</p>
+      </div>
+    );
+  }
 
   return (
 
