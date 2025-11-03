@@ -48,9 +48,15 @@ export const AuthProvider = ({ children }) => {
         const storedUser = localStorage.getItem('user_data');
         if (!storedToken || !storedUser) return;
         // Try to fetch company and apply theme
-        const res = await fetch(`${backendUrl}/api/companies/my`, {
+        let res = await fetch(`${backendUrl}/api/companies/current`, {
           headers: { 'Authorization': `Bearer ${storedToken}` }
         });
+        if (!res.ok) {
+          // Fallback for fleet_owner route
+          res = await fetch(`${backendUrl}/api/companies/my`, {
+            headers: { 'Authorization': `Bearer ${storedToken}` }
+          });
+        }
         if (res.ok) {
           const company = await res.json();
           if (company?.theme) {
