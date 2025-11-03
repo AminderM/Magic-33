@@ -159,6 +159,21 @@ backend:
         agent: "main"
         comment: "Added PUT /api/drivers/{driver_id} for updating driver info and DELETE /api/drivers/{driver_id} for removing drivers. Only accessible to fleet_owner role."
 
+  - task: "Company Theme Field Backend Support"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Extended Company model with theme: Optional[dict] field in CompanyBase and CompanyUpdate. Backend supports theme persistence via PUT /api/companies/my and retrieval via GET /api/companies/my."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETED: Theme functionality working perfectly (100% success rate). GET /api/companies/my correctly returns theme field (null initially, populated after update). PUT /api/companies/my accepts and persists theme objects with CSS variables (--primary, --secondary, --accent, --ring, --foreground). Theme data persists correctly after other field updates. All routes properly prefixed with /api. Backend using MONGO_URL environment variable correctly. Upload endpoints (logo and document) remain fully functional and unaffected."
+
 frontend:
   - task: "Confirmed Rate Currency Validation in OrderManagement"
     implemented: true
