@@ -317,7 +317,7 @@ async def register_user(user_data: UserCreate, background_tasks: BackgroundTasks
     user_obj = User(**user_dict)
     
     # Insert user
-    result = await db.users.insert_one(user_obj.dict())
+    await db.users.insert_one(user_obj.dict())
     # noinspection PyStatementEffect
 
     
