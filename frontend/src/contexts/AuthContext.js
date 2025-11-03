@@ -39,6 +39,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
+  }, []);
+
   // Apply company theme on load if present
   useEffect(() => {
     async function applyStoredTheme() {
@@ -70,8 +72,6 @@ export const AuthProvider = ({ children }) => {
       }
     }
     applyStoredTheme();
-  }, []);
-
   }, []);
 
   const login = async (email, password) => {
