@@ -134,6 +134,7 @@ class CompanyBase(BaseModel):
     website: Optional[str] = None
     # Company branding
     logo_url: Optional[str] = None
+    theme: Optional[dict] = None
     # Documents with version history
     company_documents: Optional[Dict[str, List[dict]]] = Field(default_factory=lambda: {
         "mc_authority": [],
