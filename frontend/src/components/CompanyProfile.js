@@ -429,7 +429,10 @@ const CompanyProfile = () => {
               const secondaryHex = palette.LightVibrant?.hex || colord(primaryHex).mix('#ffffff', 0.7).toHex();
               const accentHex = palette.DarkVibrant?.hex || colord(primaryHex).mix('#000000', 0.7).toHex();
 
-              const toVar = (hex) => colord(hex).toHslString().replace('hsl(', '').replace(')', '').replace(/%/g, '');
+              const toVar = (hex) => {
+                const hsl = colord(hex).toHsl();
+                return `${hsl.h} ${hsl.s}% ${hsl.l}%`;
+              };
 
               const vars = {
                 '--primary': toVar(primaryHex),
