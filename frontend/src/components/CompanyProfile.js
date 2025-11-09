@@ -539,8 +539,6 @@ const CompanyProfileInner = () => {
                 {/* Gate brand theming under feature flag */}
 
                 {isAdmin && company.logo_url && (
-                {/* Gate brand theming under feature flag */}
-
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('tc:applyThemeFromLogo'))}>
                       <i className="fas fa-palette mr-1"></i>
