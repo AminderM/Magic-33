@@ -122,37 +122,36 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header */}
-      <div className="dashboard-header">
+      <div className="dashboard-header bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-3xl font-bold text-white" data-testid="dashboard-title">
+              <h1 className="text-3xl font-bold" data-testid="dashboard-title">
                 Welcome, {user?.full_name}
               </h1>
-              <p className="text-gray-300 mt-2">
-                {user?.role?.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} Dashboard
+              <p className="mt-1 opacity-90">
+                {(user?.role || '').replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} Dashboard
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="text-white text-sm">
+              <div className="text-sm">
                 <div className="font-semibold">{company?.name || 'No Company'}</div>
                 {company && getStatusBadge(company.verification_status)}
               </div>
               
-              {/* Company Profile Dropdown */}
+              {/* Company/Profile/Admin Dropdown */}
               <div className="relative group">
                 <Button 
-                  variant="outline" 
-                  className="text-white border-white hover:bg-white hover:text-gray-900"
-                >
+                  variant="secondary"
+                  className="">
                   <i className="fas fa-building mr-2"></i>
                   Company
                   <i className="fas fa-chevron-down ml-2"></i>
                 </Button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                <div className="absolute right-0 mt-2 w-56 bg-white text-foreground rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
                   <button
                     onClick={() => navigate('/apps')}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                   >
                     <i className="fas fa-th mr-2"></i>
                     Apps
@@ -160,11 +159,23 @@ const Dashboard = () => {
                   <div className="border-t border-gray-100"></div>
                   <button
                     onClick={() => setActiveTab('profile')}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                   >
                     <i className="fas fa-id-card mr-2"></i>
                     Company Profile
                   </button>
+                  {isPlatformAdmin && (
+                    <>
+                      <div className="border-t border-gray-100"></div>
+                      <button
+                        onClick={() => navigate('/admin')}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        <i className="fas fa-tools mr-2"></i>
+                        Admin Console
+                      </button>
+                    </>
+                  )}
                   <div className="border-t border-gray-100"></div>
                   <button
                     onClick={logout}
