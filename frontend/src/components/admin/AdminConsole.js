@@ -162,6 +162,16 @@ const AdminConsole = () => {
     { id: 'products', label: 'Products', icon: Package },
   ];
 
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setActiveView('product-detail');
+  };
+
+  const handleBackToProducts = () => {
+    setSelectedProduct(null);
+    setActiveView('products');
+  };
+
   // Render different views based on activeView
   const renderContent = () => {
     switch (activeView) {
@@ -189,7 +199,9 @@ const AdminConsole = () => {
       case 'analytics':
         return <SalesAnalyticsView tenants={tenants} />;
       case 'products':
-        return <ProductsView plans={plans} />;
+        return <ProductsView plans={plans} onProductClick={handleProductClick} />;
+      case 'product-detail':
+        return <ProductDetailView product={selectedProduct} onBack={handleBackToProducts} tenants={tenants} />;
       default:
         return <HomeView tenants={tenants} plans={plans} loading={loading} />;
     }
