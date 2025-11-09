@@ -45,9 +45,9 @@ function MapUpdater({ vehicles }) {
   return null;
 }
 
-const LiveTrackingMap = () => {
 import { useFeatures } from '@/contexts/FeaturesContext';
 
+const LiveTrackingMap = () => {
   const [vehicles, setVehicles] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
