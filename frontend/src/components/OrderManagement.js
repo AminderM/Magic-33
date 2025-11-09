@@ -1306,9 +1306,6 @@ const OrderManagement = () => {
                     </DropdownMenu>
                   </FeatureGate>
                 </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
               </div>
             </CardHeader>
 
