@@ -258,6 +258,36 @@ frontend:
         comment: "Added Drivers view with table display, 'Add Driver' dialog, 'Edit Driver' dialog with form updates, DELETE button. Admin-only features. Calls POST /api/drivers, PUT /api/drivers/{id}, and DELETE /api/drivers/{id}."
 
   - task: "Document Upload with Version History UI"
+
+  - task: "Seed Platform Admin Endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added POST /api/admin/seed-platform-admin to create/update aminderpro@gmail.com as platform_admin with verified email and temporary password Admin@123!. To be removed after initial access."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 2
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Seed Platform Admin Endpoint"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Please POST /api/admin/seed-platform-admin to create the admin user, then attempt login via /api/auth/login with email aminderpro@gmail.com and password Admin@123!. Return responses and any errors."
+
     implemented: true
     working: "NA"
     file: "/app/frontend/src/components/CompanyProfile.js"
