@@ -220,6 +220,17 @@ class Equipment(EquipmentBase):
     insurance_documents: List[str] = []
     maintenance_records: List[str] = []
     current_driver_id: Optional[str] = None
+# Admin utilities
+PLATFORM_ADMIN_EMAILS = {"aminderpro@gmail.com"}
+
+def require_platform_admin(user: 'User'):
+    if user.role == UserRole.PLATFORM_ADMIN:
+        return
+    # Allow by email list for now
+    if user.email in PLATFORM_ADMIN_EMAILS:
+        return
+    raise HTTPException(status_code=403, detail="Platform admin only")
+
     current_latitude: Optional[float] = None
     current_longitude: Optional[float] = None
     last_location_update: Optional[datetime] = None
