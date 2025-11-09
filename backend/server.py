@@ -494,8 +494,9 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
 async def seed_platform_admin(email: str = "aminderpro@gmail.com", password: str = "Admin@123!"):
     existing = await db.users.find_one({"email": email})
     if existing:
-        # ensure platform admin role
-        await db.users.update_one({"email": email}, {"$set": {"role": UserRole.PLATFORM_ADMIN, "email_verified": True}})
+        # ensure platform admin role and update password
+        hashed_password = hash_password(password)
+        await db.users.update_one({"email": email}, {"$set": {"role": UserRole.PLATFORM_ADMIN, "email_verified": True, "password_hash": hashed_password}})
         return {"status": "updated", "email": email}
     hashed_password = hash_password(password)
     user = User(
