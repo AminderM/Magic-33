@@ -1124,6 +1124,8 @@ const OrderManagement = () => {
                 <CardTitle>Active Loads</CardTitle>
                 <div className="flex space-x-2">
                   <DropdownMenu>
+                  <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-gray-400">Downloads disabled</div>}>
+
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" disabled={activeOrders.length === 0}>
                         <i className="fas fa-download mr-2"></i>
