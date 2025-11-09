@@ -356,6 +356,8 @@ const LocationTracking = ({ selectedEquipmentId }) => {
           </TabsTrigger>
         </TabsList>
 
+          </FeatureGate>
+
         {/* Live Map Tab */}
         <TabsContent value="live-map" className="mt-6">
           <LiveTrackingMap />
