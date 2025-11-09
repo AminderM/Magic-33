@@ -513,6 +513,8 @@ const CompanyProfileInner = () => {
                     <Button size="sm" variant="outline" onClick={() => document.getElementById('logo-upload').click()}>
                       <i className="fas fa-upload mr-1 text-xs"></i>
                       Upload Logo
+                {/* Gate docs_versioning panel elsewhere; this section is only brand theming */}
+
                     </Button>
                   </div>
                 )}
