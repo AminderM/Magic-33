@@ -162,6 +162,14 @@ class CompanyUpdate(BaseModel):
     correspondence_email: Optional[str] = None
     website: Optional[str] = None
     logo_url: Optional[str] = None
+    plan: Optional[str] = None
+    seats: Optional[int] = None
+    feature_flags: Optional[Dict[str, bool]] = None
+    stripe_customer_id: Optional[str] = None
+    stripe_subscription_id: Optional[str] = None
+    subscription_status: Optional[str] = None
+    integrations: Optional[Dict[str, list]] = None
+
     theme: Optional[dict] = None
 
 class Company(CompanyBase):
