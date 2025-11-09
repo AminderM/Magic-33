@@ -6,12 +6,16 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Home, Users, TrendingUp, Package, LogOut } from 'lucide-react';
 
 const AdminConsole = () => {
-  const { fetchWithAuth, user } = useAuth();
+  const { fetchWithAuth, user, logout } = useAuth();
+  const navigate = useNavigate();
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+  const [activeView, setActiveView] = useState('home');
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState([]);
   const [tenants, setTenants] = useState([]);
