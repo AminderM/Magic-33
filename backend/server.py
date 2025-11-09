@@ -168,6 +168,23 @@ class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     owner_id: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    plan: Optional[str] = "free"  # free | tms_basic | tms_pro
+    seats: Optional[int] = 5
+    feature_flags: Dict[str, bool] = Field(default_factory=lambda: {
+        "live_tracking": True,
+        "eld_integration": False,
+        "ai_rate_confirmation": True,
+        "docs_versioning": True,
+        "apps_marketplace": True,
+        "brand_adaptive_theme": True,
+        "export_downloads": True,
+        "driver_app": False,
+    })
+    stripe_customer_id: Optional[str] = None
+    stripe_subscription_id: Optional[str] = None
+    subscription_status: Optional[str] = None  # active, past_due, canceled
+    integrations: Dict[str, list] = Field(default_factory=lambda: {"eld": []})
+
     verification_status: RegistrationStatus = RegistrationStatus.PENDING
     verification_documents: List[str] = []
 
