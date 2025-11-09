@@ -51,6 +51,8 @@ import { useFeatures } from '@/contexts/FeaturesContext';
   const [vehicles, setVehicles] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const flags = useFeatures ? useFeatures() : {};
+
   const mapRef = useRef(null);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
