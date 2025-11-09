@@ -30,12 +30,13 @@ function App() {
     <div className={`app theme-${theme}`}>
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
+          <FeaturesProvider>
+            <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/auth" element={<AuthPage />} />
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/apps" element={<ProtectedRoute><AppsPage /></ProtectedRoute>} />
-              <Route path="/admin" element={<AdminRoute><AdminConsole /></AdminRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><FeatureLoader><Dashboard /></FeatureLoader></ProtectedRoute>} />
+              <Route path="/apps" element={<ProtectedRoute><FeatureLoader><AppsPage /></FeatureLoader></ProtectedRoute>} />
+              <Route path="/admin" element={<AdminRoute><FeatureLoader><AdminConsole /></FeatureLoader></AdminRoute>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </FeaturesProvider>
