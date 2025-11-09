@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import AppsPage from './components/AppsPage';
 import AdminConsole from './components/admin/AdminConsole';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { FeaturesProvider } from './contexts/FeaturesContext';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
