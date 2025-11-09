@@ -350,17 +350,15 @@ const LocationTracking = ({ selectedEquipmentId }) => {
           </TabsTrigger>
           <TabsTrigger value="manual-tracking" data-testid="manual-tracking-tab">
             <i className="fas fa-mobile-alt mr-2"></i>
-          <FeatureGate flag="live_tracking" fallback={<div className="p-6 border rounded text-center text-gray-600"><div className="text-lg font-semibold mb-2">Live Tracking is not enabled for your plan</div><div className="text-sm">Upgrade to TMS PRO or TMS Enterprise to enable live sockets and real-time map updates.</div></div>}>
-
             Manual Tracking
           </TabsTrigger>
         </TabsList>
 
-          </FeatureGate>
-
         {/* Live Map Tab */}
         <TabsContent value="live-map" className="mt-6">
-          <LiveTrackingMap />
+          <FeatureGate flag="live_tracking" fallback={<div className="p-6 border rounded text-center text-gray-600"><div className="text-lg font-semibold mb-2">Live Tracking is not enabled for your plan</div><div className="text-sm">Upgrade to TMS PRO or TMS Enterprise to enable live sockets and real-time map updates.</div></div>}>
+            <LiveTrackingMap />
+          </FeatureGate>
         </TabsContent>
 
         {/* Manual Tracking Tab */}
