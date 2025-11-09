@@ -12,7 +12,7 @@ import os
 from datetime import datetime
 
 class ThemeFeatureTester:
-    def __init__(self, base_url="https://repo-insight-21.preview.emergentagent.com"):
+    def __init__(self, base_url="https://fleet-manager-ui.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.user_id = None
