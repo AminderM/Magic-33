@@ -536,6 +536,8 @@ const CompanyProfileInner = () => {
                     ))}
                   </div>
                 )}
+                {/* Gate brand theming under feature flag */}
+
                 {isAdmin && company.logo_url && (
                 {/* Gate brand theming under feature flag */}
 
