@@ -657,6 +657,42 @@ const SalesAnalyticsView = ({ tenants }) => {
 
 // Products View Component
 const ProductsView = ({ plans, onProductClick }) => {
+  const [selectedTier, setSelectedTier] = useState({});
+
+  // Group plans by product label
+  const groupedProducts = React.useMemo(() => {
+    const groups = {};
+    plans.forEach(plan => {
+      if (!groups[plan.label]) {
+        groups[plan.label] = [];
+      }
+      groups[plan.label].push(plan);
+    });
+    return groups;
+  }, [plans]);
+
+  // Get unique products (one per label)
+  const uniqueProducts = React.useMemo(() => {
+    return Object.entries(groupedProducts).map(([label, plans]) => {
+      // For TMS, default to first tier; for others, just return the plan
+      const defaultPlan = plans[0];
+      return {
+        ...defaultPlan,
+        tiers: plans.length > 1 ? plans : null,
+      };
+    });
+  }, [groupedProducts]);
+
+  const handleTierChange = (productLabel, tierId) => {
+    setSelectedTier(prev => ({ ...prev, [productLabel]: tierId }));
+  };
+
+  const getCurrentPlan = (product) => {
+    if (!product.tiers) return product;
+    const selectedTierId = selectedTier[product.label];
+    return product.tiers.find(p => p.id === selectedTierId) || product.tiers[0];
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -665,68 +701,106 @@ const ProductsView = ({ plans, onProductClick }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {plans.map((plan) => (
-          <Card 
-            key={plan.id} 
-            className="hover:shadow-xl transition-all cursor-pointer hover:scale-105 border-2 hover:border-blue-500"
-            onClick={() => onProductClick(plan)}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>{plan.label}</span>
-                <Package className="w-5 h-5 text-gray-400" />
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <div className="text-3xl font-bold text-gray-900">
-                    ${plan.price || 0}
-                    <span className="text-lg font-normal text-gray-500">/month</span>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-2">{plan.description}</p>
+        {uniqueProducts.map((product) => {
+          const currentPlan = getCurrentPlan(product);
+          const isActive = currentPlan.status === 'active';
+          
+          return (
+            <Card 
+              key={product.label}
+              className={`relative border-2 transition-all ${
+                isActive ? 'border-blue-500' : 'border-gray-200'
+              }`}
+            >
+              {/* Status Badge */}
+              <div className="absolute top-4 right-4">
+                <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                  isActive 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-700 text-white'
+                }`}>
+                  {isActive ? 'ACTIVE' : 'Coming Soon'}
+                </span>
+              </div>
+
+              <CardHeader className="pb-4">
+                {/* Icon placeholder */}
+                <div className={`w-16 h-16 rounded-full mb-4 flex items-center justify-center ${
+                  isActive ? 'bg-blue-100' : 'bg-gray-100'
+                }`}>
+                  <Package className={`w-8 h-8 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
                 </div>
-                
-                <div className="space-y-2">
-                  <div className="text-sm text-gray-600">
-                    <strong>Plan ID:</strong> {plan.id}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    <strong>Default Seats:</strong> {plan.default_seats}
-                  </div>
-                  
-                  {plan.features && (
-                    <div className="pt-3 border-t">
-                      <div className="text-sm font-medium text-gray-700 mb-2">
-                        {plan.features.length} Features
-                      </div>
-                      <ul className="space-y-1 max-h-32 overflow-y-auto">
-                        {plan.features.slice(0, 5).map((feature, idx) => (
-                          <li key={idx} className="text-xs text-gray-600 flex items-start">
-                            <span className="text-green-500 mr-2">✓</span>
-                            {feature}
-                          </li>
+                <CardTitle className="text-xl">{currentPlan.label}</CardTitle>
+                <p className="text-sm text-gray-600">{currentPlan.subtitle}</p>
+              </CardHeader>
+
+              <CardContent className="space-y-4">
+                {/* Tier Selector for TMS */}
+                {product.tiers && (
+                  <div className="pb-2">
+                    <Select
+                      value={selectedTier[product.label] || product.tiers[0].id}
+                      onValueChange={(value) => handleTierChange(product.label, value)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {product.tiers.map(tier => (
+                          <SelectItem key={tier.id} value={tier.id}>
+                            {tier.tier}
+                          </SelectItem>
                         ))}
-                        {plan.features.length > 5 && (
-                          <li className="text-xs text-blue-600 font-medium">
-                            +{plan.features.length - 5} more features...
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {/* Description */}
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {currentPlan.description}
+                </p>
+
+                {/* Key Features */}
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Key Features:</h3>
+                  <ul className="space-y-1">
+                    {currentPlan.features?.map((feature, idx) => (
+                      <li key={idx} className="text-sm text-gray-700">
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <Button variant="outline" className="w-full mt-4">
-                  View Details →
+                {/* Pricing */}
+                <div className="pt-4 border-t">
+                  <div className="text-3xl font-bold text-gray-900">
+                    ${currentPlan.price}
+                    <span className="text-base font-normal text-gray-500">/month</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">per month</p>
+                </div>
+
+                {/* Action Button */}
+                <Button 
+                  className={`w-full ${
+                    isActive 
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                      : 'bg-gray-300 text-gray-600 cursor-default'
+                  }`}
+                  disabled={!isActive}
+                  onClick={() => isActive && onProductClick(currentPlan)}
+                >
+                  {isActive ? 'Launch App' : 'Notify Me'}
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
-      {plans.length === 0 && (
+      {uniqueProducts.length === 0 && (
         <Card>
           <CardContent className="py-16 text-center text-gray-500">
             <Package className="w-12 h-12 mx-auto mb-4 text-gray-400" />
