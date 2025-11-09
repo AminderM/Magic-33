@@ -252,8 +252,8 @@ const Dashboard = () => {
         <Card className="dashboard-card">
           <CardContent className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className={`grid w-full ${user?.role === 'fleet_owner' ? 'grid-cols-5' : 'grid-cols-3'}`}>
-                {user?.role === 'fleet_owner' && (
+              <TabsList className={`grid w-full ${(user?.role === 'fleet_owner' || isPlatformAdmin) ? 'grid-cols-5' : 'grid-cols-3'}`}>
+                {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
                   <TabsTrigger value="fleet" data-testid="fleet-tab">
                     <i className="fas fa-tachometer-alt mr-2"></i>
                     Transport Hub - TMS
