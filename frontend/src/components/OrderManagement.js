@@ -1141,6 +1141,11 @@ const OrderManagement = () => {
                         <i className="fas fa-file-excel text-green-600"></i>
                         Export Excel
                       </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  </FeatureGate>
+
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => exportToJSON(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
                         <i className="fas fa-code text-blue-600"></i>
                         Export JSON
