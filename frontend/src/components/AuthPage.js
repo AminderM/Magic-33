@@ -29,6 +29,8 @@ const AuthPage = () => {
     tax_id: ''
   });
   
+  const navigate = useNavigate();
+
   const { login } = useAuth();
 
   const handleInputChange = (field, value) => {
