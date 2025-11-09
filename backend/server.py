@@ -899,6 +899,9 @@ async def create_driver_account(driver_data: UserCreate, current_user: User = De
 @api_router.get("/drivers/my", response_model=List[User])
 async def get_my_drivers(current_user: User = Depends(get_current_user)):
 # ============= Admin APIs =============
+    drivers = await db.users.find({"fleet_owner_id": current_user.id, "role": UserRole.DRIVER}).to_list(length=None)
+    return [User(**d) for d in drivers]
+
 @api_router.get('/admin/tenants')
 async def list_tenants(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
