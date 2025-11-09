@@ -279,7 +279,7 @@ const Dashboard = () => {
                 </TabsTrigger>
               </TabsList>
 
-              {user?.role === 'fleet_owner' && (
+              {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
                 <TabsContent value="fleet" className="mt-6">
                   <FleetManagement />
                 </TabsContent>
