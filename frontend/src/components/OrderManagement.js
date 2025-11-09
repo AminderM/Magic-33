@@ -1123,35 +1123,30 @@ const OrderManagement = () => {
               <div className="flex justify-between items-center">
                 <CardTitle>Active Loads</CardTitle>
                 <div className="flex space-x-2">
-                  <DropdownMenu>
                   <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-gray-400">Downloads disabled</div>}>
-
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" disabled={activeOrders.length === 0}>
-                        <i className="fas fa-download mr-2"></i>
-                        Download
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
-                        <i className="fas fa-file-csv text-gray-600"></i>
-                        Export CSV
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
-                        <i className="fas fa-file-excel text-green-600"></i>
-                        Export Excel
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" disabled={activeOrders.length === 0}>
+                          <i className="fas fa-download mr-2"></i>
+                          Download
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-file-csv text-gray-600"></i>
+                          Export CSV
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-file-excel text-green-600"></i>
+                          Export Excel
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportToJSON(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-code text-blue-600"></i>
+                          Export JSON
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </FeatureGate>
-
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => exportToJSON(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
-                        <i className="fas fa-code text-blue-600"></i>
-                        Export JSON
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </div>
               </div>
             </CardHeader>
