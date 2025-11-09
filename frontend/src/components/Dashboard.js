@@ -263,7 +263,7 @@ const Dashboard = () => {
                   <i className="fas fa-truck mr-2"></i>
                   Equipment
                 </TabsTrigger>
-                {user?.role === 'fleet_owner' && (
+                {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
                   <TabsTrigger value="drivers" data-testid="drivers-tab">
                     <i className="fas fa-users mr-2"></i>
                     Drivers
