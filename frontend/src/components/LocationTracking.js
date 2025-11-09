@@ -10,6 +10,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import LiveTrackingMap from './LiveTrackingMap';
 
+import FeatureGate from './FeatureGate';
+
 const LocationTracking = ({ selectedEquipmentId }) => {
   const { user, fetchWithAuth } = useAuth();
   const [equipment, setEquipment] = useState([]);
