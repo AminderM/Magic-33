@@ -56,6 +56,7 @@ class UserRole(str, Enum):
     ACCOUNTS_RECEIVABLE = "accounts_receivable"
     ACCOUNTS_PAYABLE = "accounts_payable"
     HR = "hr"
+    PLATFORM_ADMIN = "platform_admin"
 
 class CompanyType(str, Enum):
     TRUCKING = "trucking"
