@@ -148,155 +148,105 @@ const AdminConsole = () => {
     );
   }
 
+  const handleLogout = () => {
+    logout();
+    navigate('/auth');
+  };
+
+  // Sidebar Navigation Items
+  const navigationItems = [
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'subscription', label: 'Subscription Manager', icon: Users },
+    { id: 'analytics', label: 'Sales Analytics', icon: TrendingUp },
+    { id: 'products', label: 'Products', icon: Package },
+  ];
+
+  // Render different views based on activeView
+  const renderContent = () => {
+    switch (activeView) {
+      case 'home':
+        return <HomeView tenants={tenants} plans={plans} loading={loading} />;
+      case 'subscription':
+        return <SubscriptionManagerView 
+          tenants={tenants}
+          filtered={filtered}
+          query={query}
+          setQuery={setQuery}
+          selected={selected}
+          onSelectTenant={onSelectTenant}
+          plans={plans}
+          planIdToLabel={planIdToLabel}
+          updateSelected={updateSelected}
+          saveTenant={saveTenant}
+          saving={saving}
+          loading={loading}
+          integrations={integrations}
+          newIntegration={newIntegration}
+          setNewIntegration={setNewIntegration}
+          addIntegration={addIntegration}
+        />;
+      case 'analytics':
+        return <SalesAnalyticsView tenants={tenants} />;
+      case 'products':
+        return <ProductsView plans={plans} />;
+      default:
+        return <HomeView tenants={tenants} plans={plans} loading={loading} />;
+    }
+  };
+
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Admin Console</h1>
-          <p className="text-gray-600">Manage tenants, plans, features and integrations</p>
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Sidebar */}
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        {/* Logo/Header */}
+        <div className="p-6 border-b border-gray-200">
+          <h1 className="text-xl font-bold text-gray-800">Admin Console</h1>
+          <p className="text-sm text-gray-500 mt-1">Platform Management</p>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeView === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveView(item.id)}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-600 font-medium'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* User Info & Logout */}
+        <div className="p-4 border-t border-gray-200">
+          <div className="px-4 py-2 mb-2">
+            <div className="text-sm font-medium text-gray-800">{user?.full_name}</div>
+            <div className="text-xs text-gray-500">{user?.email}</div>
+          </div>
+          <Button 
+            variant="outline" 
+            className="w-full justify-start"
+            onClick={handleLogout}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 space-y-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Tenants</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Input placeholder="Search companies" value={query} onChange={(e) => setQuery(e.target.value)} className="mb-3" />
-              <div className="max-h-[520px] overflow-auto divide-y">
-                {loading ? (
-                  <div className="py-10 text-center text-gray-500">Loading...</div>
-                ) : (
-                  filtered.map(t => (
-                    <button key={t.id} className={`w-full text-left p-3 hover:bg-gray-50 ${selected?.id===t.id?'bg-gray-50':''}`} onClick={() => onSelectTenant(t)}>
-                      <div className="font-medium">{t.name}</div>
-                      <div className="text-xs text-gray-500">{planIdToLabel(t.plan)} • Seats: {t.seats} • {t.subscription_status || 'no sub'}</div>
-                    </button>
-                  ))
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="lg:col-span-2 space-y-6">
-          {!selected ? (
-            <Card>
-              <CardContent className="py-16 text-center text-gray-500">Select a tenant to manage</CardContent>
-            </Card>
-          ) : (
-            <>
-              <Card>
-                <CardHeader>
-                  <CardTitle>{selected.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label>Plan</Label>
-                      <Select value={selected.plan} onValueChange={(val) => updateSelected({ plan: val })}>
-                        <SelectTrigger className="mt-1"><SelectValue placeholder="Select plan" /></SelectTrigger>
-                        <SelectContent>
-                          {plans.map(p => (
-                            <SelectItem key={p.id} value={p.id}>{p.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label>Seats</Label>
-                      <Input type="number" min={1} value={selected.seats ?? 1} onChange={(e) => updateSelected({ seats: parseInt(e.target.value||'1',10) })} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label>Subscription</Label>
-                      <div className="mt-2 text-sm">{selected.subscription_status || 'No subscription'}</div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-semibold mb-2">Feature Flags</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {Object.entries(selected.feature_flags || {}).map(([key, val]) => (
-                        <div key={key} className="flex items-center justify-between border rounded px-3 py-2">
-                          <div className="text-sm font-medium">{key}</div>
-                          <Switch checked={!!val} onCheckedChange={(v) => updateSelected({ feature_flags: { ...(selected.feature_flags||{}), [key]: !!v } })} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button onClick={saveTenant} disabled={saving}>{saving? 'Saving...' : 'Save Changes'}</Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Integrations (ELD)</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="text-sm text-gray-600">Existing</div>
-                    <div className="space-y-2">
-                      {integrations?.eld?.length ? integrations.eld.map((i, idx) => (
-                        <div key={idx} className="border rounded p-3 flex items-center justify-between">
-                          <div>
-                            <div className="font-medium text-sm">{i.provider} {i.name ? `• ${i.name}` : ''}</div>
-                            <div className="text-xs text-gray-500">Client ID: {i.client_id || '—'} • Secret: {i.client_secret_masked || '—'} • Scopes: {(i.scopes||[]).join(', ')}</div>
-                          </div>
-                          <div className="text-xs text-gray-400">{new Date(i.created_at).toLocaleString()}</div>
-                        </div>
-                      )) : (
-                        <div className="text-sm text-gray-500">No integrations yet</div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="border rounded p-3 space-y-2">
-                    <div className="text-sm font-medium">Add Integration</div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div>
-                        <Label>Provider</Label>
-                        <Select value={newIntegration.provider} onValueChange={(v) => setNewIntegration(prev=>({...prev, provider: v}))}>
-                          <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="samsara">Samsara</SelectItem>
-                            <SelectItem value="motive">Motive (KeepTruckin)</SelectItem>
-                            <SelectItem value="geotab">Geotab</SelectItem>
-                            <SelectItem value="verizon_connect">Verizon Connect</SelectItem>
-                            <SelectItem value="omnitracs">Omnitracs</SelectItem>
-                            <SelectItem value="trimble">Trimble</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>Name</Label>
-                        <Input value={newIntegration.name} onChange={(e)=>setNewIntegration(prev=>({...prev, name: e.target.value}))} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Client ID</Label>
-                        <Input value={newIntegration.client_id} onChange={(e)=>setNewIntegration(prev=>({...prev, client_id: e.target.value}))} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Client Secret</Label>
-                        <Input value={newIntegration.client_secret} onChange={(e)=>setNewIntegration(prev=>({...prev, client_secret: e.target.value}))} className="mt-1" />
-                      </div>
-                      <div className="md:col-span-2">
-                        <Label>Scopes (comma separated)</Label>
-                        <Input value={newIntegration.scopes} onChange={(e)=>setNewIntegration(prev=>({...prev, scopes: e.target.value}))} className="mt-1" placeholder="e.g. vehicles.read, trips.read" />
-                      </div>
-                    </div>
-                    <div className="flex justify-end">
-                      <Button onClick={addIntegration}>Add</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-8">
+          {renderContent()}
         </div>
       </div>
     </div>
