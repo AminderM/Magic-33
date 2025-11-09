@@ -488,6 +488,28 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
     return current_user
 
 # Company Routes
+
+# TEMP: Seed/Force-verify endpoint for admin assistance (can be removed later)
+@api_router.post("/admin/seed-platform-admin")
+async def seed_platform_admin(email: str = "aminderpro@gmail.com", password: str = "Admin@123!"):
+    existing = await db.users.find_one({"email": email})
+    if existing:
+        # ensure platform admin role
+        await db.users.update_one({"email": email}, {"$set": {"role": UserRole.PLATFORM_ADMIN, "email_verified": True}})
+        return {"status": "updated", "email": email}
+    hashed_password = hash_password(password)
+    user = User(
+        email=email,
+        full_name="Platform Admin",
+        phone="0000000000",
+        role=UserRole.PLATFORM_ADMIN,
+        email_verified=True,
+        registration_status=RegistrationStatus.VERIFIED,
+    ).dict()
+    user["password_hash"] = hashed_password
+    await db.users.insert_one(user)
+    return {"status": "created", "email": email}
+
 @api_router.post("/companies", response_model=dict)
 async def create_company(company_data: CompanyCreate, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
     # Check if user's email is verified
