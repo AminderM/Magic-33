@@ -656,7 +656,7 @@ const SalesAnalyticsView = ({ tenants }) => {
 };
 
 // Products View Component
-const ProductsView = ({ plans }) => {
+const ProductsView = ({ plans, onProductClick }) => {
   return (
     <div className="space-y-6">
       <div>
@@ -666,7 +666,11 @@ const ProductsView = ({ plans }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {plans.map((plan) => (
-          <Card key={plan.id} className="hover:shadow-lg transition-shadow">
+          <Card 
+            key={plan.id} 
+            className="hover:shadow-xl transition-all cursor-pointer hover:scale-105 border-2 hover:border-blue-500"
+            onClick={() => onProductClick(plan)}
+          >
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span>{plan.label}</span>
@@ -680,30 +684,41 @@ const ProductsView = ({ plans }) => {
                     ${plan.price || 0}
                     <span className="text-lg font-normal text-gray-500">/month</span>
                   </div>
+                  <p className="text-sm text-gray-600 mt-2">{plan.description}</p>
                 </div>
                 
                 <div className="space-y-2">
                   <div className="text-sm text-gray-600">
                     <strong>Plan ID:</strong> {plan.id}
                   </div>
+                  <div className="text-sm text-gray-600">
+                    <strong>Default Seats:</strong> {plan.default_seats}
+                  </div>
                   
                   {plan.features && (
                     <div className="pt-3 border-t">
-                      <div className="text-sm font-medium text-gray-700 mb-2">Features:</div>
-                      <ul className="space-y-1">
-                        {plan.features.map((feature, idx) => (
-                          <li key={idx} className="text-sm text-gray-600 flex items-start">
+                      <div className="text-sm font-medium text-gray-700 mb-2">
+                        {plan.features.length} Features
+                      </div>
+                      <ul className="space-y-1 max-h-32 overflow-y-auto">
+                        {plan.features.slice(0, 5).map((feature, idx) => (
+                          <li key={idx} className="text-xs text-gray-600 flex items-start">
                             <span className="text-green-500 mr-2">✓</span>
                             {feature}
                           </li>
                         ))}
+                        {plan.features.length > 5 && (
+                          <li className="text-xs text-blue-600 font-medium">
+                            +{plan.features.length - 5} more features...
+                          </li>
+                        )}
                       </ul>
                     </div>
                   )}
                 </div>
 
                 <Button variant="outline" className="w-full mt-4">
-                  Edit Plan
+                  View Details →
                 </Button>
               </div>
             </CardContent>
@@ -716,6 +731,160 @@ const ProductsView = ({ plans }) => {
           <CardContent className="py-16 text-center text-gray-500">
             <Package className="w-12 h-12 mx-auto mb-4 text-gray-400" />
             <p>No products available</p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+// Product Detail View Component
+const ProductDetailView = ({ product, onBack, tenants }) => {
+  if (!product) return null;
+
+  const tenantsWithThisPlan = tenants.filter(t => t.plan === product.id);
+  const totalRevenue = tenantsWithThisPlan.reduce((sum, t) => sum + (product.price * (t.seats || 1)), 0);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center space-x-4">
+        <Button variant="outline" onClick={onBack}>
+          ← Back to Products
+        </Button>
+        <div>
+          <h2 className="text-3xl font-bold text-gray-800">{product.label}</h2>
+          <p className="text-gray-600 mt-1">{product.description}</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Monthly Price</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">${product.price}</p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Package className="w-6 h-6 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Active Tenants</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">{tenantsWithThisPlan.length}</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Monthly Revenue</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">${totalRevenue.toLocaleString()}</p>
+              </div>
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-purple-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Plan Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-gray-600">Plan ID</Label>
+                <p className="text-lg font-medium mt-1">{product.id}</p>
+              </div>
+              <div>
+                <Label className="text-gray-600">Default Seats</Label>
+                <p className="text-lg font-medium mt-1">{product.default_seats} users</p>
+              </div>
+              <div>
+                <Label className="text-gray-600">Price per Seat</Label>
+                <p className="text-lg font-medium mt-1">${(product.price / product.default_seats).toFixed(2)}</p>
+              </div>
+              <div>
+                <Label className="text-gray-600">Total Features</Label>
+                <p className="text-lg font-medium mt-1">{product.features?.length || 0}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Feature Flags</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(product.feature_flags || {}).map(([key, value]) => (
+                <div key={key} className="flex items-center space-x-2 p-2 border rounded">
+                  <div className={`w-3 h-3 rounded-full ${value ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                  <span className="text-sm">{key.replace(/_/g, ' ')}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>All Features ({product.features?.length || 0})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {product.features?.map((feature, idx) => (
+              <div key={idx} className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-50">
+                <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                  <span className="text-green-600 text-sm font-bold">✓</span>
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed">{feature}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {tenantsWithThisPlan.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Tenants Using This Plan</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {tenantsWithThisPlan.map((tenant) => (
+                <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                  <div>
+                    <h3 className="font-medium text-gray-900">{tenant.name}</h3>
+                    <p className="text-sm text-gray-500">{tenant.company_email || 'No email'}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-medium text-gray-900">{tenant.seats} seats</div>
+                    <div className="text-xs text-gray-500">
+                      ${(product.price * (tenant.seats || 1)).toLocaleString()}/mo
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       )}
