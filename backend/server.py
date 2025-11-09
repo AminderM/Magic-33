@@ -934,6 +934,11 @@ async def update_tenant(tenant_id: str, payload: TenantUpdate, current_user: Use
         return {"updated": False}
     await db.companies.update_one({"id": tenant_id}, {"$set": updates})
     tenant = await db.companies.find_one({"id": tenant_id})
+@api_router.get('/admin/plans')
+async def get_plans(current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    return PLANS
+
     return tenant
 
 class IntegrationCreate(BaseModel):
