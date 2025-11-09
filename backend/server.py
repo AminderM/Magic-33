@@ -220,6 +220,67 @@ class Equipment(EquipmentBase):
     insurance_documents: List[str] = []
     maintenance_records: List[str] = []
     current_driver_id: Optional[str] = None
+# Subscription Plans
+PLANS = [
+    {
+        "id": "tms_basic",
+        "label": "TMS Basic",
+        "default_seats": 5,
+        "feature_flags": {
+            "live_tracking": True,
+            "eld_integration": False,
+            "ai_rate_confirmation": True,
+            "docs_versioning": True,
+            "apps_marketplace": True,
+            "brand_adaptive_theme": True,
+            "export_downloads": True,
+            "driver_app": False,
+        },
+    },
+    {
+        "id": "tms_pro",
+        "label": "TMS PRO",
+        "default_seats": 15,
+        "feature_flags": {
+            "live_tracking": True,
+            "eld_integration": True,
+            "ai_rate_confirmation": True,
+            "docs_versioning": True,
+            "apps_marketplace": True,
+            "brand_adaptive_theme": True,
+            "export_downloads": True,
+            "driver_app": True,
+        },
+    },
+    {
+        "id": "tms_enterprise",
+        "label": "TMS Enterprise",
+        "default_seats": 50,
+        "feature_flags": {
+            "live_tracking": True,
+            "eld_integration": True,
+            "ai_rate_confirmation": True,
+            "docs_versioning": True,
+            "apps_marketplace": True,
+            "brand_adaptive_theme": True,
+            "export_downloads": True,
+            "driver_app": True,
+        },
+    },
+]
+
+PLAN_ID_BY_LABEL = {p["label"].lower(): p["id"] for p in PLANS}
+PLANS_BY_ID = {p["id"]: p for p in PLANS}
+
+def normalize_plan(plan_value: str) -> str:
+    if not plan_value:
+        return "tms_basic"
+    v = plan_value.strip().lower()
+    # accept either id or label
+    if v in PLANS_BY_ID:
+        return v
+    return PLAN_ID_BY_LABEL.get(v, "tms_basic")
+
 # Admin utilities
 PLATFORM_ADMIN_EMAILS = {"aminderpro@gmail.com"}
 
