@@ -96,7 +96,8 @@ import { useFeatures } from '@/contexts/FeaturesContext';
     return `${wsProtocol}://${wsUrl}/ws/fleet-tracking`;
   };
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(getWebSocketUrl(), {
+  const wsDisabled = flags && flags.live_tracking === false;
+  const { sendMessage, lastMessage, readyState } = useWebSocket(wsDisabled ? null : getWebSocketUrl(), {
     onOpen: () => {
       console.log('WebSocket connection established');
       setIsConnected(true);
