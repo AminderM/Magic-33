@@ -803,65 +803,7 @@ async def get_my_equipment_locations(current_user: User = Depends(get_current_us
 
 @api_router.get("/equipment/{equipment_id}", response_model=Equipment)
 
-# ============= Admin APIs =============
-@api_router.get('/admin/tenants')
-async def list_tenants(current_user: User = Depends(get_current_user)):
-    require_platform_admin(current_user)
-    tenants = await db.companies.find({}).to_list(length=None)
-    def mini(c):
-        return {
-            "id": c.get("id"),
-            "name": c.get("name"),
-            "plan": c.get("plan", "free"),
-            "seats": c.get("seats", 5),
-            "subscription_status": c.get("subscription_status"),
-            "feature_flags": c.get("feature_flags", {}),
-            "created_at": c.get("created_at"),
-        }
-    return [mini(c) for c in tenants]
-
-class TenantUpdate(BaseModel):
-    plan: Optional[str] = None
-    seats: Optional[int] = None
-    feature_flags: Optional[Dict[str, bool]] = None
-
-@api_router.put('/admin/tenants/{tenant_id}')
-async def update_tenant(tenant_id: str, payload: TenantUpdate, current_user: User = Depends(get_current_user)):
-    require_platform_admin(current_user)
-    updates = {k: v for k, v in payload.dict().items() if v is not None}
-    if not updates:
-        return {"updated": False}
-    await db.companies.update_one({"id": tenant_id}, {"$set": updates})
-    tenant = await db.companies.find_one({"id": tenant_id})
-    return tenant
-
-class IntegrationCreate(BaseModel):
-    provider: str
-    name: Optional[str] = None
-    client_id: Optional[str] = None
-    client_secret: Optional[str] = None
-    scopes: Optional[List[str]] = None
-
-@api_router.get('/admin/tenants/{tenant_id}/integrations')
-async def list_integrations(tenant_id: str, current_user: User = Depends(get_current_user)):
-    require_platform_admin(current_user)
-    tenant = await db.companies.find_one({"id": tenant_id})
-    if not tenant:
-        raise HTTPException(status_code=404, detail="Tenant not found")
-    return tenant.get("integrations", {"eld": []})
-
-@api_router.post('/admin/tenants/{tenant_id}/integrations')
-async def add_integration(tenant_id: str, payload: IntegrationCreate, current_user: User = Depends(get_current_user)):
-    require_platform_admin(current_user)
-    integ = payload.dict()
-    if integ.get("client_secret"):
-        integ["client_secret_masked"] = f"****{integ['client_secret'][-4:]}"
-        del integ["client_secret"]
-    integ["created_at"] = datetime.now(timezone.utc).isoformat()
-    integ["created_by"] = current_user.email
-    await db.companies.update_one({"id": tenant_id}, {"$push": {"integrations.eld": integ}})
-    tenant = await db.companies.find_one({"id": tenant_id})
-    return tenant.get("integrations", {"eld": []})
+# admin block moved below (duplicate removed)
 
 async def get_equipment_details(equipment_id: str):
     equipment = await db.equipment.find_one({"id": equipment_id})
