@@ -299,7 +299,7 @@ const Dashboard = () => {
                 <OrderManagement />
               </TabsContent>
 
-              {user?.role === 'fleet_owner' && (
+              {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
                 <TabsContent value="drivers" className="mt-6">
                   <DriverManagement onStatsUpdate={setStats} />
                 </TabsContent>
