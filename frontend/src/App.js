@@ -29,8 +29,7 @@ function App() {
     <div className={`app theme-${theme}`}>
       <BrowserRouter>
         <AuthProvider>
-          <FeaturesProvider flags={{}}>
-            <Routes>
+          <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
