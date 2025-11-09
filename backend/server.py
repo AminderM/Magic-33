@@ -176,7 +176,7 @@ class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     owner_id: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    plan: Optional[str] = "free"  # free | tms_basic | tms_pro
+    plan: Optional[str] = "tms_basic"  # tms_basic | tms_pro | tms_enterprise
     seats: Optional[int] = 5
     feature_flags: Dict[str, bool] = Field(default_factory=lambda: {
         "live_tracking": True,
