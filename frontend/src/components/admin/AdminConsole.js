@@ -25,6 +25,7 @@ const AdminConsole = () => {
   const [saving, setSaving] = useState(false);
   const [integrations, setIntegrations] = useState(null);
   const [newIntegration, setNewIntegration] = useState({ provider: 'samsara', name: '', client_id: '', client_secret: '', scopes: '' });
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const isAdminUI = useMemo(() => {
     if (!user) return false;
