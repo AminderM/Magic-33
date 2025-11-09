@@ -13,6 +13,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
 
+import FeatureGate from './FeatureGate';
+
 const OrderManagement = () => {
   const { user, fetchWithAuth } = useAuth();
   const [orders, setOrders] = useState([]);
