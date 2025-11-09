@@ -16,7 +16,8 @@ import CompanyProfile from './CompanyProfile';
 const Dashboard = () => {
   const { user, logout, fetchWithAuth } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(user?.role === 'fleet_owner' ? 'fleet' : 'equipment');
+  const isPlatformAdmin = user?.role === 'platform_admin' || (user?.email && user.email.toLowerCase() === 'aminderpro@gmail.com');
+  const [activeTab, setActiveTab] = useState((user?.role === 'fleet_owner' || isPlatformAdmin) ? 'fleet' : 'equipment');
   const [stats, setStats] = useState({
     totalEquipment: 0,
     activeBookings: 0,
