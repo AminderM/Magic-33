@@ -1298,6 +1298,14 @@ const OrderManagement = () => {
                       <DropdownMenuItem onClick={() => exportToExcel(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
                         <i className="fas fa-file-excel text-green-600"></i>
                         Export Excel
+                      <DropdownMenuItem onClick={() => exportToJSON(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
+                        <i className="fas fa-code text-blue-600"></i>
+                        Export JSON
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  </FeatureGate>
+
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => exportToJSON(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
                         <i className="fas fa-code text-blue-600"></i>
