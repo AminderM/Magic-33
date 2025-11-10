@@ -181,6 +181,8 @@ class ProductSubscription(BaseModel):
     seats_used: int = 0
     storage_allocated_gb: int = 10
     storage_used_gb: float = 0.0
+    discount_percentage: float = 0.0  # Percentage discount (0-100)
+    discount_reason: Optional[str] = None  # Reason for special pricing
     start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     next_billing_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
