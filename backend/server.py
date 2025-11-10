@@ -1216,32 +1216,204 @@ async def get_my_drivers(current_user: User = Depends(get_current_user)):
 async def list_tenants(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
     tenants = await db.companies.find({}).to_list(length=None)
-    def mini(c):
+    
+    def enrich_tenant(c):
+        # Calculate total seats and storage across all subscriptions
+        subscriptions = c.get("subscriptions", [])
+        total_seats_allocated = sum(sub.get("seats_allocated", 0) for sub in subscriptions)
+        total_seats_used = sum(sub.get("seats_used", 0) for sub in subscriptions)
+        total_storage_allocated = sum(sub.get("storage_allocated_gb", 0) for sub in subscriptions)
+        total_storage_used = sum(sub.get("storage_used_gb", 0) for sub in subscriptions)
+        
+        # Get product labels for active subscriptions
+        active_products = []
+        for sub in subscriptions:
+            if sub.get("status") == "active":
+                plan = next((p for p in PLANS if p["id"] == sub.get("product_id")), None)
+                if plan:
+                    active_products.append({
+                        "id": sub.get("id"),
+                        "product_id": sub.get("product_id"),
+                        "label": plan.get("label"),
+                        "tier": plan.get("tier"),
+                        "status": sub.get("status")
+                    })
+        
         return {
             "id": c.get("id"),
             "name": c.get("name"),
-            "plan": c.get("plan", "free"),
-            "seats": c.get("seats", 5),
-            "subscription_status": c.get("subscription_status"),
+            "company_email": c.get("company_email"),
+            "phone_number": c.get("phone_number"),
+            "plan": c.get("plan", "tms_basic"),  # Legacy field
+            "seats": c.get("seats", 5),  # Legacy field
+            "subscription_status": c.get("subscription_status", "active"),
+            "subscriptions": subscriptions,
+            "active_products": active_products,
+            "total_seats_allocated": total_seats_allocated,
+            "total_seats_used": total_seats_used,
+            "total_storage_allocated": total_storage_allocated,
+            "total_storage_used": total_storage_used,
+            "billing_email": c.get("billing_email"),
+            "payment_method": c.get("payment_method"),
+            "next_billing_date": c.get("next_billing_date"),
             "feature_flags": c.get("feature_flags", {}),
             "created_at": c.get("created_at"),
         }
-    return [mini(c) for c in tenants]
+    return [enrich_tenant(c) for c in tenants]
 
 class TenantUpdate(BaseModel):
-    plan: Optional[str] = None
-    seats: Optional[int] = None
+    name: Optional[str] = None
+    company_email: Optional[str] = None
+    phone_number: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
+    billing_email: Optional[str] = None
+    payment_method: Optional[str] = None
+    subscription_status: Optional[str] = None
+    plan: Optional[str] = None  # Legacy field
+    seats: Optional[int] = None  # Legacy field
     feature_flags: Optional[Dict[str, bool]] = None
 
 @api_router.put('/admin/tenants/{tenant_id}')
 async def update_tenant(tenant_id: str, payload: TenantUpdate, current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
-    updates = {k: v for k, v in payload.dict().items() if v is not None}
+    updates = {k: v for k, v in payload.dict(exclude_unset=True).items() if v is not None}
     if not updates:
         return {"updated": False}
     await db.companies.update_one({"id": tenant_id}, {"$set": updates})
     tenant = await db.companies.find_one({"id": tenant_id})
     return tenant
+
+class SubscriptionCreate(BaseModel):
+    product_id: str
+    seats_allocated: int = 5
+    storage_allocated_gb: int = 10
+    status: str = "active"
+
+class SubscriptionUpdate(BaseModel):
+    seats_allocated: Optional[int] = None
+    storage_allocated_gb: Optional[int] = None
+    status: Optional[str] = None
+    schedule_change: bool = True  # If True, changes apply at next billing cycle
+
+@api_router.post('/admin/tenants/{tenant_id}/subscriptions')
+async def add_product_subscription(tenant_id: str, payload: SubscriptionCreate, current_user: User = Depends(get_current_user)):
+    """Add a new product subscription to a tenant"""
+    require_platform_admin(current_user)
+    
+    # Verify product exists
+    product = next((p for p in PLANS if p["id"] == payload.product_id), None)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    # Create subscription object
+    subscription = {
+        "id": str(uuid.uuid4()),
+        "product_id": payload.product_id,
+        "status": payload.status,
+        "seats_allocated": payload.seats_allocated,
+        "seats_used": 0,
+        "storage_allocated_gb": payload.storage_allocated_gb,
+        "storage_used_gb": 0.0,
+        "start_date": datetime.now(timezone.utc).isoformat(),
+        "next_billing_date": (datetime.now(timezone.utc) + timedelta(days=30)).isoformat(),
+        "end_date": None,
+        "pending_changes": None
+    }
+    
+    # Add subscription to tenant
+    await db.companies.update_one(
+        {"id": tenant_id},
+        {"$push": {"subscriptions": subscription}}
+    )
+    
+    tenant = await db.companies.find_one({"id": tenant_id})
+    return {"message": "Subscription added successfully", "subscription": subscription, "tenant": tenant}
+
+@api_router.put('/admin/tenants/{tenant_id}/subscriptions/{subscription_id}')
+async def update_product_subscription(
+    tenant_id: str, 
+    subscription_id: str, 
+    payload: SubscriptionUpdate, 
+    current_user: User = Depends(get_current_user)
+):
+    """Update or schedule changes to a product subscription"""
+    require_platform_admin(current_user)
+    
+    tenant = await db.companies.find_one({"id": tenant_id})
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    
+    subscriptions = tenant.get("subscriptions", [])
+    sub_index = next((i for i, s in enumerate(subscriptions) if s.get("id") == subscription_id), None)
+    
+    if sub_index is None:
+        raise HTTPException(status_code=404, detail="Subscription not found")
+    
+    updates = payload.dict(exclude_unset=True, exclude={"schedule_change"})
+    
+    if payload.schedule_change:
+        # Schedule changes for next billing cycle
+        subscriptions[sub_index]["pending_changes"] = {
+            **updates,
+            "scheduled_at": datetime.now(timezone.utc).isoformat()
+        }
+    else:
+        # Apply changes immediately
+        subscriptions[sub_index].update(updates)
+    
+    await db.companies.update_one(
+        {"id": tenant_id},
+        {"$set": {"subscriptions": subscriptions}}
+    )
+    
+    tenant = await db.companies.find_one({"id": tenant_id})
+    return {"message": "Subscription updated successfully", "tenant": tenant}
+
+@api_router.delete('/admin/tenants/{tenant_id}/subscriptions/{subscription_id}')
+async def remove_product_subscription(
+    tenant_id: str, 
+    subscription_id: str, 
+    schedule_removal: bool = True,
+    current_user: User = Depends(get_current_user)
+):
+    """Remove or schedule removal of a product subscription"""
+    require_platform_admin(current_user)
+    
+    tenant = await db.companies.find_one({"id": tenant_id})
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    
+    subscriptions = tenant.get("subscriptions", [])
+    sub_index = next((i for i, s in enumerate(subscriptions) if s.get("id") == subscription_id), None)
+    
+    if sub_index is None:
+        raise HTTPException(status_code=404, detail="Subscription not found")
+    
+    if schedule_removal:
+        # Schedule cancellation at end of billing period
+        subscriptions[sub_index]["status"] = "pending_cancellation"
+        subscriptions[sub_index]["pending_changes"] = {
+            "action": "cancel",
+            "scheduled_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.companies.update_one(
+            {"id": tenant_id},
+            {"$set": {"subscriptions": subscriptions}}
+        )
+        message = "Subscription cancellation scheduled for end of billing period"
+    else:
+        # Remove immediately
+        await db.companies.update_one(
+            {"id": tenant_id},
+            {"$pull": {"subscriptions": {"id": subscription_id}}}
+        )
+        message = "Subscription removed immediately"
+    
+    tenant = await db.companies.find_one({"id": tenant_id})
+    return {"message": message, "tenant": tenant}
 
 @api_router.get('/admin/plans')
 async def get_plans(current_user: User = Depends(get_current_user)):
