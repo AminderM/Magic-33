@@ -188,6 +188,55 @@ class ProductSubscription(BaseModel):
     end_date: Optional[datetime] = None
     pending_changes: Optional[dict] = None  # Stores scheduled changes for next billing cycle
 
+# CRM Models
+class CRMContact(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    first_name: str
+    last_name: str
+    email: str
+    phone: Optional[str] = None
+    company: Optional[str] = None
+    position: Optional[str] = None
+    status: str = "lead"  # lead, prospect, customer, inactive
+    source: Optional[str] = None  # referral, website, campaign, etc.
+    tags: List[str] = Field(default_factory=list)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    owner_id: Optional[str] = None  # User who owns this contact
+
+class CRMDeal(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    value: float
+    stage: str = "prospecting"  # prospecting, qualification, proposal, negotiation, closed_won, closed_lost
+    contact_id: str
+    expected_close_date: Optional[datetime] = None
+    probability: int = 50  # 0-100
+    description: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    owner_id: Optional[str] = None
+
+class CRMActivity(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    type: str  # call, email, meeting, note, task
+    subject: str
+    description: Optional[str] = None
+    contact_id: Optional[str] = None
+    deal_id: Optional[str] = None
+    due_date: Optional[datetime] = None
+    completed: bool = False
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    owner_id: Optional[str] = None
+
+class CRMNote(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    content: str
+    contact_id: Optional[str] = None
+    deal_id: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_by: Optional[str] = None
+
 class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     owner_id: str
