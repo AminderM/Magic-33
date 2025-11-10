@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Home, Users, TrendingUp, Package, LogOut } from 'lucide-react';
 import SubscriptionManagerNew from './SubscriptionManagerNew';
+import SalesAnalyticsNew from './SalesAnalyticsNew';
 
 const AdminConsole = () => {
   const { fetchWithAuth, user, logout } = useAuth();
