@@ -1593,6 +1593,130 @@ async def get_sales_analytics(current_user: User = Depends(get_current_user)):
         'active_customers': len([t for t in tenants if t.get('subscription_status') == 'active'])
     }
 
+# CRM Endpoints
+@api_router.get('/admin/crm/contacts')
+async def get_crm_contacts(current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    contacts = await db.crm_contacts.find({}).to_list(length=None)
+    return contacts
+
+@api_router.post('/admin/crm/contacts')
+async def create_crm_contact(contact: CRMContact, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    contact.owner_id = current_user.id
+    contact_dict = contact.dict()
+    contact_dict['created_at'] = contact_dict['created_at'].isoformat()
+    contact_dict['updated_at'] = contact_dict['updated_at'].isoformat()
+    await db.crm_contacts.insert_one(contact_dict)
+    return contact
+
+@api_router.put('/admin/crm/contacts/{contact_id}')
+async def update_crm_contact(contact_id: str, contact: CRMContact, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    contact.updated_at = datetime.now(timezone.utc)
+    contact_dict = contact.dict()
+    contact_dict['updated_at'] = contact_dict['updated_at'].isoformat()
+    if 'created_at' in contact_dict and isinstance(contact_dict['created_at'], datetime):
+        contact_dict['created_at'] = contact_dict['created_at'].isoformat()
+    await db.crm_contacts.update_one({"id": contact_id}, {"$set": contact_dict})
+    return contact
+
+@api_router.delete('/admin/crm/contacts/{contact_id}')
+async def delete_crm_contact(contact_id: str, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    await db.crm_contacts.delete_one({"id": contact_id})
+    return {"message": "Contact deleted"}
+
+@api_router.get('/admin/crm/deals')
+async def get_crm_deals(current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    deals = await db.crm_deals.find({}).to_list(length=None)
+    return deals
+
+@api_router.post('/admin/crm/deals')
+async def create_crm_deal(deal: CRMDeal, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    deal.owner_id = current_user.id
+    deal_dict = deal.dict()
+    deal_dict['created_at'] = deal_dict['created_at'].isoformat()
+    deal_dict['updated_at'] = deal_dict['updated_at'].isoformat()
+    if deal_dict.get('expected_close_date'):
+        deal_dict['expected_close_date'] = deal_dict['expected_close_date'].isoformat()
+    await db.crm_deals.insert_one(deal_dict)
+    return deal
+
+@api_router.put('/admin/crm/deals/{deal_id}')
+async def update_crm_deal(deal_id: str, deal: CRMDeal, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    deal.updated_at = datetime.now(timezone.utc)
+    deal_dict = deal.dict()
+    deal_dict['updated_at'] = deal_dict['updated_at'].isoformat()
+    if 'created_at' in deal_dict and isinstance(deal_dict['created_at'], datetime):
+        deal_dict['created_at'] = deal_dict['created_at'].isoformat()
+    if deal_dict.get('expected_close_date') and isinstance(deal_dict['expected_close_date'], datetime):
+        deal_dict['expected_close_date'] = deal_dict['expected_close_date'].isoformat()
+    await db.crm_deals.update_one({"id": deal_id}, {"$set": deal_dict})
+    return deal
+
+@api_router.delete('/admin/crm/deals/{deal_id}')
+async def delete_crm_deal(deal_id: str, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    await db.crm_deals.delete_one({"id": deal_id})
+    return {"message": "Deal deleted"}
+
+@api_router.get('/admin/crm/activities')
+async def get_crm_activities(current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    activities = await db.crm_activities.find({}).to_list(length=None)
+    return activities
+
+@api_router.post('/admin/crm/activities')
+async def create_crm_activity(activity: CRMActivity, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    activity.owner_id = current_user.id
+    activity_dict = activity.dict()
+    activity_dict['created_at'] = activity_dict['created_at'].isoformat()
+    if activity_dict.get('due_date'):
+        activity_dict['due_date'] = activity_dict['due_date'].isoformat()
+    await db.crm_activities.insert_one(activity_dict)
+    return activity
+
+@api_router.get('/admin/crm/dashboard')
+async def get_crm_dashboard(current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    
+    contacts = await db.crm_contacts.find({}).to_list(length=None)
+    deals = await db.crm_deals.find({}).to_list(length=None)
+    activities = await db.crm_activities.find({}).to_list(length=None)
+    
+    # Calculate metrics
+    total_contacts = len(contacts)
+    leads = len([c for c in contacts if c.get('status') == 'lead'])
+    customers = len([c for c in contacts if c.get('status') == 'customer'])
+    
+    total_deal_value = sum(d.get('value', 0) for d in deals)
+    won_deals = [d for d in deals if d.get('stage') == 'closed_won']
+    total_won_value = sum(d.get('value', 0) for d in won_deals)
+    
+    deals_by_stage = {}
+    for deal in deals:
+        stage = deal.get('stage', 'prospecting')
+        deals_by_stage[stage] = deals_by_stage.get(stage, 0) + 1
+    
+    pending_activities = len([a for a in activities if not a.get('completed')])
+    
+    return {
+        'total_contacts': total_contacts,
+        'leads': leads,
+        'customers': customers,
+        'total_deal_value': total_deal_value,
+        'total_won_value': total_won_value,
+        'won_deals_count': len(won_deals),
+        'deals_by_stage': deals_by_stage,
+        'pending_activities': pending_activities,
+        'conversion_rate': (customers / total_contacts * 100) if total_contacts > 0 else 0
+    }
+
 class IntegrationCreate(BaseModel):
     provider: str
     name: Optional[str] = None
