@@ -45,7 +45,16 @@ const AuthPage = () => {
       const success = await login(formData.email, formData.password);
       if (success) {
         toast.success('Login successful!');
-        navigate('/dashboard');
+        
+        // Check if user is platform admin and redirect accordingly
+        const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+        const isAdmin = userData.role === 'platform_admin' || userData.email === 'aminderpro@gmail.com';
+        
+        if (isAdmin) {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (error) {
       toast.error(error.message || 'Login failed');
