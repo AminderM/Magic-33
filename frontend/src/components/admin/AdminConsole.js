@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Home, Users, TrendingUp, Package, LogOut } from 'lucide-react';
+import SubscriptionManagerNew from './SubscriptionManagerNew';
 
 const AdminConsole = () => {
   const { fetchWithAuth, user, logout } = useAuth();
