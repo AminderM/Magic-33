@@ -211,7 +211,7 @@ const AdminConsole = () => {
           refreshTenants={refreshTenants}
         />;
       case 'analytics':
-        return <SalesAnalyticsView tenants={tenants} />;
+        return <SalesAnalyticsNew tenants={tenants} fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'products':
         return <ProductsView plans={plans} onProductClick={handleProductClick} />;
       case 'product-detail':
