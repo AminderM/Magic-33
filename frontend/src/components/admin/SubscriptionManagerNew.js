@@ -398,14 +398,34 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                   {editingTenant.subscriptions?.length > 0 ? (
                     editingTenant.subscriptions.map((sub) => {
                       const product = plans.find(p => p.id === sub.product_id);
+                      const basePrice = product?.price || 0;
+                      const discount = sub.discount_percentage || 0;
+                      const discountedPrice = basePrice * (1 - discount / 100);
+                      
                       return (
                         <div key={sub.id} className="border rounded p-3 flex items-center justify-between">
                           <div className="flex-1">
-                            <div className="font-medium">{product?.label || sub.product_id}</div>
+                            <div className="flex items-center gap-2">
+                              <div className="font-medium">{product?.label || sub.product_id}</div>
+                              {discount > 0 && (
+                                <Badge className="bg-green-100 text-green-800 text-xs">
+                                  {discount}% OFF
+                                </Badge>
+                              )}
+                            </div>
                             <div className="text-xs text-gray-500 mt-1">
                               Seats: {sub.seats_used}/{sub.seats_allocated} • 
                               Storage: {sub.storage_used_gb?.toFixed(1) || 0}/{sub.storage_allocated_gb} GB
                             </div>
+                            {discount > 0 && (
+                              <div className="text-xs text-gray-700 mt-1 flex items-center gap-2">
+                                <span className="line-through text-gray-400">${basePrice}/mo</span>
+                                <span className="font-semibold text-green-600">${discountedPrice.toFixed(2)}/mo</span>
+                                {sub.discount_reason && (
+                                  <span className="text-gray-500">• {sub.discount_reason}</span>
+                                )}
+                              </div>
+                            )}
                             {sub.status === 'pending_cancellation' && (
                               <div className="text-xs text-red-600 mt-1">Scheduled for cancellation</div>
                             )}
