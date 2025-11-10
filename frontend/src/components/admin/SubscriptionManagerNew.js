@@ -19,7 +19,9 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
   const [newProductData, setNewProductData] = useState({
     product_id: '',
     seats_allocated: 5,
-    storage_allocated_gb: 10
+    storage_allocated_gb: 10,
+    discount_percentage: 0,
+    discount_reason: ''
   });
 
   // Filter and sort tenants
