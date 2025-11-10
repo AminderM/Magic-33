@@ -1293,6 +1293,8 @@ class SubscriptionCreate(BaseModel):
     seats_allocated: int = 5
     storage_allocated_gb: int = 10
     status: str = "active"
+    discount_percentage: float = 0.0
+    discount_reason: Optional[str] = None
 
 class SubscriptionUpdate(BaseModel):
     seats_allocated: Optional[int] = None
