@@ -98,7 +98,13 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
 
   const handleAddProduct = (tenant) => {
     setSelectedTenantForProduct(tenant);
-    setNewProductData({ product_id: '', seats_allocated: 5, storage_allocated_gb: 10 });
+    setNewProductData({ 
+      product_id: '', 
+      seats_allocated: 5, 
+      storage_allocated_gb: 10,
+      discount_percentage: 0,
+      discount_reason: ''
+    });
     setIsAddProductModalOpen(true);
   };
 
