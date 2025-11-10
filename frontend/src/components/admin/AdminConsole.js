@@ -35,6 +35,19 @@ const AdminConsole = () => {
     return false;
   }, [user]);
 
+  const refreshTenants = async () => {
+    try {
+      const tenantsRes = await fetchWithAuth(`${BACKEND_URL}/api/admin/tenants`);
+      if (tenantsRes.ok) {
+        const data = await tenantsRes.json();
+        setTenants(data);
+        setFiltered(data);
+      }
+    } catch (e) {
+      toast.error('Failed to refresh tenants');
+    }
+  };
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
