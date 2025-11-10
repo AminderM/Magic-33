@@ -192,23 +192,12 @@ const AdminConsole = () => {
       case 'home':
         return <HomeView tenants={tenants} plans={plans} loading={loading} />;
       case 'subscription':
-        return <SubscriptionManagerView 
+        return <SubscriptionManagerNew 
           tenants={tenants}
-          filtered={filtered}
-          query={query}
-          setQuery={setQuery}
-          selected={selected}
-          onSelectTenant={onSelectTenant}
           plans={plans}
-          planIdToLabel={planIdToLabel}
-          updateSelected={updateSelected}
-          saveTenant={saveTenant}
-          saving={saving}
-          loading={loading}
-          integrations={integrations}
-          newIntegration={newIntegration}
-          setNewIntegration={setNewIntegration}
-          addIntegration={addIntegration}
+          fetchWithAuth={fetchWithAuth}
+          BACKEND_URL={BACKEND_URL}
+          refreshTenants={refreshTenants}
         />;
       case 'analytics':
         return <SalesAnalyticsView tenants={tenants} />;
