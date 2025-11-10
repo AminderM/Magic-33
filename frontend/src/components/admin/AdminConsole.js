@@ -177,8 +177,18 @@ const AdminConsole = () => {
   ];
 
   const handleProductClick = (product) => {
-    setSelectedProduct(product);
-    setActiveView('product-detail');
+    // Check if this is the Transportation Management System
+    const isTMS = product.label === 'Transportation Management System' || 
+                  product.id?.includes('tms_');
+    
+    if (isTMS && product.status === 'active') {
+      // Launch the TMS Dashboard application
+      navigate('/dashboard');
+    } else {
+      // Show product details for other products
+      setSelectedProduct(product);
+      setActiveView('product-detail');
+    }
   };
 
   const handleBackToProducts = () => {
