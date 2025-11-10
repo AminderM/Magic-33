@@ -546,7 +546,44 @@ const SubscriptionManagerView = ({
 };
 
 // Sales Analytics View Component
-const SalesAnalyticsView = ({ tenants }) => {
+const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [timeRange, setTimeRange] = useState('monthly'); // monthly or weekly
+
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      setLoading(true);
+      try {
+        const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/analytics`);
+        if (res.ok) {
+          const data = await res.json();
+          setAnalyticsData(data);
+        }
+      } catch (e) {
+        toast.error('Failed to load analytics');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAnalytics();
+  }, [fetchWithAuth, BACKEND_URL]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!analyticsData) {
+    return <div className="text-center text-gray-500 py-16">No analytics data available</div>;
+  }
+
   const activeSubscriptions = tenants.filter(t => t.subscription_status === 'active').length;
   const pendingSubscriptions = tenants.filter(t => !t.subscription_status || t.subscription_status === 'pending').length;
   const canceledSubscriptions = tenants.filter(t => t.subscription_status === 'canceled').length;
