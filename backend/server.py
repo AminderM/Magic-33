@@ -1597,7 +1597,7 @@ async def get_sales_analytics(current_user: User = Depends(get_current_user)):
 @api_router.get('/admin/crm/contacts')
 async def get_crm_contacts(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
-    contacts = await db.crm_contacts.find({}).to_list(length=None)
+    contacts = await db.crm_contacts.find({}, {"_id": 0}).to_list(length=None)
     return contacts
 
 @api_router.post('/admin/crm/contacts')
