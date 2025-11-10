@@ -172,11 +172,27 @@ class CompanyUpdate(BaseModel):
 
     theme: Optional[dict] = None
 
+class ProductSubscription(BaseModel):
+    """Individual product subscription within a tenant"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    product_id: str  # Reference to PLANS
+    status: str = "active"  # active, pending, canceled, trial
+    seats_allocated: int = 5
+    seats_used: int = 0
+    storage_allocated_gb: int = 10
+    storage_used_gb: float = 0.0
+    start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    next_billing_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    pending_changes: Optional[dict] = None  # Stores scheduled changes for next billing cycle
+
 class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     owner_id: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    plan: Optional[str] = "tms_basic"  # tms_basic | tms_pro | tms_enterprise
+    
+    # Legacy single-plan fields (kept for backward compatibility)
+    plan: Optional[str] = "tms_basic"
     seats: Optional[int] = 5
     feature_flags: Dict[str, bool] = Field(default_factory=lambda: {
         "live_tracking": True,
@@ -188,11 +204,20 @@ class Company(CompanyBase):
         "export_downloads": True,
         "driver_app": False,
     })
+    
+    # New multi-product subscription model
+    subscriptions: List[dict] = Field(default_factory=list)  # List of ProductSubscription dicts
+    
+    # Billing information
     stripe_customer_id: Optional[str] = None
     stripe_subscription_id: Optional[str] = None
     subscription_status: Optional[str] = None  # active, past_due, canceled
+    billing_email: Optional[str] = None
+    payment_method: Optional[str] = None  # card, invoice, etc.
+    next_billing_date: Optional[datetime] = None
+    
+    # System
     integrations: Dict[str, list] = Field(default_factory=lambda: {"eld": []})
-
     verification_status: RegistrationStatus = RegistrationStatus.PENDING
     verification_documents: List[str] = []
 
