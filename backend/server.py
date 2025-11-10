@@ -1630,7 +1630,7 @@ async def delete_crm_contact(contact_id: str, current_user: User = Depends(get_c
 @api_router.get('/admin/crm/deals')
 async def get_crm_deals(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
-    deals = await db.crm_deals.find({}).to_list(length=None)
+    deals = await db.crm_deals.find({}, {"_id": 0}).to_list(length=None)
     return deals
 
 @api_router.post('/admin/crm/deals')
