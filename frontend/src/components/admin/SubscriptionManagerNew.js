@@ -255,6 +255,11 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                               <Badge variant="outline" className="text-xs">
                                 {product.tier || product.label}
                               </Badge>
+                              {product.discount_percentage > 0 && (
+                                <Badge className="bg-green-100 text-green-700 text-xs">
+                                  -{product.discount_percentage}%
+                                </Badge>
+                              )}
                             </div>
                           ))}
                         </div>
