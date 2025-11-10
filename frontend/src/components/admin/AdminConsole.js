@@ -218,6 +218,8 @@ const AdminConsole = () => {
         return <ProductsView plans={plans} onProductClick={handleProductClick} />;
       case 'product-detail':
         return <ProductDetailView product={selectedProduct} onBack={handleBackToProducts} tenants={tenants} />;
+      case 'crm':
+        return <CRMView fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       default:
         return <HomeView tenants={tenants} plans={plans} loading={loading} />;
     }
