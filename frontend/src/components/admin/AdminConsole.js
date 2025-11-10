@@ -805,7 +805,9 @@ const ProductsView = ({ plans, onProductClick }) => {
                   disabled={!isActive}
                   onClick={() => isActive && onProductClick(currentPlan)}
                 >
-                  {isActive ? 'Launch App' : 'Notify Me'}
+                  {isActive ? (
+                    currentPlan.label === 'Transportation Management System' ? 'Launch TMS →' : 'Launch App'
+                  ) : 'Notify Me'}
                 </Button>
               </CardContent>
             </Card>
