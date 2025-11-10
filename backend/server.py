@@ -1233,12 +1233,20 @@ async def list_tenants(current_user: User = Depends(get_current_user)):
             if sub.get("status") == "active":
                 plan = next((p for p in PLANS if p["id"] == sub.get("product_id")), None)
                 if plan:
+                    base_price = plan.get("price", 0)
+                    discount = sub.get("discount_percentage", 0)
+                    discounted_price = base_price * (1 - discount / 100)
+                    
                     active_products.append({
                         "id": sub.get("id"),
                         "product_id": sub.get("product_id"),
                         "label": plan.get("label"),
                         "tier": plan.get("tier"),
-                        "status": sub.get("status")
+                        "status": sub.get("status"),
+                        "base_price": base_price,
+                        "discount_percentage": discount,
+                        "discounted_price": discounted_price,
+                        "discount_reason": sub.get("discount_reason")
                     })
         
         return {
