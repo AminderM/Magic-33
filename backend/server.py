@@ -1667,7 +1667,7 @@ async def delete_crm_deal(deal_id: str, current_user: User = Depends(get_current
 @api_router.get('/admin/crm/activities')
 async def get_crm_activities(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
-    activities = await db.crm_activities.find({}).to_list(length=None)
+    activities = await db.crm_activities.find({}, {"_id": 0}).to_list(length=None)
     return activities
 
 @api_router.post('/admin/crm/activities')
