@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { Home, Users, TrendingUp, Package, LogOut } from 'lucide-react';
 import SubscriptionManagerNew from './SubscriptionManagerNew';
 import SalesAnalyticsNew from './SalesAnalyticsNew';
+import CRMView from './CRMView';
 
 const AdminConsole = () => {
   const { fetchWithAuth, user, logout } = useAuth();
