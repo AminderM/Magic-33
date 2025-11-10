@@ -1434,6 +1434,116 @@ async def get_plans(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
     return PLANS
 
+@api_router.get('/admin/analytics')
+async def get_sales_analytics(current_user: User = Depends(get_current_user)):
+    """Get comprehensive sales analytics"""
+    require_platform_admin(current_user)
+    
+    tenants = await db.companies.find({}).to_list(length=None)
+    
+    # Calculate total lifetime revenue
+    total_lifetime_revenue = 0
+    monthly_revenue = {}
+    weekly_revenue = {}
+    new_customer_revenue = {}
+    repeat_customer_data = {}
+    customer_revenue = {}
+    
+    for tenant in tenants:
+        tenant_id = tenant.get('id')
+        created_at = tenant.get('created_at')
+        subscriptions = tenant.get('subscriptions', [])
+        
+        if not created_at:
+            continue
+            
+        # Parse creation date
+        if isinstance(created_at, str):
+            created_at = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+        
+        # Calculate tenant's total revenue
+        tenant_total_revenue = 0
+        
+        for sub in subscriptions:
+            if sub.get('status') in ['active', 'trial']:
+                product = next((p for p in PLANS if p['id'] == sub.get('product_id')), None)
+                if product:
+                    base_price = product.get('price', 0)
+                    discount = sub.get('discount_percentage', 0)
+                    final_price = base_price * (1 - discount / 100)
+                    
+                    tenant_total_revenue += final_price
+                    total_lifetime_revenue += final_price
+                    
+                    # Monthly revenue breakdown
+                    month_key = created_at.strftime('%Y-%m')
+                    monthly_revenue[month_key] = monthly_revenue.get(month_key, 0) + final_price
+                    
+                    # Weekly revenue breakdown
+                    week_key = created_at.strftime('%Y-W%W')
+                    weekly_revenue[week_key] = weekly_revenue.get(week_key, 0) + final_price
+                    
+                    # Track new customer revenue (first month)
+                    current_month = datetime.now(timezone.utc).strftime('%Y-%m')
+                    if month_key == current_month:
+                        new_customer_revenue[month_key] = new_customer_revenue.get(month_key, 0) + final_price
+        
+        # Store customer revenue for top 5
+        if tenant_total_revenue > 0:
+            customer_revenue[tenant_id] = {
+                'name': tenant.get('name', 'Unknown'),
+                'revenue': tenant_total_revenue,
+                'subscriptions': len(subscriptions),
+                'status': tenant.get('subscription_status', 'active')
+            }
+    
+    # Calculate repeat customers (customers with multiple billing cycles)
+    # For demo purposes, we'll track customers by creation month
+    repeat_customers_monthly = {}
+    for tenant in tenants:
+        created_at = tenant.get('created_at')
+        if created_at:
+            if isinstance(created_at, str):
+                created_at = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+            month_key = created_at.strftime('%Y-%m')
+            repeat_customers_monthly[month_key] = repeat_customers_monthly.get(month_key, 0) + 1
+    
+    # Sort monthly revenue by date
+    sorted_monthly_revenue = sorted(monthly_revenue.items(), key=lambda x: x[0])
+    
+    # Get top 5 customers
+    top_customers = sorted(customer_revenue.values(), key=lambda x: x['revenue'], reverse=True)[:5]
+    
+    # Calculate month-on-month growth
+    mom_data = []
+    for i, (month, revenue) in enumerate(sorted_monthly_revenue):
+        growth = 0
+        if i > 0:
+            prev_revenue = sorted_monthly_revenue[i-1][1]
+            if prev_revenue > 0:
+                growth = ((revenue - prev_revenue) / prev_revenue) * 100
+        
+        mom_data.append({
+            'month': month,
+            'revenue': revenue,
+            'growth': round(growth, 2)
+        })
+    
+    return {
+        'total_lifetime_revenue': round(total_lifetime_revenue, 2),
+        'monthly_revenue': mom_data,
+        'new_activations': {
+            'monthly': [{'month': k, 'revenue': round(v, 2)} for k, v in sorted(new_customer_revenue.items())],
+            'weekly': [{'week': k, 'revenue': round(v, 2)} for k, v in sorted(weekly_revenue.items())]
+        },
+        'repeat_customers': {
+            'monthly': [{'month': k, 'count': v} for k, v in sorted(repeat_customers_monthly.items())],
+        },
+        'top_customers': top_customers,
+        'total_customers': len(tenants),
+        'active_customers': len([t for t in tenants if t.get('subscription_status') == 'active'])
+    }
+
 class IntegrationCreate(BaseModel):
     provider: str
     name: Optional[str] = None
