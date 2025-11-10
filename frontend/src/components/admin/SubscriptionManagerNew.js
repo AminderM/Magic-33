@@ -444,7 +444,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
 
       {/* Add Product Modal */}
       <Dialog open={isAddProductModalOpen} onOpenChange={setIsAddProductModalOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Add Product Subscription</DialogTitle>
             <DialogDescription>
@@ -492,6 +492,75 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                   className="mt-1"
                 />
               </div>
+            </div>
+
+            {/* Discount Override Section */}
+            <div className="border-t pt-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-semibold">Discount Override</Label>
+                <span className="text-xs text-gray-500">For clients with special pricing</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Discount %</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={0.1}
+                    value={newProductData.discount_percentage}
+                    onChange={(e) => setNewProductData({ ...newProductData, discount_percentage: parseFloat(e.target.value) || 0 })}
+                    className="mt-1"
+                    placeholder="0.0"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Enter 0-100</p>
+                </div>
+                <div>
+                  <Label>Discount Reason</Label>
+                  <Input
+                    value={newProductData.discount_reason}
+                    onChange={(e) => setNewProductData({ ...newProductData, discount_reason: e.target.value })}
+                    className="mt-1"
+                    placeholder="e.g., Partner discount, Beta customer"
+                  />
+                </div>
+              </div>
+
+              {/* Price Calculation Display */}
+              {newProductData.product_id && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="text-sm font-medium text-gray-700 mb-2">Pricing Summary</div>
+                  {(() => {
+                    const selectedPlan = plans.find(p => p.id === newProductData.product_id);
+                    const basePrice = selectedPlan?.price || 0;
+                    const discount = newProductData.discount_percentage || 0;
+                    const discountedPrice = basePrice * (1 - discount / 100);
+                    const savings = basePrice - discountedPrice;
+
+                    return (
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Base Price:</span>
+                          <span className="font-medium">${basePrice.toFixed(2)}/month</span>
+                        </div>
+                        {discount > 0 && (
+                          <>
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-600">Discount ({discount}%):</span>
+                              <span className="text-red-600 font-medium">-${savings.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-base font-bold border-t pt-2">
+                              <span className="text-gray-900">Final Price:</span>
+                              <span className="text-green-600">${discountedPrice.toFixed(2)}/month</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter>
