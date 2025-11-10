@@ -10,13 +10,37 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { FeaturesProvider } from './contexts/FeaturesContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
   if (!user) return <Navigate to="/auth" replace />;
   return children;
 };
 
 const AdminRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
   if (!user) return <Navigate to="/auth" replace />;
   const isAdmin = user.role === 'platform_admin' || (user.email && user.email.toLowerCase() === 'aminderpro@gmail.com');
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
