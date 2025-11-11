@@ -200,6 +200,85 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
     }
   };
 
+  const handleCreateCompany = async () => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/companies`, {
+        method: 'POST',
+        body: JSON.stringify(companyForm)
+      });
+      if (res.ok) {
+        toast.success('Company created successfully');
+        setIsCompanyModalOpen(false);
+        loadData();
+        resetCompanyForm();
+      }
+    } catch (e) {
+      toast.error('Failed to create company');
+    }
+  };
+
+  const handleUpdateCompany = async () => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/companies/${editingCompany.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(companyForm)
+      });
+      if (res.ok) {
+        toast.success('Company updated successfully');
+        setIsCompanyModalOpen(false);
+        loadData();
+        resetCompanyForm();
+      }
+    } catch (e) {
+      toast.error('Failed to update company');
+    }
+  };
+
+  const handleDeleteCompany = async (id) => {
+    if (!confirm('Delete this company?')) return;
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/companies/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        toast.success('Company deleted');
+        loadData();
+      }
+    } catch (e) {
+      toast.error('Failed to delete company');
+    }
+  };
+
+  const handleCompanyCSVUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploadingCSV(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/companies/upload`, {
+        method: 'POST',
+        body: formData,
+        headers: {}
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        toast.success(result.message);
+        loadData();
+      } else {
+        toast.error('Failed to upload CSV');
+      }
+    } catch (e) {
+      toast.error('Error uploading CSV');
+    } finally {
+      setUploadingCSV(false);
+      event.target.value = '';
+    }
+  };
+
   const resetContactForm = () => {
     setContactForm({
       first_name: '',
