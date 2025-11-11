@@ -1639,6 +1639,25 @@ async def get_sales_analytics(current_user: User = Depends(get_current_user)):
         'active_customers': len([t for t in tenants if t.get('subscription_status') == 'active'])
     }
 
+# Helper function to log CRM activities
+async def log_crm_activity(user, action: str, entity_type: str, entity_id: str, entity_name: str, details: dict = None):
+    try:
+        activity_log = {
+            "id": str(uuid.uuid4()),
+            "user_id": user.id,
+            "user_name": f"{user.first_name} {user.last_name}" if hasattr(user, 'first_name') else user.email,
+            "user_email": user.email,
+            "action": action,
+            "entity_type": entity_type,
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "details": details,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+        await db.crm_activity_logs.insert_one(activity_log)
+    except Exception as e:
+        print(f"Failed to log activity: {e}")
+
 # CRM Endpoints
 @api_router.get('/admin/crm/contacts')
 async def get_crm_contacts(current_user: User = Depends(get_current_user)):
