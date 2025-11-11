@@ -1886,6 +1886,17 @@ async def create_crm_company(company: CRMCompany, current_user: User = Depends(g
     company_dict['created_at'] = company_dict['created_at'].isoformat()
     company_dict['updated_at'] = company_dict['updated_at'].isoformat()
     await db.crm_companies.insert_one(company_dict)
+    
+    # Log activity
+    await log_crm_activity(
+        current_user, 
+        "created", 
+        "company", 
+        company.id, 
+        company.company_name,
+        {"industry": company.industry, "type": company.company_type}
+    )
+    
     return company
 
 @api_router.put('/admin/crm/companies/{company_id}')
