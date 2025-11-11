@@ -299,19 +299,24 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
 
       const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/companies/upload`, {
         method: 'POST',
-        body: formData,
-        headers: {}
+        body: formData
+        // Don't set headers - fetchWithAuth will handle it for FormData
       });
 
       if (res.ok) {
         const result = await res.json();
         toast.success(result.message);
+        if (result.errors && result.errors.length > 0) {
+          console.log('Import errors:', result.errors);
+        }
         loadData();
       } else {
-        toast.error('Failed to upload CSV');
+        const error = await res.json().catch(() => ({}));
+        toast.error(error.detail || 'Failed to upload CSV');
       }
     } catch (e) {
-      toast.error('Error uploading CSV');
+      console.error('Company CSV upload error:', e);
+      toast.error('Error uploading CSV: ' + e.message);
     } finally {
       setUploadingCSV(false);
       event.target.value = '';
