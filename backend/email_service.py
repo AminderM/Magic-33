@@ -210,7 +210,7 @@ async def send_company_verification_email(
     template_data = {
         "name": name,
         "company_name": company_name,
-        "dashboard_url": "https://fleet-manager-ui.preview.emergentagent.com/dashboard"
+        "dashboard_url": "https://transpo-hub-4.preview.emergentagent.com/dashboard"
     }
     
     email_service.send_in_background(

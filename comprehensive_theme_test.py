@@ -14,7 +14,7 @@ from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
 
 class ComprehensiveThemeTester:
-    def __init__(self, base_url="https://fleet-manager-ui.preview.emergentagent.com"):
+    def __init__(self, base_url="https://transpo-hub-4.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.user_id = None

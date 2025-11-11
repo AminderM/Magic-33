@@ -801,7 +801,7 @@ async def register_user(user_data: UserCreate, background_tasks: BackgroundTasks
 
     
     # Send verification email
-    verification_url = f"https://fleet-manager-ui.preview.emergentagent.com/verify-email/{token}"
+    verification_url = f"https://transpo-hub-4.preview.emergentagent.com/verify-email/{token}"
     await send_verification_email(
         background_tasks,
         user_data.email,
