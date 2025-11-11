@@ -319,6 +319,61 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
     });
   };
 
+  const resetCompanyForm = () => {
+    setCompanyForm({
+      company_name: '',
+      industry: '',
+      website: '',
+      phone: '',
+      email: '',
+      address: '',
+      city: '',
+      state: '',
+      zip_code: '',
+      country: '',
+      employee_count: '',
+      annual_revenue: '',
+      company_type: 'prospect',
+      status: 'active',
+      parent_company: '',
+      account_owner: '',
+      founded_date: '',
+      customer_since: '',
+      linkedin_url: '',
+      twitter_handle: '',
+      notes: ''
+    });
+    setEditingCompany(null);
+  };
+
+  const openEditCompany = (company) => {
+    setEditingCompany(company);
+    setCompanyForm({
+      company_name: company.company_name,
+      industry: company.industry || '',
+      website: company.website || '',
+      phone: company.phone || '',
+      email: company.email || '',
+      address: company.address || '',
+      city: company.city || '',
+      state: company.state || '',
+      zip_code: company.zip_code || '',
+      country: company.country || '',
+      employee_count: company.employee_count || '',
+      annual_revenue: company.annual_revenue || '',
+      company_type: company.company_type || 'prospect',
+      status: company.status || 'active',
+      parent_company: company.parent_company || '',
+      account_owner: company.account_owner || '',
+      founded_date: company.founded_date || '',
+      customer_since: company.customer_since || '',
+      linkedin_url: company.linkedin_url || '',
+      twitter_handle: company.twitter_handle || '',
+      notes: company.notes || ''
+    });
+    setIsCompanyModalOpen(true);
+  };
+
   const openEditContact = (contact) => {
     setEditingContact(contact);
     setContactForm({
