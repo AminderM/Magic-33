@@ -19,6 +19,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
   const [deals, setDeals] = useState([]);
   const [activities, setActivities] = useState([]);
   const [companies, setCompanies] = useState([]);
+  const [activityLogs, setActivityLogs] = useState([]);
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   
