@@ -1632,6 +1632,62 @@ async def delete_crm_contact(contact_id: str, current_user: User = Depends(get_c
     await db.crm_contacts.delete_one({"id": contact_id})
     return {"message": "Contact deleted"}
 
+@api_router.post('/admin/crm/contacts/upload')
+async def upload_crm_contacts(file: UploadFile, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    
+    # Read CSV file
+    import csv
+    import io
+    
+    try:
+        contents = await file.read()
+        decoded = contents.decode('utf-8')
+        csv_reader = csv.DictReader(io.StringIO(decoded))
+        
+        contacts_created = 0
+        errors = []
+        
+        for row in csv_reader:
+            try:
+                contact = {
+                    "id": str(uuid.uuid4()),
+                    "first_name": row.get('first_name', '').strip(),
+                    "last_name": row.get('last_name', '').strip(),
+                    "email": row.get('email', '').strip(),
+                    "phone": row.get('phone', '').strip() or None,
+                    "ext": row.get('ext', '').strip() or None,
+                    "company": row.get('company', '').strip() or None,
+                    "position": row.get('position', '').strip() or None,
+                    "address": row.get('address', '').strip() or None,
+                    "city": row.get('city', '').strip() or None,
+                    "state": row.get('state', '').strip() or None,
+                    "status": row.get('status', 'cold_lead').strip(),
+                    "notes": row.get('notes', '').strip() or None,
+                    "source": "CSV Import",
+                    "tags": [],
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "owner_id": current_user.id
+                }
+                
+                if not contact['first_name'] or not contact['last_name'] or not contact['email']:
+                    errors.append(f"Skipped row with missing required fields: {row}")
+                    continue
+                
+                await db.crm_contacts.insert_one(contact)
+                contacts_created += 1
+            except Exception as e:
+                errors.append(f"Error processing row: {str(e)}")
+        
+        return {
+            "message": f"Successfully imported {contacts_created} contacts",
+            "contacts_created": contacts_created,
+            "errors": errors
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to process CSV: {str(e)}")
+
 @api_router.get('/admin/crm/deals')
 async def get_crm_deals(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
