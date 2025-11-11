@@ -475,7 +475,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
       {/* Tabs */}
       <div className="border-b">
         <div className="flex space-x-4">
-          {['dashboard', 'contacts', 'deals', 'activities'].map(tab => (
+          {['dashboard', 'contacts', 'company', 'deals', 'activities'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -485,7 +485,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              {tab}
+              {tab === 'company' ? 'Company' : tab}
             </button>
           ))}
         </div>
