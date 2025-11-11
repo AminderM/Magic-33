@@ -1673,6 +1673,17 @@ async def create_crm_contact(contact: CRMContact, current_user: User = Depends(g
     contact_dict['created_at'] = contact_dict['created_at'].isoformat()
     contact_dict['updated_at'] = contact_dict['updated_at'].isoformat()
     await db.crm_contacts.insert_one(contact_dict)
+    
+    # Log activity
+    await log_crm_activity(
+        current_user, 
+        "created", 
+        "contact", 
+        contact.id, 
+        f"{contact.first_name} {contact.last_name}",
+        {"company": contact.company, "email": contact.email}
+    )
+    
     return contact
 
 @api_router.put('/admin/crm/contacts/{contact_id}')
