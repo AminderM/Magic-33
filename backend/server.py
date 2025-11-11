@@ -1908,11 +1908,33 @@ async def update_crm_company(company_id: str, company: CRMCompany, current_user:
     if 'created_at' in company_dict and isinstance(company_dict['created_at'], datetime):
         company_dict['created_at'] = company_dict['created_at'].isoformat()
     await db.crm_companies.update_one({"id": company_id}, {"$set": company_dict})
+    
+    # Log activity
+    await log_crm_activity(
+        current_user, 
+        "updated", 
+        "company", 
+        company.id, 
+        company.company_name,
+        {"status": company.status, "type": company.company_type}
+    )
+    
     return company
 
 @api_router.delete('/admin/crm/companies/{company_id}')
 async def delete_crm_company(company_id: str, current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
+    # Get company info before deleting
+    company = await db.crm_companies.find_one({"id": company_id})
+    if company:
+        await log_crm_activity(
+            current_user, 
+            "deleted", 
+            "company", 
+            company_id, 
+            company.get('company_name', ''),
+            {"industry": company.get('industry'), "type": company.get('company_type')}
+        )
     await db.crm_companies.delete_one({"id": company_id})
     return {"message": "Company deleted"}
 
