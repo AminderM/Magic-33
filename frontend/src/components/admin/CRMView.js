@@ -26,8 +26,10 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isDealModalOpen, setIsDealModalOpen] = useState(false);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
   const [editingContact, setEditingContact] = useState(null);
   const [editingDeal, setEditingDeal] = useState(null);
+  const [editingCompany, setEditingCompany] = useState(null);
   
   // Form states
   const [contactForm, setContactForm] = useState({
