@@ -218,12 +218,49 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
       last_name: contact.last_name,
       email: contact.email,
       phone: contact.phone || '',
+      ext: contact.ext || '',
       company: contact.company || '',
       position: contact.position || '',
+      address: contact.address || '',
+      city: contact.city || '',
+      state: contact.state || '',
       status: contact.status,
-      source: contact.source || ''
+      notes: contact.notes || ''
     });
     setIsContactModalOpen(true);
+  };
+
+  const handleCSVUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploadingCSV(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/contacts/upload`, {
+        method: 'POST',
+        body: formData,
+        headers: {} // Let browser set Content-Type for FormData
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        toast.success(result.message);
+        if (result.errors && result.errors.length > 0) {
+          console.log('Import errors:', result.errors);
+        }
+        loadData();
+      } else {
+        toast.error('Failed to upload CSV');
+      }
+    } catch (e) {
+      toast.error('Error uploading CSV');
+    } finally {
+      setUploadingCSV(false);
+      event.target.value = ''; // Reset file input
+    }
   };
 
   const getStatusBadge = (status) => {
