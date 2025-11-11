@@ -81,7 +81,7 @@ async def update_my_company(
         )
     
 
-@router.get("/companies/current", response_model=Company)
+@router.get("/current", response_model=Company)
 async def get_current_company(current_user: User = Depends(get_current_user)):
     """Return the company associated with the current user.
     - For fleet_owner: company where owner_id == current_user.id
