@@ -3,6 +3,8 @@ from models import *
 from auth import get_current_user, require_platform_admin
 from database import db
 from datetime import datetime, timezone, timedelta
+from typing import Optional, List
+from pydantic import BaseModel
 import random
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
@@ -357,3 +359,66 @@ async def log_crm_activity(user, action: str, entity_type: str, entity_id: str, 
         print(f"Failed to log activity: {e}")
 
 # CRM Endpoints
+
+
+@router.get('/tenants/{tenant_id}/integrations')
+async def list_integrations(tenant_id: str, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    tenant = await db.companies.find_one({"id": tenant_id})
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    return tenant.get("integrations", {"eld": []})
+
+@router.post('/tenants/{tenant_id}/integrations')
+async def add_integration(tenant_id: str, payload: IntegrationCreate, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    integ = payload.dict()
+    if integ.get("client_secret"):
+        integ["client_secret_masked"] = f"****{integ['client_secret'][-4:]}"
+        del integ["client_secret"]
+    integ["created_at"] = datetime.now(timezone.utc).isoformat()
+    integ["created_by"] = current_user.email
+    await db.companies.update_one({"id": tenant_id}, {"$push": {"integrations.eld": integ}})
+    tenant = await db.companies.find_one({"id": tenant_id})
+    return tenant.get("integrations", {"eld": []})
+
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only fleet owners can view drivers")
+    
+    drivers = await db.users.find({"fleet_owner_id": current_user.id}).to_list(length=None)
+    return [User(**driver) for driver in drivers]
+
+@router.put("/drivers/{driver_id}", response_model=dict)
+async def update_driver(driver_id: str, driver_data: UserBase, current_user: User = Depends(get_current_user)):
+    # Only fleet owners can update drivers
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only fleet owners can update drivers")
+    
+    # Find driver
+    driver = await db.users.find_one({"id": driver_id, "fleet_owner_id": current_user.id})
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    # Update driver
+    update_data = driver_data.dict(exclude_unset=True)
+    if update_data:
+        await db.users.update_one(
+            {"id": driver_id},
+            {"$set": update_data}
+        )
+    
+    return {"message": "Driver updated successfully"}
+
+@router.delete("/drivers/{driver_id}")
+async def delete_driver(driver_id: str, current_user: User = Depends(get_current_user)):
+    # Only fleet owners can delete drivers
+    if current_user.role != UserRole.FLEET_OWNER:
+        raise HTTPException(status_code=403, detail="Only fleet owners can delete drivers")
+    
+    result = await db.users.delete_one({"id": driver_id, "fleet_owner_id": current_user.id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    return {"message": "Driver deleted successfully"}
+
+# Location Tracking Routes
