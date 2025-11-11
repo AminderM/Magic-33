@@ -51,7 +51,7 @@ async def create_company(company_data: CompanyCreate, background_tasks: Backgrou
         "status": "verified"
     }
 
-@router.get("/companies/my", response_model=Company)
+@router.get("/my", response_model=Company)
 async def get_my_company(current_user: User = Depends(get_current_user)):
     company = await db.companies.find_one({"owner_id": current_user.id})
     if not company:
