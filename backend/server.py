@@ -242,6 +242,35 @@ class CRMNote(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     created_by: Optional[str] = None
 
+class CRMCompany(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_name: str
+    industry: Optional[str] = None
+    website: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
+    country: Optional[str] = None
+    employee_count: Optional[int] = None
+    annual_revenue: Optional[float] = None
+    company_type: str = "prospect"  # prospect, customer, partner, vendor
+    status: str = "active"  # active, inactive, churned
+    parent_company: Optional[str] = None
+    account_owner: Optional[str] = None
+    primary_contact_id: Optional[str] = None
+    founded_date: Optional[str] = None
+    customer_since: Optional[str] = None
+    linkedin_url: Optional[str] = None
+    twitter_handle: Optional[str] = None
+    notes: Optional[str] = None
+    tags: List[str] = Field(default_factory=list)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    owner_id: Optional[str] = None
+
 class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     owner_id: str
