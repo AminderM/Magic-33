@@ -666,6 +666,128 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
         </div>
       )}
 
+      {/* Company Tab */}
+      {activeTab === 'company' && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold">Companies</h3>
+            <div className="flex gap-2">
+              <label htmlFor="company-csv-upload">
+                <Button variant="outline" disabled={uploadingCSV} onClick={() => document.getElementById('company-csv-upload').click()}>
+                  {uploadingCSV ? 'Uploading...' : 'Upload CSV/Excel'}
+                </Button>
+              </label>
+              <input
+                id="company-csv-upload"
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleCompanyCSVUpload}
+                className="hidden"
+              />
+              <Button onClick={() => { resetCompanyForm(); setIsCompanyModalOpen(true); }}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Company
+              </Button>
+            </div>
+          </div>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b bg-gray-50">
+                      <th className="text-left p-3 font-semibold text-gray-700">Company Name</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Industry</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Website</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Phone</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Email</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">City</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">State</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Country</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Employee Count</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Annual Revenue</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Type</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Status</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Account Owner</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Notes</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {companies.map(company => (
+                      <tr key={company.id} className="border-b hover:bg-gray-50">
+                        <td className="p-3">
+                          <div className="font-medium text-gray-900">{company.company_name}</div>
+                          {company.parent_company && (
+                            <div className="text-xs text-gray-500">Parent: {company.parent_company}</div>
+                          )}
+                        </td>
+                        <td className="p-3 text-sm text-gray-700">{company.industry || '—'}</td>
+                        <td className="p-3 text-sm text-blue-600">
+                          {company.website ? (
+                            <a href={company.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                              {company.website.replace(/^https?:\/\//, '').substring(0, 20)}
+                            </a>
+                          ) : '—'}
+                        </td>
+                        <td className="p-3 text-sm text-gray-700">{company.phone || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{company.email || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{company.city || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{company.state || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{company.country || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">
+                          {company.employee_count ? company.employee_count.toLocaleString() : '—'}
+                        </td>
+                        <td className="p-3 text-sm text-gray-700">
+                          {company.annual_revenue ? `$${(company.annual_revenue / 1000000).toFixed(1)}M` : '—'}
+                        </td>
+                        <td className="p-3">
+                          <Badge className={
+                            company.company_type === 'customer' ? 'bg-green-100 text-green-800' :
+                            company.company_type === 'partner' ? 'bg-purple-100 text-purple-800' :
+                            company.company_type === 'vendor' ? 'bg-orange-100 text-orange-800' :
+                            'bg-blue-100 text-blue-800'
+                          }>
+                            {company.company_type}
+                          </Badge>
+                        </td>
+                        <td className="p-3">
+                          <Badge className={
+                            company.status === 'active' ? 'bg-green-100 text-green-800' :
+                            company.status === 'churned' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }>
+                            {company.status}
+                          </Badge>
+                        </td>
+                        <td className="p-3 text-sm text-gray-700">{company.account_owner || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700 max-w-xs truncate">{company.notes || '—'}</td>
+                        <td className="p-3">
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="outline" onClick={() => openEditCompany(company)}>
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => handleDeleteCompany(company.id)}>
+                              <Trash2 className="w-3 h-3 text-red-600" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {companies.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No companies yet. Add your first company or upload a CSV file.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Deals Tab */}
       {activeTab === 'deals' && (
         <div className="space-y-4">
