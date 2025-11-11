@@ -6,8 +6,28 @@ from datetime import datetime, timezone
 import csv
 import io
 from typing import Optional
+import uuid
 
 router = APIRouter(prefix="/admin/crm", tags=["CRM"])
+
+# Helper function to log CRM activities
+async def log_crm_activity(user, action: str, entity_type: str, entity_id: str, entity_name: str, details: dict = None):
+    try:
+        activity_log = {
+            "id": str(uuid.uuid4()),
+            "user_id": user.id,
+            "user_name": user.full_name if hasattr(user, 'full_name') else user.email,
+            "user_email": user.email,
+            "action": action,
+            "entity_type": entity_type,
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "details": details,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+        await db.crm_activity_logs.insert_one(activity_log)
+    except Exception as e:
+        print(f"Failed to log activity: {e}")
 
 @router.get('/contacts')
 async def get_crm_contacts(current_user: User = Depends(get_current_user)):
