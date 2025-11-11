@@ -926,6 +926,107 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
         </div>
       )}
 
+      {/* Activity Log Tab */}
+      {activeTab === 'activity-log' && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold">Activity Log</h3>
+            <p className="text-sm text-gray-600">Team activity across all CRM entities</p>
+          </div>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b bg-gray-50">
+                      <th className="text-left p-3 font-semibold text-gray-700">Timestamp</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">User</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Action</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Entity Type</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Entity Name</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activityLogs.map((log) => {
+                      const timestamp = new Date(log.timestamp);
+                      const timeAgo = (() => {
+                        const seconds = Math.floor((new Date() - timestamp) / 1000);
+                        if (seconds < 60) return `${seconds}s ago`;
+                        const minutes = Math.floor(seconds / 60);
+                        if (minutes < 60) return `${minutes}m ago`;
+                        const hours = Math.floor(minutes / 60);
+                        if (hours < 24) return `${hours}h ago`;
+                        const days = Math.floor(hours / 24);
+                        return `${days}d ago`;
+                      })();
+
+                      return (
+                        <tr key={log.id} className="border-b hover:bg-gray-50">
+                          <td className="p-3">
+                            <div className="text-sm text-gray-900">
+                              {timestamp.toLocaleString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </div>
+                            <div className="text-xs text-gray-500">{timeAgo}</div>
+                          </td>
+                          <td className="p-3">
+                            <div className="text-sm font-medium text-gray-900">{log.user_name}</div>
+                            <div className="text-xs text-gray-500">{log.user_email}</div>
+                          </td>
+                          <td className="p-3">
+                            <Badge className={
+                              log.action === 'created' ? 'bg-green-100 text-green-800' :
+                              log.action === 'updated' ? 'bg-blue-100 text-blue-800' :
+                              log.action === 'deleted' ? 'bg-red-100 text-red-800' :
+                              'bg-gray-100 text-gray-800'
+                            }>
+                              {log.action}
+                            </Badge>
+                          </td>
+                          <td className="p-3">
+                            <Badge variant="outline" className="capitalize">
+                              {log.entity_type}
+                            </Badge>
+                          </td>
+                          <td className="p-3 text-sm font-medium text-gray-900">
+                            {log.entity_name}
+                          </td>
+                          <td className="p-3 text-sm text-gray-600">
+                            {log.details && (
+                              <div className="space-y-1">
+                                {Object.entries(log.details).map(([key, value]) => (
+                                  value && (
+                                    <div key={key} className="text-xs">
+                                      <span className="font-medium">{key}:</span> {value}
+                                    </div>
+                                  )
+                                ))}
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {activityLogs.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No activity logs yet. Actions performed on contacts, companies, and deals will appear here.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Contact Modal */}
       <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
