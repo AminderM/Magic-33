@@ -49,6 +49,30 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
   
   const [uploadingCSV, setUploadingCSV] = useState(false);
   
+  const [companyForm, setCompanyForm] = useState({
+    company_name: '',
+    industry: '',
+    website: '',
+    phone: '',
+    email: '',
+    address: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    country: '',
+    employee_count: '',
+    annual_revenue: '',
+    company_type: 'prospect',
+    status: 'active',
+    parent_company: '',
+    account_owner: '',
+    founded_date: '',
+    customer_since: '',
+    linkedin_url: '',
+    twitter_handle: '',
+    notes: ''
+  });
+  
   const [dealForm, setDealForm] = useState({
     name: '',
     value: 0,
