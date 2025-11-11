@@ -265,12 +265,16 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
 
   const getStatusBadge = (status) => {
     const variants = {
-      lead: 'bg-yellow-100 text-yellow-800',
-      prospect: 'bg-blue-100 text-blue-800',
-      customer: 'bg-green-100 text-green-800',
-      inactive: 'bg-gray-100 text-gray-800'
+      cold_lead: 'bg-blue-100 text-blue-800',
+      hot_lead: 'bg-orange-100 text-orange-800',
+      customer: 'bg-green-100 text-green-800'
     };
-    return <Badge className={variants[status] || 'bg-gray-100'}>{status}</Badge>;
+    const labels = {
+      cold_lead: 'Cold Lead',
+      hot_lead: 'Hot Lead',
+      customer: 'Customer'
+    };
+    return <Badge className={variants[status] || 'bg-gray-100'}>{labels[status] || status}</Badge>;
   };
 
   const getStageBadge = (stage) => {
