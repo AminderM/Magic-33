@@ -126,12 +126,24 @@ export const AuthProvider = ({ children }) => {
   const fetchWithAuth = async (url, options = {}) => {
     const authHeaders = getAuthHeaders();
     
+    // Check if this is a FormData upload (no Content-Type header should be set)
+    const isFormData = options.body instanceof FormData;
+    
+    const headers = isFormData 
+      ? {
+          // Only include Authorization for FormData, let browser set Content-Type
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+          ...options.headers
+        }
+      : {
+          // For non-FormData requests, include all headers
+          ...authHeaders,
+          ...options.headers
+        };
+    
     const response = await fetch(url, {
       ...options,
-      headers: {
-        ...authHeaders,
-        ...options.headers
-      }
+      headers
     });
 
     if (response.status === 401) {
