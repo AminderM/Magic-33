@@ -602,7 +602,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
 
       {/* Contact Modal */}
       <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingContact ? 'Edit Contact' : 'Add New Contact'}</DialogTitle>
             <DialogDescription>
@@ -636,14 +636,6 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               />
             </div>
             <div>
-              <Label>Phone</Label>
-              <Input
-                value={contactForm.phone}
-                onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                className="mt-1"
-              />
-            </div>
-            <div>
               <Label>Company</Label>
               <Input
                 value={contactForm.company}
@@ -660,26 +652,69 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               />
             </div>
             <div>
+              <Label>Phone#</Label>
+              <Input
+                value={contactForm.phone}
+                onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                placeholder="(555) 123-4567"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Ext</Label>
+              <Input
+                value={contactForm.ext}
+                onChange={(e) => setContactForm({ ...contactForm, ext: e.target.value })}
+                placeholder="1234"
+                className="mt-1"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>Address</Label>
+              <Input
+                value={contactForm.address}
+                onChange={(e) => setContactForm({ ...contactForm, address: e.target.value })}
+                placeholder="123 Main Street"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>City</Label>
+              <Input
+                value={contactForm.city}
+                onChange={(e) => setContactForm({ ...contactForm, city: e.target.value })}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>State</Label>
+              <Input
+                value={contactForm.state}
+                onChange={(e) => setContactForm({ ...contactForm, state: e.target.value })}
+                placeholder="CA"
+                className="mt-1"
+              />
+            </div>
+            <div>
               <Label>Status</Label>
               <Select value={contactForm.status} onValueChange={(val) => setContactForm({ ...contactForm, status: val })}>
                 <SelectTrigger className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="lead">Lead</SelectItem>
-                  <SelectItem value="prospect">Prospect</SelectItem>
+                  <SelectItem value="cold_lead">Cold Lead</SelectItem>
+                  <SelectItem value="hot_lead">Hot Lead</SelectItem>
                   <SelectItem value="customer">Customer</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label>Source</Label>
-              <Input
-                value={contactForm.source}
-                onChange={(e) => setContactForm({ ...contactForm, source: e.target.value })}
-                placeholder="e.g., Website, Referral"
-                className="mt-1"
+            <div className="col-span-2">
+              <Label>Notes</Label>
+              <textarea
+                value={contactForm.notes}
+                onChange={(e) => setContactForm({ ...contactForm, notes: e.target.value })}
+                className="w-full mt-1 px-3 py-2 border rounded-md min-h-[80px]"
+                placeholder="Add any notes about this contact..."
               />
             </div>
           </div>
