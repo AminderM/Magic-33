@@ -58,7 +58,7 @@ async def get_my_company(current_user: User = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="No company found for this user")
     return Company(**company)
 
-@router.put("/companies/my", response_model=Company)
+@router.put("/my", response_model=Company)
 async def update_my_company(
     company_update: CompanyUpdate,
     current_user: User = Depends(get_current_user)
