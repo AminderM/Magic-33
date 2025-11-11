@@ -1781,6 +1781,13 @@ async def upload_crm_contacts(file: UploadFile, current_user: User = Depends(get
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to process CSV: {str(e)}")
 
+@api_router.get('/admin/crm/activity-logs')
+async def get_crm_activity_logs(current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    # Get activity logs sorted by most recent first
+    logs = await db.crm_activity_logs.find({}, {"_id": 0}).sort("timestamp", -1).to_list(length=200)
+    return logs
+
 @api_router.get('/admin/crm/deals')
 async def get_crm_deals(current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
