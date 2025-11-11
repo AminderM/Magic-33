@@ -1164,9 +1164,6 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  );
-};
 
       {/* Company Modal */}
       <Dialog open={isCompanyModalOpen} onOpenChange={setIsCompanyModalOpen}>
