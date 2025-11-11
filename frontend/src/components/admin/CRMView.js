@@ -97,16 +97,18 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [contactsRes, dealsRes, activitiesRes, dashboardRes] = await Promise.all([
+      const [contactsRes, dealsRes, activitiesRes, companiesRes, dashboardRes] = await Promise.all([
         fetchWithAuth(`${BACKEND_URL}/api/admin/crm/contacts`),
         fetchWithAuth(`${BACKEND_URL}/api/admin/crm/deals`),
         fetchWithAuth(`${BACKEND_URL}/api/admin/crm/activities`),
+        fetchWithAuth(`${BACKEND_URL}/api/admin/crm/companies`),
         fetchWithAuth(`${BACKEND_URL}/api/admin/crm/dashboard`)
       ]);
 
       if (contactsRes.ok) setContacts(await contactsRes.json());
       if (dealsRes.ok) setDeals(await dealsRes.json());
       if (activitiesRes.ok) setActivities(await activitiesRes.json());
+      if (companiesRes.ok) setCompanies(await companiesRes.json());
       if (dashboardRes.ok) setDashboard(await dashboardRes.json());
     } catch (e) {
       toast.error('Failed to load CRM data');
