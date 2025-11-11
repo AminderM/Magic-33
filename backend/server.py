@@ -271,6 +271,18 @@ class CRMCompany(BaseModel):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     owner_id: Optional[str] = None
 
+class CRMActivityLog(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    user_name: str
+    user_email: str
+    action: str  # created, updated, deleted
+    entity_type: str  # contact, company, deal
+    entity_id: str
+    entity_name: str
+    details: Optional[dict] = None  # Stores what changed
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 class Company(CompanyBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     owner_id: str
