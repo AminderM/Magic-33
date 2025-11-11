@@ -116,7 +116,7 @@ async def get_current_company(current_user: User = Depends(get_current_user)):
     updated_company = await db.companies.find_one({"id": company["id"]})
     return Company(**updated_company)
 
-@router.post("/companies/my/upload-logo")
+@router.post("/my/upload-logo")
 async def upload_company_logo(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user)
