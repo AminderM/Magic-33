@@ -161,7 +161,7 @@ async def upload_company_logo(
         if os.path.exists(temp_file_path):
             os.unlink(temp_file_path)
 
-@router.post("/companies/my/upload-document")
+@router.post("/my/upload-document")
 async def upload_company_document(
     document_type: Literal["mc_authority", "insurance_certificate", "w9"],
     file: UploadFile = File(...),
