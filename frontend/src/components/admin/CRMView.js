@@ -418,58 +418,88 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-xl font-semibold">Contacts</h3>
-            <Button onClick={() => { resetContactForm(); setIsContactModalOpen(true); }}>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Contact
-            </Button>
+            <div className="flex gap-2">
+              <label htmlFor="csv-upload">
+                <Button variant="outline" disabled={uploadingCSV} onClick={() => document.getElementById('csv-upload').click()}>
+                  {uploadingCSV ? 'Uploading...' : 'Upload CSV/Excel'}
+                </Button>
+              </label>
+              <input
+                id="csv-upload"
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleCSVUpload}
+                className="hidden"
+              />
+              <Button onClick={() => { resetContactForm(); setIsContactModalOpen(true); }}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Contact
+              </Button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {contacts.map(contact => (
-              <Card key={contact.id}>
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-lg">{contact.first_name} {contact.last_name}</h4>
-                      {contact.position && <p className="text-sm text-gray-600">{contact.position}</p>}
-                      {contact.company && (
-                        <div className="flex items-center text-sm text-gray-600 mt-1">
-                          <Building className="w-3 h-3 mr-1" />
-                          {contact.company}
-                        </div>
-                      )}
-                    </div>
-                    {getStatusBadge(contact.status)}
-                  </div>
-
-                  <div className="space-y-2 text-sm">
-                    {contact.email && (
-                      <div className="flex items-center text-gray-600">
-                        <Mail className="w-4 h-4 mr-2" />
-                        {contact.email}
-                      </div>
-                    )}
-                    {contact.phone && (
-                      <div className="flex items-center text-gray-600">
-                        <Phone className="w-4 h-4 mr-2" />
-                        {contact.phone}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex gap-2 mt-4">
-                    <Button size="sm" variant="outline" onClick={() => openEditContact(contact)}>
-                      <Edit className="w-3 h-3 mr-1" />
-                      Edit
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleDeleteContact(contact.id)}>
-                      <Trash2 className="w-3 h-3 mr-1 text-red-600" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b bg-gray-50">
+                      <th className="text-left p-3 font-semibold text-gray-700">Name</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Company</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Position</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Email</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Phone#</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Ext</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Address</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">City</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">State</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Status</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Notes</th>
+                      <th className="text-left p-3 font-semibold text-gray-700">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {contacts.map(contact => (
+                      <tr key={contact.id} className="border-b hover:bg-gray-50">
+                        <td className="p-3">
+                          <div className="font-medium text-gray-900">
+                            {contact.first_name} {contact.last_name}
+                          </div>
+                        </td>
+                        <td className="p-3 text-sm text-gray-700">{contact.company || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{contact.position || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{contact.email}</td>
+                        <td className="p-3 text-sm text-gray-700">{contact.phone || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{contact.ext || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{contact.address || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{contact.city || '—'}</td>
+                        <td className="p-3 text-sm text-gray-700">{contact.state || '—'}</td>
+                        <td className="p-3">{getStatusBadge(contact.status)}</td>
+                        <td className="p-3 text-sm text-gray-700 max-w-xs truncate">
+                          {contact.notes || '—'}
+                        </td>
+                        <td className="p-3">
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="outline" onClick={() => openEditContact(contact)}>
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => handleDeleteContact(contact.id)}>
+                              <Trash2 className="w-3 h-3 text-red-600" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {contacts.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No contacts yet. Add your first contact or upload a CSV file.
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       )}
 
