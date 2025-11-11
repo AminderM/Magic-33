@@ -443,8 +443,8 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
 
       const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/contacts/upload`, {
         method: 'POST',
-        body: formData,
-        headers: {} // Let browser set Content-Type for FormData
+        body: formData
+        // Don't set headers - fetchWithAuth will handle it for FormData
       });
 
       if (res.ok) {
@@ -455,10 +455,12 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
         }
         loadData();
       } else {
-        toast.error('Failed to upload CSV');
+        const error = await res.json().catch(() => ({}));
+        toast.error(error.detail || 'Failed to upload CSV');
       }
     } catch (e) {
-      toast.error('Error uploading CSV');
+      console.error('CSV upload error:', e);
+      toast.error('Error uploading CSV: ' + e.message);
     } finally {
       setUploadingCSV(false);
       event.target.value = ''; // Reset file input
