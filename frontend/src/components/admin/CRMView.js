@@ -1168,4 +1168,227 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
   );
 };
 
+      {/* Company Modal */}
+      <Dialog open={isCompanyModalOpen} onOpenChange={setIsCompanyModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingCompany ? 'Edit Company' : 'Add New Company'}</DialogTitle>
+            <DialogDescription>
+              {editingCompany ? 'Update company information' : 'Create a new company in your CRM'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-4 py-4">
+            <div className="col-span-2">
+              <Label>Company Name *</Label>
+              <Input
+                value={companyForm.company_name}
+                onChange={(e) => setCompanyForm({ ...companyForm, company_name: e.target.value })}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Industry</Label>
+              <Input
+                value={companyForm.industry}
+                onChange={(e) => setCompanyForm({ ...companyForm, industry: e.target.value })}
+                placeholder="e.g., Transportation, Technology"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Website</Label>
+              <Input
+                value={companyForm.website}
+                onChange={(e) => setCompanyForm({ ...companyForm, website: e.target.value })}
+                placeholder="https://example.com"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Phone</Label>
+              <Input
+                value={companyForm.phone}
+                onChange={(e) => setCompanyForm({ ...companyForm, phone: e.target.value })}
+                placeholder="(555) 123-4567"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={companyForm.email}
+                onChange={(e) => setCompanyForm({ ...companyForm, email: e.target.value })}
+                className="mt-1"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>Address</Label>
+              <Input
+                value={companyForm.address}
+                onChange={(e) => setCompanyForm({ ...companyForm, address: e.target.value })}
+                placeholder="123 Business Blvd, Suite 100"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>City</Label>
+              <Input
+                value={companyForm.city}
+                onChange={(e) => setCompanyForm({ ...companyForm, city: e.target.value })}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>State</Label>
+              <Input
+                value={companyForm.state}
+                onChange={(e) => setCompanyForm({ ...companyForm, state: e.target.value })}
+                placeholder="CA"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Zip Code</Label>
+              <Input
+                value={companyForm.zip_code}
+                onChange={(e) => setCompanyForm({ ...companyForm, zip_code: e.target.value })}
+                placeholder="12345"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Country</Label>
+              <Input
+                value={companyForm.country}
+                onChange={(e) => setCompanyForm({ ...companyForm, country: e.target.value })}
+                placeholder="USA"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Employee Count</Label>
+              <Input
+                type="number"
+                value={companyForm.employee_count}
+                onChange={(e) => setCompanyForm({ ...companyForm, employee_count: e.target.value })}
+                placeholder="50"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Annual Revenue ($)</Label>
+              <Input
+                type="number"
+                value={companyForm.annual_revenue}
+                onChange={(e) => setCompanyForm({ ...companyForm, annual_revenue: e.target.value })}
+                placeholder="1000000"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Company Type</Label>
+              <Select value={companyForm.company_type} onValueChange={(val) => setCompanyForm({ ...companyForm, company_type: val })}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="prospect">Prospect</SelectItem>
+                  <SelectItem value="customer">Customer</SelectItem>
+                  <SelectItem value="partner">Partner</SelectItem>
+                  <SelectItem value="vendor">Vendor</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Status</Label>
+              <Select value={companyForm.status} onValueChange={(val) => setCompanyForm({ ...companyForm, status: val })}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="churned">Churned</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Parent Company</Label>
+              <Input
+                value={companyForm.parent_company}
+                onChange={(e) => setCompanyForm({ ...companyForm, parent_company: e.target.value })}
+                placeholder="For subsidiaries"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Account Owner</Label>
+              <Input
+                value={companyForm.account_owner}
+                onChange={(e) => setCompanyForm({ ...companyForm, account_owner: e.target.value })}
+                placeholder="Name of account manager"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Founded Date</Label>
+              <Input
+                type="date"
+                value={companyForm.founded_date}
+                onChange={(e) => setCompanyForm({ ...companyForm, founded_date: e.target.value })}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Customer Since</Label>
+              <Input
+                type="date"
+                value={companyForm.customer_since}
+                onChange={(e) => setCompanyForm({ ...companyForm, customer_since: e.target.value })}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>LinkedIn URL</Label>
+              <Input
+                value={companyForm.linkedin_url}
+                onChange={(e) => setCompanyForm({ ...companyForm, linkedin_url: e.target.value })}
+                placeholder="https://linkedin.com/company/..."
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label>Twitter Handle</Label>
+              <Input
+                value={companyForm.twitter_handle}
+                onChange={(e) => setCompanyForm({ ...companyForm, twitter_handle: e.target.value })}
+                placeholder="@company"
+                className="mt-1"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>Notes</Label>
+              <textarea
+                value={companyForm.notes}
+                onChange={(e) => setCompanyForm({ ...companyForm, notes: e.target.value })}
+                className="w-full mt-1 px-3 py-2 border rounded-md min-h-[80px]"
+                placeholder="Add any notes about this company..."
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setIsCompanyModalOpen(false); resetCompanyForm(); }}>
+              Cancel
+            </Button>
+            <Button onClick={editingCompany ? handleUpdateCompany : handleCreateCompany}>
+              {editingCompany ? 'Update' : 'Create'} Company
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
 export default CRMView;
