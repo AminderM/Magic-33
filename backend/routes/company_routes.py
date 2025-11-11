@@ -12,7 +12,7 @@ from typing import Literal
 
 router = APIRouter(prefix="/companies", tags=["Companies"])
 
-@router.post("/companies", response_model=dict)
+@router.post("", response_model=dict)
 async def create_company(company_data: CompanyCreate, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
     # Check if user's email is verified
     if not current_user.email_verified:
