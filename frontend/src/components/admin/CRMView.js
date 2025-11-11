@@ -202,18 +202,36 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
 
   const handleCreateCompany = async () => {
     try {
+      // Prepare data with proper type conversions
+      const companyData = {
+        ...companyForm,
+        employee_count: companyForm.employee_count ? parseInt(companyForm.employee_count) : null,
+        annual_revenue: companyForm.annual_revenue ? parseFloat(companyForm.annual_revenue) : null,
+        parent_company: companyForm.parent_company || null,
+        account_owner: companyForm.account_owner || null,
+        founded_date: companyForm.founded_date || null,
+        customer_since: companyForm.customer_since || null,
+        linkedin_url: companyForm.linkedin_url || null,
+        twitter_handle: companyForm.twitter_handle || null,
+        notes: companyForm.notes || null
+      };
+
       const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/crm/companies`, {
         method: 'POST',
-        body: JSON.stringify(companyForm)
+        body: JSON.stringify(companyData)
       });
+      
       if (res.ok) {
         toast.success('Company created successfully');
         setIsCompanyModalOpen(false);
         loadData();
         resetCompanyForm();
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to create company');
       }
     } catch (e) {
-      toast.error('Failed to create company');
+      toast.error('Failed to create company: ' + e.message);
     }
   };
 
