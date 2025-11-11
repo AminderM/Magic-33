@@ -177,10 +177,14 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
       last_name: '',
       email: '',
       phone: '',
+      ext: '',
       company: '',
       position: '',
-      status: 'lead',
-      source: ''
+      address: '',
+      city: '',
+      state: '',
+      status: 'cold_lead',
+      notes: ''
     });
     setEditingContact(null);
   };
