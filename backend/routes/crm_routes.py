@@ -5,6 +5,7 @@ from database import db
 from datetime import datetime, timezone
 import csv
 import io
+from typing import Optional
 
 router = APIRouter(prefix="/admin/crm", tags=["CRM"])
 
@@ -368,11 +369,3 @@ async def upload_crm_companies(file: UploadFile, current_user: User = Depends(ge
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to process CSV: {str(e)}")
 
-class IntegrationCreate(BaseModel):
-    provider: str
-    name: Optional[str] = None
-    client_id: Optional[str] = None
-    client_secret: Optional[str] = None
-    scopes: Optional[List[str]] = None
-
-@router.get('/admin/tenants/{tenant_id}/integrations')

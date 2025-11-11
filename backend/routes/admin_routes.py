@@ -361,6 +361,13 @@ async def log_crm_activity(user, action: str, entity_type: str, entity_id: str, 
 # CRM Endpoints
 
 
+class IntegrationCreate(BaseModel):
+    provider: str
+    name: Optional[str] = None
+    client_id: Optional[str] = None
+    client_secret: Optional[str] = None
+    scopes: Optional[List[str]] = None
+
 @router.get('/tenants/{tenant_id}/integrations')
 async def list_integrations(tenant_id: str, current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
