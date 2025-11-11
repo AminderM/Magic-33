@@ -195,9 +195,14 @@ class CRMContact(BaseModel):
     last_name: str
     email: str
     phone: Optional[str] = None
+    ext: Optional[str] = None  # Phone extension
     company: Optional[str] = None
     position: Optional[str] = None
-    status: str = "lead"  # lead, prospect, customer, inactive
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    status: str = "cold_lead"  # cold_lead, hot_lead, customer
+    notes: Optional[str] = None
     source: Optional[str] = None  # referral, website, campaign, etc.
     tags: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
