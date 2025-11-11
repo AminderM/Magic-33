@@ -1807,6 +1807,103 @@ async def get_crm_dashboard(current_user: User = Depends(get_current_user)):
         'conversion_rate': (customers / total_contacts * 100) if total_contacts > 0 else 0
     }
 
+# CRM Company Endpoints
+@api_router.get('/admin/crm/companies')
+async def get_crm_companies(current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    companies = await db.crm_companies.find({}, {"_id": 0}).to_list(length=None)
+    return companies
+
+@api_router.post('/admin/crm/companies')
+async def create_crm_company(company: CRMCompany, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    company.owner_id = current_user.id
+    company_dict = company.dict()
+    company_dict['created_at'] = company_dict['created_at'].isoformat()
+    company_dict['updated_at'] = company_dict['updated_at'].isoformat()
+    await db.crm_companies.insert_one(company_dict)
+    return company
+
+@api_router.put('/admin/crm/companies/{company_id}')
+async def update_crm_company(company_id: str, company: CRMCompany, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    company.updated_at = datetime.now(timezone.utc)
+    company_dict = company.dict()
+    company_dict['updated_at'] = company_dict['updated_at'].isoformat()
+    if 'created_at' in company_dict and isinstance(company_dict['created_at'], datetime):
+        company_dict['created_at'] = company_dict['created_at'].isoformat()
+    await db.crm_companies.update_one({"id": company_id}, {"$set": company_dict})
+    return company
+
+@api_router.delete('/admin/crm/companies/{company_id}')
+async def delete_crm_company(company_id: str, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    await db.crm_companies.delete_one({"id": company_id})
+    return {"message": "Company deleted"}
+
+@api_router.post('/admin/crm/companies/upload')
+async def upload_crm_companies(file: UploadFile, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    
+    import csv
+    import io
+    
+    try:
+        contents = await file.read()
+        decoded = contents.decode('utf-8')
+        csv_reader = csv.DictReader(io.StringIO(decoded))
+        
+        companies_created = 0
+        errors = []
+        
+        for row in csv_reader:
+            try:
+                company = {
+                    "id": str(uuid.uuid4()),
+                    "company_name": row.get('company_name', '').strip(),
+                    "industry": row.get('industry', '').strip() or None,
+                    "website": row.get('website', '').strip() or None,
+                    "phone": row.get('phone', '').strip() or None,
+                    "email": row.get('email', '').strip() or None,
+                    "address": row.get('address', '').strip() or None,
+                    "city": row.get('city', '').strip() or None,
+                    "state": row.get('state', '').strip() or None,
+                    "zip_code": row.get('zip_code', '').strip() or None,
+                    "country": row.get('country', '').strip() or None,
+                    "employee_count": int(row.get('employee_count', 0)) if row.get('employee_count', '').strip() else None,
+                    "annual_revenue": float(row.get('annual_revenue', 0)) if row.get('annual_revenue', '').strip() else None,
+                    "company_type": row.get('company_type', 'prospect').strip(),
+                    "status": row.get('status', 'active').strip(),
+                    "parent_company": row.get('parent_company', '').strip() or None,
+                    "account_owner": row.get('account_owner', '').strip() or None,
+                    "founded_date": row.get('founded_date', '').strip() or None,
+                    "customer_since": row.get('customer_since', '').strip() or None,
+                    "linkedin_url": row.get('linkedin_url', '').strip() or None,
+                    "twitter_handle": row.get('twitter_handle', '').strip() or None,
+                    "notes": row.get('notes', '').strip() or None,
+                    "tags": [],
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "owner_id": current_user.id
+                }
+                
+                if not company['company_name']:
+                    errors.append(f"Skipped row with missing company name: {row}")
+                    continue
+                
+                await db.crm_companies.insert_one(company)
+                companies_created += 1
+            except Exception as e:
+                errors.append(f"Error processing row: {str(e)}")
+        
+        return {
+            "message": f"Successfully imported {companies_created} companies",
+            "companies_created": companies_created,
+            "errors": errors
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to process CSV: {str(e)}")
+
 class IntegrationCreate(BaseModel):
     provider: str
     name: Optional[str] = None
