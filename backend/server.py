@@ -1797,6 +1797,17 @@ async def create_crm_deal(deal: CRMDeal, current_user: User = Depends(get_curren
     if deal_dict.get('expected_close_date'):
         deal_dict['expected_close_date'] = deal_dict['expected_close_date'].isoformat()
     await db.crm_deals.insert_one(deal_dict)
+    
+    # Log activity
+    await log_crm_activity(
+        current_user, 
+        "created", 
+        "deal", 
+        deal.id, 
+        deal.name,
+        {"value": deal.value, "stage": deal.stage}
+    )
+    
     return deal
 
 @api_router.put('/admin/crm/deals/{deal_id}')
