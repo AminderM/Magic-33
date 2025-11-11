@@ -1695,11 +1695,33 @@ async def update_crm_contact(contact_id: str, contact: CRMContact, current_user:
     if 'created_at' in contact_dict and isinstance(contact_dict['created_at'], datetime):
         contact_dict['created_at'] = contact_dict['created_at'].isoformat()
     await db.crm_contacts.update_one({"id": contact_id}, {"$set": contact_dict})
+    
+    # Log activity
+    await log_crm_activity(
+        current_user, 
+        "updated", 
+        "contact", 
+        contact.id, 
+        f"{contact.first_name} {contact.last_name}",
+        {"status": contact.status, "company": contact.company}
+    )
+    
     return contact
 
 @api_router.delete('/admin/crm/contacts/{contact_id}')
 async def delete_crm_contact(contact_id: str, current_user: User = Depends(get_current_user)):
     require_platform_admin(current_user)
+    # Get contact info before deleting
+    contact = await db.crm_contacts.find_one({"id": contact_id})
+    if contact:
+        await log_crm_activity(
+            current_user, 
+            "deleted", 
+            "contact", 
+            contact_id, 
+            f"{contact.get('first_name', '')} {contact.get('last_name', '')}",
+            {"company": contact.get('company'), "email": contact.get('email')}
+        )
     await db.crm_contacts.delete_one({"id": contact_id})
     return {"message": "Contact deleted"}
 
