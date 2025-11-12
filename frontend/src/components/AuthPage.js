@@ -48,7 +48,8 @@ const AuthPage = () => {
         
         // Check if user is platform admin and redirect accordingly
         const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
-        const isAdmin = userData.role === 'platform_admin' || userData.email === 'aminderpro@gmail.com';
+        const isAdmin = userData.role === 'platform_admin' || 
+                       (userData.email && userData.email.toLowerCase() === 'aminderpro@gmail.com');
         
         if (isAdmin) {
           navigate('/admin');
