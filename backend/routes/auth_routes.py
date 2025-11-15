@@ -37,7 +37,8 @@ async def register_user(user_data: UserCreate, background_tasks: BackgroundTasks
     await db.users.insert_one(user_obj.dict())
     
     # Send verification email
-    verification_url = f"https://ec2-deploy-debug.preview.emergentagent.com/verify-email/{token}"
+    app_url = os.environ.get('APP_URL', 'http://localhost:3000')
+    verification_url = f"{app_url}/verify-email/{token}"
     await send_verification_email(
         background_tasks,
         user_data.email,
