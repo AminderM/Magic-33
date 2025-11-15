@@ -185,8 +185,8 @@ const AdminConsole = () => {
                   product.id?.includes('tms_');
     
     if (isTMS && product.status === 'active') {
-      // Launch the TMS Dashboard application
-      navigate('/dashboard');
+      // Launch the TMS Dashboard application in a new window
+      window.open('/dashboard', '_blank');
     } else {
       // Show product details for other products
       setSelectedProduct(product);
