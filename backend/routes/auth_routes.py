@@ -5,6 +5,7 @@ from database import db
 from datetime import datetime, timezone, timedelta
 import secrets
 import hashlib
+import os
 from email_service import send_verification_email
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
