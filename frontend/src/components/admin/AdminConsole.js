@@ -177,6 +177,7 @@ const AdminConsole = () => {
     { id: 'subscription', label: 'Subscription Manager', icon: Users },
     { id: 'analytics', label: 'Sales Analytics', icon: TrendingUp },
     { id: 'products', label: 'Products', icon: Package },
+    { id: 'integrations', label: 'Integrations', icon: Zap },
     { id: 'crm', label: 'CRM', icon: Users }
   ];
 
