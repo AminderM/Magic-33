@@ -8,10 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Home, Users, TrendingUp, Package, LogOut } from 'lucide-react';
+import { Home, Users, TrendingUp, Package, LogOut, Zap } from 'lucide-react';
 import SubscriptionManagerNew from './SubscriptionManagerNew';
 import SalesAnalyticsNew from './SalesAnalyticsNew';
 import CRMView from './CRMView';
+import IntegrationsView from './IntegrationsView';
 
 const AdminConsole = () => {
   const { fetchWithAuth, user, logout } = useAuth();
