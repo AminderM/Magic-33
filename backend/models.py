@@ -680,7 +680,7 @@ PLANS = [
         "label": "Integrated Route Mate",
         "price": 449,
         "default_seats": 20,
-        "status": "coming_soon",
+        "status": "active",
         "tier": "Territory Planner",
         "subtitle": "AI-Powered Route & Territory Optimization",
         "description": "Plan routes with a comprehensive, pre-emptive approach. Model delivery scenarios and route improvements while managing operations with advanced routing algorithms and historical data. Eliminate tedious manual re-routing and boost productivity.",
