@@ -13,6 +13,7 @@ import SubscriptionManagerNew from './SubscriptionManagerNew';
 import SalesAnalyticsNew from './SalesAnalyticsNew';
 import CRMView from './CRMView';
 import IntegrationsView from './IntegrationsView';
+import RouteMateApp from '../route-mate/RouteMateApp';
 
 const AdminConsole = () => {
   const { fetchWithAuth, user, logout } = useAuth();
