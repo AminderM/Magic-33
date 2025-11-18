@@ -675,6 +675,50 @@ PLANS = [
             "drug_testing": True,
         },
     },
+    {
+        "id": "integrated_route_mate",
+        "label": "Integrated Route Mate",
+        "price": 449,
+        "default_seats": 20,
+        "status": "coming_soon",
+        "tier": "Territory Planner",
+        "subtitle": "AI-Powered Route & Territory Optimization",
+        "description": "Plan routes with a comprehensive, pre-emptive approach. Model delivery scenarios and route improvements while managing operations with advanced routing algorithms and historical data. Eliminate tedious manual re-routing and boost productivity.",
+        "features": [
+            "Advanced Routing Algorithms (VRP/CVRP)",
+            "Automated Strategic Re-routing",
+            "Historical Data Analysis & Forecasting",
+            "Intelligent Route Scoring & Selection",
+            "Capacity Balancing Across Routes",
+            "Territory Exception Management",
+            "+ 6 more features"
+        ],
+        "all_features": [
+            "Advanced Routing Algorithms (VRP/CVRP)",
+            "Automated Strategic Re-routing",
+            "Historical Data Analysis & Forecasting",
+            "Intelligent Route Scoring & Selection",
+            "Capacity Balancing Across Routes",
+            "Territory Exception Management",
+            "Customer-Specific Needs & Constraints",
+            "Digestible Route Statistics Dashboard",
+            "Configurable Sales/Service/Distribution Reports",
+            "Resource Allocation Optimization",
+            "Route Change Impact Forecasting",
+            "Time Window Optimization"
+        ],
+        "feature_flags": {
+            "route_optimization": True,
+            "territory_planning": True,
+            "historical_analysis": True,
+            "ai_forecasting": True,
+            "automated_rerouting": True,
+            "capacity_balancing": True,
+            "exception_handling": True,
+            "custom_reports": True,
+            "intelligent_scoring": True,
+        },
+    },
 ]
 
 PLAN_ID_BY_LABEL = {p["label"].lower(): p["id"] for p in PLANS}
