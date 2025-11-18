@@ -24,6 +24,7 @@ from routes import admin_routes
 from routes import crm_routes
 from routes import misc_routes
 from routes import integrations_routes
+from routes import route_mate_routes
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
