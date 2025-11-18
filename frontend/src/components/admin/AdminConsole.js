@@ -186,9 +186,17 @@ const AdminConsole = () => {
     const isTMS = product.label === 'Transportation Management System' || 
                   product.id?.includes('tms_');
     
+    // Check if this is Integrated Route Mate
+    const isRouteMate = product.label === 'Integrated Route Mate' ||
+                        product.id === 'integrated_route_mate';
+    
     if (isTMS && product.status === 'active') {
       // Launch the TMS Dashboard application in a new window
       window.open('/dashboard', '_blank');
+    } else if (isRouteMate) {
+      // Launch Route Mate (can be coming_soon or active)
+      setSelectedProduct(product);
+      setActiveView('route-mate-app');
     } else {
       // Show product details for other products
       setSelectedProduct(product);
