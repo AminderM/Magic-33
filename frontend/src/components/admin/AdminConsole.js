@@ -863,7 +863,11 @@ const ProductsView = ({ plans, onProductClick }) => {
                   onClick={() => isActive && onProductClick(currentPlan)}
                 >
                   {isActive ? (
-                    currentPlan.label === 'Transportation Management System' ? 'Launch TMS →' : 'Launch App'
+                    currentPlan.label === 'Transportation Management System' 
+                      ? 'Launch TMS →' 
+                      : currentPlan.label === 'Integrated Route Mate'
+                      ? 'Launch Route Mate →'
+                      : 'Launch App →'
                   ) : 'Notify Me'}
                 </Button>
               </CardContent>
