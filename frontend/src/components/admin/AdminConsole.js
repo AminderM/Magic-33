@@ -229,6 +229,8 @@ const AdminConsole = () => {
         return <ProductsView plans={plans} onProductClick={handleProductClick} />;
       case 'product-detail':
         return <ProductDetailView product={selectedProduct} onBack={handleBackToProducts} tenants={tenants} />;
+      case 'route-mate-app':
+        return <RouteMateApp onClose={handleBackToProducts} BACKEND_URL={BACKEND_URL} />;
       case 'integrations':
         return <IntegrationsView fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'crm':
