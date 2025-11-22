@@ -283,6 +283,8 @@ async def remove_product_subscription(
         message = "Subscription removed immediately"
     
     tenant = await db.companies.find_one({"id": tenant_id})
+    if tenant:
+        tenant.pop('_id', None)
     return {"message": message, "tenant": tenant}
 
 @router.get('/plans')
