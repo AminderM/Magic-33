@@ -175,6 +175,23 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
       <ChevronDown className="w-4 h-4 inline ml-1" />;
   };
 
+  // Show User Management view if a tenant is selected
+  if (showUserManagement && selectedTenantForUsers) {
+    return (
+      <UserManagement
+        tenant={selectedTenantForUsers}
+        plans={plans}
+        fetchWithAuth={fetchWithAuth}
+        BACKEND_URL={BACKEND_URL}
+        onClose={() => {
+          setShowUserManagement(false);
+          setSelectedTenantForUsers(null);
+          refreshTenants();
+        }}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
