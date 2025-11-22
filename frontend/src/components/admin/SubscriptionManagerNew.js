@@ -308,6 +308,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                           size="sm"
                           variant="outline"
                           onClick={() => handleEditTenant(tenant)}
+                          title="Edit Tenant"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -315,8 +316,21 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                           size="sm"
                           variant="outline"
                           onClick={() => handleAddProduct(tenant)}
+                          title="Add Product"
                         >
                           <Plus className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-blue-50 hover:bg-blue-100"
+                          onClick={() => {
+                            setSelectedTenantForUsers(tenant);
+                            setShowUserManagement(true);
+                          }}
+                          title="Manage Users"
+                        >
+                          <Users className="w-4 h-4" />
                         </Button>
                       </div>
                     </td>
