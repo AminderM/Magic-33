@@ -358,6 +358,144 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
         </CardContent>
       </Card>
 
+      {/* Add Tenant Modal */}
+      <Dialog open={isAddTenantModalOpen} onOpenChange={setIsAddTenantModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Tenant</DialogTitle>
+            <DialogDescription>
+              Create a new tenant company in the system
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="company_name">Company Name *</Label>
+                <Input
+                  id="company_name"
+                  value={newTenantData.name}
+                  onChange={(e) => setNewTenantData({ ...newTenantData, name: e.target.value })}
+                  placeholder="Acme Trucking Co."
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="company_email">Company Email *</Label>
+                <Input
+                  id="company_email"
+                  type="email"
+                  value={newTenantData.email}
+                  onChange={(e) => setNewTenantData({ ...newTenantData, email: e.target.value })}
+                  placeholder="contact@acmetrucking.com"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number *</Label>
+                <Input
+                  id="phone"
+                  value={newTenantData.phone}
+                  onChange={(e) => setNewTenantData({ ...newTenantData, phone: e.target.value })}
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  value={newTenantData.address}
+                  onChange={(e) => setNewTenantData({ ...newTenantData, address: e.target.value })}
+                  placeholder="123 Main St, City, State ZIP"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="seats">Total Seats Allocated *</Label>
+                <Input
+                  id="seats"
+                  type="number"
+                  min="1"
+                  value={newTenantData.total_seats_allocated}
+                  onChange={(e) => setNewTenantData({ ...newTenantData, total_seats_allocated: parseInt(e.target.value) || 10 })}
+                />
+                <p className="text-xs text-gray-500">Number of user accounts allowed</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="storage">Storage Limit (GB) *</Label>
+                <Input
+                  id="storage"
+                  type="number"
+                  min="1"
+                  value={newTenantData.storage_limit_gb}
+                  onChange={(e) => setNewTenantData({ ...newTenantData, storage_limit_gb: parseInt(e.target.value) || 50 })}
+                />
+                <p className="text-xs text-gray-500">Total storage space in gigabytes</p>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setIsAddTenantModalOpen(false);
+              setNewTenantData({
+                name: '',
+                email: '',
+                phone: '',
+                address: '',
+                total_seats_allocated: 10,
+                storage_limit_gb: 50
+              });
+            }}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={async () => {
+                try {
+                  if (!newTenantData.name || !newTenantData.email || !newTenantData.phone) {
+                    toast.error('Please fill in all required fields');
+                    return;
+                  }
+
+                  const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/tenants`, {
+                    method: 'POST',
+                    body: JSON.stringify(newTenantData)
+                  });
+
+                  if (res.ok) {
+                    toast.success('Tenant created successfully!');
+                    setIsAddTenantModalOpen(false);
+                    setNewTenantData({
+                      name: '',
+                      email: '',
+                      phone: '',
+                      address: '',
+                      total_seats_allocated: 10,
+                      storage_limit_gb: 50
+                    });
+                    refreshTenants();
+                  } else {
+                    const error = await res.json();
+                    toast.error(error.detail || 'Failed to create tenant');
+                  }
+                } catch (error) {
+                  toast.error('Error creating tenant');
+                }
+              }}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              Create Tenant
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Edit Tenant Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
