@@ -292,8 +292,34 @@ metadata:
   test_sequence: 2
   run_ui: false
 
+  - task: "Admin Console Subscription Manager"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/admin/SubscriptionManagerNew.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Admin Console Subscription Manager with tenant management, product assignment, and user management navigation implemented. Includes search, sorting, edit tenant modal, add product modal, and 'Manage Users' button for each tenant."
+
+  - task: "User Management System for Tenants"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/admin/UserManagement.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Complete User Management system implemented with stats cards, user CRUD operations (add, edit, delete, reset password), role management (company_admin, dispatcher, driver), product assignment, and seat usage tracking. Includes search functionality and comprehensive user table."
+
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Admin Console Subscription Manager"
+    - "User Management System for Tenants"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
