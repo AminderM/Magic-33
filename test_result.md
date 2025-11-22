@@ -306,6 +306,9 @@ metadata:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETED: Subscription Manager working perfectly. Successfully tested: 1) Login with admin credentials (aminderpro@gmail.com) 2) Navigation to Subscription Manager 3) Tenants table display with 3 tenants (Acme Trucking Co., FastHaul Logistics, Metro Freight Services) 4) Actions column with Edit, Add Product, and Manage Users buttons 5) Tenant details showing Active Products, Status, Seats, and Storage usage 6) Search functionality and sorting capabilities. All UI elements render correctly and navigation flows work as expected."
+      - working: true
+        agent: "testing"
+        comment: "✅ EDIT TENANT FUNCTIONALITY TESTING COMPLETED: All edit tenant features working perfectly (100% success rate). CRITICAL BUG FIXED: Backend ObjectId serialization issue in PUT /api/admin/tenants/{id} endpoint resolved. Test Results: 1) ✅ Edit modal opens with populated fields (Company Name, Phone Number, Email, etc.) 2) ✅ Form fields are editable and changes reflect immediately 3) ✅ Save Changes button successfully saves data (API returns 200 OK) 4) ✅ Success toast appears and modal closes automatically 5) ✅ Changes persist in tenant table (Company Name: 'Acme Trucking Co. - Updated', Phone: '+1 555-999-8888') 6) ✅ Backend persistence verified - reopening edit modal shows saved data 7) ✅ Cancel button discards changes and preserves original data. All requested test scenarios passed successfully. Edit tenant functionality is fully operational and ready for production."
 
   - task: "User Management System for Tenants"
     implemented: true
