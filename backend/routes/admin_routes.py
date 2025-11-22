@@ -67,6 +67,61 @@ async def list_tenants(current_user: User = Depends(get_current_user)):
         }
     return [enrich_tenant(c) for c in tenants]
 
+class TenantCreate(BaseModel):
+    name: str
+    email: str
+    phone: str
+    address: Optional[str] = None
+    total_seats_allocated: int = 10
+    storage_limit_gb: int = 50
+
+@router.post('/tenants')
+async def create_tenant(tenant_data: TenantCreate, current_user: User = Depends(get_current_user)):
+    require_platform_admin(current_user)
+    
+    # Check if company with same name already exists
+    existing = await db.companies.find_one({"name": tenant_data.name})
+    if existing:
+        raise HTTPException(status_code=400, detail="Company with this name already exists")
+    
+    # Check if email already exists
+    existing_email = await db.companies.find_one({"company_email": tenant_data.email})
+    if existing_email:
+        raise HTTPException(status_code=400, detail="Company with this email already exists")
+    
+    # Create new tenant
+    new_tenant = {
+        "id": str(uuid.uuid4()),
+        "name": tenant_data.name,
+        "company_email": tenant_data.email,
+        "phone_number": tenant_data.phone,
+        "address": tenant_data.address or "",
+        "city": "",
+        "state": "",
+        "zip_code": "",
+        "billing_email": tenant_data.email,
+        "payment_method": "credit_card",
+        "subscription_status": "active",
+        "plan": "tms_basic",  # Default plan
+        "seats": tenant_data.total_seats_allocated,
+        "total_seats_allocated": tenant_data.total_seats_allocated,
+        "total_seats_used": 0,
+        "storage_limit_gb": tenant_data.storage_limit_gb,
+        "storage_used_gb": 0,
+        "feature_flags": {},
+        "subscriptions": [],
+        "active_products": [],
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_by": current_user.id
+    }
+    
+    await db.companies.insert_one(new_tenant)
+    
+    return {
+        "message": "Tenant created successfully",
+        "tenant": {k: v for k, v in new_tenant.items() if k != "_id"}
+    }
+
 class TenantUpdate(BaseModel):
     name: Optional[str] = None
     company_email: Optional[str] = None
