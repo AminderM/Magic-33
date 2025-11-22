@@ -16,6 +16,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
   const [editingTenant, setEditingTenant] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [isAddTenantModalOpen, setIsAddTenantModalOpen] = useState(false);
   const [selectedTenantForProduct, setSelectedTenantForProduct] = useState(null);
   const [showUserManagement, setShowUserManagement] = useState(false);
   const [selectedTenantForUsers, setSelectedTenantForUsers] = useState(null);
@@ -25,6 +26,14 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
     storage_allocated_gb: 10,
     discount_percentage: 0,
     discount_reason: ''
+  });
+  const [newTenantData, setNewTenantData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    total_seats_allocated: 10,
+    storage_limit_gb: 50
   });
 
   // Filter and sort tenants
