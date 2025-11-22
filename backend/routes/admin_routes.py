@@ -145,7 +145,12 @@ async def update_tenant(tenant_id: str, payload: TenantUpdate, current_user: Use
         return {"updated": False}
     await db.companies.update_one({"id": tenant_id}, {"$set": updates})
     tenant = await db.companies.find_one({"id": tenant_id})
-    return tenant
+    if tenant:
+        # Remove MongoDB-specific fields that can't be serialized
+        tenant.pop('_id', None)
+        return tenant
+    else:
+        raise HTTPException(status_code=404, detail="Tenant not found")
 
 class SubscriptionCreate(BaseModel):
     product_id: str
