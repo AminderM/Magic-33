@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Edit, Plus, Trash2, Package, ChevronDown, ChevronUp } from 'lucide-react';
+import { Edit, Plus, Trash2, Package, ChevronDown, ChevronUp, Users } from 'lucide-react';
+import UserManagement from './UserManagement';
 
 const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, refreshTenants }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,6 +17,8 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [selectedTenantForProduct, setSelectedTenantForProduct] = useState(null);
+  const [showUserManagement, setShowUserManagement] = useState(false);
+  const [selectedTenantForUsers, setSelectedTenantForUsers] = useState(null);
   const [newProductData, setNewProductData] = useState({
     product_id: '',
     seats_allocated: 5,
