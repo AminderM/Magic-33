@@ -199,6 +199,13 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
           <h2 className="text-3xl font-bold text-gray-800">Subscription Manager</h2>
           <p className="text-gray-600 mt-2">Manage tenants, products, and subscriptions</p>
         </div>
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => setIsAddTenantModalOpen(true)}
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add Tenant
+        </Button>
       </div>
 
       {/* Search and Filters */}
