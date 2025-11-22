@@ -52,6 +52,7 @@ api_router.include_router(crm_routes.router)
 api_router.include_router(misc_routes.router)
 api_router.include_router(integrations_routes.router)
 api_router.include_router(route_mate_routes.router)
+api_router.include_router(user_management_routes.router, prefix="/admin", tags=["User Management"])
 
 # WebSocket endpoint for real-time vehicle tracking
 @api_router.websocket("/ws/vehicle/{vehicle_id}")
