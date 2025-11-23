@@ -242,7 +242,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={`Ask about ${contexts.find(c => c.id === activeContext)?.label}...`}
+            placeholder={`Ask about ${departmentMap[activeDepartment]?.label}...`}
             disabled={isLoading}
             className="flex-1"
           />
