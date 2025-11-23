@@ -214,7 +214,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
           </div>
           
           {/* Add Equipment Button */}
-          {user?.role === 'fleet_owner' && (
+          {(user?.role === 'fleet_owner' || user?.role === 'platform_admin') && (
             <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
               <DialogTrigger asChild>
                 <Button className="btn-primary" data-testid="add-equipment-btn">
