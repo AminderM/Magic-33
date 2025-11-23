@@ -69,12 +69,12 @@ async def create_booking(booking_data: BookingCreate, background_tasks: Backgrou
         "total_cost": total_cost
     }
 
-@router.get("/bookings/my", response_model=List[Booking])
+@router.get("/my", response_model=List[Booking])
 async def get_my_bookings(current_user: User = Depends(get_current_user)):
     bookings = await db.bookings.find({"requester_id": current_user.id}).to_list(length=None)
     return [Booking(**booking) for booking in bookings]
 
-@router.get("/bookings/requests", response_model=List[Booking])
+@router.get("/requests", response_model=List[Booking])
 async def get_booking_requests(current_user: User = Depends(get_current_user)):
     bookings = await db.bookings.find({"equipment_owner_id": current_user.id}).to_list(length=None)
     return [Booking(**booking) for booking in bookings]
