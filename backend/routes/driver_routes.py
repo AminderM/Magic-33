@@ -13,7 +13,7 @@ def require_platform_admin(current_user: User):
 router = APIRouter(prefix="/drivers", tags=["Drivers"])
 
 @router.post("", response_model=dict)
-async def create_driver_account(driver_data: UserCreate, current_user: User = Depends(get_current_user)):
+async def create_driver_account(driver_data: DriverCreate, current_user: User = Depends(get_current_user)):
     # Only fleet owners and platform admins can create driver accounts
     if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
         raise HTTPException(status_code=403, detail="Only fleet owners and platform admins can create driver accounts")
