@@ -1413,39 +1413,7 @@ const OrderManagement = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Total Orders</div>
-            <div className="text-2xl font-bold text-blue-600">{orders.length}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Pending</div>
-            <div className="text-2xl font-bold text-yellow-600">
-              {orders.filter(o => o.status === 'pending').length}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Approved</div>
-            <div className="text-2xl font-bold text-blue-600">
-              {orders.filter(o => o.status === 'approved').length}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Completed</div>
-            <div className="text-2xl font-bold text-green-600">
-              {orders.filter(o => o.status === 'completed').length}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Summary Stats - Removed per user request */}
     </div>
   );
 };
