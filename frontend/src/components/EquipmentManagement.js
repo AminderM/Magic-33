@@ -431,7 +431,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                 ? 'Start by adding your first piece of equipment to the marketplace.'
                 : 'Check back later for available equipment.'}
             </p>
-            {user?.role === 'fleet_owner' && (
+            {(user?.role === 'fleet_owner' || user?.role === 'platform_admin') && (
               <Button 
                 onClick={() => setShowAddForm(true)}
                 className="btn-primary"
