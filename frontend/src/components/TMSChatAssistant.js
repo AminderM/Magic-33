@@ -4,12 +4,10 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { X, Send, Trash2, MessageSquare, Minimize2, Maximize2 } from 'lucide-react';
+import { Send, Trash2 } from 'lucide-react';
 
-const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [activeContext, setActiveContext] = useState('general');
+const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user }) => {
+  const [activeContext, setActiveContext] = useState('dispatch');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
