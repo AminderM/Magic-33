@@ -165,7 +165,8 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL }) => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg z-50 flex items-center gap-2"
+        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg flex items-center gap-2"
+        style={{ zIndex: 9999 }}
         title="Open AI Chat Assistant"
       >
         <MessageSquare className="w-6 h-6" />
