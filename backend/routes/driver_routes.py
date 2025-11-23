@@ -33,7 +33,7 @@ async def create_driver_account(driver_data: UserCreate, current_user: User = De
     
     return {"message": "Driver account created successfully", "driver_id": driver_obj.id}
 
-@router.get("/drivers/my", response_model=List[User])
+@router.get("/my", response_model=List[User])
 async def get_my_drivers(current_user: User = Depends(get_current_user)):
 # ============= Admin APIs =============
     drivers = await db.users.find({"fleet_owner_id": current_user.id, "role": UserRole.DRIVER}).to_list(length=None)
