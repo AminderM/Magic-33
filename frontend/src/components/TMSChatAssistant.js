@@ -73,7 +73,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
         method: 'POST',
         body: JSON.stringify({
           message: userMessage,
-          context: activeContext
+          context: activeDepartment
         })
       });
 
