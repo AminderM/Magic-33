@@ -79,7 +79,7 @@ async def get_booking_requests(current_user: User = Depends(get_current_user)):
     bookings = await db.bookings.find({"equipment_owner_id": current_user.id}).to_list(length=None)
     return [Booking(**booking) for booking in bookings]
 
-@router.patch("/bookings/{booking_id}/status", response_model=dict)
+@router.patch("/{booking_id}/status", response_model=dict)
 async def update_booking_status(
     booking_id: str, 
     status: Literal["pending", "planned", "in_transit_pickup", "at_pickup", "in_transit_delivery", "at_delivery", "delivered", "invoiced", "payment_overdue", "paid"],
