@@ -25,7 +25,7 @@ async def create_equipment(equipment_data: EquipmentCreate, current_user: User =
     
     return {"message": "Equipment added successfully", "equipment_id": equipment_obj.id}
 
-@router.get("/equipment", response_model=List[Equipment])
+@router.get("", response_model=List[Equipment])
 async def get_equipment(skip: int = 0, limit: int = 50, equipment_type: Optional[EquipmentType] = None):
     query = {"is_available": True}
     if equipment_type:
