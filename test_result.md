@@ -330,8 +330,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Admin Console Subscription Manager"
-    - "User Management System for Tenants"
+    - "TMS Add Equipment, Add Driver, and Add Load features testing completed"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
