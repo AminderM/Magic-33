@@ -175,9 +175,9 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL }) => {
   }
 
   return (
-    <div className={`fixed right-0 top-0 h-full bg-white shadow-2xl border-l z-50 flex transition-all duration-300 ${
+    <div className={`fixed right-0 top-0 h-full bg-white shadow-2xl border-l flex transition-all duration-300 ${
       isMinimized ? 'w-16' : 'w-[800px]'
-    }`}>
+    }`} style={{ zIndex: 9999 }}>
       {!isMinimized && (
         <>
           {/* Left Panel - Context Selection */}
