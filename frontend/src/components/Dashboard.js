@@ -278,8 +278,8 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Right Panel (25%) - AI Chat Assistant */}
-        <div className="w-1/4 h-full">
+        {/* Right Panel (20%) - AI Chat Assistant */}
+        <div className="w-1/5 h-full">
           <TMSChatAssistant 
             fetchWithAuth={fetchWithAuth} 
             BACKEND_URL={BACKEND_URL} 
