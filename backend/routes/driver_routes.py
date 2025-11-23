@@ -2,8 +2,13 @@ from fastapi import APIRouter, HTTPException, Depends, File, UploadFile
 from models import *
 from auth import get_current_user, hash_password
 from database import db
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import List
+import uuid
+
+def require_platform_admin(current_user: User):
+    if current_user.role != UserRole.PLATFORM_ADMIN:
+        raise HTTPException(status_code=403, detail="Platform admin access required")
 
 router = APIRouter(prefix="/drivers", tags=["Drivers"])
 
