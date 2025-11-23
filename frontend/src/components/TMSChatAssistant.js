@@ -38,7 +38,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
   const loadChatHistory = async () => {
     try {
       const res = await fetchWithAuth(
-        `${BACKEND_URL}/api/tms-chat/history?context=${activeContext}&limit=50`
+        `${BACKEND_URL}/api/tms-chat/history?context=${activeDepartment}&limit=50`
       );
       if (res.ok) {
         const data = await res.json();
