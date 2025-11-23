@@ -488,13 +488,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Rate Confirmation Document Parsing with GPT-5 Nano"
     - "Backend API endpoints testing (users, drivers, document upload)"
     - "Frontend currency validation in OrderManagement"
     - "Company Profile split view layout and navigation"
     - "User/Driver management forms and operations"
     - "Document upload with file size validation and version history"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Rate Confirmation Document Parsing with GPT-5 Nano"
   test_all: false
   test_priority: "high_first"
 
