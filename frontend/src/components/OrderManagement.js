@@ -66,7 +66,7 @@ const OrderManagement = () => {
     try {
       let endpoint = `${BACKEND_URL}/api/bookings/my`;
       
-      if (user?.role === 'fleet_owner') {
+      if (user?.role === 'fleet_owner' || user?.role === 'platform_admin') {
         endpoint = `${BACKEND_URL}/api/bookings/requests`;
       }
       
