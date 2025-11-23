@@ -7,7 +7,7 @@ from typing import List
 
 router = APIRouter(prefix="/equipment", tags=["Equipment"])
 
-@router.post("/equipment", response_model=dict)
+@router.post("", response_model=dict)
 async def create_equipment(equipment_data: EquipmentCreate, current_user: User = Depends(get_current_user)):
     # Get user's company
     company = await db.companies.find_one({"owner_id": current_user.id})
