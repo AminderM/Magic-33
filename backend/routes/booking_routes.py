@@ -102,7 +102,7 @@ async def update_booking_status(
     
     return {"message": "Status updated successfully", "status": status}
 
-@router.put("/bookings/{booking_id}", response_model=Booking)
+@router.put("/{booking_id}", response_model=Booking)
 async def update_booking(
     booking_id: str,
     booking_update: BookingCreate,
