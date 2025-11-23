@@ -20,6 +20,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const isPlatformAdmin = user?.role === 'platform_admin' || (user?.email && user.email.toLowerCase() === 'aminderpro@gmail.com');
   const [activeTab, setActiveTab] = useState((user?.role === 'fleet_owner' || isPlatformAdmin) ? 'fleet' : 'equipment');
+  const [activeDepartment, setActiveDepartment] = useState('dispatch');
   const [stats, setStats] = useState({
     totalEquipment: 0,
     activeBookings: 0,
