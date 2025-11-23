@@ -348,9 +348,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Fix Add Equipment backend API routing issue"
-  stuck_tasks: 
-    - "TMS Add Equipment, Add Driver, and Add Load Features"
+    - "Confirmed Rate Currency Validation in OrderManagement"
+    - "Company Profile split view layout and navigation"
+    - "User/Driver management forms and operations"
+    - "Document upload with file size validation and version history"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
