@@ -345,8 +345,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "TMS Add Equipment, Add Driver, and Add Load features testing completed"
-  stuck_tasks: []
+    - "Fix Add Equipment backend API routing issue"
+  stuck_tasks: 
+    - "TMS Add Equipment, Add Driver, and Add Load Features"
   test_all: false
   test_priority: "high_first"
 
