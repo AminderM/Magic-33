@@ -196,35 +196,7 @@ const FleetManagement = () => {
               </CardContent>
             </Card>
 
-            <Card className="dashboard-card">
-              <CardHeader>
-                <CardTitle>Fleet Performance Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center p-6 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600 mb-2">
-                      {fleetStats.utilizationRate}%
-                    </div>
-                    <p className="text-sm text-gray-600">Fleet Utilization</p>
-                  </div>
-                  
-                  <div className="text-center p-6 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600 mb-2">
-                      {formatCurrency(fleetStats.totalRevenue)}
-                    </div>
-                    <p className="text-sm text-gray-600">Revenue Generated</p>
-                  </div>
-                  
-                  <div className="text-center p-6 bg-purple-50 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600 mb-2">
-                      {fleetStats.totalEquipment > 0 ? formatCurrency(fleetStats.totalRevenue / fleetStats.totalEquipment) : '$0'}
-                    </div>
-                    <p className="text-sm text-gray-600">Average per Equipment</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Fleet Performance Summary - Removed per user request */}
           </div>
         </TabsContent>
 
