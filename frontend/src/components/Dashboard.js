@@ -195,9 +195,9 @@ const Dashboard = () => {
       </div>
 
       {/* Three-Column Layout: Department Panel + Main Content + Chat Panel */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden h-full">
         {/* Left Panel (20%) - Department Navigation */}
-        <div className="w-1/5 h-full">
+        <div className="w-1/5 h-full overflow-hidden">
           <DepartmentPanel 
             activeDepartment={activeDepartment} 
             onDepartmentChange={setActiveDepartment}
