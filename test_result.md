@@ -332,7 +332,7 @@ metadata:
     implemented: true
     working: true
     file: "/app/frontend/src/components/Dashboard.js, /app/frontend/src/components/EquipmentManagement.js, /app/frontend/src/components/DriverManagement.js, /app/frontend/src/components/OrderManagement.js"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
@@ -345,6 +345,9 @@ metadata:
       - working: true
         agent: "testing"
         comment: "✅ ADD EQUIPMENT FORM SUBMISSION TESTING COMPLETED: Backend routing fix successful! COMPREHENSIVE TEST RESULTS: 1) ✅ Backend Routing Fixed: equipment_routes.py now uses @router.post('') instead of @router.post('/equipment'), eliminating double prefix issue 2) ✅ API Endpoint Working: POST /api/equipment returns 200 OK with proper authentication 3) ✅ Company Requirement: Created test company for platform_admin user to enable equipment creation 4) ✅ Form Submission Success: Equipment successfully created via UI form - verified 2 equipment items in system (Test Equipment + f101 excavator) 5) ✅ UI Form Functionality: Modal opens correctly, all fields fillable (Equipment Name, Type dropdown with Dry Van/Big Rig options, Description, Hourly/Daily rates, Location, Specifications) 6) ✅ Network Requests: Confirmed POST requests to /api/equipment with proper payload including specifications field 7) ✅ Data Persistence: Equipment appears in equipment list with correct details and stats updated (Total Equipment: 2, Available Equipment: 2) 8) ✅ Multiple Equipment Types: Successfully tested both Dry Van and Excavator equipment types. Add Equipment functionality is fully operational and ready for production use."
+      - working: true
+        agent: "testing"
+        comment: "✅ ADD ORDER/LOAD FUNCTIONALITY TESTING COMPLETED: Backend routing fix successful! COMPREHENSIVE TEST RESULTS: 1) ✅ Backend Routing Fixed: booking_routes.py correctly configured with prefix='/bookings' and endpoints without double prefix, unlike previous equipment routing issue 2) ✅ API Endpoint Working: POST /api/bookings returns 200 OK with proper authentication and company association 3) ✅ Complete Form Functionality: Modal opens with 'Create New Order' title, all form sections fillable (Equipment selection with 2 options available, Shipper Information, Pickup/Delivery Details, Cargo Information, Vehicle & Driver Information, Additional Information) 4) ✅ Form Submission Success: Order successfully created via UI form - modal closes after submission indicating success 5) ✅ Network Monitoring Confirmed: POST /api/bookings successful with 200 OK response, followed by GET /api/bookings/requests also returning 200 OK 6) ✅ Data Persistence Verified: Order appears in Active Loads list (2 orders total), backend logs show successful booking creation with email notifications 7) ✅ Currency Validation Working: Confirmed Rate field accepts numeric input with proper formatting ($1500.00) 8) ✅ Equipment Integration: Equipment dropdown populated with available equipment options from previous tests. Add Order/Load functionality is fully operational and ready for production use. Backend routing issue has been resolved."
 
 test_plan:
   current_focus:
