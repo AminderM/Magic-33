@@ -159,213 +159,162 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user }) => {
     }
   };
 
-  if (!isOpen) {
-    return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg flex items-center gap-2"
-        style={{ zIndex: 9999 }}
-        title="Open AI Chat Assistant"
-      >
-        <MessageSquare className="w-6 h-6" />
-        <span className="font-semibold">AI Assistant</span>
-      </button>
-    );
-  }
+  // Get role badge for display
+  const getRoleBadge = () => {
+    const isPlatformAdmin = user?.role === 'platform_admin' || 
+                           (user?.email && user.email.toLowerCase() === 'aminderpro@gmail.com');
+    if (isPlatformAdmin) {
+      return <Badge className="bg-purple-600 text-white text-xs">Full Access</Badge>;
+    }
+    return <Badge className="bg-blue-600 text-white text-xs capitalize">
+      {user?.role?.replace('_', ' ')}
+    </Badge>;
+  };
 
   return (
-    <div className={`fixed right-0 top-0 h-full bg-white shadow-2xl border-l flex transition-all duration-300 ${
-      isMinimized ? 'w-16' : 'w-[800px]'
-    }`} style={{ zIndex: 9999 }}>
-      {!isMinimized && (
-        <>
-          {/* Left Panel - Context Selection */}
-          <div className="w-64 bg-gray-50 border-r flex flex-col">
-            <div className="p-4 border-b bg-white">
-              <h3 className="font-bold text-gray-900">TMS Departments</h3>
-              <p className="text-xs text-gray-600 mt-1">Select a department for specialized assistance</p>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto p-2">
-              {contexts.map((context) => (
-                <button
-                  key={context.id}
-                  onClick={() => setActiveContext(context.id)}
-                  className={`w-full text-left p-3 rounded-lg mb-2 transition-colors ${
-                    activeContext === context.id
-                      ? 'bg-blue-100 border-2 border-blue-500'
-                      : 'bg-white border border-gray-200 hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="flex items-start gap-2">
-                    <span className="text-2xl">{context.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-sm text-gray-900">
-                        {context.label}
-                      </div>
-                      <div className="text-xs text-gray-600 mt-1 line-clamp-2">
-                        {context.description}
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Panel - Chat Interface */}
-          <div className="flex-1 flex flex-col">
-            {/* Header */}
-            <div className="p-4 border-b bg-white flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">
-                  {contexts.find(c => c.id === activeContext)?.icon}
-                </span>
-                <div>
-                  <h2 className="font-bold text-gray-900">
-                    {contexts.find(c => c.id === activeContext)?.label}
-                  </h2>
-                  <p className="text-xs text-gray-600">
-                    AI-powered assistance • GPT-5 Nano
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleClearHistory}
-                  title="Clear chat history"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsMinimized(true)}
-                  title="Minimize"
-                >
-                  <Minimize2 className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                  title="Close"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-              {messages.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">
-                    {contexts.find(c => c.id === activeContext)?.icon}
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Start a conversation
-                  </h3>
-                  <p className="text-sm text-gray-600 max-w-md mx-auto">
-                    Ask me anything about {contexts.find(c => c.id === activeContext)?.label.toLowerCase()}. 
-                    I'm here to help with your TMS operations!
-                  </p>
-                </div>
-              )}
-
-              {messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      msg.role === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white border border-gray-200 text-gray-900'
-                    }`}
-                  >
-                    <div className="text-sm whitespace-pre-wrap">{msg.content}</div>
-                    {msg.timestamp && (
-                      <div className={`text-xs mt-1 ${
-                        msg.role === 'user' ? 'text-blue-100' : 'text-gray-500'
-                      }`}>
-                        {new Date(msg.timestamp).toLocaleTimeString()}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white border border-gray-200 rounded-lg p-3">
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                      <span className="text-sm text-gray-600">AI is thinking...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="p-4 border-t bg-white">
-              <div className="flex gap-2">
-                <Input
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
-                  disabled={isLoading}
-                  className="flex-1"
-                />
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={!message.trim() || isLoading}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                Press Enter to send • Shift+Enter for new line
-              </p>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Minimized State */}
-      {isMinimized && (
-        <div className="w-full flex flex-col items-center py-4 gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsMinimized(false)}
-            className="rotate-0"
-            title="Maximize"
-          >
-            <Maximize2 className="w-5 h-5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsOpen(false)}
-            title="Close"
-          >
-            <X className="w-5 h-5" />
-          </Button>
-          <div className="text-vertical transform -rotate-180 text-sm font-semibold text-gray-600 mt-4">
-            AI Assistant
-          </div>
+    <div className="w-[500px] bg-white border-l border-gray-200 flex flex-col h-full">
+      {/* Header */}
+      <div className="p-4 border-b bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="font-bold text-lg flex items-center gap-2">
+            <span>🤖</span>
+            TMS AI Assistant
+          </h2>
+          {getRoleBadge()}
         </div>
-      )}
+        <p className="text-xs text-blue-100">
+          GPT-5 Nano • Department-specific guidance
+        </p>
+      </div>
+
+      {/* Department Context Selection */}
+      <div className="p-3 border-b bg-gray-50">
+        <label className="text-xs font-semibold text-gray-700 mb-2 block">
+          Select Department
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {contexts.map((context) => (
+            <button
+              key={context.id}
+              onClick={() => setActiveContext(context.id)}
+              className={`text-left p-2 rounded-md text-xs transition-all ${
+                activeContext === context.id
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100'
+              }`}
+              title={context.description}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{context.icon}</span>
+                <span className="font-medium text-xs">{context.label}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Active Department Banner */}
+      <div className="px-4 py-2 bg-blue-50 border-b border-blue-100">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">{contexts.find(c => c.id === activeContext)?.icon}</span>
+          <div className="flex-1">
+            <div className="font-semibold text-sm text-gray-900">
+              {contexts.find(c => c.id === activeContext)?.label}
+            </div>
+            <div className="text-xs text-gray-600">
+              {contexts.find(c => c.id === activeContext)?.description}
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleClearHistory}
+            title="Clear chat history"
+            className="h-8 w-8 p-0"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+        {messages.length === 0 && (
+          <div className="text-center py-8">
+            <div className="text-5xl mb-3">
+              {contexts.find(c => c.id === activeContext)?.icon}
+            </div>
+            <h3 className="text-base font-semibold text-gray-900 mb-2">
+              Start a conversation
+            </h3>
+            <p className="text-sm text-gray-600 max-w-xs mx-auto">
+              Ask me anything about {contexts.find(c => c.id === activeContext)?.label.toLowerCase()}. 
+              I'm here to help with your TMS operations!
+            </p>
+          </div>
+        )}
+
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-[85%] rounded-lg p-3 ${
+                msg.role === 'user'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+              }`}
+            >
+              <div className="text-sm whitespace-pre-wrap break-words">{msg.content}</div>
+              {msg.timestamp && (
+                <div className={`text-xs mt-1 ${
+                  msg.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                }`}>
+                  {new Date(msg.timestamp).toLocaleTimeString()}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                <span className="text-sm text-gray-600">AI is thinking...</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="p-4 border-t bg-white">
+        <div className="flex gap-2">
+          <Input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder={`Ask about ${contexts.find(c => c.id === activeContext)?.label}...`}
+            disabled={isLoading}
+            className="flex-1"
+          />
+          <Button
+            onClick={handleSendMessage}
+            disabled={!message.trim() || isLoading}
+            className="bg-blue-600 hover:bg-blue-700 px-4"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          Press Enter to send • Shift+Enter for new line
+        </p>
+      </div>
     </div>
   );
 };
