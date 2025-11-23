@@ -362,6 +362,8 @@ const DriverManagement = ({ onStatsUpdate }) => {
                           <Button 
                             size="sm"
                             variant="outline"
+                            onClick={() => handleEditDriver(driver)}
+                            title="Edit Driver"
                             data-testid={`edit-driver-btn-${driver.id}`}
                           >
                             <i className="fas fa-edit"></i>
@@ -369,9 +371,21 @@ const DriverManagement = ({ onStatsUpdate }) => {
                           <Button 
                             size="sm"
                             variant="outline"
+                            onClick={() => handleTrackDriver(driver)}
+                            title="Track Driver"
                             data-testid={`track-driver-btn-${driver.id}`}
                           >
                             <i className="fas fa-map-marker-alt"></i>
+                          </Button>
+                          <Button 
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteDriver(driver)}
+                            title="Delete Driver"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            data-testid={`delete-driver-btn-${driver.id}`}
+                          >
+                            <i className="fas fa-trash"></i>
                           </Button>
                         </div>
                       </td>
