@@ -270,6 +270,28 @@ frontend:
         comment: "Added Drivers view with table display, 'Add Driver' dialog, 'Edit Driver' dialog with form updates, DELETE button. Admin-only features. Calls POST /api/drivers, PUT /api/drivers/{id}, and DELETE /api/drivers/{id}."
 
   - task: "Document Upload with Version History UI"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/CompanyProfile.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added Documents view showing 3 document types (MC/NSC Authority, Certificate of Insurance, W-9). Each displays version history list with filename, upload date, file size, and download button. Frontend validates 10MB file size before upload. Shows version count badges."
+
+  - task: "Rate Confirmation Document Parsing with GPT-5 Nano"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/OrderManagement.js, /app/backend/routes/booking_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated backend endpoint /api/bookings/parse-rate-confirmation to use GPT-5 Nano (was using Gemini). Frontend has Rate Confirmation button that opens dialog for document upload (PDF, JPG, PNG). AI parses document and auto-fills load creation form with extracted data including shipper details, pickup/delivery locations, commodity info, confirmed rate, and more."
 
   - task: "Seed Platform Admin Endpoint"
     implemented: true
