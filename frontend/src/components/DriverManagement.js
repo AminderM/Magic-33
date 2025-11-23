@@ -91,6 +91,37 @@ const DriverManagement = ({ onStatsUpdate }) => {
     toast.success('Password generated!');
   };
 
+  const handleEditDriver = (driver) => {
+    toast.info(`Edit driver: ${driver.full_name} (feature coming soon)`);
+    // TODO: Implement edit driver functionality
+  };
+
+  const handleTrackDriver = (driver) => {
+    toast.info(`Track driver: ${driver.full_name} (feature coming soon)`);
+    // TODO: Implement driver tracking functionality
+  };
+
+  const handleDeleteDriver = async (driver) => {
+    if (!confirm(`Are you sure you want to delete driver ${driver.full_name}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/drivers/${driver.id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        toast.success('Driver deleted successfully');
+        loadDrivers();
+      } else {
+        toast.error('Failed to delete driver');
+      }
+    } catch (error) {
+      toast.error('Error deleting driver');
+    }
+  };
+
   const filteredDrivers = drivers.filter(driver => 
     driver.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     driver.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
