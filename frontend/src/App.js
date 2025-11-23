@@ -49,10 +49,8 @@ const AdminRoute = ({ children }) => {
 };
 
 function App() {
-  const [theme] = useState('light');
-
   return (
-    <div className={`app theme-${theme}`}>
+    <ThemeProvider>
       <BrowserRouter>
         <AuthProvider>
           <FeaturesProvider>
@@ -67,7 +65,7 @@ function App() {
           </FeaturesProvider>
         </AuthProvider>
       </BrowserRouter>
-    </div>
+    </ThemeProvider>
   );
 }
 
