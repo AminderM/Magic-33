@@ -263,6 +263,9 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* TMS AI Chat Assistant */}
+      <TMSChatAssistant fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />
     </div>
   );
 };
