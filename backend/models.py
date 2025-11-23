@@ -51,6 +51,12 @@ class UserBase(BaseModel):
     
 class UserCreate(UserBase):
     password: str
+
+class DriverCreate(BaseModel):
+    email: EmailStr
+    full_name: str
+    phone: str
+    password: str
     
 class UserLogin(BaseModel):
     email: EmailStr
