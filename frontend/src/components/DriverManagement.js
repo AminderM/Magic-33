@@ -436,6 +436,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                     variant="outline" 
                     className="flex-1" 
                     size="sm"
+                    onClick={() => handleEditDriver(driver)}
                     data-testid={`edit-driver-btn-${driver.id}`}
                   >
                     <i className="fas fa-edit mr-1"></i>
@@ -445,10 +446,20 @@ const DriverManagement = ({ onStatsUpdate }) => {
                     variant="outline" 
                     className="flex-1" 
                     size="sm"
+                    onClick={() => handleTrackDriver(driver)}
                     data-testid={`track-driver-btn-${driver.id}`}
                   >
                     <i className="fas fa-map-marker-alt mr-1"></i>
                     Track
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleDeleteDriver(driver)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    data-testid={`delete-driver-btn-${driver.id}`}
+                  >
+                    <i className="fas fa-trash"></i>
                   </Button>
                 </div>
               </CardContent>
