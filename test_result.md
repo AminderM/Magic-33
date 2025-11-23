@@ -283,15 +283,18 @@ frontend:
 
   - task: "Rate Confirmation Document Parsing with GPT-5 Nano"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/components/OrderManagement.js, /app/backend/routes/booking_routes.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Updated backend endpoint /api/bookings/parse-rate-confirmation to use GPT-5 Nano (was using Gemini). Frontend has Rate Confirmation button that opens dialog for document upload (PDF, JPG, PNG). AI parses document and auto-fills load creation form with extracted data including shipper details, pickup/delivery locations, commodity info, confirmed rate, and more."
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL ISSUE FOUND: Frontend UI is fully functional - Rate Confirmation button (purple with file icon) opens dialog correctly with file input (.pdf, .jpg, .jpeg, .png), AI-Powered Extraction info box, Cancel/Parse buttons, and proper disabled state. However, backend GPT-5 Nano integration fails with error 'File attachments are only supported with Gemini provider'. The emergentintegrations library limitation prevents file processing with OpenAI models. Backend properly validates file types and authentication works. SOLUTION NEEDED: Either revert to Gemini provider or implement alternative file processing approach for GPT-5 Nano."
 
   - task: "Seed Platform Admin Endpoint"
     implemented: true
