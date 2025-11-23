@@ -12,7 +12,7 @@ import traceback
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 logger = logging.getLogger(__name__)
 
-@router.post("/bookings", response_model=dict)
+@router.post("", response_model=dict)
 async def create_booking(booking_data: BookingCreate, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
     # Get equipment details
     equipment = await db.equipment.find_one({"id": booking_data.equipment_id})
