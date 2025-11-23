@@ -121,7 +121,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col">
       {/* Header */}
       <div className="dashboard-header bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
@@ -192,80 +192,84 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats Cards - Removed per user request */}
-      <div className="container mx-auto px-4 py-8">
+      {/* Two-Column Layout: Main Content + Chat Panel */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Side - Main Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="container mx-auto px-4 py-8">
+            {/* Main Content Tabs */}
+            <Card className="dashboard-card">
+              <CardContent className="p-6">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className={`grid w-full ${(user?.role === 'fleet_owner' || isPlatformAdmin) ? 'grid-cols-5' : 'grid-cols-3'}`}>
+                    {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                      <TabsTrigger value="fleet" data-testid="fleet-tab">
+                        <i className="fas fa-tachometer-alt mr-2"></i>
+                        Transport Hub - TMS
+                      </TabsTrigger>
+                    )}
+                    <TabsTrigger value="equipment" data-testid="equipment-tab">
+                      <i className="fas fa-truck mr-2"></i>
+                      Equipment
+                    </TabsTrigger>
+                    {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                      <TabsTrigger value="drivers" data-testid="drivers-tab">
+                        <i className="fas fa-users mr-2"></i>
+                        Drivers
+                      </TabsTrigger>
+                    )}
+                    <TabsTrigger value="bookings" data-testid="bookings-tab">
+                      <i className="fas fa-shopping-cart mr-2"></i>
+                      Loads
+                    </TabsTrigger>
+                    <TabsTrigger value="tracking" data-testid="tracking-tab">
+                      <i className="fas fa-map-marker-alt mr-2"></i>
+                      Tracking
+                    </TabsTrigger>
+                  </TabsList>
 
-        {/* Main Content Tabs */}
-        <Card className="dashboard-card">
-          <CardContent className="p-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className={`grid w-full ${(user?.role === 'fleet_owner' || isPlatformAdmin) ? 'grid-cols-5' : 'grid-cols-3'}`}>
-                {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
-                  <TabsTrigger value="fleet" data-testid="fleet-tab">
-                    <i className="fas fa-tachometer-alt mr-2"></i>
-                    Transport Hub - TMS
-                  </TabsTrigger>
-                )}
-                <TabsTrigger value="equipment" data-testid="equipment-tab">
-                  <i className="fas fa-truck mr-2"></i>
-                  Equipment
-                </TabsTrigger>
-                {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
-                  <TabsTrigger value="drivers" data-testid="drivers-tab">
-                    <i className="fas fa-users mr-2"></i>
-                    Drivers
-                  </TabsTrigger>
-                )}
-                <TabsTrigger value="bookings" data-testid="bookings-tab">
-                  <i className="fas fa-shopping-cart mr-2"></i>
-                  Loads
-                </TabsTrigger>
-                <TabsTrigger value="tracking" data-testid="tracking-tab">
-                  <i className="fas fa-map-marker-alt mr-2"></i>
-                  Tracking
-                </TabsTrigger>
-              </TabsList>
+                  {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                    <TabsContent value="fleet" className="mt-6">
+                      <FleetManagement />
+                    </TabsContent>
+                  )}
 
-              {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
-                <TabsContent value="fleet" className="mt-6">
-                  <FleetManagement />
-                </TabsContent>
-              )}
+                  <TabsContent value="equipment" className="mt-6">
+                    <EquipmentManagement 
+                      onStatsUpdate={setStats} 
+                      onTrackEquipment={(equipmentId) => {
+                        setSelectedEquipmentForTracking(equipmentId);
+                        setActiveTab('tracking');
+                      }}
+                    />
+                  </TabsContent>
 
-              <TabsContent value="equipment" className="mt-6">
-                <EquipmentManagement 
-                  onStatsUpdate={setStats} 
-                  onTrackEquipment={(equipmentId) => {
-                    setSelectedEquipmentForTracking(equipmentId);
-                    setActiveTab('tracking');
-                  }}
-                />
-              </TabsContent>
+                  <TabsContent value="bookings" className="mt-6">
+                    <OrderManagement />
+                  </TabsContent>
 
-              <TabsContent value="bookings" className="mt-6">
-                <OrderManagement />
-              </TabsContent>
+                  {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                    <TabsContent value="drivers" className="mt-6">
+                      <DriverManagement onStatsUpdate={setStats} />
+                    </TabsContent>
+                  )}
 
-              {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
-                <TabsContent value="drivers" className="mt-6">
-                  <DriverManagement onStatsUpdate={setStats} />
-                </TabsContent>
-              )}
+                  <TabsContent value="tracking" className="mt-6">
+                    <LocationTracking selectedEquipmentId={selectedEquipmentForTracking} />
+                  </TabsContent>
 
-              <TabsContent value="tracking" className="mt-6">
-                <LocationTracking selectedEquipmentId={selectedEquipmentForTracking} />
-              </TabsContent>
+                  <TabsContent value="profile" className="mt-6">
+                    <CompanyProfile />
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
-              <TabsContent value="profile" className="mt-6">
-                <CompanyProfile />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+        {/* Right Side - AI Chat Assistant Panel */}
+        <TMSChatAssistant fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} user={user} />
       </div>
-
-      {/* TMS AI Chat Assistant */}
-      <TMSChatAssistant fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />
     </div>
   );
 };
