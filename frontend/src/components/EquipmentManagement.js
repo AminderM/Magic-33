@@ -45,7 +45,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
   ];
 
   useEffect(() => {
-    if (user?.role === 'fleet_owner') {
+    if (user?.role === 'fleet_owner' || user?.role === 'platform_admin') {
       loadMyEquipment();
     } else {
       loadAllEquipment();
