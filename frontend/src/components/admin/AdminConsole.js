@@ -192,8 +192,8 @@ const AdminConsole = () => {
                         product.id === 'integrated_route_mate';
     
     if (isTMS && product.status === 'active') {
-      // Launch the TMS Dashboard application in a new window
-      window.open('/dashboard', '_blank');
+      // Launch the TMS Dashboard application in the same tab
+      window.location.href = '/dashboard';
     } else if (isRouteMate) {
       // Launch Route Mate (can be coming_soon or active)
       setSelectedProduct(product);
