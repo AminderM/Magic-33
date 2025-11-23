@@ -387,8 +387,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Default List View for Equipment and Drivers"
-    - "AI Chat Assistant Integration with Department Tabs"
     - "Confirmed Rate Currency Validation in OrderManagement"
     - "Company Profile split view layout and navigation"
     - "User/Driver management forms and operations"
