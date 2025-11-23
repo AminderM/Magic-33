@@ -194,12 +194,21 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Two-Column Layout: Main Content + Chat Panel */}
+      {/* Three-Column Layout: Department Panel + Main Content + Chat Panel */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Side - Main Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="container mx-auto px-4 py-8">
-            {/* Main Content Tabs */}
+        {/* Left Panel (25%) - Department Navigation */}
+        <div className="w-1/4 h-full">
+          <DepartmentPanel 
+            activeDepartment={activeDepartment} 
+            onDepartmentChange={setActiveDepartment}
+          />
+        </div>
+
+        {/* Middle Panel (50%) - Main Content */}
+        <div className="w-1/2 h-full overflow-y-auto bg-gray-50">
+          <div className="p-6">
+            {/* Department-specific content will go here in Phase 2 */}
+            {/* For now, showing current TMS tabs as default */}
             <Card className="dashboard-card">
               <CardContent className="p-6">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -269,8 +278,15 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Right Side - AI Chat Assistant Panel */}
-        <TMSChatAssistant fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} user={user} />
+        {/* Right Panel (25%) - AI Chat Assistant */}
+        <div className="w-1/4 h-full">
+          <TMSChatAssistant 
+            fetchWithAuth={fetchWithAuth} 
+            BACKEND_URL={BACKEND_URL} 
+            user={user}
+            activeDepartment={activeDepartment}
+          />
+        </div>
       </div>
     </div>
   );
