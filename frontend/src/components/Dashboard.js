@@ -191,73 +191,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - Removed per user request */}
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="dashboard-card">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Equipment</p>
-                  <p className="text-2xl font-bold text-blue-600" data-testid="total-equipment-stat">
-                    {stats.totalEquipment}
-                  </p>
-                </div>
-                <div className="text-blue-600 text-2xl">
-                  <i className="fas fa-truck"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="dashboard-card">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Available Equipment</p>
-                  <p className="text-2xl font-bold text-green-600" data-testid="available-equipment-stat">
-                    {stats.availableEquipment}
-                  </p>
-                </div>
-                <div className="text-green-600 text-2xl">
-                  <i className="fas fa-check-circle"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="dashboard-card">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Active Bookings</p>
-                  <p className="text-2xl font-bold text-orange-600" data-testid="active-bookings-stat">
-                    {stats.activeBookings}
-                  </p>
-                </div>
-                <div className="text-orange-600 text-2xl">
-                  <i className="fas fa-calendar-check"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="dashboard-card">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Drivers</p>
-                  <p className="text-2xl font-bold text-purple-600" data-testid="total-drivers-stat">
-                    {stats.totalDrivers}
-                  </p>
-                </div>
-                <div className="text-purple-600 text-2xl">
-                  <i className="fas fa-users"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
 
         {/* Main Content Tabs */}
         <Card className="dashboard-card">
