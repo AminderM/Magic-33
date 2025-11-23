@@ -30,10 +30,10 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
   }, [messages]);
 
   useEffect(() => {
-    if (activeContext) {
+    if (activeDepartment) {
       loadChatHistory();
     }
-  }, [activeContext]);
+  }, [activeDepartment]);
 
   const loadChatHistory = async () => {
     try {
