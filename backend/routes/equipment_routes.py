@@ -90,7 +90,7 @@ async def get_my_equipment_locations(current_user: User = Depends(get_current_us
     
     return result
 
-@router.get("/equipment/{equipment_id}", response_model=Equipment)
+@router.get("/{equipment_id}", response_model=Equipment)
 
 # admin block moved below (duplicate removed)
 
