@@ -139,7 +139,7 @@ async def update_booking(
     updated_booking = await db.bookings.find_one({"id": booking_id})
     return Booking(**updated_booking)
 
-@router.post("/bookings/parse-rate-confirmation", response_model=dict)
+@router.post("/parse-rate-confirmation", response_model=dict)
 async def parse_rate_confirmation(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user)
