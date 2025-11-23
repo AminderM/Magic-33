@@ -8,6 +8,8 @@ from email_service import send_booking_confirmation_emails
 import base64
 import logging
 import traceback
+import os
+import json
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 logger = logging.getLogger(__name__)
