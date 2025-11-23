@@ -6,51 +6,20 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Send, Trash2 } from 'lucide-react';
 
-const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user }) => {
-  const [activeContext, setActiveContext] = useState('dispatch');
+const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const contexts = [
-    {
-      id: 'dispatch',
-      label: 'Dispatch Operations',
-      icon: '🚚',
-      description: 'Route planning, load assignment, driver dispatch'
-    },
-    {
-      id: 'accounting',
-      label: 'Accounting',
-      icon: '💰',
-      description: 'Invoicing, payments, financial reporting'
-    },
-    {
-      id: 'sales',
-      label: 'Sales/Business Development',
-      icon: '📈',
-      description: 'Lead generation, CRM, rate quotes'
-    },
-    {
-      id: 'hr',
-      label: 'HR',
-      icon: '👥',
-      description: 'Recruitment, training, employee management'
-    },
-    {
-      id: 'maintenance',
-      label: 'Fleet Maintenance',
-      icon: '🔧',
-      description: 'Preventive maintenance, repairs, inspections'
-    },
-    {
-      id: 'safety',
-      label: 'Fleet Safety',
-      icon: '🛡️',
-      description: 'Safety compliance, accident prevention, training'
-    }
-  ];
+  const departmentMap = {
+    'dispatch': { label: 'Dispatch Operations', icon: '🚚' },
+    'accounting': { label: 'Accounting', icon: '💰' },
+    'sales': { label: 'Sales/Business Development', icon: '📈' },
+    'hr': { label: 'HR', icon: '👥' },
+    'maintenance': { label: 'Fleet Maintenance', icon: '🔧' },
+    'safety': { label: 'Fleet Safety', icon: '🛡️' }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
