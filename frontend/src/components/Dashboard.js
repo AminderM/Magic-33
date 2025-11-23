@@ -143,9 +143,6 @@ const Dashboard = () => {
                 {company && getStatusBadge(company.verification_status)}
               </div>
               
-              {/* Theme Toggle */}
-              <ThemeToggle />
-              
               {/* Company/Profile/Admin Dropdown */}
               <div className="relative group">
                 <Button 
