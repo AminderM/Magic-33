@@ -166,7 +166,7 @@ async def parse_rate_confirmation(
             temp_file_path = temp_file.name
         
         try:
-            # Initialize AI chat with Gemini
+            # Initialize AI chat with GPT-5 Nano
             api_key = os.environ.get('EMERGENT_LLM_KEY')
             if not api_key:
                 raise HTTPException(status_code=500, detail="AI service not configured")
@@ -174,8 +174,8 @@ async def parse_rate_confirmation(
             chat = LlmChat(
                 api_key=api_key,
                 session_id=f"rate-conf-{current_user.id}",
-                system_message="You are an AI assistant specialized in extracting structured data from shipping and logistics documents."
-            ).with_model("gemini", "gemini-2.0-flash")
+                system_message="You are an AI assistant specialized in extracting structured data from shipping and logistics documents, including rate confirmations, bills of lading, and load tenders. Extract all relevant fields accurately."
+            ).with_model("openai", "gpt-5-nano")
             
             # Prepare file for analysis
             file_content = FileContentWithMimeType(
