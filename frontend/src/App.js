@@ -8,6 +8,7 @@ import AdminConsole from './components/admin/AdminConsole';
 import FeatureLoader from './components/FeatureLoader';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { FeaturesProvider } from './contexts/FeaturesContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
