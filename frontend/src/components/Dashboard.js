@@ -206,7 +206,7 @@ const Dashboard = () => {
         </div>
 
         {/* Middle Panel (60%) - Main Content */}
-        <div className="w-3/5 h-full overflow-y-auto bg-gray-50 dark:bg-gray-50">
+        <div className="w-3/5 h-full overflow-y-auto bg-gray-50">
           <div className="p-6">
             {/* Department-specific content will go here in Phase 2 */}
             {/* For now, showing current TMS tabs as default */}
