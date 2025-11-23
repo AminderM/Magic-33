@@ -100,13 +100,13 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
   };
 
   const handleClearHistory = async () => {
-    if (!confirm(`Clear all chat history for ${contexts.find(c => c.id === activeContext)?.label}?`)) {
+    if (!confirm(`Clear all chat history for ${departmentMap[activeDepartment]?.label}?`)) {
       return;
     }
 
     try {
       const res = await fetchWithAuth(
-        `${BACKEND_URL}/api/tms-chat/history?context=${activeContext}`,
+        `${BACKEND_URL}/api/tms-chat/history?context=${activeDepartment}`,
         { method: 'DELETE' }
       );
 
