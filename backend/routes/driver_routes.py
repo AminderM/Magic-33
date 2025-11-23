@@ -7,11 +7,11 @@ from typing import List
 
 router = APIRouter(prefix="/drivers", tags=["Drivers"])
 
-@router.post("/drivers", response_model=dict)
+@router.post("", response_model=dict)
 async def create_driver_account(driver_data: UserCreate, current_user: User = Depends(get_current_user)):
-    # Only fleet owners can create driver accounts
-    if current_user.role != UserRole.FLEET_OWNER:
-        raise HTTPException(status_code=403, detail="Only fleet owners can create driver accounts")
+    # Only fleet owners and platform admins can create driver accounts
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Only fleet owners and platform admins can create driver accounts")
     
     # Check if email already exists
     existing_user = await db.users.find_one({"email": driver_data.email})
