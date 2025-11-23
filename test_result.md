@@ -485,7 +485,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Three-Column Layout Implementation (Phase 1) - COMPLETED"
+    - "Rate Confirmation Document Parsing with GPT-5 Nano"
     - "Backend API endpoints testing (users, drivers, document upload)"
     - "Frontend currency validation in OrderManagement"
     - "Company Profile split view layout and navigation"
