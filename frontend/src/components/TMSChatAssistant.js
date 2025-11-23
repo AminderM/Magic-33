@@ -185,13 +185,13 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
         {messages.length === 0 && (
           <div className="text-center py-8">
             <div className="text-5xl mb-3">
-              {contexts.find(c => c.id === activeContext)?.icon}
+              {departmentMap[activeDepartment]?.icon}
             </div>
             <h3 className="text-base font-semibold text-gray-900 mb-2">
               Start a conversation
             </h3>
             <p className="text-sm text-gray-600 max-w-xs mx-auto">
-              Ask me anything about {contexts.find(c => c.id === activeContext)?.label.toLowerCase()}. 
+              Ask me anything about {departmentMap[activeDepartment]?.label.toLowerCase()}. 
               I'm here to help with your TMS operations!
             </p>
           </div>
