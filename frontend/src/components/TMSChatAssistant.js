@@ -141,57 +141,31 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
   };
 
   return (
-    <div className="w-[500px] bg-white border-l border-gray-200 flex flex-col h-full">
+    <div className="w-full h-full bg-white border-l border-gray-200 flex flex-col">
       {/* Header */}
       <div className="p-4 border-b bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <div className="flex items-center justify-between mb-2">
           <h2 className="font-bold text-lg flex items-center gap-2">
             <span>🤖</span>
-            TMS AI Assistant
+            AI Assistant
           </h2>
           {getRoleBadge()}
         </div>
         <p className="text-xs text-blue-100">
-          GPT-5 Nano • Department-specific guidance
+          GPT-5 Nano • Context-aware guidance
         </p>
       </div>
 
-      {/* Department Context Selection */}
-      <div className="p-3 border-b bg-gray-50">
-        <label className="text-xs font-semibold text-gray-700 mb-2 block">
-          Select Department
-        </label>
-        <div className="grid grid-cols-2 gap-2">
-          {contexts.map((context) => (
-            <button
-              key={context.id}
-              onClick={() => setActiveContext(context.id)}
-              className={`text-left p-2 rounded-md text-xs transition-all ${
-                activeContext === context.id
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-100'
-              }`}
-              title={context.description}
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{context.icon}</span>
-                <span className="font-medium text-xs">{context.label}</span>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Active Department Banner */}
-      <div className="px-4 py-2 bg-blue-50 border-b border-blue-100">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">{contexts.find(c => c.id === activeContext)?.icon}</span>
+      <div className="px-4 py-3 bg-blue-50 border-b border-blue-100">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{departmentMap[activeDepartment]?.icon}</span>
           <div className="flex-1">
             <div className="font-semibold text-sm text-gray-900">
-              {contexts.find(c => c.id === activeContext)?.label}
+              {departmentMap[activeDepartment]?.label}
             </div>
             <div className="text-xs text-gray-600">
-              {contexts.find(c => c.id === activeContext)?.description}
+              Context synced with selected department
             </div>
           </div>
           <Button
