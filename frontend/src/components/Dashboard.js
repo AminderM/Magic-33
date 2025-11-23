@@ -13,6 +13,7 @@ import LocationTracking from './LocationTracking';
 import FleetManagement from './FleetManagement';
 import CompanyProfile from './CompanyProfile';
 import TMSChatAssistant from './TMSChatAssistant';
+import DepartmentPanel from './DepartmentPanel';
 
 const Dashboard = () => {
   const { user, logout, fetchWithAuth } = useAuth();
