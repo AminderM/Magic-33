@@ -15,7 +15,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
   const [equipment, setEquipment] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [viewMode, setViewMode] = useState('tile'); // 'list' or 'tile'
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'tile' - default set to list
   const [formData, setFormData] = useState({
     name: '',
     equipment_type: '',
