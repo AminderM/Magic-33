@@ -196,16 +196,16 @@ const Dashboard = () => {
 
       {/* Three-Column Layout: Department Panel + Main Content + Chat Panel */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel (25%) - Department Navigation */}
-        <div className="w-1/4 h-full">
+        {/* Left Panel (20%) - Department Navigation */}
+        <div className="w-1/5 h-full">
           <DepartmentPanel 
             activeDepartment={activeDepartment} 
             onDepartmentChange={setActiveDepartment}
           />
         </div>
 
-        {/* Middle Panel (50%) - Main Content */}
-        <div className="w-1/2 h-full overflow-y-auto bg-gray-50">
+        {/* Middle Panel (60%) - Main Content */}
+        <div className="w-3/5 h-full overflow-y-auto bg-gray-50">
           <div className="p-6">
             {/* Department-specific content will go here in Phase 2 */}
             {/* For now, showing current TMS tabs as default */}
