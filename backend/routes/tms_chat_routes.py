@@ -111,19 +111,40 @@ async def send_chat_message(
     chat_request: ChatRequest,
     current_user: User = Depends(get_current_user)
 ):
-    """Send a message and get AI response"""
+    """Send a message and get AI response with role-based access control"""
     try:
+        # Check role-based access to department
+        user_role = current_user.role.lower()
+        allowed_departments = ROLE_DEPARTMENT_ACCESS.get(user_role, [])
+        
+        # Platform admin and company admin have access to all departments
+        if user_role not in ["platform_admin", "company_admin", "fleet_owner"]:
+            if chat_request.context not in allowed_departments:
+                return {
+                    "success": False,
+                    "error": f"Access denied. Your role ({user_role}) does not have access to {chat_request.context} department. You can only access: {', '.join(allowed_departments)}"
+                }
+        
         # Lazy import to avoid issues if not installed
         from emergentintegrations.llm.chat import LlmChat, UserMessage
         
         # Get or create session ID for this user
-        session_id = f"tms-chat-{current_user.id}"
+        session_id = f"tms-chat-{current_user.id}-{chat_request.context}"
         
-        # Get context-specific system message
+        # Get context-specific system message with role enforcement
         system_message = CONTEXT_SYSTEM_MESSAGES.get(
             chat_request.context, 
             CONTEXT_SYSTEM_MESSAGES["general"]
         )
+        
+        # Add role-specific instruction
+        role_instruction = f"\n\nCURRENT USER ROLE: {user_role.upper()}\n"
+        if user_role in ["dispatcher", "driver"]:
+            role_instruction += "This user has LIMITED access. Only answer questions relevant to their assigned department. Do not provide information from other departments."
+        elif user_role in ["company_admin", "fleet_owner", "platform_admin"]:
+            role_instruction += "This user has FULL access to all departments and can ask about any aspect of the business."
+        
+        system_message = system_message + role_instruction
         
         # Get API key from environment
         api_key = os.environ.get('EMERGENT_LLM_KEY', 'sk-emergent-73b04E1E4779758EfC')
