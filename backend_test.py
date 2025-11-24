@@ -32,7 +32,8 @@ class FleetMarketplaceAPITester:
             'drivers': [],
             'bookings': [],
             'locations': [],
-            'health': []
+            'health': [],
+            'tms_chat': []
         }
 
     def run_test(self, category: str, name: str, method: str, endpoint: str, expected_status: int, data=None, headers=None):
