@@ -177,6 +177,40 @@ class FleetMarketplaceAPITester:
         
         return success
 
+    def test_platform_admin_login(self):
+        """Test platform admin login for TMS Chat testing"""
+        print("\n" + "="*60)
+        print("🔑 TESTING PLATFORM ADMIN LOGIN")
+        print("="*60)
+        
+        # First seed the platform admin
+        print("🌱 Seeding platform admin...")
+        seed_success, seed_response = self.run_test('auth', 'Seed Platform Admin', 'POST', 'admin/seed-platform-admin', 200)
+        
+        if not seed_success:
+            print("❌ Failed to seed platform admin")
+            return False
+        
+        # Now login with platform admin credentials
+        login_data = {
+            "email": "aminderpro@gmail.com",
+            "password": "Admin@123!"
+        }
+        
+        success, response = self.run_test('auth', 'Platform Admin Login', 'POST', 'auth/login', 200, login_data)
+        
+        if success:
+            self.token = response.get('access_token')
+            self.user_id = response.get('user', {}).get('id')
+            print(f"   Platform Admin Token received: {self.token[:20]}...")
+            print(f"   Platform Admin User ID: {self.user_id}")
+            
+            # Store admin credentials for later use
+            self.admin_email = "aminderpro@gmail.com"
+            self.admin_password = "Admin@123!"
+        
+        return success
+
     def test_get_current_user(self):
         """Test get current user info"""
         print("\n" + "="*60)
