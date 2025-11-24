@@ -79,16 +79,26 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
 
       if (res.ok) {
         const data = await res.json();
-        const assistantMsg = {
-          role: 'assistant',
-          content: data.response,
-          timestamp: new Date().toISOString()
-        };
-        setMessages(prev => [...prev, assistantMsg]);
+        
+        // Check if access was denied
+        if (data.success === false && data.error) {
+          toast.error(data.error, { duration: 5000 });
+          setMessages(prev => [...prev.slice(0, -1), {
+            role: 'assistant',
+            content: `🚫 ${data.error}`,
+            timestamp: new Date().toISOString()
+          }]);
+        } else {
+          const assistantMsg = {
+            role: 'assistant',
+            content: data.response,
+            timestamp: new Date().toISOString()
+          };
+          setMessages(prev => [...prev, assistantMsg]);
+        }
       } else {
-        const error = await res.json();
-        toast.error(error.detail || 'Failed to get response');
-        // Remove user message if failed
+        const errorData = await res.json().catch(() => ({}));
+        toast.error(errorData.detail || 'Failed to get response');
         setMessages(prev => prev.slice(0, -1));
       }
     } catch (error) {
