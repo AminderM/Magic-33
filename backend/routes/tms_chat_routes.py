@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import uuid
 import os
 import asyncio
+from openai import AsyncOpenAI
 
 router = APIRouter(prefix="/tms-chat", tags=["TMS Chat"])
 
