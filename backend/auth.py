@@ -1,59 +1,57 @@
-import jwt
-import bcrypt
-from datetime import datetime, timezone, timedelta
-from typing import Optional
-from fastapi import HTTPException, Depends
+from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-import os
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from datetime import datetime, timedelta, timezone
 from models import User
 from database import db
+import os
 
 # JWT Configuration
-JWT_SECRET = os.environ.get('JWT_SECRET', 'your-secret-key-change-this')
-JWT_ALGORITHM = 'HS256'
-JWT_EXPIRATION_HOURS = 24
+SECRET_KEY = os.environ.get('JWT_SECRET', 'your-secret-key-change-this')
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
+
+# Password hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Security
 security = HTTPBearer()
 
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
-def verify_password(password: str, hashed: str) -> bool:
-    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+def hash_password(password):
+    return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: dict):
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRATION_HOURS)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
-        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        token = credentials.credentials
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
     
-    user = await db.users.find_one({"email": email})
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
     if user is None:
-        raise HTTPException(status_code=401, detail="User not found")
+        raise credentials_exception
+    
     return User(**user)
 
-# Admin utilities
-PLATFORM_ADMIN_EMAILS = {"aminderpro@gmail.com"}
-
-def require_platform_admin(user: User):
-    from models import UserRole
-    if user.role == UserRole.PLATFORM_ADMIN:
-        return
-    # Allow by email list for now
-    if user.email in PLATFORM_ADMIN_EMAILS:
-        return
-    raise HTTPException(status_code=403, detail="Platform admin only")
+def is_platform_admin(user: User):
+    """Check if user is a platform admin based on role only"""
+    return user.role.value == "platform_admin"

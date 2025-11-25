@@ -10,9 +10,10 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { FeaturesProvider } from './contexts/FeaturesContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 
+// Protected route wrapper
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -23,14 +24,13 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
   }
-  
-  if (!user) return <Navigate to="/auth" replace />;
+
   return children;
 };
 
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -41,10 +41,14 @@ const AdminRoute = ({ children }) => {
       </div>
     );
   }
-  
-  if (!user) return <Navigate to="/auth" replace />;
-  const isAdmin = user.role === 'platform_admin' || (user.email && user.email.toLowerCase() === 'aminderpro@gmail.com');
-  if (!isAdmin) return <Navigate to="/dashboard" replace />;
+
+  // Check if user is platform admin based on role only
+  const isAdmin = user?.role === 'platform_admin';
+
+  if (!isAdmin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return children;
 };
 
