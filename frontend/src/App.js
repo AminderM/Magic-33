@@ -45,8 +45,13 @@ const AdminRoute = ({ children }) => {
     );
   }
 
-  // Check if user is platform admin based on role only
-  const isAdmin = user?.role === 'platform_admin';
+  // Check if user exists and is platform admin
+  if (!user) {
+    console.log('AdminRoute: No user, redirecting to /auth');
+    return <Navigate to="/auth" replace />;
+  }
+
+  const isAdmin = user.role === 'platform_admin';
   console.log('AdminRoute: isAdmin=', isAdmin);
 
   if (!isAdmin) {
