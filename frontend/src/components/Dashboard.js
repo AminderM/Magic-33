@@ -34,6 +34,13 @@ const Dashboard = () => {
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+  // Set initial active tab after user loads
+  useEffect(() => {
+    if (user && (user.role === 'fleet_owner' || user.role === 'platform_admin')) {
+      setActiveTab('fleet');
+    }
+  }, [user]);
+
   useEffect(() => {
     loadDashboardData();
   }, []);
