@@ -90,6 +90,38 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@app.on_event("startup")
+async def startup_seed_admin():
+    """Seed platform admin on startup for production deployments"""
+    try:
+        from models import User, UserRole, RegistrationStatus
+        from auth import hash_password
+        
+        # Check if platform admin exists
+        admin_email = os.environ.get('PLATFORM_ADMIN_EMAIL', 'aminderpro@gmail.com')
+        admin_password = os.environ.get('PLATFORM_ADMIN_PASSWORD', 'Admin@123!')
+        
+        existing = await db.users.find_one({"email": admin_email})
+        
+        if not existing:
+            # Create platform admin
+            hashed_password = hash_password(admin_password)
+            user = User(
+                email=admin_email,
+                full_name="Platform Admin",
+                phone="0000000000",
+                role=UserRole.PLATFORM_ADMIN,
+                email_verified=True,
+                registration_status=RegistrationStatus.VERIFIED,
+            ).dict()
+            user["password_hash"] = hashed_password
+            await db.users.insert_one(user)
+            logging.info(f"✅ Platform admin seeded: {admin_email}")
+        else:
+            logging.info(f"✅ Platform admin already exists: {admin_email}")
+    except Exception as e:
+        logging.error(f"⚠️ Failed to seed platform admin: {str(e)}")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
