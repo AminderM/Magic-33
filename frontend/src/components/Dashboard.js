@@ -112,6 +112,7 @@ const Dashboard = () => {
 
   // Show loading state while auth initializes
   if (authLoading) {
+    console.log('Dashboard: Auth still loading...');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="text-center">
@@ -121,6 +122,9 @@ const Dashboard = () => {
       </div>
     );
   }
+  
+  console.log('Dashboard rendering - user:', user);
+  console.log('Dashboard rendering - isPlatformAdmin:', isPlatformAdmin);
 
   const getStatusBadge = (status) => {
     const statusMap = {
