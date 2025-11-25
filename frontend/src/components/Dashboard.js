@@ -14,13 +14,19 @@ import FleetManagement from './FleetManagement';
 import CompanyProfile from './CompanyProfile';
 import TMSChatAssistant from './TMSChatAssistant';
 import DepartmentPanel from './DepartmentPanel';
-import ThemeToggle from './ThemeToggle';
 
 const Dashboard = () => {
-  const { user, logout, fetchWithAuth, loading: authLoading } = useAuth();
+  const { user, logout, fetchWithAuth } = useAuth();
   const navigate = useNavigate();
   const isPlatformAdmin = user?.role === 'platform_admin';
-  const [activeTab, setActiveTab] = useState('equipment');
+  const isFleetOwner = user?.role === 'fleet_owner';
+  const showAdminTabs = isPlatformAdmin || isFleetOwner;
+  
+  // Set initial tab based on user role
+  const [activeTab, setActiveTab] = useState(() => {
+    return showAdminTabs ? 'fleet' : 'equipment';
+  });
+  
   const [activeDepartment, setActiveDepartment] = useState('dispatch');
   const [stats, setStats] = useState({
     totalEquipment: 0,
@@ -34,120 +40,50 @@ const Dashboard = () => {
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  // Set initial active tab after user loads
+  // Update active tab when user changes
   useEffect(() => {
-    console.log('Dashboard useEffect - user:', user);
-    console.log('Dashboard useEffect - isPlatformAdmin:', isPlatformAdmin);
-    if (user && (user.role === 'fleet_owner' || user.role === 'platform_admin')) {
-      console.log('Setting activeTab to fleet');
+    if (user && showAdminTabs && activeTab === 'equipment') {
       setActiveTab('fleet');
     }
-  }, [user, isPlatformAdmin]);
-
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
-    try {
-      // Load company info
-      try {
-        const companyResponse = await fetchWithAuth(`${BACKEND_URL}/api/companies/my`);
-        if (companyResponse.ok) {
-          const companyData = await companyResponse.json();
-          setCompany(companyData);
-        }
-      } catch (error) {
-        console.log('No company found for user');
-      }
-
-      // Load equipment stats
-      if (user?.role === 'fleet_owner') {
-        try {
-          const equipmentResponse = await fetchWithAuth(`${BACKEND_URL}/api/equipment/my`);
-          if (equipmentResponse.ok) {
-            const equipmentData = await equipmentResponse.json();
-            const availableCount = equipmentData.filter(eq => eq.is_available).length;
-            setStats(prev => ({
-              ...prev,
-              totalEquipment: equipmentData.length,
-              availableEquipment: availableCount
-            }));
-          }
-        } catch (error) {
-          console.error('Error loading equipment:', error);
-        }
-
-        // Load driver stats
-        try {
-          const driversResponse = await fetchWithAuth(`${BACKEND_URL}/api/drivers/my`);
-          if (driversResponse.ok) {
-            const driversData = await driversResponse.json();
-            setStats(prev => ({ ...prev, totalDrivers: driversData.length }));
-          }
-        } catch (error) {
-          console.error('Error loading drivers:', error);
-        }
-      }
-
-      // Load booking stats
-      try {
-        const bookingsResponse = await fetchWithAuth(`${BACKEND_URL}/api/bookings/my`);
-        if (bookingsResponse.ok) {
-          const bookingsData = await bookingsResponse.json();
-          const activeCount = bookingsData.filter(booking => 
-            ['pending', 'approved'].includes(booking.status)
-          ).length;
-          setStats(prev => ({ ...prev, activeBookings: activeCount }));
-        }
-      } catch (error) {
-        console.error('Error loading bookings:', error);
-      }
-    } catch (error) {
-      toast.error('Error loading dashboard data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Show loading state while auth initializes
-  if (authLoading) {
-    console.log('Dashboard: Auth still loading...');
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 text-lg">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-  
-  console.log('Dashboard rendering - user:', user);
-  console.log('Dashboard rendering - isPlatformAdmin:', isPlatformAdmin);
+  }, [user, showAdminTabs]);
 
   const getStatusBadge = (status) => {
-    const statusMap = {
-      pending: { label: 'Pending Verification', className: 'status-pending' },
-      verified: { label: 'Verified', className: 'status-verified' },
-      rejected: { label: 'Rejected', className: 'status-rejected' }
+    const statusConfig = {
+      pending: { color: 'bg-yellow-500', text: 'Pending' },
+      verified: { color: 'bg-green-500', text: 'Verified' },
+      suspended: { color: 'bg-red-500', text: 'Suspended' },
     };
-    
-    const statusInfo = statusMap[status] || statusMap.pending;
-    return (
-      <Badge className={statusInfo.className}>
-        {statusInfo.label}
-      </Badge>
-    );
+    const config = statusConfig[status] || statusConfig.pending;
+    return <Badge className={`${config.color} text-white`}>{config.text}</Badge>;
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="loading-spinner w-12 h-12"></div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const loadCompanyData = async () => {
+      try {
+        // Try current company endpoint first (for platform_admin)
+        let res = await fetchWithAuth(`${BACKEND_URL}/api/companies/current`);
+        if (!res.ok) {
+          // Fallback to my company endpoint (for fleet_owner)
+          res = await fetchWithAuth(`${BACKEND_URL}/api/companies/my`);
+        }
+        
+        if (res.ok) {
+          const data = await res.json();
+          setCompany(data);
+        }
+      } catch (error) {
+        console.error('Error loading company:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      loadCompanyData();
+    } else {
+      setLoading(false);
+    }
+  }, [user, BACKEND_URL, fetchWithAuth]);
 
   return (
     <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col overflow-hidden">
@@ -208,7 +144,10 @@ const Dashboard = () => {
                   )}
                   <div className="border-t border-gray-100"></div>
                   <button
-                    onClick={logout}
+                    onClick={() => {
+                      logout();
+                      navigate('/');
+                    }}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                   >
                     <i className="fas fa-sign-out-alt mr-2"></i>
@@ -234,13 +173,12 @@ const Dashboard = () => {
         {/* Middle Panel (60%) - Main Content */}
         <div className="w-3/5 h-full overflow-y-auto bg-gray-50">
           <div className="p-6">
-            {/* Department-specific content will go here in Phase 2 */}
-            {/* For now, showing current TMS tabs as default */}
+            {/* Main Content Tabs */}
             <Card className="dashboard-card">
               <CardContent className="p-6">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className={`grid w-full ${(user?.role === 'fleet_owner' || isPlatformAdmin) ? 'grid-cols-5' : 'grid-cols-3'}`}>
-                    {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-5' : 'grid-cols-3'}`}>
+                    {showAdminTabs && (
                       <TabsTrigger value="fleet" data-testid="fleet-tab">
                         <i className="fas fa-tachometer-alt mr-2"></i>
                         Transport Hub - TMS
@@ -250,7 +188,7 @@ const Dashboard = () => {
                       <i className="fas fa-truck mr-2"></i>
                       Equipment
                     </TabsTrigger>
-                    {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                    {showAdminTabs && (
                       <TabsTrigger value="drivers" data-testid="drivers-tab">
                         <i className="fas fa-users mr-2"></i>
                         Drivers
@@ -266,7 +204,7 @@ const Dashboard = () => {
                     </TabsTrigger>
                   </TabsList>
 
-                  {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                  {showAdminTabs && (
                     <TabsContent value="fleet" className="mt-6">
                       <FleetManagement />
                     </TabsContent>
@@ -286,7 +224,7 @@ const Dashboard = () => {
                     <OrderManagement />
                   </TabsContent>
 
-                  {(user?.role === 'fleet_owner' || isPlatformAdmin) && (
+                  {showAdminTabs && (
                     <TabsContent value="drivers" className="mt-6">
                       <DriverManagement onStatsUpdate={setStats} />
                     </TabsContent>

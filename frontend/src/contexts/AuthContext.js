@@ -1,61 +1,63 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  
+  // Initialize state synchronously from localStorage
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem('auth_token') || null;
+    } catch {
+      return null;
+    }
+  });
+  
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user_data');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  
+  const [loading, setLoading] = useState(false); // Set to false since we load synchronously
 
-  // Initialize auth state from localStorage
+  // Persist to localStorage whenever state changes
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        console.log('AuthContext: Initializing auth...');
-        const storedToken = localStorage.getItem('auth_token');
-        const storedUser = localStorage.getItem('user_data');
-        console.log('AuthContext: storedToken:', storedToken ? 'exists' : 'null');
-        console.log('AuthContext: storedUser:', storedUser ? storedUser : 'null');
-        
-        if (storedToken && storedUser) {
-          console.log('AuthContext: Setting user from localStorage');
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
-        } else {
-          console.log('AuthContext: No stored credentials found');
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-        // Clear corrupted data
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_data');
-      } finally {
-        console.log('AuthContext: Setting loading to false');
-        setLoading(false);
-      }
-    };
+    if (token) {
+      localStorage.setItem('auth_token', token);
+    } else {
+      localStorage.removeItem('auth_token');
+    }
+  }, [token]);
 
-    initializeAuth();
-  }, []);
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user_data', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user_data');
+    }
+  }, [user]);
 
   // Apply company theme on load if present
   useEffect(() => {
     async function applyStoredTheme() {
       try {
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
-        const storedToken = localStorage.getItem('auth_token');
-        const storedUser = localStorage.getItem('user_data');
-        if (!storedToken || !storedUser) return;
+        const storedToken = token;
+        if (!storedToken || !user) return;
+        
         // Try to fetch company and apply theme
         let res = await fetch(`${backendUrl}/api/companies/current`, {
           headers: { 'Authorization': `Bearer ${storedToken}` }
@@ -75,15 +77,31 @@ export const AuthProvider = ({ children }) => {
           }
         }
       } catch (e) {
-        // non-blocking
+        console.error('Error applying theme:', e);
       }
     }
-    applyStoredTheme();
-  }, []);
+    
+    if (token && user) {
+      applyStoredTheme();
+    }
+  }, [token, user]);
+
+  const fetchWithAuth = async (url, options = {}) => {
+    if (!token) {
+      throw new Error('No authentication token');
+    }
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      ...options.headers,
+    };
+
+    return fetch(url, { ...options, headers });
+  };
 
   const login = async (email, password) => {
     try {
-      console.log('AuthContext: Login called with email:', email);
       const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -93,23 +111,13 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
-      console.log('AuthContext: Login response:', response.ok ? 'success' : 'failed');
       
       if (response.ok) {
         const { access_token, user: userData } = data;
-        console.log('AuthContext: User data received:', userData);
         
-        // Store in state
+        // Update state (which will automatically update localStorage via useEffect)
         setToken(access_token);
         setUser(userData);
-        console.log('AuthContext: Set token and user in state');
-        
-        // Store in localStorage
-        localStorage.setItem('auth_token', access_token);
-        localStorage.setItem('user_data', JSON.stringify(userData));
-        console.log('AuthContext: Stored in localStorage');
-        console.log('AuthContext: Verification - token in LS:', localStorage.getItem('auth_token') ? 'exists' : 'null');
-        console.log('AuthContext: Verification - user in LS:', localStorage.getItem('user_data') ? 'exists' : 'null');
         
         return true;
       } else {
@@ -122,51 +130,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
     setToken(null);
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
-  };
-
-  const getAuthHeaders = () => {
-    return token ? {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    } : {
-      'Content-Type': 'application/json'
-    };
-  };
-
-  const fetchWithAuth = async (url, options = {}) => {
-    const authHeaders = getAuthHeaders();
-    
-    // Check if this is a FormData upload (no Content-Type header should be set)
-    const isFormData = options.body instanceof FormData;
-    
-    const headers = isFormData 
-      ? {
-          // Only include Authorization for FormData, let browser set Content-Type
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-          ...options.headers
-        }
-      : {
-          // For non-FormData requests, include all headers
-          ...authHeaders,
-          ...options.headers
-        };
-    
-    const response = await fetch(url, {
-      ...options,
-      headers
-    });
-
-    if (response.status === 401) {
-      // Token expired or invalid, logout user
-      logout();
-      throw new Error('Session expired. Please login again.');
-    }
-
-    return response;
+    setUser(null);
   };
 
   const value = {
@@ -175,13 +140,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     logout,
-    getAuthHeaders,
-    fetchWithAuth
+    fetchWithAuth,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
