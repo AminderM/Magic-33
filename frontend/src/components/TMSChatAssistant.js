@@ -140,8 +140,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
 
   // Get role badge for display
   const getRoleBadge = () => {
-    const isPlatformAdmin = user?.role === 'platform_admin' || 
-                           (user?.email && user.email.toLowerCase() === 'aminderpro@gmail.com');
+    const isPlatformAdmin = user?.role === 'platform_admin';
     if (isPlatformAdmin) {
       return <Badge className="bg-purple-600 text-white text-xs">Full Access</Badge>;
     }
