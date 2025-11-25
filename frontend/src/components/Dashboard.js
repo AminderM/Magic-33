@@ -17,7 +17,7 @@ import DepartmentPanel from './DepartmentPanel';
 import ThemeToggle from './ThemeToggle';
 
 const Dashboard = () => {
-  const { user, logout, fetchWithAuth, loading } = useAuth();
+  const { user, logout, fetchWithAuth, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const isPlatformAdmin = user?.role === 'platform_admin';
   const [activeTab, setActiveTab] = useState('equipment');
