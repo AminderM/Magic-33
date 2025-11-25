@@ -147,21 +147,40 @@ async def send_chat_message(
         
         system_message = system_message + role_instruction
         
-        # Get API key from environment
-        api_key = os.environ.get('EMERGENT_LLM_KEY', 'sk-emergent-73b04E1E4779758EfC')
+        # Get OpenAI API key from environment
+        openai_api_key = os.environ.get('OPENAI_API_KEY')
+        if not openai_api_key:
+            raise HTTPException(status_code=500, detail="OpenAI API key not configured")
         
-        # Initialize chat with GPT-5 Nano
-        chat = LlmChat(
-            api_key=api_key,
-            session_id=session_id,
-            system_message=system_message
-        ).with_model("openai", "gpt-5-nano")
+        # Initialize OpenAI client
+        client = AsyncOpenAI(api_key=openai_api_key)
         
-        # Create user message
-        user_message = UserMessage(text=chat_request.message)
+        # Retrieve chat history for context
+        history_docs = await db.tms_chat_history.find(
+            {"user_id": current_user.id, "session_id": session_id},
+            {"_id": 0}
+        ).sort("timestamp", -1).limit(10).to_list(10)
         
-        # Get response
-        response = await chat.send_message(user_message)
+        # Build messages array with history
+        messages = [{"role": "system", "content": system_message}]
+        
+        # Add recent history (reversed to chronological order)
+        for doc in reversed(history_docs):
+            messages.append({"role": "user", "content": doc["user_message"]})
+            messages.append({"role": "assistant", "content": doc["assistant_response"]})
+        
+        # Add current message
+        messages.append({"role": "user", "content": chat_request.message})
+        
+        # Call OpenAI API with GPT-4o
+        completion = await client.chat.completions.create(
+            model="gpt-4o",  # Using GPT-4o (latest available model)
+            messages=messages,
+            temperature=0.7,
+            max_tokens=1000
+        )
+        
+        response = completion.choices[0].message.content
         
         # Save to database
         chat_history_entry = {
@@ -181,12 +200,6 @@ async def send_chat_message(
             "response": response,
             "context": chat_request.context
         }
-        
-    except ImportError:
-        raise HTTPException(
-            status_code=500, 
-            detail="emergentintegrations library not installed. Please install with: pip install emergentintegrations --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/"
-        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
 
