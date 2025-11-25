@@ -83,6 +83,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
+      console.log('AuthContext: Login called with email:', email);
       const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -92,17 +93,23 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
+      console.log('AuthContext: Login response:', response.ok ? 'success' : 'failed');
       
       if (response.ok) {
         const { access_token, user: userData } = data;
+        console.log('AuthContext: User data received:', userData);
         
         // Store in state
         setToken(access_token);
         setUser(userData);
+        console.log('AuthContext: Set token and user in state');
         
         // Store in localStorage
         localStorage.setItem('auth_token', access_token);
         localStorage.setItem('user_data', JSON.stringify(userData));
+        console.log('AuthContext: Stored in localStorage');
+        console.log('AuthContext: Verification - token in LS:', localStorage.getItem('auth_token') ? 'exists' : 'null');
+        console.log('AuthContext: Verification - user in LS:', localStorage.getItem('user_data') ? 'exists' : 'null');
         
         return true;
       } else {
