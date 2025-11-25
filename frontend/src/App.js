@@ -31,7 +31,10 @@ const ProtectedRoute = ({ children }) => {
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
+  console.log('AdminRoute: loading=', loading, 'user=', user?.email, 'role=', user?.role);
+
   if (loading) {
+    console.log('AdminRoute: Still loading auth...');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -44,11 +47,14 @@ const AdminRoute = ({ children }) => {
 
   // Check if user is platform admin based on role only
   const isAdmin = user?.role === 'platform_admin';
+  console.log('AdminRoute: isAdmin=', isAdmin);
 
   if (!isAdmin) {
+    console.log('AdminRoute: Not admin, redirecting to /dashboard');
     return <Navigate to="/dashboard" replace />;
   }
 
+  console.log('AdminRoute: Access granted, rendering Admin Console');
   return children;
 };
 
