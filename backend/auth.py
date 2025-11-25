@@ -55,3 +55,12 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 def is_platform_admin(user: User):
     """Check if user is a platform admin based on role only"""
     return user.role.value == "platform_admin"
+
+def require_platform_admin(current_user: User = Depends(get_current_user)):
+    """Dependency to require platform admin role"""
+    if not is_platform_admin(current_user):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Platform admin access required"
+        )
+    return current_user
