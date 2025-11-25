@@ -55,12 +55,16 @@ const AdminConsole = () => {
     const load = async () => {
       setLoading(true);
       try {
+        console.log('AdminConsole: Fetching plans from:', `${BACKEND_URL}/api/admin/plans`);
         const [plansRes, tenantsRes] = await Promise.all([
           fetchWithAuth(`${BACKEND_URL}/api/admin/plans`),
           fetchWithAuth(`${BACKEND_URL}/api/admin/tenants`)
         ]);
+        console.log('AdminConsole: Plans response status:', plansRes.status, plansRes.ok);
         if (plansRes.ok) {
-          setPlans(await plansRes.json());
+          const plansData = await plansRes.json();
+          console.log('AdminConsole: Plans loaded:', plansData.length, 'plans');
+          setPlans(plansData);
         } else {
           if (plansRes.status === 403) toast.error('Not authorized to view Admin Console');
         }
