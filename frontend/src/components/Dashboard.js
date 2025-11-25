@@ -36,10 +36,13 @@ const Dashboard = () => {
 
   // Set initial active tab after user loads
   useEffect(() => {
+    console.log('Dashboard useEffect - user:', user);
+    console.log('Dashboard useEffect - isPlatformAdmin:', isPlatformAdmin);
     if (user && (user.role === 'fleet_owner' || user.role === 'platform_admin')) {
+      console.log('Setting activeTab to fleet');
       setActiveTab('fleet');
     }
-  }, [user]);
+  }, [user, isPlatformAdmin]);
 
   useEffect(() => {
     loadDashboardData();
