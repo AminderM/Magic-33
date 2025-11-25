@@ -507,6 +507,8 @@ test_plan:
     - "Document upload with file size validation and version history"
   stuck_tasks:
     - "Rate Confirmation Document Parsing with GPT-5 Nano"
+  completed_tasks:
+    - "GPT-5 Nano TMS Chat Role-Based Access Control"
   test_all: false
   test_priority: "high_first"
 
