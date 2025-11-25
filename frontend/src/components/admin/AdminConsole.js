@@ -35,7 +35,6 @@ const AdminConsole = () => {
   const isAdminUI = useMemo(() => {
     if (!user) return false;
     if (user.role === 'platform_admin') return true;
-    if (user.email && user.email.toLowerCase() === 'aminderpro@gmail.com') return true; // backend allowlist mirror
     return false;
   }, [user]);
 
