@@ -19,14 +19,20 @@ export const AuthProvider = ({ children }) => {
 
   // Initialize auth state from localStorage
   useEffect(() => {
-    const initializeAuth = () => {
+    const initializeAuth = async () => {
       try {
+        console.log('AuthContext: Initializing auth...');
         const storedToken = localStorage.getItem('auth_token');
         const storedUser = localStorage.getItem('user_data');
+        console.log('AuthContext: storedToken:', storedToken ? 'exists' : 'null');
+        console.log('AuthContext: storedUser:', storedUser ? storedUser : 'null');
         
         if (storedToken && storedUser) {
+          console.log('AuthContext: Setting user from localStorage');
           setToken(storedToken);
           setUser(JSON.parse(storedUser));
+        } else {
+          console.log('AuthContext: No stored credentials found');
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
@@ -34,6 +40,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_data');
       } finally {
+        console.log('AuthContext: Setting loading to false');
         setLoading(false);
       }
     };
