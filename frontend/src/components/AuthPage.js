@@ -46,13 +46,20 @@ const AuthPage = () => {
       if (success) {
         toast.success('Login successful!');
         
-        // Check if user is platform admin and redirect accordingly
+        // Wait for localStorage to be updated, then check role
+        // Use a small delay to ensure useEffect in AuthContext has run
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
         const isAdmin = userData.role === 'platform_admin';
         
+        console.log('AuthPage: Login successful, user role:', userData.role, 'isAdmin:', isAdmin);
+        
         if (isAdmin) {
+          console.log('AuthPage: Redirecting to /admin');
           navigate('/admin');
         } else {
+          console.log('AuthPage: Redirecting to /dashboard');
           navigate('/dashboard');
         }
       }
