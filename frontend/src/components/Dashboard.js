@@ -17,10 +17,10 @@ import DepartmentPanel from './DepartmentPanel';
 import ThemeToggle from './ThemeToggle';
 
 const Dashboard = () => {
-  const { user, logout, fetchWithAuth } = useAuth();
+  const { user, logout, fetchWithAuth, loading } = useAuth();
   const navigate = useNavigate();
   const isPlatformAdmin = user?.role === 'platform_admin';
-  const [activeTab, setActiveTab] = useState((user?.role === 'fleet_owner' || isPlatformAdmin) ? 'fleet' : 'equipment');
+  const [activeTab, setActiveTab] = useState('equipment');
   const [activeDepartment, setActiveDepartment] = useState('dispatch');
   const [stats, setStats] = useState({
     totalEquipment: 0,
