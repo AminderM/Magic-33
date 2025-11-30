@@ -207,7 +207,7 @@ const FleetManagement = () => {
 
         {/* Drivers Tab */}
         <TabsContent value="drivers" className="mt-6">
-          {/* <DriverManagement onStatsUpdate={setFleetStats} />
+          <DriverManagement onStatsUpdate={setFleetStats} />
         </TabsContent>
 
         {/* Live Tracking Tab */}
