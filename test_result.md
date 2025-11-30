@@ -508,7 +508,7 @@ metadata:
     implemented: true
     working: false
     file: "/app/frontend/src/components/driver/DriverPortalAuth.js"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -518,6 +518,9 @@ metadata:
       - working: false
         agent: "testing"
         comment: "🎯 COMPREHENSIVE DRIVER PORTAL TESTING COMPLETED: CRITICAL TAB STRUCTURE ISSUE IDENTIFIED. DETAILED FINDINGS: ✅ ADMIN CONSOLE ACCESS: Successfully logged in with aminderpro@gmail.com/Admin@123! and accessed TMS Dashboard ✅ DASHBOARD LOADING: TMS Dashboard loads correctly with proper authentication ❌ DRIVER PORTAL DEMO TAB MISSING: The 'Driver Portal Demo' tab defined in Dashboard.js (lines 206-209) is not visible in the UI ❌ ROOT CAUSE IDENTIFIED: FleetManagement.js component (lines 125-143) renders its own nested Tabs structure (Overview, Equipment, Drivers, Live Tracking) when 'Transport Hub - TMS' tab is active, overriding the main Dashboard tabs and hiding the Driver Portal Demo tab ✅ CODE VERIFICATION: Driver Portal Demo tab is correctly implemented in Dashboard.js with data-testid='driver-portal-tab' and proper DriverPortalView component ✅ DRIVERPORTALVIEW COMPONENT: Fully implemented with login form, pre-filled credentials (testdriver@example.com/Driver@123!), dashboard with 'My Loads', logout/signup functionality SOLUTION NEEDED: Restructure tab hierarchy to ensure Driver Portal Demo tab is accessible - either move it to FleetManagement component or modify tab structure to prevent nesting conflicts."
+      - working: false
+        agent: "testing"
+        comment: "🎯 DRIVER PORTAL DEMO TESTING COMPLETED: CRITICAL ACCESS ISSUE CONFIRMED. COMPREHENSIVE TEST RESULTS: ✅ LOGIN FLOW: Successfully authenticated with aminderpro@gmail.com/Admin@123! credentials and accessed TMS Dashboard with three-column layout (TMS Departments, Main Content, AI Assistant) ✅ DASHBOARD STRUCTURE: TMS Dashboard loads correctly showing Transport Hub-TMS, Equipment, Drivers, Loads, and Tracking tabs ❌ DRIVER PORTAL DEMO NOT ACCESSIBLE: Extensive testing confirms Driver Portal Demo is not accessible through any of the expected methods: 1) ❌ Driver Portal Demo tab with data-testid='driver-portal-tab' not visible in main tabs 2) ❌ Company dropdown does not contain '🚀 Driver Portal Demo' button as expected 3) ❌ No Driver Portal interface found anywhere in the UI 4) ❌ Authentication session expires when trying to access /dashboard directly, redirecting to auth page ✅ CODE ANALYSIS: Dashboard.js contains proper Driver Portal Demo tab implementation (lines 214-217) and DriverPortalView component is fully implemented with login form, pre-filled credentials (testdriver@example.com/Driver@123!), My Loads dashboard, logout/signup functionality ❌ ROOT CAUSE: Tab hierarchy conflict where FleetManagement.js nested tabs override main Dashboard tabs, hiding Driver Portal Demo tab. Additionally, authentication persistence issues prevent stable dashboard access. SOLUTION REQUIRED: 1) Fix tab structure to make Driver Portal Demo accessible 2) Resolve authentication session persistence issues 3) Ensure Company dropdown properly displays Driver Portal Demo option."
 
 test_plan:
   current_focus:
