@@ -237,12 +237,39 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900">Driver Management</h2>
+        <p className="text-gray-600">
+          Manage fleet drivers, approve signups, and assign loads
+        </p>
+      </div>
+
+      {/* Management Tabs */}
+      <Tabs value={activeManagementTab} onValueChange={setActiveManagementTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="fleet">
+            <i className="fas fa-users mr-2"></i>
+            Fleet Drivers ({drivers.length})
+          </TabsTrigger>
+          <TabsTrigger value="pending">
+            <i className="fas fa-clock mr-2"></i>
+            Pending Approvals ({pendingDrivers.length})
+          </TabsTrigger>
+          <TabsTrigger value="assignments">
+            <i className="fas fa-truck-loading mr-2"></i>
+            Load Assignments
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Fleet Drivers Tab */}
+        <TabsContent value="fleet" className="space-y-6 mt-6">
       {/* Header and Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Driver Management</h2>
-          <p className="text-gray-600">
-            Create and manage driver accounts for your fleet
+          <h3 className="text-lg font-semibold text-gray-900">Your Fleet Drivers</h3>
+          <p className="text-sm text-gray-600">
+            Drivers you've added to your fleet
           </p>
         </div>
         
