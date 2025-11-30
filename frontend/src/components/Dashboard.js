@@ -125,6 +125,14 @@ const Dashboard = () => {
                   </button>
                   <div className="border-t border-gray-100"></div>
                   <button
+                    onClick={() => setActiveTab('driver-portal')}
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 bg-blue-50 text-blue-700 font-medium"
+                  >
+                    <i className="fas fa-mobile-alt mr-2"></i>
+                    🚀 Driver Portal Demo
+                  </button>
+                  <div className="border-t border-gray-100"></div>
+                  <button
                     onClick={() => setActiveTab('profile')}
                     className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                   >
