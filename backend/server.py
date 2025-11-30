@@ -56,6 +56,7 @@ api_router.include_router(integrations_routes.router)
 api_router.include_router(route_mate_routes.router)
 api_router.include_router(user_management_routes.router, prefix="/admin", tags=["User Management"])
 api_router.include_router(tms_chat_routes.router)
+api_router.include_router(driver_app_routes.router)
 
 # WebSocket endpoint for real-time vehicle tracking
 @api_router.websocket("/ws/vehicle/{vehicle_id}")
