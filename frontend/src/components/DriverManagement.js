@@ -132,6 +132,95 @@ const DriverManagement = ({ onStatsUpdate }) => {
     }
   };
 
+  const loadPendingDrivers = async () => {
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/users?role=driver&status=pending`);
+      if (response.ok) {
+        const data = await response.json();
+        setPendingDrivers(data.filter(d => d.registration_status === 'pending' && !d.fleet_owner_id));
+      }
+    } catch (error) {
+      console.error('Error loading pending drivers:', error);
+    }
+  };
+
+  const loadAvailableLoads = async () => {
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings`);
+      if (response.ok) {
+        const data = await response.json();
+        setLoads(data);
+      }
+    } catch (error) {
+      console.error('Error loading loads:', error);
+    }
+  };
+
+  const handleApproveDriver = async (driverId) => {
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/admin/users/${driverId}/verify`, {
+        method: 'PUT'
+      });
+      if (response.ok) {
+        toast.success('Driver approved successfully!');
+        loadPendingDrivers();
+        loadDrivers();
+      } else {
+        toast.error('Failed to approve driver');
+      }
+    } catch (error) {
+      toast.error('Error approving driver');
+    }
+  };
+
+  const handleRejectDriver = async (driverId) => {
+    if (!confirm('Are you sure you want to reject this driver application?')) {
+      return;
+    }
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/users/${driverId}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        toast.success('Driver application rejected');
+        loadPendingDrivers();
+      } else {
+        toast.error('Failed to reject driver');
+      }
+    } catch (error) {
+      toast.error('Error rejecting driver');
+    }
+  };
+
+  const handleAssignLoad = async () => {
+    if (!selectedLoad || !selectedDriverForLoad) {
+      toast.error('Please select a load to assign');
+      return;
+    }
+
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${selectedLoad}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          driver_id: selectedDriverForLoad.id,
+          driver_name: selectedDriverForLoad.full_name,
+          status: 'pending'
+        })
+      });
+
+      if (response.ok) {
+        toast.success('Load assigned successfully!');
+        setShowAssignLoadDialog(false);
+        setSelectedLoad('');
+        loadAvailableLoads();
+      } else {
+        toast.error('Failed to assign load');
+      }
+    } catch (error) {
+      toast.error('Error assigning load');
+    }
+  };
+
   const filteredDrivers = drivers.filter(driver => 
     driver.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     driver.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
