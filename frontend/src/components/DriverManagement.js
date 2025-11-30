@@ -34,6 +34,8 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
   useEffect(() => {
     loadDrivers();
+    loadPendingDrivers();
+    loadAvailableLoads();
   }, []);
 
   const loadDrivers = async () => {
