@@ -177,7 +177,7 @@ const Dashboard = () => {
             <Card className="dashboard-card">
               <CardContent className="p-6">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-5' : 'grid-cols-3'}`}>
+                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'}`}>
                     {showAdminTabs && (
                       <TabsTrigger value="fleet" data-testid="fleet-tab">
                         <i className="fas fa-tachometer-alt mr-2"></i>
@@ -201,6 +201,10 @@ const Dashboard = () => {
                     <TabsTrigger value="tracking" data-testid="tracking-tab">
                       <i className="fas fa-map-marker-alt mr-2"></i>
                       Tracking
+                    </TabsTrigger>
+                    <TabsTrigger value="driver-portal" data-testid="driver-portal-tab">
+                      <i className="fas fa-mobile-alt mr-2"></i>
+                      Driver Portal Demo
                     </TabsTrigger>
                   </TabsList>
 
