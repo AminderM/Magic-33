@@ -80,6 +80,14 @@ function App() {
               <Route path="/dashboard" element={<ProtectedRoute><FeatureLoader><Dashboard /></FeatureLoader></ProtectedRoute>} />
               <Route path="/apps" element={<ProtectedRoute><FeatureLoader><AppsPage /></FeatureLoader></ProtectedRoute>} />
               <Route path="/admin" element={<AdminRoute><FeatureLoader><AdminConsole /></FeatureLoader></AdminRoute>} />
+              
+              {/* Driver Portal Routes */}
+              <Route path="/driver-portal" element={<DriverPortalAuth />} />
+              <Route path="/driver-portal/dashboard" element={<DriverPortalDashboard />} />
+              <Route path="/driver-portal/loads/:loadId" element={<DriverLoadDetails />} />
+              <Route path="/driver-portal/navigation/:loadId" element={<DriverNavigation />} />
+              <Route path="/driver-portal/profile" element={<DriverProfile />} />
+              
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </FeaturesProvider>
