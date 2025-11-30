@@ -242,6 +242,15 @@ const Dashboard = () => {
                     <LocationTracking selectedEquipmentId={selectedEquipmentForTracking} />
                   </TabsContent>
 
+                  <TabsContent value="driver-portal" className="mt-6">
+                    <iframe 
+                      src="/driver-portal" 
+                      className="w-full border-0 rounded-lg"
+                      style={{ height: 'calc(100vh - 250px)', minHeight: '600px' }}
+                      title="Driver Portal"
+                    />
+                  </TabsContent>
+
                   <TabsContent value="profile" className="mt-6">
                     <CompanyProfile />
                   </TabsContent>
