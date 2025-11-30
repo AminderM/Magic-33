@@ -725,6 +725,47 @@ PLANS = [
             "intelligent_scoring": True,
         },
     },
+    {
+        "id": "driver_app",
+        "label": "Driver App",
+        "price": 0,
+        "default_seats": 0,
+        "status": "active",
+        "tier": "Mobile Driver App",
+        "subtitle": "Mobile App for Drivers on Android & iOS",
+        "description": "Empower your drivers with a mobile app for Android and iOS devices. Drivers receive dispatch assignments, update order status in real-time, and access GPS navigation with turn-by-turn directions. Requires an active TMS subscription.",
+        "features": [
+            "Receive Dispatch Assignments",
+            "Confirm Load Acceptance",
+            "Real-time Order Status Updates",
+            "GPS Navigation with Route Visualization",
+            "+ 2 more features"
+        ],
+        "all_features": [
+            "Receive Dispatch Assignments",
+            "Confirm Load Acceptance",
+            "Real-time Order Status Updates",
+            "GPS Navigation with Route Visualization",
+            "Live Turn-by-Turn Directions",
+            "Multi-Stop Route Planning",
+            "Driver Profile Management",
+            "Document Upload (POD, Signatures)"
+        ],
+        "feature_flags": {
+            "dispatch_receive": True,
+            "load_confirmation": True,
+            "status_updates": True,
+            "gps_navigation": True,
+            "turn_by_turn": True,
+            "multi_stop": True,
+            "driver_profile": True,
+            "document_upload": True,
+        },
+        "requirements": {
+            "requires_tms": True,
+            "platforms": ["Android", "iOS"]
+        }
+    },
 ]
 
 PLAN_ID_BY_LABEL = {p["label"].lower(): p["id"] for p in PLANS}
