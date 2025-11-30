@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import EquipmentManagement from './EquipmentManagement';
-import DriverManagement from './DriverManagement';
+// import DriverManagement from './DriverManagement';
 import OrderManagement from './OrderManagement';
 import LocationTracking from './LocationTracking';
 import FleetManagement from './FleetManagement';
