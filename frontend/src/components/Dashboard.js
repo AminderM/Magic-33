@@ -243,12 +243,83 @@ const Dashboard = () => {
                   </TabsContent>
 
                   <TabsContent value="driver-portal" className="mt-6">
-                    <iframe 
-                      src="/driver-portal" 
-                      className="w-full border-0 rounded-lg"
-                      style={{ height: 'calc(100vh - 250px)', minHeight: '600px' }}
-                      title="Driver Portal"
-                    />
+                    <div className="space-y-4">
+                      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
+                        <h2 className="text-2xl font-bold mb-2">Driver Portal Demo</h2>
+                        <p className="text-blue-100">
+                          Experience the Driver Portal interface - designed for drivers to manage their loads, update status in real-time, and navigate routes.
+                        </p>
+                      </div>
+
+                      <div className="bg-white rounded-lg p-6 shadow-sm">
+                        <h3 className="text-lg font-semibold mb-4">🚀 Quick Access Options:</h3>
+                        <div className="space-y-3">
+                          <a
+                            href="https://logistics-nano.emergent.host/driver-demo.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block p-4 border-2 border-blue-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all"
+                          >
+                            <div className="flex items-center gap-3">
+                              <i className="fas fa-external-link-alt text-blue-600 text-xl"></i>
+                              <div>
+                                <h4 className="font-semibold text-gray-900">Open Full Demo (New Tab)</h4>
+                                <p className="text-sm text-gray-600">Interactive standalone demo with mock data</p>
+                              </div>
+                            </div>
+                          </a>
+
+                          <div className="p-4 border-2 border-gray-200 rounded-lg">
+                            <h4 className="font-semibold text-gray-900 mb-2">
+                              <i className="fas fa-mobile-alt text-purple-600 mr-2"></i>
+                              Mobile App Access
+                            </h4>
+                            <p className="text-sm text-gray-600 mb-3">
+                              The complete React Native mobile app is available at <code className="bg-gray-100 px-2 py-1 rounded">/app/mobile/</code>
+                            </p>
+                            <div className="bg-gray-50 p-3 rounded">
+                              <p className="text-xs text-gray-700 font-mono">
+                                cd /app/mobile<br/>
+                                yarn install<br/>
+                                yarn android  # or yarn ios
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white rounded-lg p-6 shadow-sm">
+                          <h3 className="font-semibold text-gray-900 mb-3">
+                            <i className="fas fa-check-circle text-green-600 mr-2"></i>
+                            Driver Features
+                          </h3>
+                          <ul className="space-y-2 text-sm text-gray-700">
+                            <li>• View assigned loads dashboard</li>
+                            <li>• Accept/reject load assignments</li>
+                            <li>• Real-time status updates</li>
+                            <li>• GPS navigation integration</li>
+                            <li>• Profile management</li>
+                            <li>• Owner-operator signup</li>
+                          </ul>
+                        </div>
+
+                        <div className="bg-white rounded-lg p-6 shadow-sm">
+                          <h3 className="font-semibold text-gray-900 mb-3">
+                            <i className="fas fa-server text-blue-600 mr-2"></i>
+                            Backend APIs
+                          </h3>
+                          <ul className="space-y-2 text-sm text-gray-700">
+                            <li>• POST /api/driver/login</li>
+                            <li>• POST /api/driver/signup</li>
+                            <li>• GET /api/driver/loads</li>
+                            <li>• PUT /api/driver/loads/:id/status</li>
+                            <li>• GET /api/driver/loads/:id/route</li>
+                            <li>• 9 total endpoints working</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
                   </TabsContent>
 
                   <TabsContent value="profile" className="mt-6">
