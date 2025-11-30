@@ -23,6 +23,12 @@ const DriverManagement = ({ onStatsUpdate }) => {
     password: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeManagementTab, setActiveManagementTab] = useState('fleet');
+  const [pendingDrivers, setPendingDrivers] = useState([]);
+  const [loads, setLoads] = useState([]);
+  const [showAssignLoadDialog, setShowAssignLoadDialog] = useState(false);
+  const [selectedDriverForLoad, setSelectedDriverForLoad] = useState(null);
+  const [selectedLoad, setSelectedLoad] = useState('');
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
