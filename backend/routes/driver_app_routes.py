@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from typing import List, Optional
 import uuid
 
-router = APIRouter(prefix="/api/driver", tags=["Driver App"])
+router = APIRouter(prefix="/driver", tags=["Driver App"])
 
 @router.post("/login")
 async def driver_login(credentials: UserLogin):
