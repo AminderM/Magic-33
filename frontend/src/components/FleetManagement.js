@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import EquipmentManagement from './EquipmentManagement';
-import DriverManagement from './DriverManagement';
+// import DriverManagement from './DriverManagement';
 import LocationTracking from './LocationTracking';
 
 const FleetManagement = () => {
@@ -207,7 +207,7 @@ const FleetManagement = () => {
 
         {/* Drivers Tab */}
         <TabsContent value="drivers" className="mt-6">
-          <DriverManagement onStatsUpdate={setFleetStats} />
+          {/* <DriverManagement onStatsUpdate={setFleetStats} />
         </TabsContent>
 
         {/* Live Tracking Tab */}
