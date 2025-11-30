@@ -9,6 +9,11 @@ import FeatureLoader from './components/FeatureLoader';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { FeaturesProvider } from './contexts/FeaturesContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import DriverPortalAuth from './components/driver/DriverPortalAuth';
+import DriverPortalDashboard from './components/driver/DriverPortalDashboard';
+import DriverLoadDetails from './components/driver/DriverLoadDetails';
+import DriverNavigation from './components/driver/DriverNavigation';
+import DriverProfile from './components/driver/DriverProfile';
 
 // Protected route wrapper
 const ProtectedRoute = ({ children }) => {
