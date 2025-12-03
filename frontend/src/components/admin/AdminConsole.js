@@ -927,27 +927,67 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        {/* Login Screen */}
+        {/* Main Dashboard */}
         <Card className="overflow-hidden">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
-            <h4 className="font-semibold text-sm">Login Screen</h4>
+          <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 text-white">
+            <h4 className="font-semibold text-sm">Main Dashboard</h4>
+            <p className="text-xs opacity-90">TMS-style Layout</p>
           </div>
-          <CardContent className="p-4">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 space-y-3">
-              <div className="text-center">
-                <i className="fas fa-truck text-blue-600 text-3xl mb-2"></i>
-                <p className="font-bold">Driver Portal</p>
-                <p className="text-xs text-gray-600">Sign in to continue</p>
+          <CardContent className="p-0">
+            <div className="bg-white">
+              {/* Header with Menu */}
+              <div className="bg-blue-600 text-white p-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-truck text-xs"></i>
+                  <span className="text-xs font-semibold">Driver TMS</span>
+                </div>
+                <button className="p-1.5 hover:bg-blue-700 rounded">
+                  <i className="fas fa-bars text-sm"></i>
+                </button>
               </div>
-              <div className="space-y-2">
-                <div className="bg-white rounded p-2 text-xs">
-                  <p className="text-gray-400">Email</p>
+              
+              {/* Load Cards */}
+              <div className="p-2 space-y-2 bg-gray-50">
+                <div className="bg-white rounded border p-2">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs font-bold">ORD-001</span>
+                    <span className="text-[9px] bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">Pending</span>
+                  </div>
+                  <div className="space-y-1 text-[9px] text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <i className="fas fa-map-marker-alt text-green-600"></i>
+                      <span>LA, CA → Phoenix, AZ</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-1 mt-1.5">
+                    <button className="flex-1 bg-blue-50 text-blue-600 px-2 py-1 rounded text-[8px] font-medium">
+                      <i className="fas fa-route mr-0.5"></i>Route
+                    </button>
+                    <button className="flex-1 bg-green-50 text-green-600 px-2 py-1 rounded text-[8px] font-medium">
+                      <i className="fas fa-camera mr-0.5"></i>Docs
+                    </button>
+                  </div>
                 </div>
-                <div className="bg-white rounded p-2 text-xs">
-                  <p className="text-gray-400">Password</p>
-                </div>
-                <div className="bg-blue-600 text-white text-center py-2 rounded text-xs font-semibold">
-                  Sign In
+                
+                <div className="bg-white rounded border p-2">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs font-bold">ORD-002</span>
+                    <span className="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">In Transit</span>
+                  </div>
+                  <div className="space-y-1 text-[9px] text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <i className="fas fa-map-marker-alt text-green-600"></i>
+                      <span>SD, CA → Vegas, NV</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-1 mt-1.5">
+                    <button className="flex-1 bg-blue-50 text-blue-600 px-2 py-1 rounded text-[8px] font-medium">
+                      <i className="fas fa-route mr-0.5"></i>Route
+                    </button>
+                    <button className="flex-1 bg-green-50 text-green-600 px-2 py-1 rounded text-[8px] font-medium">
+                      <i className="fas fa-camera mr-0.5"></i>Docs
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
