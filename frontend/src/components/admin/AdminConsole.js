@@ -1181,19 +1181,90 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
       </div>
 
       {/* Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Driver Features</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <i className="fas fa-truck-loading text-blue-600"></i>
+              Load Management
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
-              {product.features?.map((feature, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
-                  <span className="text-sm">{feature}</span>
-                </li>
-              ))}
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>View assigned loads/orders</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Accept/reject assignments</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Real-time status updates</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>TMS-style mobile layout</span>
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <i className="fas fa-route text-purple-600"></i>
+              Navigation & Routes
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Google Maps integration</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Multi-stop route display</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Pickup → Stops → Delivery</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Turn-by-turn directions</span>
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <i className="fas fa-camera text-green-600"></i>
+              Documents & AI
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Camera capture (POD, BOL)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>File browse & upload</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>Auto-sync with Company TMS</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <span>AI Assistant for driver Q&A</span>
+              </li>
             </ul>
           </CardContent>
         </Card>
