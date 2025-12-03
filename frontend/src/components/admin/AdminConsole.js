@@ -994,44 +994,50 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
           </CardContent>
         </Card>
 
-        {/* Dashboard Screen */}
+        {/* Menu Dropdown */}
         <Card className="overflow-hidden">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
-            <h4 className="font-semibold text-sm">Dashboard</h4>
+          <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-3 text-white">
+            <h4 className="font-semibold text-sm">Menu Dropdown</h4>
+            <p className="text-xs opacity-90">Top-right hamburger</p>
           </div>
-          <CardContent className="p-4">
-            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-              <div className="bg-white rounded p-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
-                    <i className="fas fa-box text-blue-600 text-xs"></i>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold">ORD-001</p>
-                    <span className="text-[10px] bg-yellow-100 text-yellow-800 px-1 py-0.5 rounded">Pending</span>
-                  </div>
+          <CardContent className="p-0">
+            <div className="bg-white">
+              {/* Header */}
+              <div className="bg-blue-600 text-white p-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-truck text-xs"></i>
+                  <span className="text-xs font-semibold">Driver TMS</span>
                 </div>
-                <div className="text-[10px] text-gray-600 space-y-0.5">
-                  <div className="flex items-center gap-1">
-                    <i className="fas fa-map-marker-alt text-green-600"></i>
-                    <span>Los Angeles</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <i className="fas fa-map-marker-alt text-red-600"></i>
-                    <span>Phoenix</span>
-                  </div>
+                <div className="p-1.5 bg-blue-700 rounded">
+                  <i className="fas fa-bars text-sm"></i>
                 </div>
               </div>
-              <div className="bg-white rounded p-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
-                    <i className="fas fa-box text-blue-600 text-xs"></i>
-                  </div>
+              
+              {/* Dropdown Menu */}
+              <div className="bg-white border-l-4 border-blue-600">
+                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b flex items-center gap-2 bg-purple-50">
+                  <i className="fas fa-robot text-purple-600 text-sm"></i>
                   <div>
-                    <p className="text-xs font-bold">ORD-002</p>
-                    <span className="text-[10px] bg-blue-100 text-blue-800 px-1 py-0.5 rounded">Planned</span>
+                    <p className="text-xs font-semibold text-purple-700">AI Assistant</p>
+                    <p className="text-[9px] text-gray-500">Ask me anything</p>
                   </div>
-                </div>
+                </button>
+                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b text-xs flex items-center gap-2">
+                  <i className="fas fa-truck-loading text-gray-600"></i>
+                  <span>My Loads</span>
+                </button>
+                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b text-xs flex items-center gap-2">
+                  <i className="fas fa-user text-gray-600"></i>
+                  <span>Profile</span>
+                </button>
+                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b text-xs flex items-center gap-2">
+                  <i className="fas fa-cog text-gray-600"></i>
+                  <span>Settings</span>
+                </button>
+                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 text-xs flex items-center gap-2 text-red-600">
+                  <i className="fas fa-sign-out-alt"></i>
+                  <span>Logout</span>
+                </button>
               </div>
             </div>
           </CardContent>
