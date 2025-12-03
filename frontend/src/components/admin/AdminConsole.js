@@ -855,24 +855,34 @@ const ProductsView = ({ plans, onProductClick }) => {
                   <p className="text-xs text-gray-500 mt-1">per month</p>
                 </div>
 
-                {/* Action Button */}
-                <Button 
-                  className={`w-full ${
-                    isActive 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                      : 'bg-gray-300 text-gray-600 cursor-default'
-                  }`}
-                  disabled={!isActive}
-                  onClick={() => isActive && onProductClick(currentPlan)}
-                >
-                  {isActive ? (
-                    currentPlan.label === 'Transportation Management System' 
-                      ? 'Launch TMS →' 
-                      : currentPlan.label === 'Integrated Route Mate'
-                      ? 'Launch Route Mate →'
-                      : 'Launch App →'
-                  ) : 'Notify Me'}
-                </Button>
+                {/* Action Buttons */}
+                {currentPlan.label === 'Driver App' ? (
+                  <Button 
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                    onClick={() => onProductClick(currentPlan)}
+                  >
+                    <i className="fas fa-mobile-alt mr-2"></i>
+                    View Interface Preview
+                  </Button>
+                ) : (
+                  <Button 
+                    className={`w-full ${
+                      isActive 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : 'bg-gray-300 text-gray-600 cursor-default'
+                    }`}
+                    disabled={!isActive}
+                    onClick={() => isActive && onProductClick(currentPlan)}
+                  >
+                    {isActive ? (
+                      currentPlan.label === 'Transportation Management System' 
+                        ? 'Launch TMS →' 
+                        : currentPlan.label === 'Integrated Route Mate'
+                        ? 'Launch Route Mate →'
+                        : 'Launch App →'
+                    ) : 'Notify Me'}
+                  </Button>
+                )}
               </CardContent>
             </Card>
           );
