@@ -1107,31 +1107,73 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
           </CardContent>
         </Card>
 
-        {/* Navigation Screen */}
+        {/* Document Upload */}
         <Card className="overflow-hidden">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
-            <h4 className="font-semibold text-sm">Navigation</h4>
+          <div className="bg-gradient-to-br from-green-600 to-teal-600 p-3 text-white">
+            <h4 className="font-semibold text-sm">Document Upload</h4>
+            <p className="text-xs opacity-90">Camera & Browse</p>
           </div>
-          <CardContent className="p-4">
-            <div className="space-y-2">
-              <div className="bg-purple-600 text-white p-2 rounded text-xs">
-                <p className="font-bold">Navigation</p>
-              </div>
-              <div className="bg-gray-200 rounded h-24 flex items-center justify-center">
-                <i className="fas fa-map text-gray-400 text-2xl"></i>
-              </div>
-              <div className="bg-white border rounded p-2 text-[10px] space-y-1">
+          <CardContent className="p-0">
+            <div className="bg-white">
+              {/* Header */}
+              <div className="bg-blue-600 text-white p-2 flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <div className="w-4 h-4 bg-green-500 rounded-full text-white flex items-center justify-center text-[8px]">A</div>
-                  <span className="text-xs">LA, CA</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className="w-4 h-4 bg-red-500 rounded-full text-white flex items-center justify-center text-[8px]">B</div>
-                  <span className="text-xs">Phoenix, AZ</span>
+                  <button className="text-white">
+                    <i className="fas fa-arrow-left text-xs"></i>
+                  </button>
+                  <span className="text-xs font-semibold ml-1">ORD-001 Documents</span>
                 </div>
               </div>
-              <div className="bg-purple-600 text-white text-center py-1.5 rounded text-xs font-semibold">
-                <i className="fas fa-directions mr-1"></i>Open Maps
+              
+              {/* Upload Options */}
+              <div className="p-3 space-y-2">
+                <div className="bg-blue-50 rounded-lg p-3 border-2 border-dashed border-blue-300">
+                  <div className="text-center">
+                    <i className="fas fa-camera text-blue-600 text-2xl mb-1"></i>
+                    <p className="text-xs font-semibold text-blue-700">Take Photo</p>
+                    <p className="text-[9px] text-gray-600 mt-0.5">Capture POD, BOL, etc.</p>
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 rounded-lg p-3 border-2 border-dashed border-green-300">
+                  <div className="text-center">
+                    <i className="fas fa-folder-open text-green-600 text-2xl mb-1"></i>
+                    <p className="text-xs font-semibold text-green-700">Browse Files</p>
+                    <p className="text-[9px] text-gray-600 mt-0.5">Upload from device</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Uploaded Files */}
+              <div className="px-3 pb-3">
+                <p className="text-[9px] text-gray-500 uppercase font-medium mb-1.5">Uploaded (2)</p>
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 bg-gray-50 p-1.5 rounded">
+                    <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+                      <i className="fas fa-file-pdf text-blue-600 text-xs"></i>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[9px] font-semibold">POD.pdf</p>
+                      <p className="text-[8px] text-gray-500">24.5 KB</p>
+                    </div>
+                    <i className="fas fa-check-circle text-green-600 text-xs"></i>
+                  </div>
+                  <div className="flex items-center gap-2 bg-gray-50 p-1.5 rounded">
+                    <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
+                      <i className="fas fa-image text-green-600 text-xs"></i>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[9px] font-semibold">BOL.jpg</p>
+                      <p className="text-[8px] text-gray-500">156 KB</p>
+                    </div>
+                    <i className="fas fa-sync text-blue-600 text-xs animate-spin"></i>
+                  </div>
+                </div>
+                
+                <p className="text-[8px] text-gray-500 mt-2 flex items-center gap-1">
+                  <i className="fas fa-cloud-upload-alt"></i>
+                  Syncing with Company TMS...
+                </p>
               </div>
             </div>
           </CardContent>
