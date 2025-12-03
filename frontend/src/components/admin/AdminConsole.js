@@ -904,7 +904,7 @@ const ProductsView = ({ plans, onProductClick }) => {
 
 // Driver App Interface Preview Component
 const DriverAppInterfacePreview = ({ product, onBack }) => {
-  const [activeScreen, setActiveScreen] = useState('login');
+  const [activeScreen, setActiveScreen] = useState('dashboard');
 
   return (
     <div className="space-y-6">
