@@ -908,6 +908,11 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
   const tenantsWithThisPlan = tenants.filter(t => t.plan === product.id);
   const totalRevenue = tenantsWithThisPlan.reduce((sum, t) => sum + (product.price * (t.seats || 1)), 0);
 
+  // Special view for Driver App
+  if (product.label === 'Driver App') {
+    return <DriverAppInterfacePreview product={product} onBack={onBack} />;
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-4">
