@@ -901,6 +901,214 @@ const ProductsView = ({ plans, onProductClick }) => {
   );
 };
 
+
+// Driver App Interface Preview Component
+const DriverAppInterfacePreview = ({ product, onBack }) => {
+  const [activeScreen, setActiveScreen] = useState('login');
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center space-x-4">
+        <Button variant="outline" onClick={onBack}>
+          ← Back to Products
+        </Button>
+        <div>
+          <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <i className="fas fa-mobile-alt text-purple-600"></i>
+            {product.label} - Interface Preview
+          </h2>
+          <p className="text-gray-600 mt-1">{product.subtitle}</p>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-lg">
+        <h3 className="text-xl font-bold mb-2">📱 Mobile App Interface Wireframes</h3>
+        <p>View how drivers will interact with your TMS through the mobile app on Android and iOS devices.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        {/* Login Screen */}
+        <Card className="overflow-hidden">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
+            <h4 className="font-semibold text-sm">Login Screen</h4>
+          </div>
+          <CardContent className="p-4">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 space-y-3">
+              <div className="text-center">
+                <i className="fas fa-truck text-blue-600 text-3xl mb-2"></i>
+                <p className="font-bold">Driver Portal</p>
+                <p className="text-xs text-gray-600">Sign in to continue</p>
+              </div>
+              <div className="space-y-2">
+                <div className="bg-white rounded p-2 text-xs">
+                  <p className="text-gray-400">Email</p>
+                </div>
+                <div className="bg-white rounded p-2 text-xs">
+                  <p className="text-gray-400">Password</p>
+                </div>
+                <div className="bg-blue-600 text-white text-center py-2 rounded text-xs font-semibold">
+                  Sign In
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Dashboard Screen */}
+        <Card className="overflow-hidden">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
+            <h4 className="font-semibold text-sm">Dashboard</h4>
+          </div>
+          <CardContent className="p-4">
+            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+              <div className="bg-white rounded p-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
+                    <i className="fas fa-box text-blue-600 text-xs"></i>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold">ORD-001</p>
+                    <span className="text-[10px] bg-yellow-100 text-yellow-800 px-1 py-0.5 rounded">Pending</span>
+                  </div>
+                </div>
+                <div className="text-[10px] text-gray-600 space-y-0.5">
+                  <div className="flex items-center gap-1">
+                    <i className="fas fa-map-marker-alt text-green-600"></i>
+                    <span>Los Angeles</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <i className="fas fa-map-marker-alt text-red-600"></i>
+                    <span>Phoenix</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded p-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
+                    <i className="fas fa-box text-blue-600 text-xs"></i>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold">ORD-002</p>
+                    <span className="text-[10px] bg-blue-100 text-blue-800 px-1 py-0.5 rounded">Planned</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Load Details Screen */}
+        <Card className="overflow-hidden">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
+            <h4 className="font-semibold text-sm">Load Details</h4>
+          </div>
+          <CardContent className="p-4">
+            <div className="space-y-2">
+              <div className="bg-blue-600 text-white p-2 rounded">
+                <p className="text-xs font-bold">ORD-2024-001</p>
+              </div>
+              <div className="bg-white border rounded p-2 space-y-2">
+                <div className="bg-green-50 p-2 rounded">
+                  <p className="text-[10px] text-green-900 font-medium">PICKUP</p>
+                  <p className="text-xs font-bold">123 Warehouse</p>
+                  <p className="text-[10px] text-gray-600">LA, CA</p>
+                </div>
+                <div className="bg-red-50 p-2 rounded">
+                  <p className="text-[10px] text-red-900 font-medium">DELIVERY</p>
+                  <p className="text-xs font-bold">456 Distribution</p>
+                  <p className="text-[10px] text-gray-600">Phoenix, AZ</p>
+                </div>
+              </div>
+              <div className="bg-green-600 text-white text-center py-1.5 rounded text-xs font-semibold">
+                <i className="fas fa-check mr-1"></i>Accept Load
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Navigation Screen */}
+        <Card className="overflow-hidden">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
+            <h4 className="font-semibold text-sm">Navigation</h4>
+          </div>
+          <CardContent className="p-4">
+            <div className="space-y-2">
+              <div className="bg-purple-600 text-white p-2 rounded text-xs">
+                <p className="font-bold">Navigation</p>
+              </div>
+              <div className="bg-gray-200 rounded h-24 flex items-center justify-center">
+                <i className="fas fa-map text-gray-400 text-2xl"></i>
+              </div>
+              <div className="bg-white border rounded p-2 text-[10px] space-y-1">
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-green-500 rounded-full text-white flex items-center justify-center text-[8px]">A</div>
+                  <span className="text-xs">LA, CA</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-red-500 rounded-full text-white flex items-center justify-center text-[8px]">B</div>
+                  <span className="text-xs">Phoenix, AZ</span>
+                </div>
+              </div>
+              <div className="bg-purple-600 text-white text-center py-1.5 rounded text-xs font-semibold">
+                <i className="fas fa-directions mr-1"></i>Open Maps
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Features Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Driver Features</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {product.features?.map((feature, idx) => (
+                <li key={idx} className="flex items-start gap-2">
+                  <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                  <span className="text-sm">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Technical Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Platforms</p>
+                <p className="text-base font-semibold">Android & iOS</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Pricing</p>
+                <p className="text-base font-semibold text-green-600">FREE</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Requirements</p>
+                <p className="text-sm">Active TMS Subscription</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Backend APIs</p>
+                <p className="text-sm">9 Endpoints Ready</p>
+              </div>
+            </div>
+            <div className="pt-4 border-t">
+              <p className="text-sm font-medium text-gray-600 mb-2">React Native App Location</p>
+              <code className="text-xs bg-gray-100 p-2 rounded block">/app/mobile/</code>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
 // Product Detail View Component
 const ProductDetailView = ({ product, onBack, tenants }) => {
   if (!product) return null;
