@@ -1043,30 +1043,65 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
           </CardContent>
         </Card>
 
-        {/* Load Details Screen */}
+        {/* AI Assistant Chat */}
         <Card className="overflow-hidden">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 text-white">
-            <h4 className="font-semibold text-sm">Load Details</h4>
+          <div className="bg-gradient-to-br from-purple-600 to-indigo-600 p-3 text-white">
+            <h4 className="font-semibold text-sm">AI Assistant</h4>
+            <p className="text-xs opacity-90">Driver-specific Q&A</p>
           </div>
-          <CardContent className="p-4">
-            <div className="space-y-2">
-              <div className="bg-blue-600 text-white p-2 rounded">
-                <p className="text-xs font-bold">ORD-2024-001</p>
-              </div>
-              <div className="bg-white border rounded p-2 space-y-2">
-                <div className="bg-green-50 p-2 rounded">
-                  <p className="text-[10px] text-green-900 font-medium">PICKUP</p>
-                  <p className="text-xs font-bold">123 Warehouse</p>
-                  <p className="text-[10px] text-gray-600">LA, CA</p>
+          <CardContent className="p-0">
+            <div className="bg-white h-full">
+              {/* Header */}
+              <div className="bg-purple-600 text-white p-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-robot text-sm"></i>
+                  <span className="text-xs font-semibold">AI Assistant</span>
                 </div>
-                <div className="bg-red-50 p-2 rounded">
-                  <p className="text-[10px] text-red-900 font-medium">DELIVERY</p>
-                  <p className="text-xs font-bold">456 Distribution</p>
-                  <p className="text-[10px] text-gray-600">Phoenix, AZ</p>
+                <button className="text-white">
+                  <i className="fas fa-times text-xs"></i>
+                </button>
+              </div>
+              
+              {/* Chat Messages */}
+              <div className="p-2 space-y-2 bg-gray-50 h-32 overflow-y-auto">
+                <div className="flex gap-1.5">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-robot text-purple-600 text-[8px]"></i>
+                  </div>
+                  <div className="bg-white rounded-lg p-1.5 text-[9px] max-w-[80%]">
+                    <p>Hi! I'm your AI assistant. Ask me about your routes, loads, or delivery requirements.</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-1.5 justify-end">
+                  <div className="bg-blue-600 text-white rounded-lg p-1.5 text-[9px] max-w-[80%]">
+                    <p>What's the status of ORD-001?</p>
+                  </div>
+                  <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-user text-blue-600 text-[8px]"></i>
+                  </div>
+                </div>
+                
+                <div className="flex gap-1.5">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-robot text-purple-600 text-[8px]"></i>
+                  </div>
+                  <div className="bg-white rounded-lg p-1.5 text-[9px] max-w-[80%]">
+                    <p>ORD-001 is pending acceptance. Pickup: LA, CA. Delivery: Phoenix, AZ. Distance: 372 miles.</p>
+                  </div>
                 </div>
               </div>
-              <div className="bg-green-600 text-white text-center py-1.5 rounded text-xs font-semibold">
-                <i className="fas fa-check mr-1"></i>Accept Load
+              
+              {/* Input */}
+              <div className="p-2 bg-white border-t flex gap-1">
+                <input 
+                  className="flex-1 text-[9px] border rounded px-2 py-1" 
+                  placeholder="Ask a question..."
+                  disabled
+                />
+                <button className="bg-purple-600 text-white px-2 rounded">
+                  <i className="fas fa-paper-plane text-[8px]"></i>
+                </button>
               </div>
             </div>
           </CardContent>
