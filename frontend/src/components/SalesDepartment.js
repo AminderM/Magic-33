@@ -467,6 +467,293 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </Card>
         </TabsContent>
 
+        {/* Freight Calculator Tab */}
+        <TabsContent value="calculator" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Distance Calculator with Mapping */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <i className="fas fa-map-marked-alt text-blue-600"></i>
+                  Distance Calculator & Route Mapper
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Pickup Location</Label>
+                  <Input 
+                    placeholder="Enter pickup address or city, state"
+                    className="mb-2"
+                  />
+                </div>
+                
+                <div>
+                  <Label>Add Stops (Optional)</Label>
+                  <div className="space-y-2">
+                    <Input 
+                      placeholder="Stop 1: City, State"
+                      className="mb-2"
+                    />
+                    <Button variant="outline" size="sm" className="w-full">
+                      <i className="fas fa-plus mr-2"></i>
+                      Add Another Stop
+                    </Button>
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Destination</Label>
+                  <Input 
+                    placeholder="Enter destination address or city, state"
+                  />
+                </div>
+
+                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                  <i className="fas fa-route mr-2"></i>
+                  Calculate Distance & View Map
+                </Button>
+
+                {/* Results Display */}
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-900 mb-3">Route Summary</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-700">Total Distance:</span>
+                      <span className="font-semibold">--- miles</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-700">Estimated Time:</span>
+                      <span className="font-semibold">--- hours</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-700">Number of Stops:</span>
+                      <span className="font-semibold">---</span>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full mt-3" size="sm">
+                    <i className="fas fa-external-link-alt mr-2"></i>
+                    Open in Google Maps
+                  </Button>
+                </div>
+
+                {/* Map Preview Placeholder */}
+                <div className="mt-4 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-64 flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <i className="fas fa-map text-5xl mb-3"></i>
+                    <p className="text-sm">Map will appear here after calculation</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Unit Converters */}
+            <div className="space-y-6">
+              {/* Weight Converter */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <i className="fas fa-weight text-green-600"></i>
+                    Weight Converter
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label>Pounds (lbs)</Label>
+                    <Input 
+                      type="number"
+                      placeholder="Enter weight in pounds"
+                      onChange={(e) => {
+                        const lbs = parseFloat(e.target.value);
+                        if (!isNaN(lbs)) {
+                          const kgs = (lbs * 0.453592).toFixed(2);
+                          document.getElementById('kgs-result').value = kgs;
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="text-center">
+                    <i className="fas fa-exchange-alt text-gray-400"></i>
+                  </div>
+
+                  <div>
+                    <Label>Kilograms (kg)</Label>
+                    <Input 
+                      id="kgs-result"
+                      type="number"
+                      placeholder="Enter weight in kilograms"
+                      onChange={(e) => {
+                        const kgs = parseFloat(e.target.value);
+                        if (!isNaN(kgs)) {
+                          const lbs = (kgs * 2.20462).toFixed(2);
+                          const lbsInput = e.target.form?.querySelector('input[placeholder*="pounds"]');
+                          if (lbsInput) lbsInput.value = lbs;
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-xs text-gray-600 mb-2">Quick Reference:</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="font-semibold">1 lb</span> = 0.453 kg
+                      </div>
+                      <div>
+                        <span className="font-semibold">1 kg</span> = 2.205 lbs
+                      </div>
+                      <div>
+                        <span className="font-semibold">1 ton (US)</span> = 907 kg
+                      </div>
+                      <div>
+                        <span className="font-semibold">1 tonne</span> = 2,205 lbs
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Temperature Converter */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <i className="fas fa-thermometer-half text-red-600"></i>
+                    Temperature Converter
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label>Fahrenheit (°F)</Label>
+                    <Input 
+                      type="number"
+                      placeholder="Enter temperature in Fahrenheit"
+                      onChange={(e) => {
+                        const f = parseFloat(e.target.value);
+                        if (!isNaN(f)) {
+                          const c = ((f - 32) * 5/9).toFixed(2);
+                          document.getElementById('celsius-result').value = c;
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="text-center">
+                    <i className="fas fa-exchange-alt text-gray-400"></i>
+                  </div>
+
+                  <div>
+                    <Label>Celsius (°C)</Label>
+                    <Input 
+                      id="celsius-result"
+                      type="number"
+                      placeholder="Enter temperature in Celsius"
+                      onChange={(e) => {
+                        const c = parseFloat(e.target.value);
+                        if (!isNaN(c)) {
+                          const f = ((c * 9/5) + 32).toFixed(2);
+                          const fInput = e.target.form?.querySelector('input[placeholder*="Fahrenheit"]');
+                          if (fInput) fInput.value = f;
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                    <p className="text-xs text-gray-600 mb-2">Common Temperatures:</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="font-semibold">Freezing:</span> 32°F / 0°C
+                      </div>
+                      <div>
+                        <span className="font-semibold">Room Temp:</span> 68°F / 20°C
+                      </div>
+                      <div>
+                        <span className="font-semibold">Body Temp:</span> 98.6°F / 37°C
+                      </div>
+                      <div>
+                        <span className="font-semibold">Boiling:</span> 212°F / 100°C
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-xs font-semibold text-blue-900 mb-1">Formulas:</p>
+                    <div className="text-xs text-gray-700 space-y-1">
+                      <div>°F = (°C × 9/5) + 32</div>
+                      <div>°C = (°F - 32) × 5/9</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Additional Converters */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <i className="fas fa-ruler text-purple-600"></i>
+                    Distance Converter
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label>Miles</Label>
+                    <Input 
+                      type="number"
+                      placeholder="Enter distance in miles"
+                      onChange={(e) => {
+                        const miles = parseFloat(e.target.value);
+                        if (!isNaN(miles)) {
+                          const km = (miles * 1.60934).toFixed(2);
+                          document.getElementById('km-result').value = km;
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="text-center">
+                    <i className="fas fa-exchange-alt text-gray-400"></i>
+                  </div>
+
+                  <div>
+                    <Label>Kilometers</Label>
+                    <Input 
+                      id="km-result"
+                      type="number"
+                      placeholder="Enter distance in kilometers"
+                      onChange={(e) => {
+                        const km = parseFloat(e.target.value);
+                        if (!isNaN(km)) {
+                          const miles = (km * 0.621371).toFixed(2);
+                          const milesInput = e.target.form?.querySelector('input[placeholder*="miles"]');
+                          if (milesInput) milesInput.value = miles;
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                    <p className="text-xs text-gray-600 mb-2">Quick Reference:</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="font-semibold">1 mile</span> = 1.609 km
+                      </div>
+                      <div>
+                        <span className="font-semibold">1 km</span> = 0.621 miles
+                      </div>
+                      <div>
+                        <span className="font-semibold">100 miles</span> = 161 km
+                      </div>
+                      <div>
+                        <span className="font-semibold">100 km</span> = 62 miles
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+
         {/* Rate Quotes Tab */}
         <TabsContent value="quotes" className="mt-6">
           <Card>
