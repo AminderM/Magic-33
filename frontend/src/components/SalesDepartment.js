@@ -757,7 +757,6 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </CardContent>
               </Card>
             </div>
-          </div>
         </TabsContent>
 
         {/* Rate Quotes Tab */}
