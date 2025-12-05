@@ -454,8 +454,9 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+      <div className="px-6 pt-4 bg-gray-50">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-4 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
           <TabsTrigger value="pipeline">
             <i className="fas fa-funnel-dollar mr-2"></i>
             Sales Pipeline
