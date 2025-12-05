@@ -212,16 +212,16 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[85%] rounded-lg p-3 ${
+              className={`max-w-[85%] rounded-2xl p-3 ${
                 msg.role === 'user'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-gray-900 text-white'
                   : 'bg-white border border-gray-200 text-gray-900 shadow-sm'
               }`}
             >
               <div className="text-sm whitespace-pre-wrap break-words">{msg.content}</div>
               {msg.timestamp && (
                 <div className={`text-xs mt-1 ${
-                  msg.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                  msg.role === 'user' ? 'text-gray-400' : 'text-gray-500'
                 }`}>
                   {new Date(msg.timestamp).toLocaleTimeString()}
                 </div>
