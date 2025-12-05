@@ -264,6 +264,10 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <i className="fas fa-building mr-2"></i>
             Customers
           </TabsTrigger>
+          <TabsTrigger value="calculator">
+            <i className="fas fa-calculator mr-2"></i>
+            Freight Calculator
+          </TabsTrigger>
           <TabsTrigger value="quotes">
             <i className="fas fa-file-invoice-dollar mr-2"></i>
             Rate Quotes
