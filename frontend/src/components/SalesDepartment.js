@@ -384,7 +384,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <p className="text-sm text-gray-500 mt-1">Lead generation, CRM, rate quotes & customer management</p>
           </div>
           {activeTab === 'leads' && (
-            <Button onClick={() => setShowAddLeadModal(true)} className="bg-gray-900 hover:bg-gray-800 rounded-lg">
+            <Button onClick={() => setShowAddLeadModal(true)} className="bg-[#F7B501] hover:bg-[#e5a701] rounded-lg">
               <i className="fas fa-plus mr-2"></i>
               Add New Lead
             </Button>
@@ -765,7 +765,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
                         <Button 
                           onClick={pushToRateQuotes}
-                          className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg shadow-sm h-11"
+                          className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-11"
                         >
                           <i className="fas fa-arrow-right mr-2"></i>
                           Push to Rate Quotes
@@ -838,7 +838,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         />
                       </div>
 
-                      <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg shadow-sm h-11">
+                      <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-11">
                         <i className="fas fa-calculator mr-2"></i>
                         Calculate Route
                       </Button>
