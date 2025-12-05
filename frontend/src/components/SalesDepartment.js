@@ -837,7 +837,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         />
                       </div>
 
-                      <Button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-sm">
+                      <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg shadow-sm h-11">
                         <i className="fas fa-calculator mr-2"></i>
                         Calculate Route
                       </Button>
