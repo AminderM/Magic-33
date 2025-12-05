@@ -778,15 +778,15 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 {/* Right - Map & Distance Calculator (3/5 width) */}
                 <div className="lg:col-span-3 space-y-4">
                   {/* Map Display */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-[500px] flex flex-col">
+                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800">Route Preview</h4>
                       <Button variant="ghost" size="sm" className="text-xs text-gray-600 hover:text-gray-900">
                         <i className="fas fa-external-link-alt mr-1.5"></i>
                         Open in Maps
                       </Button>
                     </div>
-                    <div className="bg-gray-50 h-[400px] flex items-center justify-center">
+                    <div className="bg-gray-50 flex-1 flex items-center justify-center">
                       <div className="text-center text-gray-400">
                         <i className="fas fa-map text-5xl mb-3 opacity-50"></i>
                         <p className="text-sm font-medium text-gray-600 mb-1">No route calculated</p>
