@@ -267,6 +267,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </div>
+          )}
         </div>
 
         {/* Right Panel (20%) - AI Chat Assistant */}
