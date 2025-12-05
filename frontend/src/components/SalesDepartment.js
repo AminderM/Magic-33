@@ -339,6 +339,38 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     return colors[stage] || 'bg-gray-500';
   };
 
+  const calculateTotalQuote = () => {
+    const subtotal = 
+      (quoteData.distance * quoteData.ratePerMile) +
+      quoteData.fuelSurcharge +
+      (quoteData.stops.length * quoteData.ratePerStop) +
+      quoteData.accessorialCharges;
+    
+    const total = subtotal + (subtotal * (quoteData.margin / 100));
+    return total.toFixed(2);
+  };
+
+  const pushToRateQuotes = () => {
+    const newQuote = {
+      id: Date.now().toString(),
+      pickupLocation: quoteData.pickupLocation || 'Not specified',
+      destination: quoteData.destination || 'Not specified',
+      distance: quoteData.distance,
+      totalAmount: calculateTotalQuote(),
+      status: 'incomplete',
+      createdAt: new Date().toISOString(),
+      ratePerMile: quoteData.ratePerMile,
+      fuelSurcharge: quoteData.fuelSurcharge,
+      ratePerStop: quoteData.ratePerStop,
+      accessorialCharges: quoteData.accessorialCharges,
+      margin: quoteData.margin
+    };
+    
+    setQuotes([newQuote, ...quotes]);
+    setActiveTab('quotes');
+    toast.success('Quote pushed to Rate Quotes tab');
+  };
+
   return (
     <div className="h-full overflow-auto p-6 bg-gray-50">
       {/* Header */}
