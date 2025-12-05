@@ -774,50 +774,52 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     </div>
                   </div>
 
-                  {/* Distance Calculator Inputs */}
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-4 flex items-center gap-2">
-                      <i className="fas fa-map-marked-alt"></i>
-                      Distance Calculator & Route Mapper
-                    </h4>
-                    <div className="space-y-3">
-                      <div>
-                        <Label className="text-xs text-gray-600">Pickup Location</Label>
+                  {/* Distance Calculator Inputs - Sleek Design */}
+                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                        <i className="fas fa-route text-blue-500"></i>
+                        Route Calculator
+                      </h4>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <i className="fas fa-map-marker-alt text-green-500"></i>
+                        </div>
                         <Input 
-                          placeholder="Enter pickup address or city, state"
+                          placeholder="Pickup location"
                           value={quoteData.pickupLocation}
                           onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
-                          className="mt-1"
+                          className="pl-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                         />
                       </div>
                       
-                      <div>
-                        <Label className="text-xs text-gray-600">Add Stops (Optional)</Label>
-                        <div className="space-y-2">
-                          <Input 
-                            placeholder="Stop 1: City, State"
-                            className="text-sm"
-                          />
-                          <Button variant="outline" size="sm" className="w-full">
-                            <i className="fas fa-plus mr-2"></i>
-                            Add Another Stop
-                          </Button>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <i className="fas fa-map-pin text-gray-400"></i>
                         </div>
-                      </div>
-
-                      <div>
-                        <Label className="text-xs text-gray-600">Destination</Label>
                         <Input 
-                          placeholder="Enter destination address or city, state"
-                          value={quoteData.destination}
-                          onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
-                          className="mt-1"
+                          placeholder="Add stop (optional)"
+                          className="pl-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
                         />
                       </div>
 
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                        <i className="fas fa-route mr-2"></i>
-                        Calculate Distance & View Map
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <i className="fas fa-map-marker-alt text-red-500"></i>
+                        </div>
+                        <Input 
+                          placeholder="Destination"
+                          value={quoteData.destination}
+                          onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
+                          className="pl-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                        />
+                      </div>
+
+                      <Button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-sm">
+                        <i className="fas fa-calculator mr-2"></i>
+                        Calculate Route
                       </Button>
                     </div>
                   </div>
