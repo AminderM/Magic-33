@@ -88,35 +88,35 @@ const Dashboard = () => {
   }, [user, BACKEND_URL, fetchWithAuth]);
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col overflow-hidden">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="dashboard-header bg-primary text-primary-foreground flex-shrink-0">
-        <div className="container mx-auto px-4">
+      <div className="bg-white border-b border-gray-200 flex-shrink-0 shadow-sm">
+        <div className="container mx-auto px-6">
           <div className="flex justify-between items-center py-4">
             <div>
-              <h1 className="text-3xl font-bold" data-testid="dashboard-title">
+              <h1 className="text-2xl font-bold text-gray-900" data-testid="dashboard-title">
                 Welcome, {user?.full_name}
               </h1>
-              <p className="mt-1 opacity-90">
+              <p className="mt-0.5 text-sm text-gray-500">
                 {(user?.role || '').replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} Dashboard
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm">
-                <div className="font-semibold">{company?.name || 'No Company'}</div>
+                <div className="font-semibold text-gray-900">{company?.name || 'No Company'}</div>
                 {company && getStatusBadge(company.verification_status)}
               </div>
               
               {/* Company/Profile/Admin Dropdown */}
               <div className="relative group">
                 <Button 
-                  variant="secondary"
-                  className="">
+                  variant="outline"
+                  className="border-gray-300 hover:bg-gray-50 rounded-lg">
                   <i className="fas fa-building mr-2"></i>
                   Company
                   <i className="fas fa-chevron-down ml-2"></i>
                 </Button>
-                <div className="absolute right-0 mt-2 w-56 bg-white text-foreground rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                <div className="absolute right-0 mt-2 w-56 bg-white text-gray-900 rounded-xl shadow-lg border border-gray-200 py-1 z-50 hidden group-hover:block">
                   <button
                     onClick={() => navigate('/apps')}
                     className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
