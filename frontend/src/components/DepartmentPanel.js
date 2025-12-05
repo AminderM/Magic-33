@@ -56,7 +56,7 @@ const DepartmentPanel = ({ activeDepartment, onDepartmentChange }) => {
             onClick={() => onDepartmentChange(dept.id)}
             className={`w-full text-left p-3 rounded-xl transition-all ${
               activeDepartment === dept.id
-                ? 'bg-gray-900 text-white shadow-sm'
+                ? 'bg-[#F7B501] text-white shadow-sm'
                 : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300'
             }`}
           >
