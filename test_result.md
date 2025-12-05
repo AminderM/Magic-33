@@ -420,6 +420,21 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Sales & Business Development Department View"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/SalesDepartment.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented complete Sales Department interface with header, 4 KPI cards (Total Leads, Active Opportunities, Pipeline Value, Active Customers), Add New Lead button, and 4 tabs (Sales Pipeline, Leads, Customers, Rate Quotes). Component includes mock data, lead management functionality, and professional UI design."
+      - working: false
+        agent: "testing"
+        comment: "❌ SALES DEPARTMENT VIEW NOT ACCESSIBLE: Comprehensive testing reveals critical department switching bug. DETAILED FINDINGS: 1) ✅ SalesDepartment Component: Fully implemented with all required features - header with emoji, 4 KPI cards, Add New Lead button, 4 tabs with proper content, lead management modal, mock data for leads/opportunities/customers 2) ✅ Department Button: Sales/Business Development button exists in left panel, is clickable, and gets highlighted when selected 3) ❌ CRITICAL BUG: Department switching functionality broken - clicking Sales/Business Development does not render SalesDepartment component in middle panel 4) ❌ ROOT CAUSE: Dashboard.js conditional rendering (activeDepartment === 'sales') not working - activeDepartment state not updating when department buttons are clicked 5) ❌ IMPACT: Users cannot access Sales Department interface despite it being fully implemented 6) ✅ Component Quality: SalesDepartment.js code is production-ready with proper structure, styling, and functionality. SOLUTION REQUIRED: Fix department state management in Dashboard.js - investigate onDepartmentChange callback and activeDepartment state updates."
+
 agent_communication:
   - agent: "main"
     message: "Please POST /api/admin/seed-platform-admin to create the admin user, then attempt login via /api/auth/login with email aminderpro@gmail.com and password Admin@123!. Return responses and any errors."
