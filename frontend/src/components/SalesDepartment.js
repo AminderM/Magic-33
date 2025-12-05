@@ -8,6 +8,161 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 
+// Unified Converter Component
+const UnifiedConverter = () => {
+  const [conversionType, setConversionType] = useState('weight');
+  const [inputValue, setInputValue] = useState('');
+  const [outputValue, setOutputValue] = useState('');
+
+  const conversionConfig = {
+    weight: {
+      icon: 'fa-weight',
+      color: 'green',
+      fromUnit: 'Pounds (lbs)',
+      toUnit: 'Kilograms (kg)',
+      fromToRatio: 0.453592,
+      toFromRatio: 2.20462,
+      quickRef: [
+        { label: '1 lb', value: '0.453 kg' },
+        { label: '1 kg', value: '2.205 lbs' },
+        { label: '1 ton (US)', value: '907 kg' },
+        { label: '1 tonne', value: '2,205 lbs' }
+      ]
+    },
+    temperature: {
+      icon: 'fa-thermometer-half',
+      color: 'red',
+      fromUnit: 'Fahrenheit (°F)',
+      toUnit: 'Celsius (°C)',
+      convertFromTo: (f) => ((f - 32) * 5/9).toFixed(2),
+      convertToFrom: (c) => ((c * 9/5) + 32).toFixed(2),
+      quickRef: [
+        { label: 'Freezing', value: '32°F / 0°C' },
+        { label: 'Room Temp', value: '68°F / 20°C' },
+        { label: 'Body Temp', value: '98.6°F / 37°C' },
+        { label: 'Boiling', value: '212°F / 100°C' }
+      ]
+    },
+    distance: {
+      icon: 'fa-ruler',
+      color: 'purple',
+      fromUnit: 'Miles',
+      toUnit: 'Kilometers',
+      fromToRatio: 1.60934,
+      toFromRatio: 0.621371,
+      quickRef: [
+        { label: '1 mile', value: '1.609 km' },
+        { label: '1 km', value: '0.621 miles' },
+        { label: '100 miles', value: '161 km' },
+        { label: '100 km', value: '62 miles' }
+      ]
+    }
+  };
+
+  const config = conversionConfig[conversionType];
+
+  const handleInputChange = (value, isFromUnit) => {
+    const numValue = parseFloat(value);
+    
+    if (isNaN(numValue) || value === '') {
+      setInputValue('');
+      setOutputValue('');
+      return;
+    }
+
+    if (isFromUnit) {
+      setInputValue(value);
+      if (conversionType === 'temperature') {
+        setOutputValue(config.convertFromTo(numValue));
+      } else {
+        setOutputValue((numValue * config.fromToRatio).toFixed(2));
+      }
+    } else {
+      setOutputValue(value);
+      if (conversionType === 'temperature') {
+        setInputValue(config.convertToFrom(numValue));
+      } else {
+        setInputValue((numValue * config.toFromRatio).toFixed(2));
+      }
+    }
+  };
+
+  const handleTypeChange = (newType) => {
+    setConversionType(newType);
+    setInputValue('');
+    setOutputValue('');
+  };
+
+  return (
+    <Card className="mt-6">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <i className={`fas ${config.icon} text-${config.color}-600`}></i>
+            Unit Converter
+          </CardTitle>
+          <Select value={conversionType} onValueChange={handleTypeChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="weight">Weight</SelectItem>
+              <SelectItem value="temperature">Temperature</SelectItem>
+              <SelectItem value="distance">Distance</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div>
+          <Label>{config.fromUnit}</Label>
+          <Input 
+            type="number"
+            placeholder={`Enter ${config.fromUnit.toLowerCase()}`}
+            value={inputValue}
+            onChange={(e) => handleInputChange(e.target.value, true)}
+          />
+        </div>
+
+        <div className="text-center">
+          <i className="fas fa-exchange-alt text-gray-400"></i>
+        </div>
+
+        <div>
+          <Label>{config.toUnit}</Label>
+          <Input 
+            type="number"
+            placeholder={`Enter ${config.toUnit.toLowerCase()}`}
+            value={outputValue}
+            onChange={(e) => handleInputChange(e.target.value, false)}
+          />
+        </div>
+
+        <div className={`p-3 bg-${config.color}-50 rounded-lg border border-${config.color}-200`}>
+          <p className="text-xs text-gray-600 mb-2">Quick Reference:</p>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            {config.quickRef.map((ref, idx) => (
+              <div key={idx}>
+                <span className="font-semibold">{ref.label}:</span> {ref.value}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {conversionType === 'temperature' && (
+          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-xs font-semibold text-blue-900 mb-1">Formulas:</p>
+            <div className="text-xs text-gray-700 space-y-1">
+              <div>°F = (°C × 9/5) + 32</div>
+              <div>°C = (°F - 32) × 5/9</div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
 const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [activeTab, setActiveTab] = useState('pipeline');
   const [leads, setLeads] = useState([]);
