@@ -488,15 +488,18 @@ metadata:
 
   - task: "Three-Column Layout Implementation (Phase 1)"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/components/Dashboard.js, /app/frontend/src/components/DepartmentPanel.js, /app/frontend/src/components/TMSChatAssistant.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE THREE-COLUMN LAYOUT TESTING COMPLETED: Phase 1 implementation fully successful (100% success rate). LAYOUT VERIFICATION: 1) ✅ Three-column structure confirmed - Left Panel (25% width) with Department navigation, Middle Panel (50% width) with TMS content, Right Panel (25% width) with AI Chat Assistant 2) ✅ Left Panel: 'TMS Departments' header present, all 6 department buttons visible (Dispatch Operations 🚚, Accounting 💰, Sales/Business Development 📈, HR 👥, Fleet Maintenance 🔧, Fleet Safety 🛡️), footer shows 'AI-Powered Assistance' 3) ✅ Right Panel: AI Assistant header, 'Full Access' role badge, GPT-5 Nano branding, Active Department Banner with 'Context synced with selected department', chat input field, send button, clear history button 4) ✅ Department Integration: Department context controlled by left panel, chat automatically syncs with selected department, NO department selection buttons inside chat (correctly removed as per requirement) 5) ✅ Middle Panel: All 5 TMS tabs present (Transport Hub-TMS, Equipment, Drivers, Loads, Tracking), content loads correctly 6) ✅ Department Switching: Successfully tested switching between Dispatch Operations and Accounting - right panel updates context appropriately 7) ✅ Message Sending: Chat functionality working in department context. All Phase 1 requirements met and fully operational."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL BUG DISCOVERED: Sales Department View Not Working. COMPREHENSIVE TESTING RESULTS: 1) ✅ Login Flow: Successfully authenticated with aminderpro@gmail.com/Admin@123! and accessed TMS Dashboard 2) ✅ Three-Column Layout: Layout structure working correctly - left panel (departments), middle panel (content), right panel (AI chat) 3) ✅ Department Panel: All 6 departments visible and clickable (Dispatch Operations, Accounting, Sales/Business Development, HR, Fleet Maintenance, Fleet Safety) 4) ✅ Sales Button Interaction: Sales/Business Development button found, clickable, and gets highlighted when clicked 5) ❌ CRITICAL ISSUE: Middle panel does not switch to Sales Department view when Sales/Business Development is clicked. Instead continues showing 'Transport Hub - TMS Dashboard' 6) ❌ Missing Sales Interface: Expected Sales Department header '📈 Sales & Business Development', KPI cards (Total Leads, Active Opportunities, Pipeline Value, Active Customers), Add New Lead button, and 4 tabs (Sales Pipeline, Leads, Customers, Rate Quotes) are not displayed 7) ROOT CAUSE: Department switching functionality broken - activeDepartment state not updating properly or conditional rendering (activeDepartment === 'sales') not working. SOLUTION REQUIRED: Fix department state management in Dashboard.js to properly switch middle panel content when Sales department is selected."
 
   - task: "GPT-5 Nano TMS Chat Role-Based Access Control"
     implemented: true
