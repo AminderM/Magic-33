@@ -836,22 +836,86 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Rate Quotes</CardTitle>
-                <Button>
+                <Button onClick={() => setActiveTab('calculator')}>
                   <i className="fas fa-plus mr-2"></i>
                   Create New Quote
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12">
-                <i className="fas fa-file-invoice-dollar text-gray-400 text-5xl mb-4"></i>
-                <h3 className="text-xl font-semibold mb-2">Quote Generator</h3>
-                <p className="text-gray-600 mb-4">Create professional rate quotes for your customers</p>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <i className="fas fa-calculator mr-2"></i>
-                  Generate Quote
-                </Button>
-              </div>
+              {quotes.length === 0 ? (
+                <div className="text-center py-12">
+                  <i className="fas fa-file-invoice-dollar text-gray-400 text-5xl mb-4"></i>
+                  <h3 className="text-xl font-semibold mb-2">No Quotes Yet</h3>
+                  <p className="text-gray-600 mb-4">Create professional rate quotes using the Freight Calculator</p>
+                  <Button onClick={() => setActiveTab('calculator')} className="bg-blue-600 hover:bg-blue-700">
+                    <i className="fas fa-calculator mr-2"></i>
+                    Go to Freight Calculator
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {quotes.map((quote) => (
+                    <div key={quote.id} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-file-invoice text-blue-600 text-xl"></i>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-gray-900">
+                              {quote.pickupLocation} → {quote.destination}
+                            </h4>
+                            <p className="text-sm text-gray-500">
+                              Created {new Date(quote.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-green-700">${quote.totalAmount}</div>
+                          <Badge className={quote.status === 'incomplete' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}>
+                            {quote.status}
+                          </Badge>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                        <div>
+                          <span className="text-gray-600">Rate/Mile:</span>
+                          <span className="font-semibold ml-1">${quote.ratePerMile}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">Fuel Surcharge:</span>
+                          <span className="font-semibold ml-1">${quote.fuelSurcharge}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">Rate/Stop:</span>
+                          <span className="font-semibold ml-1">${quote.ratePerStop}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">Margin:</span>
+                          <span className="font-semibold ml-1">{quote.margin}%</span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 flex gap-2">
+                        <Button variant="outline" size="sm">
+                          <i className="fas fa-edit mr-1"></i>
+                          Edit
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <i className="fas fa-paper-plane mr-1"></i>
+                          Send to Customer
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <i className="fas fa-check mr-1"></i>
+                          Mark Complete
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
