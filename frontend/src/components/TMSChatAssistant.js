@@ -214,7 +214,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
             <div
               className={`max-w-[85%] rounded-2xl p-3 ${
                 msg.role === 'user'
-                  ? 'bg-gray-900 text-white'
+                  ? 'bg-[#F7B501] text-white'
                   : 'bg-white border border-gray-200 text-gray-900 shadow-sm'
               }`}
             >
@@ -258,7 +258,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
           <Button
             onClick={handleSendMessage}
             disabled={!message.trim() || isLoading}
-            className="bg-gray-900 hover:bg-gray-800 px-4 rounded-lg"
+            className="bg-[#F7B501] hover:bg-gray-800 px-4 rounded-lg"
           >
             <Send className="w-4 h-4" />
           </Button>
