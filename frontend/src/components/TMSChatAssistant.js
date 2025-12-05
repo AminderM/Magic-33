@@ -258,7 +258,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
           <Button
             onClick={handleSendMessage}
             disabled={!message.trim() || isLoading}
-            className="bg-[#F7B501] hover:bg-gray-800 px-4 rounded-lg"
+            className="bg-[#F7B501] hover:bg-[#e5a701] px-4 rounded-lg"
           >
             <Send className="w-4 h-4" />
           </Button>
