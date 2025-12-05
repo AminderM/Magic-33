@@ -152,29 +152,29 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
   return (
     <div className="w-full h-full bg-white border-l border-gray-200 flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+      <div className="p-5 border-b border-gray-200">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="font-bold text-lg flex items-center gap-2">
+          <h2 className="font-bold text-base text-gray-900 flex items-center gap-2">
             <span>🤖</span>
             AI Assistant
           </h2>
           {getRoleBadge()}
         </div>
-        <p className="text-xs text-blue-100">
-          GPT-5 Nano • Context-aware guidance
+        <p className="text-xs text-gray-500">
+          GPT-5 Nano • Context-aware
         </p>
       </div>
 
       {/* Active Department Banner */}
-      <div className="px-4 py-3 bg-blue-50 border-b border-blue-100">
+      <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">{departmentMap[activeDepartment]?.icon}</span>
+          <span className="text-2xl">{departmentMap[activeDepartment]?.icon}</span>
           <div className="flex-1">
-            <div className="font-semibold text-sm text-gray-900">
+            <div className="font-semibold text-xs text-gray-900">
               {departmentMap[activeDepartment]?.label}
             </div>
-            <div className="text-xs text-gray-600">
-              Context synced with selected department
+            <div className="text-xs text-gray-500">
+              Active context
             </div>
           </div>
           <Button
