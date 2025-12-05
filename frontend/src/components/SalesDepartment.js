@@ -337,10 +337,12 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             </h1>
             <p className="text-gray-600 mt-2">Lead generation, CRM, rate quotes & customer management</p>
           </div>
-          <Button onClick={() => setShowAddLeadModal(true)} className="bg-blue-600 hover:bg-blue-700">
-            <i className="fas fa-plus mr-2"></i>
-            Add New Lead
-          </Button>
+          {activeTab === 'leads' && (
+            <Button onClick={() => setShowAddLeadModal(true)} className="bg-blue-600 hover:bg-blue-700">
+              <i className="fas fa-plus mr-2"></i>
+              Add New Lead
+            </Button>
+          )}
         </div>
 
         {/* KPI Cards */}
