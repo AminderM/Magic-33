@@ -372,19 +372,19 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   };
 
   return (
-    <div className="h-full overflow-auto p-6 bg-gray-50">
+    <div className="h-full overflow-auto">
       {/* Header */}
-      <div className="mb-6">
+      <div className="bg-white border-b border-gray-200 px-6 py-5">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <span className="text-4xl">📈</span>
+            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <span className="text-2xl">📈</span>
               Sales & Business Development
             </h1>
-            <p className="text-gray-600 mt-2">Lead generation, CRM, rate quotes & customer management</p>
+            <p className="text-sm text-gray-500 mt-1">Lead generation, CRM, rate quotes & customer management</p>
           </div>
           {activeTab === 'leads' && (
-            <Button onClick={() => setShowAddLeadModal(true)} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={() => setShowAddLeadModal(true)} className="bg-gray-900 hover:bg-gray-800 rounded-lg">
               <i className="fas fa-plus mr-2"></i>
               Add New Lead
             </Button>
@@ -393,7 +393,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-          <Card>
+          <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
