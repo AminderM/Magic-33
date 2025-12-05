@@ -469,82 +469,88 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Freight Calculator Tab */}
         <TabsContent value="calculator" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Distance Calculator with Mapping */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <i className="fas fa-map-marked-alt text-blue-600"></i>
-                  Distance Calculator & Route Mapper
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Pickup Location</Label>
-                  <Input 
-                    placeholder="Enter pickup address or city, state"
-                    className="mb-2"
-                  />
-                </div>
-                
-                <div>
-                  <Label>Add Stops (Optional)</Label>
-                  <div className="space-y-2">
+          {/* Top Section - Distance Calculator & Map Side by Side */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <i className="fas fa-map-marked-alt text-blue-600"></i>
+                Distance Calculator & Route Mapper
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left - Calculator Inputs */}
+                <div className="space-y-4">
+                  <div>
+                    <Label>Pickup Location</Label>
                     <Input 
-                      placeholder="Stop 1: City, State"
+                      placeholder="Enter pickup address or city, state"
                       className="mb-2"
                     />
-                    <Button variant="outline" size="sm" className="w-full">
-                      <i className="fas fa-plus mr-2"></i>
-                      Add Another Stop
+                  </div>
+                  
+                  <div>
+                    <Label>Add Stops (Optional)</Label>
+                    <div className="space-y-2">
+                      <Input 
+                        placeholder="Stop 1: City, State"
+                        className="mb-2"
+                      />
+                      <Button variant="outline" size="sm" className="w-full">
+                        <i className="fas fa-plus mr-2"></i>
+                        Add Another Stop
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label>Destination</Label>
+                    <Input 
+                      placeholder="Enter destination address or city, state"
+                    />
+                  </div>
+
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <i className="fas fa-route mr-2"></i>
+                    Calculate Distance & View Map
+                  </Button>
+
+                  {/* Results Display */}
+                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-semibold text-blue-900 mb-3">Route Summary</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-700">Total Distance:</span>
+                        <span className="font-semibold">--- miles</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-700">Estimated Time:</span>
+                        <span className="font-semibold">--- hours</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-700">Number of Stops:</span>
+                        <span className="font-semibold">---</span>
+                      </div>
+                    </div>
+                    <Button variant="outline" className="w-full mt-3" size="sm">
+                      <i className="fas fa-external-link-alt mr-2"></i>
+                      Open in Google Maps
                     </Button>
                   </div>
                 </div>
 
-                <div>
-                  <Label>Destination</Label>
-                  <Input 
-                    placeholder="Enter destination address or city, state"
-                  />
-                </div>
-
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                  <i className="fas fa-route mr-2"></i>
-                  Calculate Distance & View Map
-                </Button>
-
-                {/* Results Display */}
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-semibold text-blue-900 mb-3">Route Summary</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Total Distance:</span>
-                      <span className="font-semibold">--- miles</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Estimated Time:</span>
-                      <span className="font-semibold">--- hours</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Number of Stops:</span>
-                      <span className="font-semibold">---</span>
-                    </div>
-                  </div>
-                  <Button variant="outline" className="w-full mt-3" size="sm">
-                    <i className="fas fa-external-link-alt mr-2"></i>
-                    Open in Google Maps
-                  </Button>
-                </div>
-
-                {/* Map Preview Placeholder */}
-                <div className="mt-4 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-64 flex items-center justify-center">
+                {/* Right - Map Display */}
+                <div className="bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-[600px] flex items-center justify-center">
                   <div className="text-center text-gray-500">
-                    <i className="fas fa-map text-5xl mb-3"></i>
-                    <p className="text-sm">Map will appear here after calculation</p>
+                    <i className="fas fa-map text-6xl mb-4"></i>
+                    <p className="text-lg font-semibold mb-2">Interactive Map</p>
+                    <p className="text-sm">Route visualization will appear here</p>
+                    <p className="text-xs mt-2">Enter locations and click Calculate</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </CardContent>
+          </Card>
 
             {/* Unit Converters */}
             <div className="space-y-6">
