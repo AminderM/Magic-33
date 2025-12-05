@@ -673,55 +673,16 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Freight Calculator Tab */}
         <TabsContent value="calculator" className="mt-6">
-          {/* Top Section - Distance Calculator & Map Side by Side */}
           <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <i className="fas fa-map-marked-alt text-blue-600"></i>
-                Distance Calculator & Route Mapper
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Left - Calculator Inputs */}
-                <div className="space-y-4">
-                  <div>
-                    <Label>Pickup Location</Label>
-                    <Input 
-                      placeholder="Enter pickup address or city, state"
-                      className="mb-2"
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label>Add Stops (Optional)</Label>
-                    <div className="space-y-2">
-                      <Input 
-                        placeholder="Stop 1: City, State"
-                        className="mb-2"
-                      />
-                      <Button variant="outline" size="sm" className="w-full">
-                        <i className="fas fa-plus mr-2"></i>
-                        Add Another Stop
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label>Destination</Label>
-                    <Input 
-                      placeholder="Enter destination address or city, state"
-                    />
-                  </div>
-
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    <i className="fas fa-route mr-2"></i>
-                    Calculate Distance & View Map
-                  </Button>
-
-                  {/* Quote Calculator */}
-                  <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                    <h4 className="font-semibold text-green-900 mb-3">Freight Quote Calculator</h4>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                {/* Left - Freight Quote Calculator (2/5 width) */}
+                <div className="lg:col-span-2 space-y-4">
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <h4 className="font-semibold text-green-900 mb-4 flex items-center gap-2">
+                      <i className="fas fa-calculator"></i>
+                      Freight Quote Calculator
+                    </h4>
                     <div className="space-y-3">
                       <div>
                         <Label className="text-xs text-gray-600">Rate per Mile ($)</Label>
@@ -729,6 +690,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           type="number" 
                           placeholder="0.00"
                           step="0.01"
+                          value={quoteData.ratePerMile || ''}
+                          onChange={(e) => setQuoteData({...quoteData, ratePerMile: parseFloat(e.target.value) || 0})}
                           className="mt-1"
                         />
                       </div>
@@ -738,6 +701,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           type="number" 
                           placeholder="0.00"
                           step="0.01"
+                          value={quoteData.fuelSurcharge || ''}
+                          onChange={(e) => setQuoteData({...quoteData, fuelSurcharge: parseFloat(e.target.value) || 0})}
                           className="mt-1"
                         />
                       </div>
@@ -747,6 +712,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           type="number" 
                           placeholder="0.00"
                           step="0.01"
+                          value={quoteData.ratePerStop || ''}
+                          onChange={(e) => setQuoteData({...quoteData, ratePerStop: parseFloat(e.target.value) || 0})}
                           className="mt-1"
                         />
                       </div>
@@ -756,6 +723,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           type="number" 
                           placeholder="0.00"
                           step="0.01"
+                          value={quoteData.accessorialCharges || ''}
+                          onChange={(e) => setQuoteData({...quoteData, accessorialCharges: parseFloat(e.target.value) || 0})}
                           className="mt-1"
                         />
                       </div>
@@ -765,31 +734,91 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           type="number" 
                           placeholder="0"
                           step="1"
+                          value={quoteData.margin || ''}
+                          onChange={(e) => setQuoteData({...quoteData, margin: parseFloat(e.target.value) || 0})}
                           className="mt-1"
                         />
                       </div>
                       <div className="pt-3 border-t border-green-300">
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center mb-3">
                           <span className="font-semibold text-green-900">Total Quote:</span>
-                          <span className="text-2xl font-bold text-green-700">$0.00</span>
+                          <span className="text-2xl font-bold text-green-700">${calculateTotalQuote()}</span>
                         </div>
+                        <Button 
+                          onClick={pushToRateQuotes}
+                          className="w-full bg-blue-600 hover:bg-blue-700"
+                        >
+                          <i className="fas fa-arrow-right mr-2"></i>
+                          Push to Rate Quotes
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Right - Map Display */}
-                <div className="space-y-3">
-                  <Button variant="outline" size="sm" className="w-full">
-                    <i className="fas fa-external-link-alt mr-2"></i>
-                    Open in Google Maps
-                  </Button>
-                  <div className="bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-[560px] flex items-center justify-center">
-                    <div className="text-center text-gray-500">
-                      <i className="fas fa-map text-6xl mb-4"></i>
-                      <p className="text-lg font-semibold mb-2">Interactive Map</p>
-                      <p className="text-sm">Route visualization will appear here</p>
-                      <p className="text-xs mt-2">Enter locations and click Calculate</p>
+                {/* Right - Map & Distance Calculator (3/5 width) */}
+                <div className="lg:col-span-3 space-y-4">
+                  {/* Map Display */}
+                  <div className="space-y-3">
+                    <Button variant="outline" size="sm" className="w-full">
+                      <i className="fas fa-external-link-alt mr-2"></i>
+                      Open in Google Maps
+                    </Button>
+                    <div className="bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-[400px] flex items-center justify-center">
+                      <div className="text-center text-gray-500">
+                        <i className="fas fa-map text-6xl mb-4"></i>
+                        <p className="text-lg font-semibold mb-2">Interactive Map</p>
+                        <p className="text-sm">Route visualization will appear here</p>
+                        <p className="text-xs mt-2">Enter locations and click Calculate</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Distance Calculator Inputs */}
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-semibold text-blue-900 mb-4 flex items-center gap-2">
+                      <i className="fas fa-map-marked-alt"></i>
+                      Distance Calculator & Route Mapper
+                    </h4>
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-xs text-gray-600">Pickup Location</Label>
+                        <Input 
+                          placeholder="Enter pickup address or city, state"
+                          value={quoteData.pickupLocation}
+                          onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs text-gray-600">Add Stops (Optional)</Label>
+                        <div className="space-y-2">
+                          <Input 
+                            placeholder="Stop 1: City, State"
+                            className="text-sm"
+                          />
+                          <Button variant="outline" size="sm" className="w-full">
+                            <i className="fas fa-plus mr-2"></i>
+                            Add Another Stop
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-xs text-gray-600">Destination</Label>
+                        <Input 
+                          placeholder="Enter destination address or city, state"
+                          value={quoteData.destination}
+                          onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                        <i className="fas fa-route mr-2"></i>
+                        Calculate Distance & View Map
+                      </Button>
                     </div>
                   </div>
                 </div>
