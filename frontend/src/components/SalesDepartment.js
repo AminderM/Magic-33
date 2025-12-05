@@ -168,6 +168,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [leads, setLeads] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAddLeadModal, setShowAddLeadModal] = useState(false);
   const [newLead, setNewLead] = useState({
@@ -177,6 +178,19 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     phone: '',
     source: 'website',
     status: 'new'
+  });
+  
+  // Freight Calculator state
+  const [quoteData, setQuoteData] = useState({
+    pickupLocation: '',
+    destination: '',
+    stops: [],
+    distance: 0,
+    ratePerMile: 0,
+    fuelSurcharge: 0,
+    ratePerStop: 0,
+    accessorialCharges: 0,
+    margin: 0
   });
 
   useEffect(() => {
