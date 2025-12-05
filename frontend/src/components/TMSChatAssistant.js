@@ -245,7 +245,7 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t bg-white">
+      <div className="p-4 border-t border-gray-200 bg-white">
         <div className="flex gap-2">
           <Input
             value={message}
@@ -253,12 +253,12 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
             onKeyPress={handleKeyPress}
             placeholder={`Ask about ${departmentMap[activeDepartment]?.label}...`}
             disabled={isLoading}
-            className="flex-1"
+            className="flex-1 border-gray-200 rounded-lg focus:border-gray-400"
           />
           <Button
             onClick={handleSendMessage}
             disabled={!message.trim() || isLoading}
-            className="bg-blue-600 hover:bg-blue-700 px-4"
+            className="bg-gray-900 hover:bg-gray-800 px-4 rounded-lg"
           >
             <Send className="w-4 h-4" />
           </Button>
