@@ -777,17 +777,19 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 {/* Right - Map & Distance Calculator (3/5 width) */}
                 <div className="lg:col-span-3 space-y-4">
                   {/* Map Display */}
-                  <div className="space-y-3">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <i className="fas fa-external-link-alt mr-2"></i>
-                      Open in Google Maps
-                    </Button>
-                    <div className="bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-[400px] flex items-center justify-center">
-                      <div className="text-center text-gray-500">
-                        <i className="fas fa-map text-6xl mb-4"></i>
-                        <p className="text-lg font-semibold mb-2">Interactive Map</p>
-                        <p className="text-sm">Route visualization will appear here</p>
-                        <p className="text-xs mt-2">Enter locations and click Calculate</p>
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                      <h4 className="text-sm font-semibold text-gray-800">Route Preview</h4>
+                      <Button variant="ghost" size="sm" className="text-xs text-gray-600 hover:text-gray-900">
+                        <i className="fas fa-external-link-alt mr-1.5"></i>
+                        Open in Maps
+                      </Button>
+                    </div>
+                    <div className="bg-gray-50 h-[400px] flex items-center justify-center">
+                      <div className="text-center text-gray-400">
+                        <i className="fas fa-map text-5xl mb-3 opacity-50"></i>
+                        <p className="text-sm font-medium text-gray-600 mb-1">No route calculated</p>
+                        <p className="text-xs text-gray-500">Enter locations below to view route</p>
                       </div>
                     </div>
                   </div>
