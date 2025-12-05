@@ -181,17 +181,17 @@ const Dashboard = () => {
         </div>
 
         {/* Middle Panel (60%) - Main Content */}
-        <div className="w-3/5 h-full overflow-y-auto bg-gray-50">
+        <div className="w-3/5 h-full overflow-y-auto bg-gray-50 p-6">
           {/* Department-Specific Views */}
           {activeDepartment === 'sales' ? (
             <SalesDepartment BACKEND_URL={BACKEND_URL} fetchWithAuth={fetchWithAuth} />
           ) : (
-            <div className="p-6">
+            <div>
               {/* Main Content Tabs */}
-              <Card className="dashboard-card">
+              <Card className="bg-white rounded-2xl shadow-sm border border-gray-100">
                 <CardContent className="p-6">
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'}`}>
+                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-gray-100 p-1 rounded-xl`}>
                     {showAdminTabs && (
                       <TabsTrigger value="fleet" data-testid="fleet-tab">
                         <i className="fas fa-tachometer-alt mr-2"></i>
