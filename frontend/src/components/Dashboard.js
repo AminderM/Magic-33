@@ -92,14 +92,17 @@ const Dashboard = () => {
       {/* Header */}
       <div className="bg-white border-b border-gray-200 flex-shrink-0 shadow-sm">
         <div className="container mx-auto px-6">
-          <div className="flex justify-between items-center py-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900" data-testid="dashboard-title">
-                Welcome, {user?.full_name}
-              </h1>
-              <p className="mt-0.5 text-sm text-gray-500">
-                {(user?.role || '').replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} Dashboard
-              </p>
+          <div className="flex justify-between items-center py-3">
+            <div className="flex items-center gap-6">
+              <img src="/company-logo.jpg" alt="Integrated Supply Chain Solutions" className="h-12 w-auto" />
+              <div>
+                <h1 className="text-xl font-bold text-gray-900" data-testid="dashboard-title">
+                  Welcome, {user?.full_name}
+                </h1>
+                <p className="mt-0.5 text-xs text-gray-500">
+                  {(user?.role || '').replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} Dashboard
+                </p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm">
