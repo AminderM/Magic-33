@@ -686,7 +686,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         Quote Calculator
                       </h4>
                     </div>
-                    <div className="p-5 space-y-4 flex-1 overflow-y-auto">
+                    <div className="p-5 space-y-3 flex-1 overflow-hidden">
                       <div>
                         <Label className="text-xs font-medium text-gray-600 mb-2 block">Rate per Mile</Label>
                         <div className="relative">
