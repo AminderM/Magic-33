@@ -680,15 +680,15 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 {/* Left - Freight Quote Calculator (2/5 width) */}
                 <div className="lg:col-span-2 space-y-4">
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col h-[500px]">
-                    <div className="px-5 py-4 border-b border-gray-100 flex-shrink-0">
+                    <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                         <i className="fas fa-dollar-sign text-gray-500"></i>
                         Quote Calculator
                       </h4>
                     </div>
-                    <div className="p-5 space-y-3 flex-1 overflow-hidden">
+                    <div className="p-4 space-y-3 flex-1 overflow-y-auto">
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-2 block">Rate per Mile</Label>
+                        <Label className="text-xs font-medium text-gray-600 mb-1.5 block">Rate per Mile</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
                           <Input 
@@ -697,12 +697,12 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             step="0.01"
                             value={quoteData.ratePerMile || ''}
                             onChange={(e) => setQuoteData({...quoteData, ratePerMile: parseFloat(e.target.value) || 0})}
-                            className="pl-7 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-9 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-2 block">Fuel Surcharge</Label>
+                        <Label className="text-xs font-medium text-gray-600 mb-1.5 block">Fuel Surcharge</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
                           <Input 
@@ -711,12 +711,12 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             step="0.01"
                             value={quoteData.fuelSurcharge || ''}
                             onChange={(e) => setQuoteData({...quoteData, fuelSurcharge: parseFloat(e.target.value) || 0})}
-                            className="pl-7 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-9 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-2 block">Rate per Stop</Label>
+                        <Label className="text-xs font-medium text-gray-600 mb-1.5 block">Rate per Stop</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
                           <Input 
@@ -725,12 +725,12 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             step="0.01"
                             value={quoteData.ratePerStop || ''}
                             onChange={(e) => setQuoteData({...quoteData, ratePerStop: parseFloat(e.target.value) || 0})}
-                            className="pl-7 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-9 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-2 block">Accessorial Charges</Label>
+                        <Label className="text-xs font-medium text-gray-600 mb-1.5 block">Accessorial Charges</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
                           <Input 
@@ -739,12 +739,12 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             step="0.01"
                             value={quoteData.accessorialCharges || ''}
                             onChange={(e) => setQuoteData({...quoteData, accessorialCharges: parseFloat(e.target.value) || 0})}
-                            className="pl-7 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-9 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-2 block">Margin</Label>
+                        <Label className="text-xs font-medium text-gray-600 mb-1.5 block">Margin</Label>
                         <div className="relative">
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
                           <Input 
@@ -753,19 +753,19 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             step="1"
                             value={quoteData.margin || ''}
                             onChange={(e) => setQuoteData({...quoteData, margin: parseFloat(e.target.value) || 0})}
-                            className="pr-8 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pr-8 h-9 border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       
-                      <div className="pt-4 mt-4 border-t border-gray-100">
-                        <div className="flex justify-between items-center mb-4">
-                          <span className="text-sm font-medium text-gray-600">Total Quote</span>
-                          <span className="text-2xl font-bold text-gray-900">${calculateTotalQuote()}</span>
+                      <div className="pt-3 mt-3 border-t border-gray-100">
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="text-xs font-medium text-gray-600">Total Quote</span>
+                          <span className="text-xl font-bold text-gray-900">${calculateTotalQuote()}</span>
                         </div>
                         <Button 
                           onClick={pushToRateQuotes}
-                          className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-11"
+                          className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-9"
                         >
                           <i className="fas fa-arrow-right mr-2"></i>
                           Push to Rate Quotes
