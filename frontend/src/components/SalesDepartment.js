@@ -673,37 +673,78 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     Calculate Distance & View Map
                   </Button>
 
-                  {/* Results Display */}
-                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-3">Route Summary</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Total Distance:</span>
-                        <span className="font-semibold">--- miles</span>
+                  {/* Quote Calculator */}
+                  <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                    <h4 className="font-semibold text-green-900 mb-3">Freight Quote Calculator</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-xs text-gray-600">Rate per Mile ($)</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="0.00"
+                          step="0.01"
+                          className="mt-1"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Estimated Time:</span>
-                        <span className="font-semibold">--- hours</span>
+                      <div>
+                        <Label className="text-xs text-gray-600">Fuel Surcharge ($)</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="0.00"
+                          step="0.01"
+                          className="mt-1"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Number of Stops:</span>
-                        <span className="font-semibold">---</span>
+                      <div>
+                        <Label className="text-xs text-gray-600">Rate per Stop ($)</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="0.00"
+                          step="0.01"
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-600">Accessorial Charges ($)</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="0.00"
+                          step="0.01"
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-600">Margin (%)</Label>
+                        <Input 
+                          type="number" 
+                          placeholder="0"
+                          step="1"
+                          className="mt-1"
+                        />
+                      </div>
+                      <div className="pt-3 border-t border-green-300">
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold text-green-900">Total Quote:</span>
+                          <span className="text-2xl font-bold text-green-700">$0.00</span>
+                        </div>
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full mt-3" size="sm">
-                      <i className="fas fa-external-link-alt mr-2"></i>
-                      Open in Google Maps
-                    </Button>
                   </div>
                 </div>
 
                 {/* Right - Map Display */}
-                <div className="bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-[600px] flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <i className="fas fa-map text-6xl mb-4"></i>
-                    <p className="text-lg font-semibold mb-2">Interactive Map</p>
-                    <p className="text-sm">Route visualization will appear here</p>
-                    <p className="text-xs mt-2">Enter locations and click Calculate</p>
+                <div className="space-y-3">
+                  <Button variant="outline" size="sm" className="w-full">
+                    <i className="fas fa-external-link-alt mr-2"></i>
+                    Open in Google Maps
+                  </Button>
+                  <div className="bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 h-[560px] flex items-center justify-center">
+                    <div className="text-center text-gray-500">
+                      <i className="fas fa-map text-6xl mb-4"></i>
+                      <p className="text-lg font-semibold mb-2">Interactive Map</p>
+                      <p className="text-sm">Route visualization will appear here</p>
+                      <p className="text-xs mt-2">Enter locations and click Calculate</p>
+                    </div>
                   </div>
                 </div>
               </div>
