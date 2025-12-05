@@ -943,6 +943,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
 
       {/* Add Lead Modal */}
       {showAddLeadModal && (
