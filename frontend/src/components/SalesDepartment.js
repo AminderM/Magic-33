@@ -480,13 +480,13 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         </TabsList>
 
         {/* Sales Pipeline Tab */}
-        <TabsContent value="pipeline" className="mt-6">
+        <TabsContent value="pipeline" className="mt-6 pb-6">
           <div className="grid gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Active Opportunities</CardTitle>
+            <Card className="bg-white rounded-2xl shadow-sm border border-gray-100">
+              <CardHeader className="border-b border-gray-100 px-6 py-4">
+                <CardTitle className="text-base font-semibold text-gray-900">Active Opportunities</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 {opportunities.length === 0 ? (
                   <div className="text-center py-12">
                     <i className="fas fa-handshake text-gray-400 text-5xl mb-4"></i>
