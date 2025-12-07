@@ -94,15 +94,15 @@ const UnifiedConverter = () => {
   };
 
   return (
-    <Card className="mt-6">
-      <CardHeader>
+    <Card className="h-[240px] flex flex-col">
+      <CardHeader className="flex-shrink-0 px-4 py-2.5 border-b border-gray-100">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <i className={`fas ${config.icon} text-${config.color}-600`}></i>
+          <CardTitle className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+            <i className={`fas ${config.icon} text-gray-500`}></i>
             Unit Converter
           </CardTitle>
           <Select value={conversionType} onValueChange={handleTypeChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[140px] h-8 text-xs">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -113,7 +113,7 @@ const UnifiedConverter = () => {
           </Select>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2 p-4 flex-1 overflow-y-auto">
         <div>
           <Label>{config.fromUnit}</Label>
           <Input 
