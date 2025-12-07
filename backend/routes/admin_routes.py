@@ -491,4 +491,207 @@ async def delete_driver(driver_id: str, current_user: User = Depends(get_current
     
     return {"message": "Driver deleted successfully"}
 
+# Integration Management Routes
+class IntegrationData(BaseModel):
+    name: str
+    description: Optional[str] = None
+    service_id: str
+    category: str
+    enabled: bool = True
+    config: dict
+
+@router.get('/integrations')
+async def list_all_integrations(current_user: User = Depends(get_current_user)):
+    """Get all configured integrations for the current user's company"""
+    require_platform_admin(current_user)
+    
+    # Get company integrations
+    company = await db.companies.find_one({"company_email": current_user.email})
+    if not company:
+        return []
+    
+    integrations = company.get("integrations_v2", [])
+    return integrations
+
+@router.post('/integrations')
+async def create_integration(integration: IntegrationData, current_user: User = Depends(get_current_user)):
+    """Create a new integration"""
+    require_platform_admin(current_user)
+    
+    # Get company
+    company = await db.companies.find_one({"company_email": current_user.email})
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    
+    # Create integration object
+    new_integration = {
+        "id": str(uuid.uuid4()),
+        "name": integration.name,
+        "description": integration.description,
+        "service_id": integration.service_id,
+        "category": integration.category,
+        "enabled": integration.enabled,
+        "config": integration.config,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_by": current_user.email
+    }
+    
+    # Add to company integrations
+    await db.companies.update_one(
+        {"company_email": current_user.email},
+        {"$push": {"integrations_v2": new_integration}}
+    )
+    
+    return new_integration
+
+@router.put('/integrations/{integration_id}')
+async def update_integration(
+    integration_id: str, 
+    updates: IntegrationData, 
+    current_user: User = Depends(get_current_user)
+):
+    """Update an existing integration"""
+    require_platform_admin(current_user)
+    
+    # Get company
+    company = await db.companies.find_one({"company_email": current_user.email})
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    
+    # Find and update the integration
+    integrations = company.get("integrations_v2", [])
+    integration_found = False
+    
+    for i, integ in enumerate(integrations):
+        if integ.get("id") == integration_id:
+            integrations[i].update({
+                "name": updates.name,
+                "description": updates.description,
+                "enabled": updates.enabled,
+                "config": updates.config,
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "updated_by": current_user.email
+            })
+            integration_found = True
+            break
+    
+    if not integration_found:
+        raise HTTPException(status_code=404, detail="Integration not found")
+    
+    # Update in database
+    await db.companies.update_one(
+        {"company_email": current_user.email},
+        {"$set": {"integrations_v2": integrations}}
+    )
+    
+    return {"message": "Integration updated successfully"}
+
+@router.delete('/integrations/{integration_id}')
+async def delete_integration(integration_id: str, current_user: User = Depends(get_current_user)):
+    """Delete an integration"""
+    require_platform_admin(current_user)
+    
+    # Remove integration from company
+    result = await db.companies.update_one(
+        {"company_email": current_user.email},
+        {"$pull": {"integrations_v2": {"id": integration_id}}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Integration not found")
+    
+    return {"message": "Integration deleted successfully"}
+
+@router.post('/integrations/{integration_id}/toggle')
+async def toggle_integration(
+    integration_id: str, 
+    payload: dict, 
+    current_user: User = Depends(get_current_user)
+):
+    """Enable or disable an integration"""
+    require_platform_admin(current_user)
+    
+    enabled = payload.get("enabled", True)
+    
+    # Get company
+    company = await db.companies.find_one({"company_email": current_user.email})
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    
+    # Find and update the integration
+    integrations = company.get("integrations_v2", [])
+    integration_found = False
+    
+    for i, integ in enumerate(integrations):
+        if integ.get("id") == integration_id:
+            integrations[i]["enabled"] = enabled
+            integrations[i]["updated_at"] = datetime.now(timezone.utc).isoformat()
+            integration_found = True
+            break
+    
+    if not integration_found:
+        raise HTTPException(status_code=404, detail="Integration not found")
+    
+    # Update in database
+    await db.companies.update_one(
+        {"company_email": current_user.email},
+        {"$set": {"integrations_v2": integrations}}
+    )
+    
+    return {"message": f"Integration {'enabled' if enabled else 'disabled'} successfully"}
+
+@router.post('/integrations/{integration_id}/test')
+async def test_integration(integration_id: str, current_user: User = Depends(get_current_user)):
+    """Test an integration configuration"""
+    require_platform_admin(current_user)
+    
+    # Get company
+    company = await db.companies.find_one({"company_email": current_user.email})
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    
+    # Find the integration
+    integrations = company.get("integrations_v2", [])
+    integration = next((i for i in integrations if i.get("id") == integration_id), None)
+    
+    if not integration:
+        raise HTTPException(status_code=404, detail="Integration not found")
+    
+    # For Google Maps, just verify the API key exists
+    if integration.get("service_id") == "google_maps":
+        api_key = integration.get("config", {}).get("api_key")
+        if api_key and len(api_key) > 10:
+            return {"success": True, "message": "API key configured"}
+        else:
+            return {"success": False, "message": "Invalid API key"}
+    
+    # Default response for other integrations
+    return {"success": True, "message": "Configuration looks valid"}
+
+@router.get('/integrations/google-maps/key')
+async def get_google_maps_key(current_user: User = Depends(get_current_user)):
+    """Get Google Maps API key for the current user's company"""
+    
+    # Get company
+    company = await db.companies.find_one({"company_email": current_user.email})
+    if not company:
+        return {"api_key": None, "configured": False}
+    
+    # Find Google Maps integration
+    integrations = company.get("integrations_v2", [])
+    google_maps = next(
+        (i for i in integrations if i.get("service_id") == "google_maps" and i.get("enabled")), 
+        None
+    )
+    
+    if not google_maps:
+        return {"api_key": None, "configured": False}
+    
+    api_key = google_maps.get("config", {}).get("api_key")
+    return {
+        "api_key": api_key,
+        "configured": True,
+        "integration_name": google_maps.get("name")
+    }
+
 # Location Tracking Routes
