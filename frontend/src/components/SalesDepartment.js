@@ -809,41 +809,39 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         Route Calculator
                       </h4>
                     </div>
-                    <div className="p-4 flex-1 flex flex-col justify-between">
-                      <div className="space-y-2.5">
-                        <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                            <i className="fas fa-map-marker-alt text-green-500"></i>
-                          </div>
-                          <Input 
-                            placeholder="Pickup location"
-                            value={quoteData.pickupLocation}
-                            onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
-                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
-                          />
+                    <div className="p-4 flex-1 flex flex-col justify-evenly">
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <i className="fas fa-map-marker-alt text-green-500"></i>
                         </div>
-                        
-                        <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                            <i className="fas fa-map-pin text-gray-400"></i>
-                          </div>
-                          <Input 
-                            placeholder="Add stop (optional)"
-                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
-                          />
+                        <Input 
+                          placeholder="Pickup location"
+                          value={quoteData.pickupLocation}
+                          onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
+                          className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                        />
+                      </div>
+                      
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <i className="fas fa-map-pin text-gray-400"></i>
                         </div>
+                        <Input 
+                          placeholder="Add stop (optional)"
+                          className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
+                        />
+                      </div>
 
-                        <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                            <i className="fas fa-map-marker-alt text-red-500"></i>
-                          </div>
-                          <Input 
-                            placeholder="Destination"
-                            value={quoteData.destination}
-                            onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
-                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
-                          />
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <i className="fas fa-map-marker-alt text-red-500"></i>
                         </div>
+                        <Input 
+                          placeholder="Destination"
+                          value={quoteData.destination}
+                          onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
+                          className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                        />
                       </div>
 
                       <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-10">
