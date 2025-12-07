@@ -115,49 +115,41 @@ const UnifiedConverter = () => {
       </CardHeader>
       <CardContent className="space-y-2 p-4 flex-1 overflow-y-auto">
         <div>
-          <Label>{config.fromUnit}</Label>
+          <Label className="text-xs font-medium text-gray-600 mb-1 block">{config.fromUnit}</Label>
           <Input 
             type="number"
             placeholder={`Enter ${config.fromUnit.toLowerCase()}`}
             value={inputValue}
             onChange={(e) => handleInputChange(e.target.value, true)}
+            className="h-9 border-gray-200 rounded-lg"
           />
         </div>
 
-        <div className="text-center">
-          <i className="fas fa-exchange-alt text-gray-400"></i>
+        <div className="text-center py-1">
+          <i className="fas fa-exchange-alt text-gray-400 text-sm"></i>
         </div>
 
         <div>
-          <Label>{config.toUnit}</Label>
+          <Label className="text-xs font-medium text-gray-600 mb-1 block">{config.toUnit}</Label>
           <Input 
             type="number"
             placeholder={`Enter ${config.toUnit.toLowerCase()}`}
             value={outputValue}
             onChange={(e) => handleInputChange(e.target.value, false)}
+            className="h-9 border-gray-200 rounded-lg"
           />
         </div>
 
-        <div className={`p-3 bg-${config.color}-50 rounded-lg border border-${config.color}-200`}>
-          <p className="text-xs text-gray-600 mb-2">Quick Reference:</p>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            {config.quickRef.map((ref, idx) => (
+        <div className="p-2 bg-gray-50 rounded-lg border border-gray-200">
+          <p className="text-xs text-gray-600 mb-1">Quick Reference:</p>
+          <div className="grid grid-cols-2 gap-1 text-xs">
+            {config.quickRef.slice(0, 2).map((ref, idx) => (
               <div key={idx}>
                 <span className="font-semibold">{ref.label}:</span> {ref.value}
               </div>
             ))}
           </div>
         </div>
-
-        {conversionType === 'temperature' && (
-          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-xs font-semibold text-blue-900 mb-1">Formulas:</p>
-            <div className="text-xs text-gray-700 space-y-1">
-              <div>°F = (°C × 9/5) + 32</div>
-              <div>°C = (°F - 32) × 5/9</div>
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );
