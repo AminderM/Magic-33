@@ -794,14 +794,14 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   </div>
 
                   {/* Bottom Row - Unit Converter and Route Calculator */}
-                  <div className="flex gap-4">
-                    {/* Unit Converter - Takes remaining space */}
+                  <div className="flex gap-4 items-start">
+                    {/* Unit Converter - Equal width with Route Calculator */}
                     <div className="flex-1">
                       <UnifiedConverter />
                     </div>
 
                     {/* Distance Calculator Inputs - Moved to right */}
-                    <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[240px] w-[280px] flex flex-col overflow-hidden flex-shrink-0">
+                    <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[240px] flex-1 flex flex-col overflow-hidden">
                       <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
                         <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                           <i className="fas fa-route text-blue-500"></i>
