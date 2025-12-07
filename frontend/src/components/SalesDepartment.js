@@ -795,8 +795,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
                   {/* Bottom Row - Unit Converter and Route Calculator */}
                   <div className="flex gap-4 items-start justify-between">
-                    {/* Unit Converter - Wider to cover empty space */}
-                    <div className="flex-[1.4]">
+                    {/* Unit Converter - Increased width by 15% */}
+                    <div className="flex-[2.75]">
                       <UnifiedConverter />
                     </div>
 
