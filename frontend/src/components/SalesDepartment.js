@@ -862,9 +862,6 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               </div>
             </CardContent>
           </Card>
-
-          {/* Unified Unit Converter */}
-          <UnifiedConverter />
         </TabsContent>
 
         {/* Rate Quotes Tab */}
