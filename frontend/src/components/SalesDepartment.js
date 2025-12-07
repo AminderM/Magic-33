@@ -802,7 +802,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   </div>
 
                   {/* Distance Calculator Inputs */}
-                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[240px] flex flex-col overflow-hidden">
+                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[240px] w-1/2 flex flex-col overflow-hidden">
                     <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                         <i className="fas fa-route text-blue-500"></i>
