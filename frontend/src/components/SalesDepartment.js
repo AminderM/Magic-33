@@ -680,14 +680,14 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 {/* Left - Freight Quote Calculator (2/5 width) */}
                 <div className="lg:col-span-2 space-y-4">
                   {/* Quote Calculator */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-                    <div className="px-4 py-2.5 border-b border-gray-100">
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-[400px] flex flex-col">
+                    <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                         <i className="fas fa-dollar-sign text-gray-500"></i>
                         Quote Calculator
                       </h4>
                     </div>
-                    <div className="p-4 space-y-2">
+                    <div className="p-4 space-y-2 flex-1 overflow-y-auto">
                       <div>
                         <Label className="text-xs font-medium text-gray-600 mb-1 block">Rate per Mile</Label>
                         <div className="relative">
