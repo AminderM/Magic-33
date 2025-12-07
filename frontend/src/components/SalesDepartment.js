@@ -801,53 +801,61 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     </div>
                   </div>
 
-                  {/* Distance Calculator Inputs */}
-                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[240px] w-1/2 flex flex-col overflow-hidden">
-                    <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
-                      <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                        <i className="fas fa-route text-blue-500"></i>
-                        Route Calculator
-                      </h4>
+                  {/* Bottom Row - Unit Converter and Route Calculator */}
+                  <div className="flex gap-4">
+                    {/* Unit Converter - Takes remaining space */}
+                    <div className="flex-1">
+                      <UnifiedConverter />
                     </div>
-                    <div className="p-4 flex-1 flex flex-col justify-evenly">
-                      <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                          <i className="fas fa-map-marker-alt text-green-500"></i>
-                        </div>
-                        <Input 
-                          placeholder="Pickup location"
-                          value={quoteData.pickupLocation}
-                          onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
-                          className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
-                        />
-                      </div>
-                      
-                      <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                          <i className="fas fa-map-pin text-gray-400"></i>
-                        </div>
-                        <Input 
-                          placeholder="Add stop (optional)"
-                          className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
-                        />
-                      </div>
 
-                      <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                          <i className="fas fa-map-marker-alt text-red-500"></i>
-                        </div>
-                        <Input 
-                          placeholder="Destination"
-                          value={quoteData.destination}
-                          onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
-                          className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
-                        />
+                    {/* Distance Calculator Inputs - Moved to right */}
+                    <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[240px] w-[280px] flex flex-col overflow-hidden flex-shrink-0">
+                      <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
+                        <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                          <i className="fas fa-route text-blue-500"></i>
+                          Route Calculator
+                        </h4>
                       </div>
+                      <div className="p-4 flex-1 flex flex-col justify-evenly">
+                        <div className="relative">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <i className="fas fa-map-marker-alt text-green-500"></i>
+                          </div>
+                          <Input 
+                            placeholder="Pickup location"
+                            value={quoteData.pickupLocation}
+                            onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
+                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                          />
+                        </div>
+                        
+                        <div className="relative">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <i className="fas fa-map-pin text-gray-400"></i>
+                          </div>
+                          <Input 
+                            placeholder="Add stop (optional)"
+                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
+                          />
+                        </div>
 
-                      <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-10">
-                        <i className="fas fa-calculator mr-2"></i>
-                        Calculate
-                      </Button>
+                        <div className="relative">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            <i className="fas fa-map-marker-alt text-red-500"></i>
+                          </div>
+                          <Input 
+                            placeholder="Destination"
+                            value={quoteData.destination}
+                            onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
+                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                          />
+                        </div>
+
+                        <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-10">
+                          <i className="fas fa-calculator mr-2"></i>
+                          Calculate
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
