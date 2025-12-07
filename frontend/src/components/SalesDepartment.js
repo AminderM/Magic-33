@@ -802,14 +802,14 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   </div>
 
                   {/* Distance Calculator Inputs */}
-                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm flex flex-col">
-                    <div className="px-4 py-3 border-b border-gray-100">
+                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[240px] flex flex-col">
+                    <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                         <i className="fas fa-route text-blue-500"></i>
                         Route Calculator
                       </h4>
                     </div>
-                    <div className="p-4 space-y-3">
+                    <div className="p-4 space-y-3 flex-1 flex flex-col">
                       <div className="relative">
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                           <i className="fas fa-map-marker-alt text-green-500"></i>
@@ -844,7 +844,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         />
                       </div>
 
-                      <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-11">
+                      <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-11 mt-auto">
                         <i className="fas fa-calculator mr-2"></i>
                         Calculate
                       </Button>
