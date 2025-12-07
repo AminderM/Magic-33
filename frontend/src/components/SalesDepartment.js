@@ -848,25 +848,6 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         <i className="fas fa-calculator mr-2"></i>
                         Calculate Route
                       </Button>
-
-                      {/* Total Rate Card - Integrated */}
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <div className="bg-gradient-to-br from-[#F7B501] to-[#e5a701] rounded-xl shadow-sm p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-semibold text-white/90">Total Quote</h4>
-                            <i className="fas fa-file-invoice-dollar text-white/60"></i>
-                          </div>
-                          <div className="text-3xl font-bold text-white mb-1">${calculateTotalQuote()}</div>
-                          <p className="text-xs text-white/80 mb-3">Generated from calculator</p>
-                          <Button 
-                            onClick={pushToRateQuotes}
-                            className="w-full bg-white hover:bg-gray-50 text-[#F7B501] font-semibold rounded-lg shadow-sm h-9"
-                          >
-                            <i className="fas fa-arrow-right mr-2"></i>
-                            Push to Rate Quotes
-                          </Button>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
