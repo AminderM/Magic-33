@@ -784,7 +784,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 {/* Right - Map & Distance Calculator (3/5 width) */}
                 <div className="lg:col-span-3 space-y-4">
                   {/* Map Display */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-[500px] flex flex-col">
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-[280px] flex flex-col">
                     <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800">Route Preview</h4>
                       <Button variant="ghost" size="sm" className="text-xs text-gray-600 hover:text-gray-900">
@@ -794,22 +794,22 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     </div>
                     <div className="bg-gray-50 flex-1 flex items-center justify-center">
                       <div className="text-center text-gray-400">
-                        <i className="fas fa-map text-5xl mb-3 opacity-50"></i>
+                        <i className="fas fa-map text-4xl mb-2 opacity-50"></i>
                         <p className="text-sm font-medium text-gray-600 mb-1">No route calculated</p>
-                        <p className="text-xs text-gray-500">Enter locations below to view route</p>
+                        <p className="text-xs text-gray-500">Enter locations below</p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Distance Calculator Inputs - Sleek Design */}
-                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm">
+                  {/* Distance Calculator Inputs - Aligned with Map */}
+                  <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[280px] flex flex-col">
                     <div className="px-4 py-3 border-b border-gray-100">
                       <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                         <i className="fas fa-route text-blue-500"></i>
                         Route Calculator
                       </h4>
                     </div>
-                    <div className="p-4 space-y-3">
+                    <div className="p-4 space-y-3 flex-1">
                       <div className="relative">
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                           <i className="fas fa-map-marker-alt text-green-500"></i>
@@ -818,7 +818,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           placeholder="Pickup location"
                           value={quoteData.pickupLocation}
                           onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
-                          className="pl-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                          className="pl-10 h-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                         />
                       </div>
                       
@@ -828,7 +828,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
                         <Input 
                           placeholder="Add stop (optional)"
-                          className="pl-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
+                          className="pl-10 h-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
                         />
                       </div>
 
@@ -840,13 +840,13 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           placeholder="Destination"
                           value={quoteData.destination}
                           onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
-                          className="pl-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                          className="pl-10 h-10 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                         />
                       </div>
 
-                      <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-11">
+                      <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-11 mt-auto">
                         <i className="fas fa-calculator mr-2"></i>
-                        Calculate Route
+                        Calculate
                       </Button>
                     </div>
                   </div>
