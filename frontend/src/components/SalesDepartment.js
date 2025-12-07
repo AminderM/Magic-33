@@ -762,18 +762,18 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   </div>
 
                   {/* Total Rate Card - Below Quote Calculator */}
-                  <div className="bg-gradient-to-br from-[#F7B501] to-[#e5a701] rounded-2xl shadow-md border border-[#e5a701] p-5 flex flex-col justify-between">
+                  <div className="bg-gradient-to-br from-[#F7B501] to-[#e5a701] rounded-2xl shadow-md border border-[#e5a701] p-5 h-[280px] flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-semibold text-white/90">Total Quote</h4>
                       <i className="fas fa-file-invoice-dollar text-white/60 text-lg"></i>
                     </div>
-                    <div className="my-4">
-                      <div className="text-4xl font-bold text-white mb-1">${calculateTotalQuote()}</div>
-                      <p className="text-xs text-white/80">Generated from calculator inputs</p>
+                    <div className="flex-1 flex flex-col justify-center">
+                      <div className="text-5xl font-bold text-white mb-2">${calculateTotalQuote()}</div>
+                      <p className="text-sm text-white/90">Generated from calculator inputs</p>
                     </div>
                     <Button 
                       onClick={pushToRateQuotes}
-                      className="w-full bg-white hover:bg-gray-50 text-[#F7B501] font-semibold rounded-lg shadow-sm h-9"
+                      className="w-full bg-white hover:bg-gray-50 text-[#F7B501] font-semibold rounded-lg shadow-sm h-11"
                     >
                       <i className="fas fa-arrow-right mr-2"></i>
                       Push to Rate Quotes
