@@ -68,6 +68,7 @@ const PlacesAutocomplete = ({
       type="text"
       value={value}
       onChange={handleChange}
+      onKeyDown={onKeyDown}
       placeholder={placeholder}
       className={className}
     />
