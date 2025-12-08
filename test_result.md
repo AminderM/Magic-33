@@ -457,6 +457,18 @@ test_plan:
         agent: "testing"
         comment: "❌ CRITICAL ROOT CAUSE IDENTIFIED: Google Maps integration fails due to AUTHENTICATION TOKEN PERSISTENCE ISSUE. COMPREHENSIVE INVESTIGATION RESULTS: ✅ BACKEND API KEY CONFIGURED: 1) Google Maps API key endpoint /api/admin/integrations/google-maps/key returns 200 OK with valid API key 'AIzaSyApjXEL1hfWGG8X0bT4Iw0iE_Qb-Hjy7bU' and configured: true 2) Backend logs show successful API calls to Google Maps endpoint ❌ FRONTEND AUTHENTICATION FAILURE: 1) Authentication token not persisting in localStorage after login (hasToken: false) 2) All API calls to /api/admin/integrations/google-maps/key return 401 'Could not validate credentials' 3) SalesDepartment component cannot load API key due to authentication failure ❌ JAVASCRIPT RUNTIME ERRORS: 1) Console shows 'Cannot read properties of undefined (reading maps)' - Google Maps API not loading 2) No Google Maps scripts found (0 scripts detected) 3) window.google object undefined - API never loads due to missing API key ✅ UI COMPONENTS WORKING: 1) All Freight Calculator components render correctly 2) Route Preview shows appropriate fallback messages 3) Input fields, buttons, and calculator functionality all working 🔧 ROOT CAUSE: Authentication token storage/retrieval mechanism broken, preventing Google Maps API key from being fetched, which blocks Google Maps JavaScript API loading. SOLUTION REQUIRED: Fix authentication token persistence in frontend AuthContext to enable Google Maps API key retrieval and subsequent map loading."
 
+  - task: "Delete Stops Feature in Freight Calculator"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/components/SalesDepartment.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE IDENTIFIED: Delete Stops functionality has UI display problems. DETAILED FINDINGS: ✅ NAVIGATION SUCCESS: Successfully logged in with aminderpro@gmail.com/Admin@123! and navigated to Sales & Business Development → Freight Calculator tab. ✅ UI COMPONENTS WORKING: All form inputs functional - pickup location (Los Angeles, CA), add stop input with + button, destination (New York, NY). Successfully added 3 stops (Chicago, Denver, Phoenix) via the add stop functionality. ❌ STOPS LIST NOT VISIBLE: Despite successfully adding stops through the UI (confirmed by successful API calls), the stops list is not displaying in the Route Calculator section. The stops container (.max-h-24.overflow-y-auto) and stop cards (.bg-gradient-to-r) are not found in the DOM. ❌ DELETE BUTTONS NOT ACCESSIBLE: Cannot test delete functionality because added stops are not visible in the UI. Found 4 delete buttons total in the page but none in the Route Calculator section where stops should appear. ✅ CODE IMPLEMENTATION VERIFIED: SalesDepartment.js lines 1068-1088 contain proper delete functionality with toast messages and state updates. SOLUTION REQUIRED: Fix stops list display issue - stops are being added to state but not rendering in the UI. The stops container with scrollable area and gradient cards should appear between the 'Add stop' input and destination input when stops are added."
+
 agent_communication:
   - agent: "main"
     message: "Please POST /api/admin/seed-platform-admin to create the admin user, then attempt login via /api/auth/login with email aminderpro@gmail.com and password Admin@123!. Return responses and any errors."
