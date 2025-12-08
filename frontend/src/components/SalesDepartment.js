@@ -835,7 +835,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 {/* Right Column - Map + Unit Converter + Route Calculator */}
-                <div className="space-y-4">
+                <div className="space-y-4 flex-1">
                   {/* Map Display with Google Maps Integration - Bigger */}
                   <RouteMapPreview
                     pickup={quoteData.pickupLocation}
