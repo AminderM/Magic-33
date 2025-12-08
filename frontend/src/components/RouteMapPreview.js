@@ -164,9 +164,10 @@ const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey
         <div className="flex-1 relative">
           <Map
             mapId="route-preview-map"
-            center={mapCenter}
-            zoom={mapZoom}
+            defaultCenter={mapCenter}
+            defaultZoom={mapZoom}
             disableDefaultUI={false}
+            gestureHandling="greedy"
             style={{ width: '100%', height: '100%' }}
           >
             {pickup && destination && (
