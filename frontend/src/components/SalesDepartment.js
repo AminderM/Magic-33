@@ -878,14 +878,60 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           />
                         </div>
                         
-                        <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
-                            <i className="fas fa-map-pin text-gray-400"></i>
+                        {/* Add Stop Section */}
+                        <div className="space-y-2">
+                          <div className="relative flex gap-2">
+                            <div className="flex-1 relative">
+                              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
+                                <i className="fas fa-map-pin text-gray-400"></i>
+                              </div>
+                              <PlacesAutocomplete
+                                placeholder="Add stop (optional)"
+                                value={currentStop}
+                                onChange={(value) => setCurrentStop(value)}
+                                apiKey={googleMapsApiKey}
+                                className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
+                              />
+                            </div>
+                            <Button
+                              onClick={() => {
+                                if (currentStop.trim()) {
+                                  setQuoteData({
+                                    ...quoteData, 
+                                    stops: [...quoteData.stops, currentStop]
+                                  });
+                                  setCurrentStop('');
+                                  toast.success('Stop added to route');
+                                }
+                              }}
+                              size="sm"
+                              className="h-9 w-9 p-0 bg-[#F7B501] hover:bg-[#e5a701] text-white"
+                            >
+                              <i className="fas fa-plus"></i>
+                            </Button>
                           </div>
-                          <Input 
-                            placeholder="Add stop (optional)"
-                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
-                          />
+                          
+                          {/* List of Added Stops */}
+                          {quoteData.stops.length > 0 && (
+                            <div className="space-y-1 max-h-20 overflow-y-auto">
+                              {quoteData.stops.map((stop, index) => (
+                                <div key={index} className="flex items-center gap-2 bg-gray-50 rounded px-2 py-1 text-xs">
+                                  <i className="fas fa-map-pin text-gray-400 text-xs"></i>
+                                  <span className="flex-1 truncate text-gray-700">Stop {index + 1}: {stop}</span>
+                                  <button
+                                    onClick={() => {
+                                      const newStops = quoteData.stops.filter((_, i) => i !== index);
+                                      setQuoteData({...quoteData, stops: newStops});
+                                      toast.info('Stop removed');
+                                    }}
+                                    className="text-gray-400 hover:text-red-500 transition-colors"
+                                  >
+                                    <i className="fas fa-times text-xs"></i>
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
 
                         <div className="relative">
