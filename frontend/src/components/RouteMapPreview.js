@@ -8,6 +8,8 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated }) => {
   const map = useMap();
   const [directionsService, setDirectionsService] = useState(null);
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
+  const [lastCalculatedRoute, setLastCalculatedRoute] = useState(null);
+  const [isCalculating, setIsCalculating] = useState(false);
 
   useEffect(() => {
     if (!map) return;
@@ -35,6 +37,16 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated }) => {
 
   useEffect(() => {
     if (!directionsService || !directionsRenderer || !pickup || !destination) return;
+    
+    // Create a unique key for this route
+    const routeKey = `${pickup}|${destination}|${(stops || []).join('|')}`;
+    
+    // Don't recalculate if it's the same route or already calculating
+    if (routeKey === lastCalculatedRoute || isCalculating) {
+      return;
+    }
+    
+    setIsCalculating(true);
 
     const waypoints = (stops || []).map(stop => ({
       location: stop,
