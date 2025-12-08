@@ -699,8 +699,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Freight Calculator Tab */}
         <TabsContent value="calculator" className="mt-6">
-          <DraggableFreightCalculator
-            QuoteCalculatorComponent={
+          <Card className="mb-6">
+            <CardContent className="p-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Left Column - Quote Calculator + Total Quote */}
                 <div className="space-y-4 max-w-[400px]">
