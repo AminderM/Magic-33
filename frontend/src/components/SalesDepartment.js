@@ -807,9 +807,11 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     stops: [],
                     distance: 0,
                     ratePerMile: 0,
+                    ratePerLbs: 0,
                     fuelSurcharge: 0,
                     ratePerStop: 0,
                     accessorialCharges: 0,
+                    accessoryName: '',
                     margin: 0
                   },
                   routeData: null,
