@@ -117,7 +117,11 @@ const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey
   }
 
   return (
-    <APIProvider apiKey={apiKey}>
+    <APIProvider 
+      apiKey={apiKey}
+      onLoad={() => console.log('Google Maps API loaded successfully')}
+      onError={(error) => console.error('Google Maps API error:', error)}
+    >
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-[400px] flex flex-col">
         <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
           <h4 className="text-sm font-semibold text-gray-800">Route Preview</h4>
