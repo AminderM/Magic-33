@@ -192,7 +192,10 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   useEffect(() => {
     loadSalesData();
-    loadGoogleMapsKey();
+    // Load Google Maps key with a slight delay to ensure auth is ready
+    setTimeout(() => {
+      loadGoogleMapsKey();
+    }, 1000);
   }, []);
 
   const loadGoogleMapsKey = async () => {
