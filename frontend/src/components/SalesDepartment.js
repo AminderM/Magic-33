@@ -702,7 +702,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Left Column - Quote Calculator + Total Quote */}
-                <div className="space-y-4 max-w-[500px]">
+                <div className="space-y-4 max-w-[400px]">
                   {/* Quote Calculator */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-[480px] flex flex-col">
                     <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
