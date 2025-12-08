@@ -6,7 +6,8 @@ const PlacesAutocomplete = ({
   onChange, 
   placeholder, 
   apiKey,
-  className = ""
+  className = "",
+  onKeyDown
 }) => {
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
