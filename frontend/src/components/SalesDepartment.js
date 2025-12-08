@@ -1066,18 +1066,19 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           
                           {/* List of Added Stops */}
                           {quoteData.stops.length > 0 && (
-                            <div className="space-y-1 max-h-20 overflow-y-auto">
+                            <div className="space-y-1.5 max-h-24 overflow-y-auto pr-1">
                               {quoteData.stops.map((stop, index) => (
-                                <div key={index} className="flex items-center gap-2 bg-gray-50 rounded px-2 py-1 text-xs">
-                                  <i className="fas fa-map-pin text-gray-400 text-xs"></i>
-                                  <span className="flex-1 truncate text-gray-700">Stop {index + 1}: {stop}</span>
+                                <div key={index} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-gray-50 rounded-lg px-3 py-2 text-xs border border-blue-100 hover:border-blue-200 transition-all">
+                                  <i className="fas fa-map-pin text-blue-500 text-xs"></i>
+                                  <span className="flex-1 truncate text-gray-700 font-medium">Stop {index + 1}: {stop}</span>
                                   <button
                                     onClick={() => {
                                       const newStops = quoteData.stops.filter((_, i) => i !== index);
                                       setQuoteData({...quoteData, stops: newStops});
-                                      toast.info('Stop removed');
+                                      toast.success(`Stop ${index + 1} removed from route`);
                                     }}
-                                    className="text-gray-400 hover:text-red-500 transition-colors"
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-white hover:bg-red-50 text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-300 transition-all shadow-sm hover:shadow"
+                                    title="Remove this stop"
                                   >
                                     <i className="fas fa-times text-xs"></i>
                                   </button>
