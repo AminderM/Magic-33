@@ -201,11 +201,11 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   // Google Maps integration
   const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
 
-  // Get active tab
-  const activeTab = quoteTabs.find(tab => tab.id === activeTabId) || quoteTabs[0];
-  const quoteData = activeTab.data;
-  const routeData = activeTab.routeData;
-  const currentStop = activeTab.currentStop;
+  // Get active quote tab
+  const activeQuoteTab = quoteTabs.find(tab => tab.id === activeTabId) || quoteTabs[0];
+  const quoteData = activeQuoteTab.data;
+  const routeData = activeQuoteTab.routeData;
+  const currentStop = activeQuoteTab.currentStop;
 
   // Update active tab
   const updateActiveTab = (updates) => {
