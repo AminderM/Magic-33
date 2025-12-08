@@ -126,7 +126,7 @@ const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey
 
   if (!apiKey) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-[400px] flex items-center justify-center">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-[480px] flex items-center justify-center">
         <div className="text-center text-gray-400">
           <i className="fas fa-map text-6xl mb-3 opacity-50"></i>
           <p className="text-sm font-medium text-gray-600 mb-1">Google Maps not configured</p>
@@ -143,7 +143,7 @@ const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey
       onLoad={() => console.log('Google Maps API loaded successfully')}
       onError={(error) => console.error('Google Maps API error:', error)}
     >
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-[400px] flex flex-col">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-[480px] flex flex-col">
         <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
           <h4 className="text-sm font-semibold text-gray-800">Route Preview</h4>
           {pickup && destination && (
