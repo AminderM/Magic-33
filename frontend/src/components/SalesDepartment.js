@@ -197,11 +197,17 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   const loadGoogleMapsKey = async () => {
     try {
+      console.log('Loading Google Maps API key...');
       const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/integrations/google-maps/key`);
+      console.log('Google Maps API key response:', res.status);
       if (res.ok) {
         const data = await res.json();
+        console.log('Google Maps data:', data);
         if (data.configured && data.api_key) {
           setGoogleMapsApiKey(data.api_key);
+          console.log('Google Maps API key loaded successfully');
+        } else {
+          console.log('Google Maps not configured or no API key');
         }
       }
     } catch (e) {
