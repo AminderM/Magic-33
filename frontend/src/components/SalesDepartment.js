@@ -750,7 +750,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   `}
                   onClick={() => setActiveTabId(tab.id)}
                 >
-                  <i className="fas fa-file-invoice text-xs"></i>
+                  <i className="fas fa-file-invoice text-xs flex-shrink-0"></i>
                   <input
                     type="text"
                     value={tab.name}
@@ -762,30 +762,33 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     }}
                     onClick={(e) => e.stopPropagation()}
                     className={`
-                      text-sm font-medium bg-transparent border-none outline-none w-24
+                      text-sm font-medium bg-transparent border-none outline-none w-20
                       ${tab.id === activeTabId ? 'text-white placeholder-white/70' : 'text-gray-700'}
                     `}
-                    placeholder="Quote name"
+                    placeholder="Quote"
                   />
-                  {quoteTabs.length > 1 && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const newTabs = quoteTabs.filter(t => t.id !== tab.id);
-                        setQuoteTabs(newTabs);
-                        if (tab.id === activeTabId && newTabs.length > 0) {
-                          setActiveTabId(newTabs[0].id);
-                        }
-                        toast.info(`${tab.name} closed`);
-                      }}
-                      className={`
-                        hover:bg-white/20 rounded p-1 transition-colors
-                        ${tab.id === activeTabId ? 'text-white' : 'text-gray-500 hover:text-red-500'}
-                      `}
-                    >
-                      <i className="fas fa-times text-xs"></i>
-                    </button>
-                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (quoteTabs.length === 1) {
+                        toast.error('Cannot close the last quote tab');
+                        return;
+                      }
+                      const newTabs = quoteTabs.filter(t => t.id !== tab.id);
+                      setQuoteTabs(newTabs);
+                      if (tab.id === activeTabId && newTabs.length > 0) {
+                        setActiveTabId(newTabs[0].id);
+                      }
+                      toast.success(`${tab.name} closed - all data cleared`);
+                    }}
+                    className={`
+                      flex-shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-white/20 transition-colors
+                      ${tab.id === activeTabId ? 'text-white hover:bg-white/30' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}
+                    `}
+                    title="Close quote"
+                  >
+                    <i className="fas fa-times text-sm"></i>
+                  </button>
                 </div>
               ))}
             </div>
