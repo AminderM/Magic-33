@@ -858,7 +858,20 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           />
                         </div>
 
-                        <Button className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-10">
+                        <Button 
+                          onClick={() => {
+                            if (!quoteData.pickupLocation || !quoteData.destination) {
+                              toast.error('Please enter both pickup and destination locations');
+                              return;
+                            }
+                            if (!googleMapsApiKey) {
+                              toast.error('Google Maps not configured. Please add API key in Admin Console.');
+                              return;
+                            }
+                            toast.info('Calculating route...');
+                          }}
+                          className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-10"
+                        >
                           <i className="fas fa-calculator mr-2"></i>
                           Calculate
                         </Button>
