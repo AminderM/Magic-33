@@ -482,26 +482,26 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       {/* Main Content Tabs */}
       <div className="px-6 pt-4 bg-gray-50">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
-          <TabsTrigger value="pipeline">
-            <i className="fas fa-funnel-dollar mr-2"></i>
-            Sales Pipeline
+          <TabsList className="grid w-full grid-cols-5 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
+          <TabsTrigger value="pipeline" className="text-sm px-2">
+            <i className="fas fa-funnel-dollar mr-1.5 text-xs"></i>
+            <span className="hidden sm:inline">Sales </span>Pipeline
           </TabsTrigger>
-          <TabsTrigger value="leads">
-            <i className="fas fa-user-plus mr-2"></i>
+          <TabsTrigger value="leads" className="text-sm px-2">
+            <i className="fas fa-user-plus mr-1.5 text-xs"></i>
             Leads
           </TabsTrigger>
-          <TabsTrigger value="customers">
-            <i className="fas fa-building mr-2"></i>
+          <TabsTrigger value="customers" className="text-sm px-2">
+            <i className="fas fa-building mr-1.5 text-xs"></i>
             Customers
           </TabsTrigger>
-          <TabsTrigger value="calculator">
-            <i className="fas fa-calculator mr-2"></i>
-            Freight Calculator
+          <TabsTrigger value="calculator" className="text-sm px-2">
+            <i className="fas fa-calculator mr-1.5 text-xs"></i>
+            <span className="hidden lg:inline">Freight </span>Calculator
           </TabsTrigger>
-          <TabsTrigger value="quotes">
-            <i className="fas fa-file-invoice-dollar mr-2"></i>
-            Rate Quotes
+          <TabsTrigger value="quotes" className="text-sm px-2">
+            <i className="fas fa-file-invoice-dollar mr-1.5 text-xs"></i>
+            <span className="hidden sm:inline">Rate </span>Quotes
           </TabsTrigger>
         </TabsList>
 
