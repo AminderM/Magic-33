@@ -191,6 +191,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   // Google Maps integration
   const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
   const [routeData, setRouteData] = useState(null);
+  const [currentStop, setCurrentStop] = useState('');
 
   useEffect(() => {
     loadSalesData();
