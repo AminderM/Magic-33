@@ -412,6 +412,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Google Maps Integration in Admin Console"
     - "Confirmed Rate Currency Validation in OrderManagement"
     - "Company Profile split view layout and navigation"
     - "User/Driver management forms and operations"
