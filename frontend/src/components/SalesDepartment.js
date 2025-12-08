@@ -783,6 +783,33 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           />
                         </div>
                       </div>
+
+                      {/* Route Distance Display */}
+                      <div className="mt-3 pt-3 border-t border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <i className="fas fa-route text-[#F7B501]"></i>
+                            <Label className="text-xs font-medium text-gray-700">Route Distance</Label>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-lg font-bold text-gray-900">
+                              {routeData ? routeData.distanceValue.toFixed(2) : quoteData.distance || '0.00'}
+                            </span>
+                            <span className="text-xs font-medium text-gray-500">miles</span>
+                          </div>
+                        </div>
+                        {routeData && (
+                          <div className="mt-1 text-xs text-gray-500 flex items-center gap-1">
+                            <i className="fas fa-clock text-xs"></i>
+                            <span>Est. {routeData.durationValue.toFixed(1)} hours</span>
+                          </div>
+                        )}
+                        {!routeData && !quoteData.distance && (
+                          <p className="mt-1 text-xs text-gray-400 italic">
+                            Enter pickup & destination to calculate
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
 
