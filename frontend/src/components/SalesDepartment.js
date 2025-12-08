@@ -837,19 +837,20 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       </div>
                       <div className="p-4 flex-1 flex flex-col justify-evenly">
                         <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
                             <i className="fas fa-map-marker-alt text-green-500"></i>
                           </div>
-                          <Input 
+                          <PlacesAutocomplete
                             placeholder="Pickup location"
                             value={quoteData.pickupLocation}
-                            onChange={(e) => setQuoteData({...quoteData, pickupLocation: e.target.value})}
+                            onChange={(value) => setQuoteData({...quoteData, pickupLocation: value})}
+                            apiKey={googleMapsApiKey}
                             className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                           />
                         </div>
                         
                         <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
                             <i className="fas fa-map-pin text-gray-400"></i>
                           </div>
                           <Input 
@@ -859,13 +860,14 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
 
                         <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
                             <i className="fas fa-map-marker-alt text-red-500"></i>
                           </div>
-                          <Input 
+                          <PlacesAutocomplete
                             placeholder="Destination"
                             value={quoteData.destination}
-                            onChange={(e) => setQuoteData({...quoteData, destination: e.target.value})}
+                            onChange={(value) => setQuoteData({...quoteData, destination: value})}
+                            apiKey={googleMapsApiKey}
                             className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                           />
                         </div>
