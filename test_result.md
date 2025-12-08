@@ -438,15 +438,18 @@ test_plan:
 
   - task: "Google Maps Integration in Admin Console"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/components/admin/IntegrationsView.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Google Maps integration functionality implemented in Admin Console Integrations view. Users can add Google Maps API integration through Transportation APIs category with API key configuration. Integration supports enable/disable toggle, testing, and configuration management."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: Google Maps integration UI flow works perfectly but has session management problems. DETAILED FINDINGS: ✅ FRONTEND UI FULLY FUNCTIONAL: 1) Login with aminderpro@gmail.com/Admin@123! works correctly 2) Navigation to Admin Console Integrations section successful 3) Add Integration modal opens correctly with proper form structure 4) Category dropdown contains Transportation APIs option 5) Service dropdown contains Google Maps API option 6) Form fields work correctly (Integration Name: 'Production Google Maps', Description: 'Route optimization and mapping', API Key field, Enable toggle) 7) Form validation and submission works - modal closes after submit indicating success ❌ BLOCKING ISSUE: Session management causes frequent redirects to auth page during testing, preventing verification of final integration card display. The UI components are properly implemented but session timeouts block complete end-to-end testing. SOLUTION REQUIRED: Fix authentication session persistence to enable full integration testing verification."
 
 agent_communication:
   - agent: "main"
