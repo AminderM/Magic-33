@@ -1042,6 +1042,17 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 placeholder="Add stop (optional)"
                                 value={currentStop}
                                 onChange={(value) => setCurrentStop(value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' && currentStop.trim()) {
+                                    e.preventDefault();
+                                    setQuoteData({
+                                      ...quoteData, 
+                                      stops: [...quoteData.stops, currentStop]
+                                    });
+                                    setCurrentStop('');
+                                    toast.success('Stop added to route');
+                                  }
+                                }}
                                 apiKey={googleMapsApiKey}
                                 className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
                               />
