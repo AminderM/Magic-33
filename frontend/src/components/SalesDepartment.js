@@ -175,23 +175,58 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     status: 'new'
   });
   
-  // Freight Calculator state
-  const [quoteData, setQuoteData] = useState({
-    pickupLocation: '',
-    destination: '',
-    stops: [],
-    distance: 0,
-    ratePerMile: 0,
-    fuelSurcharge: 0,
-    ratePerStop: 0,
-    accessorialCharges: 0,
-    margin: 0
-  });
+  // Multi-tab Freight Calculator state
+  const [quoteTabs, setQuoteTabs] = useState([
+    {
+      id: 1,
+      name: 'Quote 1',
+      data: {
+        pickupLocation: '',
+        destination: '',
+        stops: [],
+        distance: 0,
+        ratePerMile: 0,
+        fuelSurcharge: 0,
+        ratePerStop: 0,
+        accessorialCharges: 0,
+        margin: 0
+      },
+      routeData: null,
+      currentStop: ''
+    }
+  ]);
+  const [activeTabId, setActiveTabId] = useState(1);
+  const [nextTabId, setNextTabId] = useState(2);
 
   // Google Maps integration
   const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
-  const [routeData, setRouteData] = useState(null);
-  const [currentStop, setCurrentStop] = useState('');
+
+  // Get active tab
+  const activeTab = quoteTabs.find(tab => tab.id === activeTabId) || quoteTabs[0];
+  const quoteData = activeTab.data;
+  const routeData = activeTab.routeData;
+  const currentStop = activeTab.currentStop;
+
+  // Update active tab
+  const updateActiveTab = (updates) => {
+    setQuoteTabs(tabs => tabs.map(tab => 
+      tab.id === activeTabId 
+        ? { ...tab, ...updates }
+        : tab
+    ));
+  };
+
+  const setQuoteData = (newData) => {
+    updateActiveTab({ data: typeof newData === 'function' ? newData(quoteData) : newData });
+  };
+
+  const setRouteData = (newRouteData) => {
+    updateActiveTab({ routeData: newRouteData });
+  };
+
+  const setCurrentStop = (newStop) => {
+    updateActiveTab({ currentStop: newStop });
+  };
 
   useEffect(() => {
     loadSalesData();
