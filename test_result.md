@@ -435,6 +435,18 @@ test_plan:
         agent: "testing"
         comment: "❌ SALES DEPARTMENT VIEW NOT ACCESSIBLE: Comprehensive testing reveals critical department switching bug. DETAILED FINDINGS: 1) ✅ SalesDepartment Component: Fully implemented with all required features - header with emoji, 4 KPI cards, Add New Lead button, 4 tabs with proper content, lead management modal, mock data for leads/opportunities/customers 2) ✅ Department Button: Sales/Business Development button exists in left panel, is clickable, and gets highlighted when selected 3) ❌ CRITICAL BUG: Department switching functionality broken - clicking Sales/Business Development does not render SalesDepartment component in middle panel 4) ❌ ROOT CAUSE: Dashboard.js conditional rendering (activeDepartment === 'sales') not working - activeDepartment state not updating when department buttons are clicked 5) ❌ IMPACT: Users cannot access Sales Department interface despite it being fully implemented 6) ✅ Component Quality: SalesDepartment.js code is production-ready with proper structure, styling, and functionality. SOLUTION REQUIRED: Fix department state management in Dashboard.js - investigate onDepartmentChange callback and activeDepartment state updates."
 
+  - task: "Google Maps Integration in Admin Console"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/admin/IntegrationsView.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Google Maps integration functionality implemented in Admin Console Integrations view. Users can add Google Maps API integration through Transportation APIs category with API key configuration. Integration supports enable/disable toggle, testing, and configuration management."
+
 agent_communication:
   - agent: "main"
     message: "Please POST /api/admin/seed-platform-admin to create the admin user, then attempt login via /api/auth/login with email aminderpro@gmail.com and password Admin@123!. Return responses and any errors."
