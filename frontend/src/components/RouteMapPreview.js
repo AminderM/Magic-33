@@ -79,6 +79,9 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated }) => {
         const distanceMiles = (totalDistance / 1609.34).toFixed(2);
         const durationHours = (totalDuration / 3600).toFixed(2);
 
+        // Mark this route as calculated
+        setLastCalculatedRoute(routeKey);
+
         if (onRouteCalculated) {
           onRouteCalculated({
             distance: `${distanceMiles} miles`,
@@ -91,8 +94,9 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated }) => {
         console.error('Directions request failed:', status);
         toast.error('Failed to calculate route');
       }
+      setIsCalculating(false);
     });
-  }, [directionsService, directionsRenderer, pickup, destination, stops, onRouteCalculated]);
+  }, [directionsService, directionsRenderer, pickup, destination, stops, onRouteCalculated, lastCalculatedRoute, isCalculating]);
 
   return null;
 };
