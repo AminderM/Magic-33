@@ -119,6 +119,7 @@ const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey
   return (
     <APIProvider 
       apiKey={apiKey}
+      libraries={['places', 'geometry', 'drawing']}
       onLoad={() => console.log('Google Maps API loaded successfully')}
       onError={(error) => console.error('Google Maps API error:', error)}
     >
