@@ -436,11 +436,11 @@ test_plan:
         agent: "testing"
         comment: "❌ SALES DEPARTMENT VIEW NOT ACCESSIBLE: Comprehensive testing reveals critical department switching bug. DETAILED FINDINGS: 1) ✅ SalesDepartment Component: Fully implemented with all required features - header with emoji, 4 KPI cards, Add New Lead button, 4 tabs with proper content, lead management modal, mock data for leads/opportunities/customers 2) ✅ Department Button: Sales/Business Development button exists in left panel, is clickable, and gets highlighted when selected 3) ❌ CRITICAL BUG: Department switching functionality broken - clicking Sales/Business Development does not render SalesDepartment component in middle panel 4) ❌ ROOT CAUSE: Dashboard.js conditional rendering (activeDepartment === 'sales') not working - activeDepartment state not updating when department buttons are clicked 5) ❌ IMPACT: Users cannot access Sales Department interface despite it being fully implemented 6) ✅ Component Quality: SalesDepartment.js code is production-ready with proper structure, styling, and functionality. SOLUTION REQUIRED: Fix department state management in Dashboard.js - investigate onDepartmentChange callback and activeDepartment state updates."
 
-  - task: "Google Maps Integration in Admin Console"
+  - task: "Google Maps Integration in Freight Calculator"
     implemented: true
     working: false
-    file: "/app/frontend/src/components/admin/IntegrationsView.js"
-    stuck_count: 0
+    file: "/app/frontend/src/components/SalesDepartment.js, /app/frontend/src/components/RouteMapPreview.js"
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -450,6 +450,9 @@ test_plan:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL ISSUE: Google Maps integration UI flow works perfectly but has session management problems. DETAILED FINDINGS: ✅ FRONTEND UI FULLY FUNCTIONAL: 1) Login with aminderpro@gmail.com/Admin@123! works correctly 2) Navigation to Admin Console Integrations section successful 3) Add Integration modal opens correctly with proper form structure 4) Category dropdown contains Transportation APIs option 5) Service dropdown contains Google Maps API option 6) Form fields work correctly (Integration Name: 'Production Google Maps', Description: 'Route optimization and mapping', API Key field, Enable toggle) 7) Form validation and submission works - modal closes after submit indicating success ❌ BLOCKING ISSUE: Session management causes frequent redirects to auth page during testing, preventing verification of final integration card display. The UI components are properly implemented but session timeouts block complete end-to-end testing. SOLUTION REQUIRED: Fix authentication session persistence to enable full integration testing verification."
+      - working: false
+        agent: "testing"
+        comment: "🎯 COMPREHENSIVE GOOGLE MAPS FREIGHT CALCULATOR TESTING COMPLETED: CRITICAL AUTHENTICATION AND JAVASCRIPT ERRORS IDENTIFIED. DETAILED TEST RESULTS: ✅ NAVIGATION SUCCESS: 1) Login with aminderpro@gmail.com/Admin@123! successful 2) Successfully navigated to Sales & Business Development department 3) Successfully accessed Freight Calculator tab 4) Route Preview section found with 'Google Maps not configured' message ✅ UI COMPONENTS WORKING: 1) Found pickup location input field (placeholder: 'Pickup location') 2) Found destination input field (placeholder: 'Destination') 3) Quote Calculator with pricing inputs functional 4) Unit Converter component working 5) 'Push to Rate Quotes' button present ❌ CRITICAL ISSUES IDENTIFIED: 1) AUTHENTICATION TOKEN ERROR: Console shows 'Failed to load Google Maps API key: Error: No authentication token' - the fetchWithAuth function cannot retrieve API key from /api/admin/integrations/google-maps/key endpoint 2) JAVASCRIPT RUNTIME ERROR: 'Cannot read properties of undefined (reading maps)' - Google Maps library not properly loaded causing TypeError 3) API KEY LOADING FAILURE: Console logs show 'Loading Google Maps API key...' followed by authentication failure 4) NO GOOGLE MAPS ELEMENTS: No .gm-style, canvas, or Google Maps iframe elements detected ✅ EXPECTED BEHAVIOR CONFIRMED: Route Preview correctly shows 'Google Maps not configured' and 'Please add Google Maps API key in Admin Console' messages when API key is not available. SOLUTION REQUIRED: 1) Fix authentication token handling for Google Maps API key retrieval 2) Ensure Google Maps JavaScript library loads properly 3) Configure Google Maps API key in Admin Console integrations."
 
 agent_communication:
   - agent: "main"
