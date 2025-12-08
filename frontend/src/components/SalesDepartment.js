@@ -199,6 +199,11 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   }, []);
 
   const loadGoogleMapsKey = async () => {
+    if (!fetchWithAuth || !BACKEND_URL) {
+      console.log('fetchWithAuth or BACKEND_URL not available');
+      return;
+    }
+    
     try {
       console.log('Loading Google Maps API key...');
       const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/integrations/google-maps/key`);
