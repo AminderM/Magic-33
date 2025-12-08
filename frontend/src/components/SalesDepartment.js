@@ -700,11 +700,11 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         <TabsContent value="calculator" className="mt-6">
           <Card className="mb-6">
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Left - Freight Quote Calculator (2/5 width) */}
-                <div className="lg:col-span-2 space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Left Column - Quote Calculator + Total Quote */}
+                <div className="space-y-4">
                   {/* Quote Calculator */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-[400px] flex flex-col">
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-[480px] flex flex-col">
                     <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                         <i className="fas fa-dollar-sign text-gray-500"></i>
