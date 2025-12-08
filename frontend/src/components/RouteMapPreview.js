@@ -88,21 +88,25 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated }) => {
 const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey }) => {
   const [mapCenter, setMapCenter] = useState({ lat: 39.8283, lng: -98.5795 }); // Center of US
   const [mapZoom, setMapZoom] = useState(4);
+  const [lastGeocodedPickup, setLastGeocodedPickup] = useState(null);
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
   useEffect(() => {
-    // If we have a pickup location, center the map there
-    if (pickup) {
-      // Use Geocoding API to convert address to coordinates
+    // Only geocode if pickup changed and we're not already geocoding
+    if (pickup && pickup !== lastGeocodedPickup && !isGeocoding && window.google?.maps) {
+      setIsGeocoding(true);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ address: pickup }, (results, status) => {
         if (status === 'OK' && results[0]) {
           const location = results[0].geometry.location;
           setMapCenter({ lat: location.lat(), lng: location.lng() });
           setMapZoom(8);
+          setLastGeocodedPickup(pickup);
         }
+        setIsGeocoding(false);
       });
     }
-  }, [pickup]);
+  }, [pickup, lastGeocodedPickup, isGeocoding]);
 
   if (!apiKey) {
     return (
