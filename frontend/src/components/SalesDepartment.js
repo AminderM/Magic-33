@@ -186,9 +186,28 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     margin: 0
   });
 
+  // Google Maps integration
+  const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
+  const [routeData, setRouteData] = useState(null);
+
   useEffect(() => {
     loadSalesData();
+    loadGoogleMapsKey();
   }, []);
+
+  const loadGoogleMapsKey = async () => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/admin/integrations/google-maps/key`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.configured && data.api_key) {
+          setGoogleMapsApiKey(data.api_key);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load Google Maps API key:', e);
+    }
+  };
 
   const loadSalesData = async () => {
     setLoading(true);
