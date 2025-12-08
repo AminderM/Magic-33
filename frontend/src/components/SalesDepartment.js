@@ -885,17 +885,42 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Accessorial Charges</Label>
+                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Rate per Lbs</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
                           <Input 
                             type="number" 
                             placeholder="0.00"
                             step="0.01"
-                            value={quoteData.accessorialCharges || ''}
-                            onChange={(e) => setQuoteData({...quoteData, accessorialCharges: parseFloat(e.target.value) || 0})}
+                            value={quoteData.ratePerLbs || ''}
+                            onChange={(e) => setQuoteData({...quoteData, ratePerLbs: parseFloat(e.target.value) || 0})}
                             className="pl-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Accessorial Charges</Label>
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                            <Input 
+                              type="number" 
+                              placeholder="0.00"
+                              step="0.01"
+                              value={quoteData.accessorialCharges || ''}
+                              onChange={(e) => setQuoteData({...quoteData, accessorialCharges: parseFloat(e.target.value) || 0})}
+                              className="pl-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            />
+                          </div>
+                          <div className="relative flex-1">
+                            <Input 
+                              type="text" 
+                              placeholder="Name"
+                              value={quoteData.accessoryName || ''}
+                              onChange={(e) => setQuoteData({...quoteData, accessoryName: e.target.value})}
+                              className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div>
