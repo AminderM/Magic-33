@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import RouteMapPreview from './RouteMapPreview';
 import PlacesAutocomplete from './PlacesAutocomplete';
+import DraggableFreightCalculator from './DraggableFreightCalculator';
 
 // Unified Converter Component
 const UnifiedConverter = () => {
