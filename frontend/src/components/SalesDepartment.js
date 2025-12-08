@@ -735,6 +735,92 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Freight Calculator Tab */}
         <TabsContent value="calculator" className="mt-6">
+          {/* Multi-Quote Tabs Bar */}
+          <div className="mb-4 flex items-center gap-2 bg-white rounded-lg border border-gray-200 p-2 overflow-x-auto">
+            <div className="flex gap-1 flex-1 overflow-x-auto">
+              {quoteTabs.map((tab) => (
+                <div
+                  key={tab.id}
+                  className={`
+                    flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-all
+                    ${tab.id === activeTabId 
+                      ? 'bg-[#F7B501] text-white shadow-sm' 
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                    }
+                  `}
+                  onClick={() => setActiveTabId(tab.id)}
+                >
+                  <i className="fas fa-file-invoice text-xs"></i>
+                  <input
+                    type="text"
+                    value={tab.name}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      setQuoteTabs(tabs => tabs.map(t => 
+                        t.id === tab.id ? { ...t, name: e.target.value } : t
+                      ));
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className={`
+                      text-sm font-medium bg-transparent border-none outline-none w-24
+                      ${tab.id === activeTabId ? 'text-white placeholder-white/70' : 'text-gray-700'}
+                    `}
+                    placeholder="Quote name"
+                  />
+                  {quoteTabs.length > 1 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const newTabs = quoteTabs.filter(t => t.id !== tab.id);
+                        setQuoteTabs(newTabs);
+                        if (tab.id === activeTabId && newTabs.length > 0) {
+                          setActiveTabId(newTabs[0].id);
+                        }
+                        toast.info(`${tab.name} closed`);
+                      }}
+                      className={`
+                        hover:bg-white/20 rounded p-1 transition-colors
+                        ${tab.id === activeTabId ? 'text-white' : 'text-gray-500 hover:text-red-500'}
+                      `}
+                    >
+                      <i className="fas fa-times text-xs"></i>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Add New Quote Tab Button */}
+            <button
+              onClick={() => {
+                const newTab = {
+                  id: nextTabId,
+                  name: `Quote ${nextTabId}`,
+                  data: {
+                    pickupLocation: '',
+                    destination: '',
+                    stops: [],
+                    distance: 0,
+                    ratePerMile: 0,
+                    fuelSurcharge: 0,
+                    ratePerStop: 0,
+                    accessorialCharges: 0,
+                    margin: 0
+                  },
+                  routeData: null,
+                  currentStop: ''
+                };
+                setQuoteTabs([...quoteTabs, newTab]);
+                setActiveTabId(newTab.id);
+                setNextTabId(nextTabId + 1);
+                toast.success('New quote created');
+              }}
+              className="flex items-center gap-2 px-3 py-2 bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-md transition-colors flex-shrink-0"
+            >
+              <i className="fas fa-plus text-xs"></i>
+              <span className="text-sm font-medium">New Quote</span>
+            </button>
+          </div>
           <Card className="mb-6">
             <CardContent className="p-6">
               <div className="flex flex-col lg:flex-row gap-2">
