@@ -96,7 +96,7 @@ const UnifiedConverter = () => {
   };
 
   return (
-    <Card className="h-[240px] flex flex-col">
+    <Card className="h-[280px] flex flex-col">
       <CardHeader className="flex-shrink-0 px-4 py-2.5 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-semibold text-gray-800 flex items-center gap-2">
