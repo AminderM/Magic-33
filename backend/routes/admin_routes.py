@@ -518,10 +518,24 @@ async def create_integration(integration: IntegrationData, current_user: User = 
     """Create a new integration"""
     require_platform_admin(current_user)
     
-    # Get company
+    # Get company - try multiple lookup methods
     company = await db.companies.find_one({"company_email": current_user.email})
+    
+    # If not found by company_email, try to find admin's company or create one
     if not company:
-        raise HTTPException(status_code=404, detail="Company not found")
+        # For platform admins, use their email to find/create a company
+        company = await db.companies.find_one({"id": f"admin-company-{current_user.id}"})
+        
+        if not company:
+            # Create a default company for the admin user
+            company = {
+                "id": f"admin-company-{current_user.id}",
+                "name": "Admin Organization",
+                "company_email": current_user.email,
+                "integrations_v2": [],
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.companies.insert_one(company)
     
     # Create integration object
     new_integration = {
