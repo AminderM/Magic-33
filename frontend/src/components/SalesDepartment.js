@@ -453,67 +453,6 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             </Button>
           )}
         </div>
-
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-          <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total Leads</p>
-                  <p className="text-2xl font-bold text-gray-900">{leads.length}</p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <i className="fas fa-user-plus text-blue-600 text-xl"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-500">Active Opportunities</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{opportunities.length}</p>
-                </div>
-                <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
-                  <i className="fas fa-handshake text-gray-600 text-lg"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-500">Pipeline Value</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">
-                    ${opportunities.reduce((sum, opp) => sum + opp.value, 0).toLocaleString()}
-                  </p>
-                </div>
-                <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
-                  <i className="fas fa-dollar-sign text-gray-600 text-lg"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-500">Active Customers</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{customers.length}</p>
-                </div>
-                <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
-                  <i className="fas fa-building text-gray-600 text-lg"></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
 
       {/* Main Content Tabs */}
