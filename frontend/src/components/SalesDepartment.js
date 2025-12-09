@@ -638,9 +638,9 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Leads Tab */}
         <TabsContent value="leads" className="mt-6">
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <CardHeader className="border-b border-gray-200 px-6 py-4">
-              <CardTitle className="text-lg font-semibold text-gray-900">Lead Management</CardTitle>
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
+            <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
+              <CardTitle className="text-base font-bold text-gray-900">Lead Management</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {leads.length === 0 ? (
@@ -653,53 +653,47 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Company</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact Person</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Email</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Source</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100 border-b-2 border-gray-300">
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Company</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Contact Person</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Email</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Phone</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Source</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Status</th>
+                        <th className="px-4 py-2.5 text-center text-sm font-bold text-gray-900">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody>
                       {leads.map((lead) => (
-                        <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="font-medium text-gray-900">{lead.company_name}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600">{lead.contact_person}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                        <tr key={lead.id} className="border-b border-gray-300 hover:bg-gray-50">
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{lead.company_name}</td>
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{lead.contact_person}</td>
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                            <div className="flex items-center gap-1">
                               <i className="fas fa-envelope text-gray-400 text-xs"></i>
                               {lead.email}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                            <div className="flex items-center gap-1">
                               <i className="fas fa-phone text-gray-400 text-xs"></i>
                               {lead.phone}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600 capitalize">{lead.source.replace('_', ' ')}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300 capitalize">{lead.source.replace('_', ' ')}</td>
+                          <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className={getStatusColor(lead.status)}>{lead.status.toUpperCase()}</Badge>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right">
-                            <div className="flex gap-2 justify-end">
-                              <Button size="sm" variant="outline">
-                                <i className="fas fa-phone mr-1"></i>
+                          <td className="px-4 py-2.5 text-sm text-center">
+                            <div className="flex gap-1.5 justify-center">
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
+                                <i className="fas fa-phone mr-1 text-xs"></i>
                                 Contact
                               </Button>
-                              <Button size="sm" variant="outline">
-                                <i className="fas fa-arrow-right mr-1"></i>
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
+                                <i className="fas fa-arrow-right mr-1 text-xs"></i>
                                 Convert
                               </Button>
                             </div>
