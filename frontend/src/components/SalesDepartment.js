@@ -1023,6 +1023,46 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
                       </div>
 
+                      {/* Required Fields for Email Generation */}
+                      <div className="pt-3 border-t border-gray-200 space-y-2">
+                        <div>
+                          <Label className="text-xs font-medium text-gray-600 mb-1 block">
+                            Consignor <span className="text-red-500">*</span>
+                          </Label>
+                          <Input 
+                            type="text" 
+                            placeholder="Enter consignor name"
+                            value={quoteData.consignor || ''}
+                            onChange={(e) => setQuoteData({...quoteData, consignor: e.target.value})}
+                            className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs font-medium text-gray-600 mb-1 block">
+                            Consignee <span className="text-red-500">*</span>
+                          </Label>
+                          <Input 
+                            type="text" 
+                            placeholder="Enter consignee name"
+                            value={quoteData.consignee || ''}
+                            onChange={(e) => setQuoteData({...quoteData, consignee: e.target.value})}
+                            className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs font-medium text-gray-600 mb-1 block">
+                            Customer <span className="text-red-500">*</span>
+                          </Label>
+                          <Input 
+                            type="text" 
+                            placeholder="Enter customer name"
+                            value={quoteData.customer || ''}
+                            onChange={(e) => setQuoteData({...quoteData, customer: e.target.value})}
+                            className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                          />
+                        </div>
+                      </div>
+
                       {/* Route Distance Display */}
                       <div className="mt-3 pt-3 border-t border-gray-200">
                         <div className="flex items-center justify-between">
