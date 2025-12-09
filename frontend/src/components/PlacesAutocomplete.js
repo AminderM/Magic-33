@@ -10,7 +10,7 @@ const PlacesAutocomplete = ({
   onKeyDown
 }) => {
   const inputRef = useRef(null);
-  const autocompleteRef = useRef(null);
+  const sessionTokenRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const PlacesAutocomplete = ({
     }
 
     // Wait for Places library to load with retry mechanism
-    const initPlaces = () => {
+    const initPlaces = async () => {
       if (!window.google.maps.places) {
         console.log('PlacesAutocomplete: Waiting for Places library...');
         setTimeout(initPlaces, 100);
@@ -28,13 +28,28 @@ const PlacesAutocomplete = ({
       }
       
       console.log('PlacesAutocomplete: Places library loaded successfully');
-      setIsLoaded(true);
-
-      // Initialize autocomplete after library is loaded
+      
+      try {
+        // Import the new Places library
+        const { AutocompleteService, AutocompleteSessionToken } = await window.google.maps.importLibrary("places");
+        
+        // Create a new session token
+        sessionTokenRef.current = new AutocompleteSessionToken();
+        
+        setIsLoaded(true);
+        console.log('PlacesAutocomplete: New Places API initialized successfully');
+      } catch (error) {
+        console.error('PlacesAutocomplete: Error loading new Places API:', error);
+        // Fallback: try using the old API if new one fails
+        initLegacyPlaces();
+      }
+    };
+    
+    // Fallback to legacy API if needed
+    const initLegacyPlaces = () => {
       try {
         const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
           types: ['geocode', 'establishment'],
-          // Support all countries including Canada, US, and worldwide locations
           fields: ['formatted_address', 'geometry', 'name']
         });
 
@@ -48,19 +63,17 @@ const PlacesAutocomplete = ({
           }
         });
 
-        autocompleteRef.current = autocomplete;
-        console.log('PlacesAutocomplete: Initialized successfully');
+        setIsLoaded(true);
+        console.log('PlacesAutocomplete: Legacy API initialized successfully');
       } catch (error) {
-        console.error('PlacesAutocomplete: Error initializing:', error);
+        console.error('PlacesAutocomplete: Error initializing legacy API:', error);
       }
     };
     
     initPlaces();
 
     return () => {
-      if (autocompleteRef.current) {
-        window.google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
+      // Cleanup if needed
     };
   }, [apiKey, onChange]);
 
