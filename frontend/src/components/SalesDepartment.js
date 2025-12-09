@@ -485,6 +485,88 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </TabsTrigger>
         </TabsList>
 
+        {/* Analytics Tab */}
+        <TabsContent value="analytics" className="mt-6 pb-6">
+          {/* KPI Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Leads</p>
+                    <p className="text-2xl font-bold text-gray-900">{leads.length}</p>
+                  </div>
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <i className="fas fa-user-plus text-blue-600 text-xl"></i>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-gray-500">Active Opportunities</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{opportunities.length}</p>
+                  </div>
+                  <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <i className="fas fa-handshake text-gray-600 text-lg"></i>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-gray-500">Pipeline Value</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">
+                      ${opportunities.reduce((sum, opp) => sum + opp.value, 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <i className="fas fa-dollar-sign text-gray-600 text-lg"></i>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-gray-500">Active Customers</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{customers.length}</p>
+                  </div>
+                  <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <i className="fas fa-building text-gray-600 text-lg"></i>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Analytics Content */}
+          <div className="grid gap-6">
+            <Card className="bg-white rounded-2xl shadow-sm border border-gray-100">
+              <CardHeader className="border-b border-gray-100 px-6 py-4">
+                <CardTitle className="text-base font-semibold text-gray-900">Sales & Business Analytics</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="text-center py-20">
+                  <i className="fas fa-chart-pie text-gray-300 text-6xl mb-4"></i>
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Analytics Dashboard Coming Soon</h3>
+                  <p className="text-gray-500 max-w-md mx-auto">
+                    Comprehensive sales analytics, performance metrics, and business insights will be displayed here.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
         {/* Sales Pipeline Tab */}
         <TabsContent value="pipeline" className="mt-6 pb-6">
           <div className="grid gap-6">
