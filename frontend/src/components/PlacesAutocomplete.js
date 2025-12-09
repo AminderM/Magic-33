@@ -27,35 +27,35 @@ const PlacesAutocomplete = ({
         return;
       }
       
-      setIsLoaded(true);
       console.log('PlacesAutocomplete: Places library loaded successfully');
+      setIsLoaded(true);
+
+      // Initialize autocomplete after library is loaded
+      try {
+        const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
+          types: ['geocode', 'establishment'],
+          // Support all countries including Canada, US, and worldwide locations
+          fields: ['formatted_address', 'geometry', 'name']
+        });
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          
+          if (place.formatted_address) {
+            onChange(place.formatted_address);
+          } else if (place.name) {
+            onChange(place.name);
+          }
+        });
+
+        autocompleteRef.current = autocomplete;
+        console.log('PlacesAutocomplete: Initialized successfully');
+      } catch (error) {
+        console.error('PlacesAutocomplete: Error initializing:', error);
+      }
     };
     
     initPlaces();
-
-    // Initialize autocomplete
-    try {
-      const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-        types: ['geocode', 'establishment'],
-        // Support all countries including Canada, US, and worldwide locations
-        fields: ['formatted_address', 'geometry', 'name']
-      });
-
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        
-        if (place.formatted_address) {
-          onChange(place.formatted_address);
-        } else if (place.name) {
-          onChange(place.name);
-        }
-      });
-
-      autocompleteRef.current = autocomplete;
-      console.log('PlacesAutocomplete: Initialized successfully');
-    } catch (error) {
-      console.error('PlacesAutocomplete: Error initializing:', error);
-    }
 
     return () => {
       if (autocompleteRef.current) {
