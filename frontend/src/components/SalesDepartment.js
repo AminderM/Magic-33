@@ -948,6 +948,29 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
                       </div>
                       <div>
+                        <Label className="text-xs font-medium text-gray-600 mb-1 block">FTL/LTL (%)</Label>
+                        <div className="relative">
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">%</span>
+                          <Input 
+                            type="number" 
+                            placeholder="0"
+                            min="0"
+                            max="100"
+                            step="1"
+                            value={quoteData.ftlLtlPercentage || ''}
+                            onChange={(e) => {
+                              const value = parseFloat(e.target.value) || 0;
+                              const clampedValue = Math.min(Math.max(value, 0), 100);
+                              setQuoteData({...quoteData, ftlLtlPercentage: clampedValue});
+                            }}
+                            className="pr-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          <span className="font-medium">0% = LTL</span> (Less Than Truck Load) | <span className="font-medium">100% = FTL</span> (Full Truck Load)
+                        </p>
+                      </div>
+                      <div>
                         <Label className="text-xs font-medium text-gray-600 mb-1 block">Accessorial Charges</Label>
                         <div className="flex gap-2">
                           <div className="relative flex-1">
