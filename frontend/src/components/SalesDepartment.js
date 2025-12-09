@@ -435,7 +435,10 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       ratePerStop: quoteData.ratePerStop,
       accessorialCharges: quoteData.accessorialCharges,
       margin: quoteData.margin,
-      ftlLtlPercentage: quoteData.ftlLtlPercentage
+      ftlLtlPercentage: quoteData.ftlLtlPercentage,
+      consignor: quoteData.consignor || '',
+      consignee: quoteData.consignee || '',
+      customer: quoteData.customer || ''
     };
     
     setQuotes([newQuote, ...quotes]);
