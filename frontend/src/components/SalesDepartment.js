@@ -569,9 +569,9 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Sales Pipeline Tab */}
         <TabsContent value="pipeline" className="mt-6 pb-6">
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <CardHeader className="border-b border-gray-200 px-6 py-4">
-              <CardTitle className="text-lg font-semibold text-gray-900">Active Opportunities</CardTitle>
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
+            <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
+              <CardTitle className="text-base font-bold text-gray-900">Active Opportunities</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {opportunities.length === 0 ? (
@@ -581,34 +581,28 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Opportunity</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Company</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Value</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Stage</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Probability</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Close Date</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100 border-b-2 border-gray-300">
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Opportunity</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Company</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Value</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Stage</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Probability</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Close Date</th>
+                        <th className="px-4 py-2.5 text-center text-sm font-bold text-gray-900">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody>
                       {opportunities.map((opp) => (
-                        <tr key={opp.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="font-medium text-gray-900">{opp.title}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600">{opp.company}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="font-semibold text-green-600">${opp.value.toLocaleString()}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                        <tr key={opp.id} className="border-b border-gray-300 hover:bg-gray-50">
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{opp.title}</td>
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{opp.company}</td>
+                          <td className="px-4 py-2.5 text-sm text-green-600 font-semibold border-r border-gray-300">${opp.value.toLocaleString()}</td>
+                          <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className={getStatusColor(opp.stage)}>{opp.stage.replace('_', ' ').toUpperCase()}</Badge>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <div className="flex items-center gap-2">
                               <div className="w-16 bg-gray-200 rounded-full h-2">
                                 <div 
@@ -616,20 +610,18 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                   style={{ width: `${opp.probability}%` }}
                                 ></div>
                               </div>
-                              <span className="text-sm font-medium text-gray-700">{opp.probability}%</span>
+                              <span className="text-sm text-gray-700">{opp.probability}%</span>
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600">{new Date(opp.close_date).toLocaleDateString()}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right">
-                            <div className="flex gap-2 justify-end">
-                              <Button size="sm" variant="outline">
-                                <i className="fas fa-edit mr-1"></i>
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{new Date(opp.close_date).toLocaleDateString()}</td>
+                          <td className="px-4 py-2.5 text-sm text-center">
+                            <div className="flex gap-1.5 justify-center">
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
+                                <i className="fas fa-edit mr-1 text-xs"></i>
                                 Edit
                               </Button>
-                              <Button size="sm" variant="outline">
-                                <i className="fas fa-file-alt mr-1"></i>
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
+                                <i className="fas fa-file-alt mr-1 text-xs"></i>
                                 Proposal
                               </Button>
                             </div>
