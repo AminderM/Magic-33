@@ -54,26 +54,21 @@ const DepartmentPanel = ({ activeDepartment, onDepartmentChange }) => {
           <button
             key={dept.id}
             onClick={() => onDepartmentChange(dept.id)}
-            className={`w-full text-left p-3 rounded-xl transition-all ${
+            className={`w-full text-center p-4 rounded-xl transition-all ${
               activeDepartment === dept.id
                 ? 'bg-[#F7B501] text-white shadow-sm'
                 : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300'
             }`}
           >
-            <div className="flex items-start gap-3">
-              <span className="text-xl">{dept.icon}</span>
-              <div className="flex-1 min-w-0">
-                <div className={`font-semibold text-sm ${
-                  activeDepartment === dept.id ? 'text-white' : 'text-gray-900'
-                }`}>
-                  {dept.label}
-                </div>
-                <div className={`text-xs mt-0.5 ${
-                  activeDepartment === dept.id ? 'text-gray-300' : 'text-gray-500'
-                }`}>
-                  {dept.description}
-                </div>
-              </div>
+            <div className={`font-bold text-lg ${
+              activeDepartment === dept.id ? 'text-white' : 'text-gray-900'
+            }`}>
+              {dept.label}
+            </div>
+            <div className={`text-xs mt-1 ${
+              activeDepartment === dept.id ? 'text-gray-200' : 'text-gray-500'
+            }`}>
+              {dept.description}
             </div>
           </button>
         ))}
