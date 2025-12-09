@@ -447,6 +447,52 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     toast.success(`Quote ${quoteNumber} created successfully`);
   };
 
+  const generateEmail = (quote) => {
+    const emailSubject = `Rate Quote ${quote.quoteNumber} - ${quote.pickupLocation} to ${quote.destination}`;
+    const emailBody = `
+Dear ${quote.customer},
+
+Please find below the rate quote details:
+
+QUOTE NUMBER: ${quote.quoteNumber}
+DATE: ${new Date(quote.createdAt).toLocaleDateString()}
+
+CONSIGNOR: ${quote.consignor}
+CONSIGNEE: ${quote.consignee}
+CUSTOMER: ${quote.customer}
+
+ROUTE DETAILS:
+Pickup Location: ${quote.pickupLocation}
+Destination: ${quote.destination}
+Distance: ${quote.distance} miles
+
+PRICING BREAKDOWN:
+Rate per Mile: $${quote.ratePerMile}
+Fuel Surcharge: $${quote.fuelSurcharge}
+Rate per Stop: $${quote.ratePerStop}
+Accessorial Charges: $${quote.accessorialCharges}
+Margin: ${quote.margin}%
+FTL/LTL: ${quote.ftlLtlPercentage}%
+
+TOTAL AMOUNT: $${quote.totalAmount}
+
+Thank you for your business.
+
+Best regards,
+Sales Team
+    `.trim();
+
+    // Create mailto link
+    const mailtoLink = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    window.location.href = mailtoLink;
+    
+    toast.success('Email client opened with quote details');
+  };
+
+  const isQuoteComplete = (quote) => {
+    return quote.consignor && quote.consignee && quote.customer;
+  };
+
   return (
     <div className="h-full overflow-auto">
       {/* Header */}
