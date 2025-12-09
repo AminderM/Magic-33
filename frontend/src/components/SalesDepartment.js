@@ -724,65 +724,81 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Customers Tab */}
         <TabsContent value="customers" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Customer Database</CardTitle>
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <CardHeader className="border-b border-gray-200 px-6 py-4">
+              <CardTitle className="text-lg font-semibold text-gray-900">Customer Database</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               {customers.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-building text-gray-400 text-5xl mb-4"></i>
                   <p className="text-gray-600">No customers yet</p>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {customers.map((customer) => (
-                    <div key={customer.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-3 flex-1">
-                          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold">
-                            {customer.company_name.charAt(0)}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-lg">{customer.company_name}</h3>
-                            <p className="text-sm text-gray-600">{customer.contact_person}</p>
-                            <div className="flex items-center gap-4 mt-2 text-sm">
-                              <span className="flex items-center gap-1">
-                                <i className="fas fa-envelope text-gray-400"></i>
-                                {customer.email}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <i className="fas fa-phone text-gray-400"></i>
-                                {customer.phone}
-                              </span>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Company</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact Person</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Email</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Revenue</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Loads</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {customers.map((customer) => (
+                        <tr key={customer.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-medium text-gray-900">{customer.company_name}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600">{customer.contact_person}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                              <i className="fas fa-envelope text-gray-400 text-xs"></i>
+                              {customer.email}
                             </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <Badge className="bg-green-500 text-white">ACTIVE</Badge>
-                          <div className="mt-3 space-y-1">
-                            <p className="text-sm text-gray-600">Total Revenue</p>
-                            <p className="text-xl font-bold text-green-600">${customer.total_revenue.toLocaleString()}</p>
-                            <p className="text-xs text-gray-500">{customer.loads_count} loads completed</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 mt-3">
-                        <Button size="sm" variant="outline">
-                          <i className="fas fa-eye mr-1"></i>
-                          View Details
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <i className="fas fa-file-invoice mr-1"></i>
-                          Create Quote
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <i className="fas fa-history mr-1"></i>
-                          Load History
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                              <i className="fas fa-phone text-gray-400 text-xs"></i>
+                              {customer.phone}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-semibold text-green-600">${customer.total_revenue.toLocaleString()}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600">{customer.loads_count} completed</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Badge className="bg-green-500 text-white">ACTIVE</Badge>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right">
+                            <div className="flex gap-2 justify-end">
+                              <Button size="sm" variant="outline">
+                                <i className="fas fa-eye mr-1"></i>
+                                View
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <i className="fas fa-file-invoice mr-1"></i>
+                                Quote
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <i className="fas fa-history mr-1"></i>
+                                History
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </CardContent>
