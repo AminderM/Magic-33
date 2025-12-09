@@ -646,11 +646,11 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Leads Tab */}
         <TabsContent value="leads" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Lead Management</CardTitle>
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <CardHeader className="border-b border-gray-200 px-6 py-4">
+              <CardTitle className="text-lg font-semibold text-gray-900">Lead Management</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               {leads.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-user-plus text-gray-400 text-5xl mb-4"></i>
@@ -660,46 +660,62 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {leads.map((lead) => (
-                    <div key={lead.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start gap-3 flex-1">
-                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                            {lead.company_name.charAt(0)}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-lg">{lead.company_name}</h3>
-                            <p className="text-sm text-gray-600">{lead.contact_person}</p>
-                            <div className="flex items-center gap-4 mt-2 text-sm">
-                              <span className="flex items-center gap-1">
-                                <i className="fas fa-envelope text-gray-400"></i>
-                                {lead.email}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <i className="fas fa-phone text-gray-400"></i>
-                                {lead.phone}
-                              </span>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Company</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact Person</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Email</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Source</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {leads.map((lead) => (
+                        <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-medium text-gray-900">{lead.company_name}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600">{lead.contact_person}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                              <i className="fas fa-envelope text-gray-400 text-xs"></i>
+                              {lead.email}
                             </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <Badge className={getStatusColor(lead.status)}>{lead.status.toUpperCase()}</Badge>
-                          <p className="text-sm text-gray-600 mt-2">Source: {lead.source.replace('_', ' ')}</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 mt-3">
-                        <Button size="sm" variant="outline">
-                          <i className="fas fa-phone mr-1"></i>
-                          Contact
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <i className="fas fa-arrow-right mr-1"></i>
-                          Convert to Opportunity
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                              <i className="fas fa-phone text-gray-400 text-xs"></i>
+                              {lead.phone}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600 capitalize">{lead.source.replace('_', ' ')}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Badge className={getStatusColor(lead.status)}>{lead.status.toUpperCase()}</Badge>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right">
+                            <div className="flex gap-2 justify-end">
+                              <Button size="sm" variant="outline">
+                                <i className="fas fa-phone mr-1"></i>
+                                Contact
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <i className="fas fa-arrow-right mr-1"></i>
+                                Convert
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </CardContent>
