@@ -710,9 +710,9 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Customers Tab */}
         <TabsContent value="customers" className="mt-6">
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <CardHeader className="border-b border-gray-200 px-6 py-4">
-              <CardTitle className="text-lg font-semibold text-gray-900">Customer Database</CardTitle>
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
+            <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
+              <CardTitle className="text-base font-bold text-gray-900">Customer Database</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {customers.length === 0 ? (
@@ -722,61 +722,53 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Company</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact Person</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Email</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Phone</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Revenue</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Loads</th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-100 border-b-2 border-gray-300">
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Company</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Contact Person</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Email</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Phone</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Total Revenue</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Loads</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Status</th>
+                        <th className="px-4 py-2.5 text-center text-sm font-bold text-gray-900">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody>
                       {customers.map((customer) => (
-                        <tr key={customer.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="font-medium text-gray-900">{customer.company_name}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600">{customer.contact_person}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                        <tr key={customer.id} className="border-b border-gray-300 hover:bg-gray-50">
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.company_name}</td>
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.contact_person}</td>
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                            <div className="flex items-center gap-1">
                               <i className="fas fa-envelope text-gray-400 text-xs"></i>
                               {customer.email}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600 flex items-center gap-1">
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                            <div className="flex items-center gap-1">
                               <i className="fas fa-phone text-gray-400 text-xs"></i>
                               {customer.phone}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="font-semibold text-green-600">${customer.total_revenue.toLocaleString()}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-600">{customer.loads_count} completed</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-4 py-2.5 text-sm text-green-600 font-semibold border-r border-gray-300">${customer.total_revenue.toLocaleString()}</td>
+                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.loads_count} completed</td>
+                          <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className="bg-green-500 text-white">ACTIVE</Badge>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right">
-                            <div className="flex gap-2 justify-end">
-                              <Button size="sm" variant="outline">
-                                <i className="fas fa-eye mr-1"></i>
+                          <td className="px-4 py-2.5 text-sm text-center">
+                            <div className="flex gap-1.5 justify-center">
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
+                                <i className="fas fa-eye mr-1 text-xs"></i>
                                 View
                               </Button>
-                              <Button size="sm" variant="outline">
-                                <i className="fas fa-file-invoice mr-1"></i>
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
+                                <i className="fas fa-file-invoice mr-1 text-xs"></i>
                                 Quote
                               </Button>
-                              <Button size="sm" variant="outline">
-                                <i className="fas fa-history mr-1"></i>
+                              <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
+                                <i className="fas fa-history mr-1 text-xs"></i>
                                 History
                               </Button>
                             </div>
