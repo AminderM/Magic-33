@@ -447,46 +447,70 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     toast.success(`Quote ${quoteNumber} created successfully`);
   };
 
-  const generateEmail = (quote) => {
-    const emailSubject = `Rate Quote ${quote.quoteNumber} - ${quote.pickupLocation} to ${quote.destination}`;
-    const emailBody = `
-Dear ${quote.customer},
-
-Please find below the rate quote details:
+  const generateEmail = async (quote) => {
+    try {
+      toast.info('AI Assistant is generating your professional email...');
+      
+      const quoteDetails = `
+Generate a professional rate quotation email for the following details:
 
 QUOTE NUMBER: ${quote.quoteNumber}
 DATE: ${new Date(quote.createdAt).toLocaleDateString()}
 
-CONSIGNOR: ${quote.consignor}
-CONSIGNEE: ${quote.consignee}
-CUSTOMER: ${quote.customer}
+CUSTOMER INFORMATION:
+- Customer: ${quote.customer}
+- Consignor: ${quote.consignor}
+- Consignee: ${quote.consignee}
 
 ROUTE DETAILS:
-Pickup Location: ${quote.pickupLocation}
-Destination: ${quote.destination}
-Distance: ${quote.distance} miles
+- Pickup Location: ${quote.pickupLocation}
+- Destination: ${quote.destination}
+- Distance: ${quote.distance} miles
 
 PRICING BREAKDOWN:
-Rate per Mile: $${quote.ratePerMile}
-Fuel Surcharge: $${quote.fuelSurcharge}
-Rate per Stop: $${quote.ratePerStop}
-Accessorial Charges: $${quote.accessorialCharges}
-Margin: ${quote.margin}%
-FTL/LTL: ${quote.ftlLtlPercentage}%
+- Rate per Mile: $${quote.ratePerMile}
+- Fuel Surcharge: $${quote.fuelSurcharge}
+- Rate per Stop: $${quote.ratePerStop}
+- Accessorial Charges: $${quote.accessorialCharges}
+- Margin: ${quote.margin}%
+- FTL/LTL: ${quote.ftlLtlPercentage}%
 
 TOTAL AMOUNT: $${quote.totalAmount}
 
-Thank you for your business.
+Please generate:
+1. A professional email subject line
+2. A complete professional email body with proper formatting, greeting, quote details, terms, and closing
 
-Best regards,
-Sales Team
-    `.trim();
+Format the response as:
+Subject: [subject line]
 
-    // Create mailto link
-    const mailtoLink = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-    window.location.href = mailtoLink;
-    
-    toast.success('Email client opened with quote details');
+Body:
+[email body]
+      `.trim();
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/tms-chat/message`, {
+        method: 'POST',
+        body: JSON.stringify({
+          message: quoteDetails,
+          context: 'sales'
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Display in AI Assistant panel by switching to it
+        toast.success('Professional quotation email generated! Check AI Assistant panel.');
+        
+        // Optionally, you could show a modal here with the generated email
+        // For now, the email appears in the AI Assistant chat
+      } else {
+        throw new Error('Failed to generate email');
+      }
+    } catch (error) {
+      console.error('Error generating email:', error);
+      toast.error('Failed to generate email. Please try again.');
+    }
   };
 
   const isQuoteComplete = (quote) => {
