@@ -416,8 +416,11 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   };
 
   const pushToRateQuotes = () => {
+    const quoteNumber = `RQ-${String(quoteCounter).padStart(4, '0')}`;
+    
     const newQuote = {
       id: Date.now().toString(),
+      quoteNumber: quoteNumber,
       pickupLocation: quoteData.pickupLocation || 'Not specified',
       destination: quoteData.destination || 'Not specified',
       distance: quoteData.distance,
@@ -428,12 +431,14 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       fuelSurcharge: quoteData.fuelSurcharge,
       ratePerStop: quoteData.ratePerStop,
       accessorialCharges: quoteData.accessorialCharges,
-      margin: quoteData.margin
+      margin: quoteData.margin,
+      ftlLtlPercentage: quoteData.ftlLtlPercentage
     };
     
     setQuotes([newQuote, ...quotes]);
+    setQuoteCounter(quoteCounter + 1);
     setActiveTab('quotes');
-    toast.success('Quote pushed to Rate Quotes tab');
+    toast.success(`Quote ${quoteNumber} created successfully`);
   };
 
   return (
