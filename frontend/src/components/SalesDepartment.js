@@ -1367,6 +1367,28 @@ Sales Team
                         </div>
                       </div>
                       
+                      {/* Required Info Section */}
+                      <div className="grid grid-cols-3 gap-3 text-sm mb-3 p-3 bg-gray-50 rounded-lg">
+                        <div>
+                          <span className="text-gray-600 block">Consignor:</span>
+                          <span className={`font-semibold ${quote.consignor ? 'text-gray-900' : 'text-red-500'}`}>
+                            {quote.consignor || 'Not specified'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-600 block">Consignee:</span>
+                          <span className={`font-semibold ${quote.consignee ? 'text-gray-900' : 'text-red-500'}`}>
+                            {quote.consignee || 'Not specified'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-600 block">Customer:</span>
+                          <span className={`font-semibold ${quote.customer ? 'text-gray-900' : 'text-red-500'}`}>
+                            {quote.customer || 'Not specified'}
+                          </span>
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                         <div>
                           <span className="text-gray-600">Rate/Mile:</span>
@@ -1391,15 +1413,27 @@ Sales Team
                           <i className="fas fa-edit mr-1"></i>
                           Edit
                         </Button>
-                        <Button variant="outline" size="sm">
-                          <i className="fas fa-paper-plane mr-1"></i>
-                          Send to Customer
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => generateEmail(quote)}
+                          disabled={!isQuoteComplete(quote)}
+                          className={!isQuoteComplete(quote) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-50'}
+                        >
+                          <i className="fas fa-envelope mr-1"></i>
+                          Generate Email
                         </Button>
                         <Button variant="outline" size="sm">
                           <i className="fas fa-check mr-1"></i>
                           Mark Complete
                         </Button>
                       </div>
+                      {!isQuoteComplete(quote) && (
+                        <p className="text-xs text-red-500 mt-2">
+                          <i className="fas fa-exclamation-circle mr-1"></i>
+                          Please add Consignor, Consignee, and Customer to generate email
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
