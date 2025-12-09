@@ -175,16 +175,16 @@ const Dashboard = () => {
 
       {/* Three-Column Layout: Department Panel + Main Content + Chat Panel */}
       <div className="flex-1 flex overflow-hidden h-full">
-        {/* Left Panel (20%) - Department Navigation */}
-        <div className="w-1/5 h-full overflow-hidden">
+        {/* Left Panel (14%) - Department Navigation */}
+        <div className="w-[14%] h-full overflow-hidden">
           <DepartmentPanel 
             activeDepartment={activeDepartment} 
             onDepartmentChange={setActiveDepartment}
           />
         </div>
 
-        {/* Middle Panel (60%) - Main Content */}
-        <div className="w-3/5 h-full overflow-y-auto bg-gray-50 p-6">
+        {/* Middle Panel (66%) - Main Content */}
+        <div className="w-[66%] h-full overflow-y-auto bg-gray-50 p-6">
           {/* Department-Specific Views */}
           {activeDepartment === 'sales' ? (
             <SalesDepartment BACKEND_URL={BACKEND_URL} fetchWithAuth={fetchWithAuth} />
