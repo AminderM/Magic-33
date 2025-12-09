@@ -247,19 +247,20 @@ const TMSChatAssistant = ({ fetchWithAuth, BACKEND_URL, user, activeDepartment }
 
       {/* Input */}
       <div className="p-4 border-t border-gray-200 bg-white">
-        <div className="flex gap-2">
-          <Input
+        <div className="flex gap-2 items-end">
+          <Textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={`Ask about ${departmentMap[activeDepartment]?.label}...`}
             disabled={isLoading}
-            className="flex-1 border-gray-200 rounded-lg focus:border-gray-400"
+            className="flex-1 border-gray-200 rounded-lg focus:border-gray-400 resize-none h-[220px]"
+            rows={8}
           />
           <Button
             onClick={handleSendMessage}
             disabled={!message.trim() || isLoading}
-            className="bg-[#F7B501] hover:bg-[#e5a701] px-4 rounded-lg"
+            className="bg-[#F7B501] hover:bg-[#e5a701] px-4 py-6 rounded-lg"
           >
             <Send className="w-4 h-4" />
           </Button>
