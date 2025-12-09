@@ -31,7 +31,7 @@ const PlacesAutocomplete = ({
     try {
       const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
         types: ['geocode', 'establishment'],
-        componentRestrictions: { country: 'us' }, // Restrict to US, you can remove this line for worldwide
+        // Support all countries including Canada, US, and worldwide locations
         fields: ['formatted_address', 'geometry', 'name']
       });
 
