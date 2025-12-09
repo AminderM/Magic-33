@@ -19,13 +19,19 @@ const PlacesAutocomplete = ({
       return;
     }
 
-    // Check if Places library is loaded
-    if (!window.google.maps.places) {
-      console.error('PlacesAutocomplete: Places library not loaded');
-      return;
-    }
-
-    setIsLoaded(true);
+    // Wait for Places library to load with retry mechanism
+    const initPlaces = () => {
+      if (!window.google.maps.places) {
+        console.log('PlacesAutocomplete: Waiting for Places library...');
+        setTimeout(initPlaces, 100);
+        return;
+      }
+      
+      setIsLoaded(true);
+      console.log('PlacesAutocomplete: Places library loaded successfully');
+    };
+    
+    initPlaces();
 
     // Initialize autocomplete
     try {
