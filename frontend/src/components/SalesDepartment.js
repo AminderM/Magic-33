@@ -1250,6 +1250,12 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             <i className="fas fa-file-invoice text-blue-600 text-xl"></i>
                           </div>
                           <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="font-bold text-blue-600 text-lg">
+                                {quote.quoteNumber}
+                              </h4>
+                              <Badge className="bg-blue-100 text-blue-800 text-xs">Rate Quote</Badge>
+                            </div>
                             <h4 className="font-semibold text-gray-900">
                               {quote.pickupLocation} → {quote.destination}
                             </h4>
