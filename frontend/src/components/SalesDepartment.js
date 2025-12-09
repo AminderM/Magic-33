@@ -569,66 +569,79 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Sales Pipeline Tab */}
         <TabsContent value="pipeline" className="mt-6 pb-6">
-          <div className="grid gap-6">
-            <Card className="bg-white rounded-2xl shadow-sm border border-gray-100">
-              <CardHeader className="border-b border-gray-100 px-6 py-4">
-                <CardTitle className="text-base font-semibold text-gray-900">Active Opportunities</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                {opportunities.length === 0 ? (
-                  <div className="text-center py-12">
-                    <i className="fas fa-handshake text-gray-400 text-5xl mb-4"></i>
-                    <p className="text-gray-600">No opportunities yet</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {opportunities.map((opp) => (
-                      <div key={opp.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <h3 className="font-semibold text-lg">{opp.title}</h3>
-                            <p className="text-sm text-gray-600">{opp.company}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-xl font-bold text-green-600">${opp.value.toLocaleString()}</p>
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <CardHeader className="border-b border-gray-200 px-6 py-4">
+              <CardTitle className="text-lg font-semibold text-gray-900">Active Opportunities</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {opportunities.length === 0 ? (
+                <div className="text-center py-12">
+                  <i className="fas fa-handshake text-gray-400 text-5xl mb-4"></i>
+                  <p className="text-gray-600">No opportunities yet</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Opportunity</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Company</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Value</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Stage</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Probability</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Close Date</th>
+                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {opportunities.map((opp) => (
+                        <tr key={opp.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-medium text-gray-900">{opp.title}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600">{opp.company}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="font-semibold text-green-600">${opp.value.toLocaleString()}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                             <Badge className={getStatusColor(opp.stage)}>{opp.stage.replace('_', ' ').toUpperCase()}</Badge>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <p className="text-gray-600">Close Date</p>
-                            <p className="font-medium">{new Date(opp.close_date).toLocaleDateString()}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-600">Probability</p>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                              <div className="flex-1 bg-gray-200 rounded-full h-2">
+                              <div className="w-16 bg-gray-200 rounded-full h-2">
                                 <div 
                                   className={`${getStageColor(opp.stage)} h-2 rounded-full`}
                                   style={{ width: `${opp.probability}%` }}
                                 ></div>
                               </div>
-                              <span className="font-medium">{opp.probability}%</span>
+                              <span className="text-sm font-medium text-gray-700">{opp.probability}%</span>
                             </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2 mt-3">
-                          <Button size="sm" variant="outline">
-                            <i className="fas fa-edit mr-1"></i>
-                            Edit
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <i className="fas fa-file-alt mr-1"></i>
-                            Create Proposal
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-600">{new Date(opp.close_date).toLocaleDateString()}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right">
+                            <div className="flex gap-2 justify-end">
+                              <Button size="sm" variant="outline">
+                                <i className="fas fa-edit mr-1"></i>
+                                Edit
+                              </Button>
+                              <Button size="sm" variant="outline">
+                                <i className="fas fa-file-alt mr-1"></i>
+                                Proposal
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Leads Tab */}
