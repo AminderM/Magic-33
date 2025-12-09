@@ -191,7 +191,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         ratePerStop: 0,
         accessorialCharges: 0,
         accessoryName: '',
-        margin: 0
+        margin: 0,
+        ftlLtlPercentage: 0
       },
       routeData: null,
       currentStop: ''
