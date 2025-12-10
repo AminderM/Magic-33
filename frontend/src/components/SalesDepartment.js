@@ -1552,6 +1552,65 @@ Body:
           </Card>
         </div>
       )}
+
+      {/* Generated Email Modal */}
+      {showEmailModal && generatedEmail && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <CardHeader className="border-b border-gray-200 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-bold text-gray-900">
+                  <i className="fas fa-envelope mr-2 text-blue-600"></i>
+                  Generated Email - {generatedEmail.quote.quoteNumber}
+                </CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowEmailModal(false)}
+                  className="hover:bg-gray-100"
+                >
+                  <i className="fas fa-times"></i>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6 overflow-y-auto flex-1">
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <i className="fas fa-info-circle text-blue-600"></i>
+                    <span className="font-semibold text-blue-900">AI-Generated Professional Email</span>
+                  </div>
+                  <p className="text-sm text-blue-800">
+                    Review the generated email below. You can copy it to your clipboard and paste it into your email client.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
+                  <pre className="whitespace-pre-wrap font-sans text-sm text-gray-900">
+{generatedEmail.content}
+                  </pre>
+                </div>
+              </div>
+            </CardContent>
+            <div className="border-t border-gray-200 p-4 flex gap-2 flex-shrink-0">
+              <Button
+                onClick={copyEmailToClipboard}
+                className="flex-1 bg-green-600 hover:bg-green-700"
+              >
+                <i className="fas fa-copy mr-2"></i>
+                Copy to Clipboard
+              </Button>
+              <Button
+                onClick={() => setShowEmailModal(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                Close
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
