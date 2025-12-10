@@ -238,7 +238,51 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   useEffect(() => {
     loadSalesData();
     loadGoogleMapsKey();
+    loadRateQuotes();
   }, [fetchWithAuth, BACKEND_URL]);
+
+  // Load rate quotes from database
+  const loadRateQuotes = async () => {
+    if (!fetchWithAuth || !BACKEND_URL) return;
+    
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/sales/rate-quotes`);
+      if (res.ok) {
+        const data = await res.json();
+        const formattedQuotes = (data.quotes || []).map(q => ({
+          id: q.id,
+          quoteNumber: q.quote_number,
+          pickupLocation: q.pickup || 'Not specified',
+          destination: q.destination || 'Not specified',
+          distance: q.distance || 0,
+          totalAmount: q.total_quote?.toFixed(2) || '0.00',
+          status: q.status || 'draft',
+          createdAt: q.created_at,
+          ratePerMile: q.base_rate || 0,
+          fuelSurcharge: q.fuel_surcharge || 0,
+          ratePerStop: 0,
+          accessorialCharges: q.accessorials || 0,
+          margin: 0,
+          ftlLtlPercentage: q.ftl_ltl_percentage || 0,
+          consignor: q.consignor || '',
+          consignee: q.consignee || '',
+          customer: q.customer || ''
+        }));
+        setQuotes(formattedQuotes);
+        
+        // Update quote counter based on existing quotes
+        if (data.quotes && data.quotes.length > 0) {
+          const maxNumber = Math.max(...data.quotes.map(q => {
+            const num = parseInt(q.quote_number?.replace('RQ-', '') || '0');
+            return isNaN(num) ? 0 : num;
+          }));
+          setQuoteCounter(maxNumber + 1);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load rate quotes:', e);
+    }
+  };
 
   const loadGoogleMapsKey = async () => {
     if (!fetchWithAuth || !BACKEND_URL) {
