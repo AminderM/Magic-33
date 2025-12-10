@@ -29,7 +29,7 @@ const Dashboard = () => {
     return showAdminTabs ? 'fleet' : 'equipment';
   });
   
-  const [activeDepartment, setActiveDepartment] = useState('dispatch');
+  const [activeDepartment, setActiveDepartment] = useState('sales');
   const [stats, setStats] = useState({
     totalEquipment: 0,
     activeBookings: 0,
