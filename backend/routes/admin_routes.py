@@ -722,6 +722,11 @@ class UserCreateAdmin(BaseModel):
     role: UserRole
     company_id: Optional[str] = None
     phone: Optional[str] = None
+    mc_number: Optional[str] = None
+    dot_number: Optional[str] = None
+    company_name: Optional[str] = None
+    company_website: Optional[str] = None
+    status: str = "active"  # active, inactive, declined, cancelled
     is_active: bool = True
 
 class UserUpdateAdmin(BaseModel):
@@ -729,8 +734,16 @@ class UserUpdateAdmin(BaseModel):
     role: Optional[UserRole] = None
     company_id: Optional[str] = None
     phone: Optional[str] = None
+    mc_number: Optional[str] = None
+    dot_number: Optional[str] = None
+    company_name: Optional[str] = None
+    company_website: Optional[str] = None
+    status: Optional[str] = None  # active, inactive, declined, cancelled
     is_active: Optional[bool] = None
     password: Optional[str] = None  # Optional password update
+
+class UserCommentCreate(BaseModel):
+    content: str
 
 class UserFilterParams(BaseModel):
     company_id: Optional[str] = None
