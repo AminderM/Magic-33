@@ -522,10 +522,53 @@ Body:
   };
 
   const copyEmailToClipboard = () => {
-    if (generatedEmail) {
-      navigator.clipboard.writeText(generatedEmail.content);
-      toast.success('Email copied to clipboard!');
+    if (!generatedEmail) return;
+    
+    try {
+      // Try modern Clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(generatedEmail.content)
+          .then(() => {
+            toast.success('Email copied to clipboard!');
+          })
+          .catch(() => {
+            // Fallback to older method
+            fallbackCopyToClipboard(generatedEmail.content);
+          });
+      } else {
+        // Use fallback method directly
+        fallbackCopyToClipboard(generatedEmail.content);
+      }
+    } catch (error) {
+      // Use fallback method
+      fallbackCopyToClipboard(generatedEmail.content);
     }
+  };
+
+  const fallbackCopyToClipboard = (text) => {
+    // Create a temporary textarea element
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        toast.success('Email copied to clipboard!');
+      } else {
+        toast.error('Failed to copy. Please select and copy manually.');
+      }
+    } catch (error) {
+      console.error('Fallback copy failed:', error);
+      toast.error('Failed to copy. Please select and copy manually.');
+    }
+    
+    document.body.removeChild(textArea);
   };
 
   const isQuoteComplete = (quote) => {
