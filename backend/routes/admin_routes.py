@@ -900,6 +900,23 @@ async def update_user_admin(user_id: str, user_data: UserUpdateAdmin, current_us
     if user_data.phone is not None:
         update_data["phone"] = user_data.phone
     
+    if user_data.mc_number is not None:
+        update_data["mc_number"] = user_data.mc_number
+    
+    if user_data.dot_number is not None:
+        update_data["dot_number"] = user_data.dot_number
+    
+    if user_data.company_name is not None:
+        update_data["company_name"] = user_data.company_name
+    
+    if user_data.company_website is not None:
+        update_data["company_website"] = user_data.company_website
+    
+    if user_data.status is not None:
+        update_data["status"] = user_data.status
+        # Sync is_active with status
+        update_data["is_active"] = user_data.status == "active"
+    
     if user_data.is_active is not None:
         update_data["is_active"] = user_data.is_active
     
