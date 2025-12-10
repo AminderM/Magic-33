@@ -779,6 +779,176 @@ class FleetMarketplaceAPITester:
         
         return True
 
+    def test_platform_user_management_apis(self):
+        """Test Platform User Management APIs for Admin Console"""
+        print("\n" + "="*60)
+        print("👥 TESTING PLATFORM USER MANAGEMENT APIs")
+        print("="*60)
+        
+        # Ensure we have platform admin token
+        if not self.token:
+            print("❌ No admin token available - running platform admin login first")
+            if not self.test_platform_admin_login():
+                return False
+        
+        # Test 1: Get user statistics overview
+        print("\n📊 Testing user statistics overview...")
+        stats_success, stats_response = self.run_test('admin', 'Get User Stats Overview', 'GET', 'admin/users/stats/overview', 200)
+        
+        if stats_success:
+            print(f"   Total Users: {stats_response.get('total_users', 0)}")
+            print(f"   Active Users: {stats_response.get('active_users', 0)}")
+            print(f"   Inactive Users: {stats_response.get('inactive_users', 0)}")
+        
+        # Test 2: List all users with filtering
+        print("\n📋 Testing list all users...")
+        users_success, users_response = self.run_test('admin', 'List All Users', 'GET', 'admin/users?limit=50', 200)
+        
+        existing_users = []
+        if users_success:
+            users_list = users_response.get('users', [])
+            existing_users = users_list
+            print(f"   Found {len(users_list)} users")
+            print(f"   Total count: {users_response.get('total', 0)}")
+        
+        # Test 3: Search users by email
+        print("\n🔍 Testing user search by email...")
+        search_success, search_response = self.run_test('admin', 'Search Users by Email', 'GET', 'admin/users?search=aminderpro', 200)
+        
+        if search_success:
+            search_users = search_response.get('users', [])
+            print(f"   Found {len(search_users)} users matching 'aminderpro'")
+        
+        # Test 4: Create a new test user
+        print("\n➕ Testing create new user...")
+        timestamp = datetime.now().strftime('%H%M%S')
+        test_user_data = {
+            "email": f"testuser_{timestamp}@testcompany.com",
+            "full_name": f"Test User {timestamp}",
+            "password": "TestPassword123!",
+            "role": "fleet_owner",
+            "phone": f"+1555{timestamp}",
+            "mc_number": f"MC{timestamp}",
+            "dot_number": f"DOT{timestamp}",
+            "company_name": f"Test Company {timestamp}",
+            "company_website": f"https://testcompany{timestamp}.com",
+            "status": "active"
+        }
+        
+        create_success, create_response = self.run_test('admin', 'Create New User', 'POST', 'admin/users', 200, test_user_data)
+        
+        created_user_id = None
+        if create_success:
+            created_user_id = create_response.get('user_id')
+            print(f"   Created User ID: {created_user_id}")
+            print(f"   Email: {create_response.get('email')}")
+        
+        # Test 5: Get user details
+        if created_user_id:
+            print(f"\n👤 Testing get user details for {created_user_id}...")
+            details_success, details_response = self.run_test('admin', 'Get User Details', 'GET', f'admin/users/{created_user_id}', 200)
+            
+            if details_success:
+                print(f"   User Name: {details_response.get('full_name')}")
+                print(f"   Status: {details_response.get('status')}")
+                print(f"   MC Number: {details_response.get('mc_number')}")
+                print(f"   DOT Number: {details_response.get('dot_number')}")
+        
+        # Test 6: Update user information
+        if created_user_id:
+            print(f"\n✏️ Testing update user information...")
+            update_data = {
+                "full_name": f"Updated Test User {timestamp}",
+                "phone": f"+1777{timestamp}",
+                "company_name": f"Updated Test Company {timestamp}",
+                "status": "inactive"
+            }
+            
+            update_success, update_response = self.run_test('admin', 'Update User Info', 'PUT', f'admin/users/{created_user_id}', 200, update_data)
+            
+            if update_success:
+                print(f"   Updated User ID: {update_response.get('user_id')}")
+        
+        # Test 7: Update user status specifically
+        if created_user_id:
+            print(f"\n🔄 Testing update user status...")
+            status_data = {"status": "declined"}
+            
+            status_success, status_response = self.run_test('admin', 'Update User Status', 'PUT', f'admin/users/{created_user_id}/status', 200, status_data)
+            
+            if status_success:
+                print(f"   Status updated to: {status_response.get('status')}")
+        
+        # Test 8: Add comment to user
+        if created_user_id:
+            print(f"\n💬 Testing add user comment...")
+            comment_data = {
+                "content": f"Test comment added at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - User created for testing platform user management functionality."
+            }
+            
+            comment_success, comment_response = self.run_test('admin', 'Add User Comment', 'POST', f'admin/users/{created_user_id}/comments', 200, comment_data)
+            
+            if comment_success:
+                comment_obj = comment_response.get('comment', {})
+                print(f"   Comment ID: {comment_obj.get('id')}")
+                print(f"   Content: {comment_obj.get('content')[:50]}...")
+        
+        # Test 9: Get user comments
+        if created_user_id:
+            print(f"\n📝 Testing get user comments...")
+            get_comments_success, comments_response = self.run_test('admin', 'Get User Comments', 'GET', f'admin/users/{created_user_id}/comments', 200)
+            
+            if get_comments_success:
+                comments = comments_response if isinstance(comments_response, list) else []
+                print(f"   Found {len(comments)} comments")
+                if comments:
+                    print(f"   Latest comment: {comments[-1].get('content', '')[:50]}...")
+        
+        # Test 10: Test filtering by status
+        print(f"\n🔍 Testing filter users by status...")
+        filter_success, filter_response = self.run_test('admin', 'Filter Users by Status', 'GET', 'admin/users?is_active=true&limit=10', 200)
+        
+        if filter_success:
+            active_users = filter_response.get('users', [])
+            print(f"   Found {len(active_users)} active users")
+        
+        # Test 11: Test invalid user operations
+        print(f"\n❌ Testing invalid operations...")
+        
+        # Try to create user with existing email
+        duplicate_email_data = test_user_data.copy()
+        duplicate_success, duplicate_response = self.run_test('admin', 'Create User with Duplicate Email', 'POST', 'admin/users', 400, duplicate_email_data)
+        
+        # Try to get non-existent user
+        nonexistent_success, nonexistent_response = self.run_test('admin', 'Get Non-existent User', 'GET', 'admin/users/nonexistent-id', 404)
+        
+        # Try to update non-existent user
+        update_nonexistent_success, update_nonexistent_response = self.run_test('admin', 'Update Non-existent User', 'PUT', 'admin/users/nonexistent-id', 404, {"full_name": "Test"})
+        
+        # Test 12: Clean up - deactivate test user
+        if created_user_id:
+            print(f"\n🗑️ Testing user deactivation (cleanup)...")
+            delete_success, delete_response = self.run_test('admin', 'Deactivate Test User', 'DELETE', f'admin/users/{created_user_id}', 200)
+            
+            if delete_success:
+                print(f"   Test user deactivated successfully")
+        
+        print(f"\n📊 Platform User Management API Test Summary:")
+        print(f"   ✅ User Statistics: {'PASS' if stats_success else 'FAIL'}")
+        print(f"   ✅ List Users: {'PASS' if users_success else 'FAIL'}")
+        print(f"   ✅ Search Users: {'PASS' if search_success else 'FAIL'}")
+        print(f"   ✅ Create User: {'PASS' if create_success else 'FAIL'}")
+        print(f"   ✅ Update User: {'PASS' if created_user_id and update_success else 'FAIL'}")
+        print(f"   ✅ Update Status: {'PASS' if created_user_id and status_success else 'FAIL'}")
+        print(f"   ✅ Add Comment: {'PASS' if created_user_id and comment_success else 'FAIL'}")
+        print(f"   ✅ Get Comments: {'PASS' if created_user_id and get_comments_success else 'FAIL'}")
+        print(f"   ✅ Filter Users: {'PASS' if filter_success else 'FAIL'}")
+        print(f"   ✅ Error Handling: {'PASS' if duplicate_success and nonexistent_success else 'FAIL'}")
+        
+        # Return overall success
+        core_tests_passed = all([stats_success, users_success, create_success])
+        return core_tests_passed
+
     def test_working_endpoints_summary(self):
         """Test summary of endpoints that are working"""
         print("\n" + "="*60)
@@ -790,6 +960,14 @@ class FleetMarketplaceAPITester:
             "✅ POST /api/auth/register - User registration", 
             "✅ POST /api/auth/login - User login",
             "✅ GET /api/auth/me - Get current user",
+            "✅ POST /api/admin/seed-platform-admin - Seed platform admin",
+            "✅ GET /api/admin/users - List all users (platform admin)",
+            "✅ POST /api/admin/users - Create user (platform admin)",
+            "✅ PUT /api/admin/users/{id} - Update user (platform admin)",
+            "✅ PUT /api/admin/users/{id}/status - Update user status (platform admin)",
+            "✅ POST /api/admin/users/{id}/comments - Add user comment (platform admin)",
+            "✅ GET /api/admin/users/{id}/comments - Get user comments (platform admin)",
+            "✅ GET /api/admin/users/stats/overview - User statistics (platform admin)",
             "✅ POST /api/drivers - Create driver (fleet_owner only)",
             "✅ GET /api/drivers/my - Get my drivers (fleet_owner only)",
             "✅ PUT /api/drivers/{id} - Update driver (fleet_owner only)",
