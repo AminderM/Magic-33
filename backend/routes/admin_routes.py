@@ -751,7 +751,7 @@ class UserFilterParams(BaseModel):
     is_active: Optional[bool] = None
     search: Optional[str] = None  # Search by name or email
 
-@router.get('/users', response_model=List[dict])
+@router.get('/users', response_model=dict)
 async def list_all_users(
     company_id: Optional[str] = None,
     role: Optional[str] = None,
