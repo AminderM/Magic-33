@@ -462,33 +462,70 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     return total.toFixed(2);
   };
 
-  const pushToRateQuotes = () => {
+  const pushToRateQuotes = async () => {
     const quoteNumber = `RQ-${String(quoteCounter).padStart(4, '0')}`;
     
-    const newQuote = {
-      id: Date.now().toString(),
-      quoteNumber: quoteNumber,
-      pickupLocation: quoteData.pickupLocation || 'Not specified',
+    // Prepare quote data for backend
+    const quotePayload = {
+      quote_number: quoteNumber,
+      pickup: quoteData.pickupLocation || 'Not specified',
       destination: quoteData.destination || 'Not specified',
-      distance: quoteData.distance,
-      totalAmount: calculateTotalQuote(),
-      status: 'incomplete',
-      createdAt: new Date().toISOString(),
-      ratePerMile: quoteData.ratePerMile,
-      fuelSurcharge: quoteData.fuelSurcharge,
-      ratePerStop: quoteData.ratePerStop,
-      accessorialCharges: quoteData.accessorialCharges,
-      margin: quoteData.margin,
-      ftlLtlPercentage: quoteData.ftlLtlPercentage,
-      consignor: quoteData.consignor || '',
-      consignee: quoteData.consignee || '',
-      customer: quoteData.customer || ''
+      stops: quoteData.stops || [],
+      distance: quoteData.distance || 0,
+      base_rate: (quoteData.distance * quoteData.ratePerMile) || 0,
+      fuel_surcharge: quoteData.fuelSurcharge || 0,
+      accessorials: quoteData.accessorialCharges || 0,
+      total_quote: parseFloat(calculateTotalQuote()) || 0,
+      consignor: quoteData.consignor || null,
+      consignee: quoteData.consignee || null,
+      customer: quoteData.customer || null,
+      ftl_ltl_percentage: quoteData.ftlLtlPercentage || null,
+      status: 'draft'
     };
     
-    setQuotes([newQuote, ...quotes]);
-    setQuoteCounter(quoteCounter + 1);
-    setActiveTab('quotes');
-    toast.success(`Quote ${quoteNumber} created successfully`);
+    try {
+      // Save to backend
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/sales/rate-quotes`, {
+        method: 'POST',
+        body: JSON.stringify(quotePayload)
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        
+        // Create local quote object for state
+        const newQuote = {
+          id: data.quote_id,
+          quoteNumber: data.quote_number,
+          pickupLocation: quoteData.pickupLocation || 'Not specified',
+          destination: quoteData.destination || 'Not specified',
+          distance: quoteData.distance,
+          totalAmount: calculateTotalQuote(),
+          status: 'draft',
+          createdAt: new Date().toISOString(),
+          ratePerMile: quoteData.ratePerMile,
+          fuelSurcharge: quoteData.fuelSurcharge,
+          ratePerStop: quoteData.ratePerStop,
+          accessorialCharges: quoteData.accessorialCharges,
+          margin: quoteData.margin,
+          ftlLtlPercentage: quoteData.ftlLtlPercentage,
+          consignor: quoteData.consignor || '',
+          consignee: quoteData.consignee || '',
+          customer: quoteData.customer || ''
+        };
+        
+        setQuotes([newQuote, ...quotes]);
+        setQuoteCounter(quoteCounter + 1);
+        setActiveTab('quotes');
+        toast.success(`Quote ${data.quote_number} created and saved successfully`);
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to save quote');
+      }
+    } catch (error) {
+      console.error('Error saving quote:', error);
+      toast.error('Failed to save quote. Please try again.');
+    }
   };
 
   const [generatedEmail, setGeneratedEmail] = useState(null);
