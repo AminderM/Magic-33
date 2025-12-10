@@ -220,6 +220,8 @@ const AdminConsole = () => {
     switch (activeView) {
       case 'home':
         return <HomeView tenants={tenants} plans={plans} loading={loading} />;
+      case 'users':
+        return <PlatformUserManagement fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'subscription':
         return <SubscriptionManagerNew 
           tenants={tenants}
