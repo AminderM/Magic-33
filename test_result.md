@@ -418,7 +418,8 @@ test_plan:
     - "Company Profile split view layout and navigation"
     - "User/Driver management forms and operations"
     - "Document upload with file size validation and version history"
-  stuck_tasks: []
+  stuck_tasks:
+    - "AI-Powered Generate Email with Modal Display"
   test_all: false
   test_priority: "high_first"
 
