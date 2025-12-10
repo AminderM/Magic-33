@@ -14,6 +14,7 @@ import SalesAnalyticsNew from './SalesAnalyticsNew';
 import CRMView from './CRMView';
 import IntegrationsView from './IntegrationsView';
 import RouteMateApp from '../route-mate/RouteMateApp';
+import PlatformUserManagement from './PlatformUserManagement';
 
 const AdminConsole = () => {
   const { fetchWithAuth, user, logout } = useAuth();
