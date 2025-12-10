@@ -28,6 +28,7 @@ from routes import route_mate_routes
 from routes import user_management_routes
 from routes import tms_chat_routes
 from routes import driver_app_routes
+from routes import sales_routes
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
