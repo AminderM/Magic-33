@@ -496,6 +496,17 @@ test_plan:
       - working: true
         agent: "testing"
         comment: "✅ COMPREHENSIVE GENERATE EMAIL BUTTON TESTING COMPLETED: All functionality working perfectly (100% success rate). DETAILED TEST RESULTS: ✅ PART 1 - Required Fields Verification: Successfully verified all three required fields (Consignor, Consignee, Customer) are present in FreightCalculator Quote Calculator section with red asterisks (*) indicating required status. Fields are properly positioned below the pricing inputs with clear labels and placeholder text. ✅ PART 2 - Incomplete Quote Behavior: Created quote without required fields (Toronto, ON → Vancouver, BC with empty Consignor/Consignee/Customer), verified quote displays 'Not specified' in red text for all three missing fields, Generate Email button properly disabled with opacity-50 class and cursor-not-allowed styling, warning message 'Please add Consignor, Consignee, and Customer to generate email' displayed correctly below disabled button. ✅ PART 3 - Complete Quote Behavior: Created quote with all required fields filled (Montreal, QC → Calgary, AB, Consignor: ABC Shipping Inc, Consignee: XYZ Logistics Ltd, Customer: Test Customer Corp), verified company names appear in normal black text (not red), Generate Email button enabled and clickable (no opacity-50 class), no warning message displayed for complete quote. ✅ PART 4 - Generate Email Functionality: Successfully clicked enabled Generate Email button, verified mailto: link opens default email client, email subject contains quote number and route (Rate Quote RQ-0001 - Montreal, QC to Calgary, AB), email body includes complete quote details with all three required fields (Consignor, Consignee, Customer) plus route details, pricing breakdown, and professional formatting. ✅ VALIDATION LOGIC: isQuoteComplete() function properly validates presence of all three required fields, generateEmail() function creates properly formatted mailto link with comprehensive quote details. All Generate Email button functionality working perfectly with proper conditional validation, enabling/disabling based on required field completion, and complete email generation. Feature fully meets specifications and ready for production use."
+  - task: "AI-Powered Generate Email with Modal Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/SalesDepartment.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated Generate Email feature to use AI-powered email generation with modal display. Clicking Generate Email now triggers API call to /api/tms-chat/message with sales context to generate professional email content, then displays result in a modal dialog with copy to clipboard functionality. Modal includes title with quote number, close button, blue info box, generated email content in gray box, and Copy/Close buttons."
 
 agent_communication:
   - agent: "main"
