@@ -833,11 +833,17 @@ async def create_user_admin(user_data: UserCreateAdmin, current_user: User = Dep
         "role": user_data.role,
         "company_id": user_data.company_id,
         "phone": user_data.phone,
+        "mc_number": user_data.mc_number,
+        "dot_number": user_data.dot_number,
+        "company_name": user_data.company_name,
+        "company_website": user_data.company_website,
+        "status": user_data.status,
         "is_active": user_data.is_active,
         "email_verified": True,  # Auto-verify admin-created users
         "registration_status": RegistrationStatus.VERIFIED,
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "created_by": current_user.id
+        "created_by": current_user.id,
+        "comments": []  # Initialize empty comments array
     }
     
     # Insert user
