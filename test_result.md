@@ -412,16 +412,25 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Platform User Management UI"
     - "AI-Powered Generate Email with Modal Display"
     - "Google Maps Integration in Admin Console"
-    - "Confirmed Rate Currency Validation in OrderManagement"
-    - "Company Profile split view layout and navigation"
-    - "User/Driver management forms and operations"
-    - "Document upload with file size validation and version history"
   stuck_tasks:
     - "AI-Powered Generate Email with Modal Display"
   test_all: false
   test_priority: "high_first"
+
+  - task: "Platform User Management UI"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/admin/PlatformUserManagement.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Completely rebuilt Platform User Management UI with new requirements: spreadsheet-style table with columns (Name, Email, Phone#, MC#, DOT#, Company Name, Company Website), action buttons at end (Edit button, Status dropdown with Active/Inactive/Declined/Cancelled options, Comments button for customer history). Added backend support for new fields (mc_number, dot_number, company_name, company_website, status) and comments system. Create User modal includes all required fields with Generate password button. Edit User modal allows updating all fields. Comments modal allows adding/viewing/deleting comments about customer history."
 
   - task: "Sales & Business Development Department View"
     implemented: true
