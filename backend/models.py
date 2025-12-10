@@ -6,16 +6,23 @@ import uuid
 
 # Enums
 class UserRole(str, Enum):
-    FLEET_OWNER = "fleet_owner"
+    PLATFORM_ADMIN = "platform_admin"  # Platform owner (SAAS provider)
+    COMPANY_ADMIN = "company_admin"    # Customer company admin
+    MANAGER = "manager"                # Company manager
+    DISPATCHER = "dispatcher"          # Dispatcher role
+    ACCOUNTANT = "accountant"          # Accountant role
+    HR_MANAGER = "hr_manager"          # HR Manager role
+    SALES_MANAGER = "sales_manager"    # Sales Manager role
+    DRIVER = "driver"                  # Driver role
+    FLEET_MANAGER = "fleet_manager"    # Fleet Manager role
+    # Legacy roles (keep for backward compatibility)
+    FLEET_OWNER = "fleet_owner"        # Legacy - maps to COMPANY_ADMIN
     MANUFACTURER = "manufacturer"
     CONSTRUCTION_COMPANY = "construction_company"
     WAREHOUSE = "warehouse"
-    DRIVER = "driver"
-    DISPATCHER = "dispatcher"
     ACCOUNTS_RECEIVABLE = "accounts_receivable"
     ACCOUNTS_PAYABLE = "accounts_payable"
     HR = "hr"
-    PLATFORM_ADMIN = "platform_admin"
 
 class CompanyType(str, Enum):
     TRUCKING = "trucking"
