@@ -12,7 +12,7 @@ from models import User
 from auth import get_current_user
 import uuid
 
-router = APIRouter(prefix="/api/sales", tags=["Sales"])
+router = APIRouter(prefix="/sales", tags=["Sales"])
 
 # Pydantic Models
 class StopLocation(BaseModel):
