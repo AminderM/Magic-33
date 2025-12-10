@@ -33,7 +33,8 @@ class FleetMarketplaceAPITester:
             'bookings': [],
             'locations': [],
             'health': [],
-            'tms_chat': []
+            'tms_chat': [],
+            'admin': []
         }
 
     def run_test(self, category: str, name: str, method: str, endpoint: str, expected_status: int, data=None, headers=None):
