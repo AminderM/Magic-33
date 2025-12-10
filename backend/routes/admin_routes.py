@@ -709,3 +709,292 @@ async def get_google_maps_key(current_user: User = Depends(get_current_user)):
     }
 
 # Location Tracking Routes
+
+
+# ============================================================================
+# USER MANAGEMENT ENDPOINTS (Platform Admin Only)
+# ============================================================================
+
+class UserCreateAdmin(BaseModel):
+    email: EmailStr
+    full_name: str
+    password: str
+    role: UserRole
+    company_id: Optional[str] = None
+    phone: Optional[str] = None
+    is_active: bool = True
+
+class UserUpdateAdmin(BaseModel):
+    full_name: Optional[str] = None
+    role: Optional[UserRole] = None
+    company_id: Optional[str] = None
+    phone: Optional[str] = None
+    is_active: Optional[bool] = None
+    password: Optional[str] = None  # Optional password update
+
+class UserFilterParams(BaseModel):
+    company_id: Optional[str] = None
+    role: Optional[UserRole] = None
+    is_active: Optional[bool] = None
+    search: Optional[str] = None  # Search by name or email
+
+@router.get('/users', response_model=List[dict])
+async def list_all_users(
+    company_id: Optional[str] = None,
+    role: Optional[str] = None,
+    is_active: Optional[bool] = None,
+    search: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
+    current_user: User = Depends(get_current_user)
+):
+    """List all users with filtering (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Build query
+    query = {}
+    
+    if company_id:
+        query["company_id"] = company_id
+    
+    if role:
+        query["role"] = role
+    
+    if is_active is not None:
+        query["is_active"] = is_active
+    
+    if search:
+        # Search by name or email
+        query["$or"] = [
+            {"full_name": {"$regex": search, "$options": "i"}},
+            {"email": {"$regex": search, "$options": "i"}}
+        ]
+    
+    # Get users with pagination
+    users = await db.users.find(query, {"_id": 0, "password_hash": 0}).skip(skip).limit(limit).to_list(length=limit)
+    
+    # Enrich with company name
+    for user in users:
+        if user.get("company_id"):
+            company = await db.companies.find_one({"id": user["company_id"]}, {"_id": 0, "name": 1})
+            user["company_name"] = company.get("name") if company else "Unknown"
+        else:
+            user["company_name"] = None
+    
+    # Get total count
+    total_count = await db.users.count_documents(query)
+    
+    return {
+        "users": users,
+        "total": total_count,
+        "skip": skip,
+        "limit": limit
+    }
+
+@router.post('/users', response_model=dict)
+async def create_user_admin(user_data: UserCreateAdmin, current_user: User = Depends(get_current_user)):
+    """Create a new user (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Check if email already exists
+    existing_user = await db.users.find_one({"email": user_data.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Validate company if provided
+    if user_data.company_id:
+        company = await db.companies.find_one({"id": user_data.company_id})
+        if not company:
+            raise HTTPException(status_code=404, detail="Company not found")
+    
+    # Hash password
+    from auth import hash_password
+    hashed_password = hash_password(user_data.password)
+    
+    # Create user object
+    user_dict = {
+        "id": str(uuid.uuid4()),
+        "email": user_data.email,
+        "full_name": user_data.full_name,
+        "password_hash": hashed_password,
+        "role": user_data.role,
+        "company_id": user_data.company_id,
+        "phone": user_data.phone,
+        "is_active": user_data.is_active,
+        "email_verified": True,  # Auto-verify admin-created users
+        "registration_status": RegistrationStatus.VERIFIED,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_by": current_user.id
+    }
+    
+    # Insert user
+    await db.users.insert_one(user_dict)
+    
+    return {
+        "message": "User created successfully",
+        "user_id": user_dict["id"],
+        "email": user_dict["email"]
+    }
+
+@router.get('/users/{user_id}', response_model=dict)
+async def get_user_details(user_id: str, current_user: User = Depends(get_current_user)):
+    """Get user details (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "password_hash": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Enrich with company details
+    if user.get("company_id"):
+        company = await db.companies.find_one({"id": user["company_id"]}, {"_id": 0})
+        user["company"] = company
+    
+    return user
+
+@router.put('/users/{user_id}', response_model=dict)
+async def update_user_admin(user_id: str, user_data: UserUpdateAdmin, current_user: User = Depends(get_current_user)):
+    """Update user (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Check if user exists
+    existing_user = await db.users.find_one({"id": user_id})
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Build update data
+    update_data = {}
+    
+    if user_data.full_name is not None:
+        update_data["full_name"] = user_data.full_name
+    
+    if user_data.role is not None:
+        update_data["role"] = user_data.role
+    
+    if user_data.company_id is not None:
+        # Validate company
+        company = await db.companies.find_one({"id": user_data.company_id})
+        if not company:
+            raise HTTPException(status_code=404, detail="Company not found")
+        update_data["company_id"] = user_data.company_id
+    
+    if user_data.phone is not None:
+        update_data["phone"] = user_data.phone
+    
+    if user_data.is_active is not None:
+        update_data["is_active"] = user_data.is_active
+    
+    if user_data.password is not None:
+        # Hash new password
+        from auth import hash_password
+        update_data["password_hash"] = hash_password(user_data.password)
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+    
+    # Add update metadata
+    update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
+    update_data["updated_by"] = current_user.id
+    
+    # Update user
+    await db.users.update_one({"id": user_id}, {"$set": update_data})
+    
+    return {
+        "message": "User updated successfully",
+        "user_id": user_id
+    }
+
+@router.delete('/users/{user_id}', response_model=dict)
+async def delete_user_admin(user_id: str, current_user: User = Depends(get_current_user)):
+    """Delete/Deactivate user (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Check if user exists
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Prevent deleting platform admin
+    if user.get("role") == UserRole.PLATFORM_ADMIN:
+        raise HTTPException(status_code=403, detail="Cannot delete platform admin user")
+    
+    # Soft delete - just deactivate the user
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {
+                "is_active": False,
+                "deleted_at": datetime.now(timezone.utc).isoformat(),
+                "deleted_by": current_user.id
+            }
+        }
+    )
+    
+    return {
+        "message": "User deactivated successfully",
+        "user_id": user_id
+    }
+
+class BulkUserAction(BaseModel):
+    user_ids: List[str]
+    action: str  # "activate" or "deactivate"
+
+@router.post('/users/bulk-action', response_model=dict)
+async def bulk_user_action(action_data: BulkUserAction, current_user: User = Depends(get_current_user)):
+    """Bulk activate/deactivate users (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    if action_data.action not in ["activate", "deactivate"]:
+        raise HTTPException(status_code=400, detail="Invalid action. Use 'activate' or 'deactivate'")
+    
+    is_active = action_data.action == "activate"
+    
+    # Update all users
+    result = await db.users.update_many(
+        {"id": {"$in": action_data.user_ids}},
+        {
+            "$set": {
+                "is_active": is_active,
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "updated_by": current_user.id
+            }
+        }
+    )
+    
+    return {
+        "message": f"Successfully {action_data.action}d {result.modified_count} users",
+        "modified_count": result.modified_count
+    }
+
+@router.get('/users/stats/overview', response_model=dict)
+async def get_users_stats(current_user: User = Depends(get_current_user)):
+    """Get user statistics overview (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Total users
+    total_users = await db.users.count_documents({})
+    
+    # Active users
+    active_users = await db.users.count_documents({"is_active": True})
+    
+    # Users by role
+    pipeline = [
+        {"$group": {"_id": "$role", "count": {"$sum": 1}}}
+    ]
+    users_by_role = await db.users.aggregate(pipeline).to_list(length=None)
+    
+    # Users by company
+    pipeline = [
+        {"$match": {"company_id": {"$ne": None}}},
+        {"$group": {"_id": "$company_id", "count": {"$sum": 1}}}
+    ]
+    users_by_company = await db.users.aggregate(pipeline).to_list(length=None)
+    
+    return {
+        "total_users": total_users,
+        "active_users": active_users,
+        "inactive_users": total_users - active_users,
+        "users_by_role": {item["_id"]: item["count"] for item in users_by_role},
+        "total_companies_with_users": len(users_by_company)
+    }
+
