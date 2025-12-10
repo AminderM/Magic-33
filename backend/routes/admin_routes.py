@@ -1066,7 +1066,7 @@ async def add_user_comment(user_id: str, comment_data: UserCommentCreate, curren
         "comment": comment
     }
 
-@router.get('/users/{user_id}/comments', response_model=List[dict])
+@router.get('/users/{user_id}/comments')
 async def get_user_comments(user_id: str, current_user: User = Depends(get_current_user)):
     """Get all comments for a user (Platform Admin only)"""
     require_platform_admin(current_user)
