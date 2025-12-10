@@ -374,12 +374,12 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
               />
             </div>
             <div>
-              <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <Select value={filterStatus || "all"} onValueChange={(v) => setFilterStatus(v === "all" ? "" : v)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   {USER_STATUSES.map(status => (
                     <SelectItem key={status.value} value={status.value}>{status.label}</SelectItem>
                   ))}
