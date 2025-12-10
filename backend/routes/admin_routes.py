@@ -1034,3 +1034,98 @@ async def get_users_stats(current_user: User = Depends(get_current_user)):
         "total_companies_with_users": len(users_by_company)
     }
 
+# Comments endpoints for user management
+@router.post('/users/{user_id}/comments', response_model=dict)
+async def add_user_comment(user_id: str, comment_data: UserCommentCreate, current_user: User = Depends(get_current_user)):
+    """Add a comment to a user's profile (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Check if user exists
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Create comment object
+    comment = {
+        "id": str(uuid.uuid4()),
+        "content": comment_data.content,
+        "created_by": current_user.id,
+        "created_by_name": current_user.full_name,
+        "created_by_email": current_user.email,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    # Add comment to user's comments array
+    await db.users.update_one(
+        {"id": user_id},
+        {"$push": {"comments": comment}}
+    )
+    
+    return {
+        "message": "Comment added successfully",
+        "comment": comment
+    }
+
+@router.get('/users/{user_id}/comments', response_model=List[dict])
+async def get_user_comments(user_id: str, current_user: User = Depends(get_current_user)):
+    """Get all comments for a user (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Check if user exists
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "comments": 1})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return user.get("comments", [])
+
+@router.delete('/users/{user_id}/comments/{comment_id}', response_model=dict)
+async def delete_user_comment(user_id: str, comment_id: str, current_user: User = Depends(get_current_user)):
+    """Delete a comment from a user's profile (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    # Remove comment from user's comments array
+    result = await db.users.update_one(
+        {"id": user_id},
+        {"$pull": {"comments": {"id": comment_id}}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    
+    return {"message": "Comment deleted successfully"}
+
+# Update status endpoint
+@router.put('/users/{user_id}/status', response_model=dict)
+async def update_user_status(user_id: str, status_data: dict, current_user: User = Depends(get_current_user)):
+    """Update user status (Platform Admin only)"""
+    require_platform_admin(current_user)
+    
+    status = status_data.get("status")
+    if status not in ["active", "inactive", "declined", "cancelled"]:
+        raise HTTPException(status_code=400, detail="Invalid status. Use 'active', 'inactive', 'declined', or 'cancelled'")
+    
+    # Check if user exists
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Update status
+    await db.users.update_one(
+        {"id": user_id},
+        {
+            "$set": {
+                "status": status,
+                "is_active": status == "active",
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "updated_by": current_user.id
+            }
+        }
+    )
+    
+    return {
+        "message": f"User status updated to {status}",
+        "user_id": user_id,
+        "status": status
+    }
+
+
