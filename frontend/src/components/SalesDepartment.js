@@ -447,6 +447,9 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     toast.success(`Quote ${quoteNumber} created successfully`);
   };
 
+  const [generatedEmail, setGeneratedEmail] = useState(null);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+
   const generateEmail = async (quote) => {
     try {
       toast.info('AI Assistant is generating your professional email...');
@@ -481,7 +484,7 @@ Please generate:
 1. A professional email subject line
 2. A complete professional email body with proper formatting, greeting, quote details, terms, and closing
 
-Format the response as:
+Format the response EXACTLY as:
 Subject: [subject line]
 
 Body:
@@ -499,17 +502,29 @@ Body:
       if (response.ok) {
         const data = await response.json();
         
-        // Display in AI Assistant panel by switching to it
-        toast.success('Professional quotation email generated! Check AI Assistant panel.');
+        // Parse the AI response to extract subject and body
+        const emailContent = data.response || '';
         
-        // Optionally, you could show a modal here with the generated email
-        // For now, the email appears in the AI Assistant chat
+        setGeneratedEmail({
+          content: emailContent,
+          quote: quote
+        });
+        setShowEmailModal(true);
+        
+        toast.success('Professional quotation email generated successfully!');
       } else {
         throw new Error('Failed to generate email');
       }
     } catch (error) {
       console.error('Error generating email:', error);
       toast.error('Failed to generate email. Please try again.');
+    }
+  };
+
+  const copyEmailToClipboard = () => {
+    if (generatedEmail) {
+      navigator.clipboard.writeText(generatedEmail.content);
+      toast.success('Email copied to clipboard!');
     }
   };
 
