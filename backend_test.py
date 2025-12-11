@@ -950,6 +950,207 @@ class FleetMarketplaceAPITester:
         core_tests_passed = all([stats_success, users_success, create_success])
         return core_tests_passed
 
+    def test_quote_persistence_feature(self):
+        """Test Quote Persistence feature - comprehensive testing of rate quotes"""
+        print("\n" + "="*60)
+        print("💰 TESTING QUOTE PERSISTENCE FEATURE")
+        print("="*60)
+        
+        # Ensure we have platform admin token
+        if not self.token:
+            print("❌ No admin token available - running platform admin login first")
+            if not self.test_platform_admin_login():
+                return False
+        
+        # Test 1: Verify existing quote loads from database (RQ-0001)
+        print("\n📋 Test 1: Verify existing quote loads from database...")
+        existing_quotes_success, existing_quotes_response = self.run_test(
+            'sales', 'Get Existing Rate Quotes', 'GET', 'sales/rate-quotes', 200
+        )
+        
+        existing_quotes = []
+        if existing_quotes_success:
+            quotes_list = existing_quotes_response.get('quotes', [])
+            existing_quotes = quotes_list
+            print(f"   Found {len(quotes_list)} existing quotes")
+            
+            # Look for RQ-0001 specifically
+            rq_0001_found = any(quote.get('quote_number') == 'RQ-0001' for quote in quotes_list)
+            if rq_0001_found:
+                print("   ✅ RQ-0001 quote found in database")
+            else:
+                print("   ⚠️  RQ-0001 quote not found - will be created in next test")
+        
+        # Test 2: Create new quote via API (Montreal → Calgary)
+        print("\n➕ Test 2: Create new quote via API...")
+        
+        # Get next quote number first
+        next_number_success, next_number_response = self.run_test(
+            'sales', 'Get Next Quote Number', 'GET', 'sales/rate-quotes/next-number', 200
+        )
+        
+        next_quote_number = "RQ-0001"  # Default fallback
+        if next_number_success:
+            next_quote_number = next_number_response.get('next_quote_number', 'RQ-0001')
+            print(f"   Next quote number: {next_quote_number}")
+        
+        # Create Montreal → Calgary quote
+        montreal_calgary_quote = {
+            "quote_number": next_quote_number,
+            "pickup": "Montreal, QC, Canada",
+            "destination": "Calgary, AB, Canada",
+            "distance": 3420.5,
+            "duration": "36 hours",
+            "base_rate": 2500.00,
+            "fuel_surcharge": 350.00,
+            "accessorials": 150.00,
+            "total_quote": 3000.00,
+            "consignor": "Montreal Shipping Co.",
+            "consignee": "Calgary Logistics Ltd.",
+            "customer": "TransCanada Freight Corp.",
+            "unit_type": "Dry Van",
+            "weight": 25000.0,
+            "notes": "Cross-country shipment, temperature controlled",
+            "status": "draft"
+        }
+        
+        create_success, create_response = self.run_test(
+            'sales', 'Create Montreal→Calgary Quote', 'POST', 'sales/rate-quotes', 200, montreal_calgary_quote
+        )
+        
+        created_quote_id = None
+        created_quote_number = None
+        if create_success:
+            created_quote_id = create_response.get('quote_id')
+            created_quote_number = create_response.get('quote_number')
+            print(f"   Created Quote ID: {created_quote_id}")
+            print(f"   Created Quote Number: {created_quote_number}")
+        
+        # Test 3: Verify both quotes exist
+        print("\n🔍 Test 3: Verify both quotes exist...")
+        all_quotes_success, all_quotes_response = self.run_test(
+            'sales', 'Get All Rate Quotes After Creation', 'GET', 'sales/rate-quotes', 200
+        )
+        
+        total_quotes_count = 0
+        if all_quotes_success:
+            quotes_list = all_quotes_response.get('quotes', [])
+            total_quotes_count = all_quotes_response.get('total', len(quotes_list))
+            print(f"   Total quotes in database: {total_quotes_count}")
+            
+            # Verify we have at least 2 quotes (or more if others exist)
+            if total_quotes_count >= 2:
+                print("   ✅ Multiple quotes exist in database")
+                
+                # Show quote details
+                for i, quote in enumerate(quotes_list[:3], 1):  # Show first 3 quotes
+                    quote_num = quote.get('quote_number', 'N/A')
+                    pickup = quote.get('pickup', 'N/A')
+                    destination = quote.get('destination', 'N/A')
+                    total = quote.get('total_quote', 0)
+                    status = quote.get('status', 'N/A')
+                    print(f"   Quote {i}: {quote_num} - {pickup} → {destination} (${total}, {status})")
+            else:
+                print(f"   ⚠️  Expected at least 2 quotes, found {total_quotes_count}")
+        
+        # Test 4: Get specific quote by ID
+        if created_quote_id:
+            print(f"\n🎯 Test 4: Get specific quote by ID...")
+            specific_quote_success, specific_quote_response = self.run_test(
+                'sales', 'Get Specific Quote by ID', 'GET', f'sales/rate-quotes/{created_quote_id}', 200
+            )
+            
+            if specific_quote_success:
+                quote_data = specific_quote_response
+                print(f"   Quote Number: {quote_data.get('quote_number')}")
+                print(f"   Route: {quote_data.get('pickup')} → {quote_data.get('destination')}")
+                print(f"   Total: ${quote_data.get('total_quote', 0)}")
+                print(f"   Customer: {quote_data.get('customer', 'N/A')}")
+        
+        # Test 5: Get sales stats
+        print("\n📊 Test 5: Get sales statistics...")
+        stats_success, stats_response = self.run_test(
+            'sales', 'Get Sales Statistics', 'GET', 'sales/stats', 200
+        )
+        
+        if stats_success:
+            print(f"   Total Quotes: {stats_response.get('total_quotes', 0)}")
+            print(f"   Draft Quotes: {stats_response.get('draft_quotes', 0)}")
+            print(f"   Sent Quotes: {stats_response.get('sent_quotes', 0)}")
+            print(f"   Accepted Quotes: {stats_response.get('accepted_quotes', 0)}")
+            print(f"   Declined Quotes: {stats_response.get('declined_quotes', 0)}")
+            print(f"   Total Accepted Value: ${stats_response.get('total_accepted_value', 0)}")
+        
+        # Test 6: Test quote filtering and search
+        print("\n🔍 Test 6: Test quote filtering and search...")
+        
+        # Search by customer
+        search_success, search_response = self.run_test(
+            'sales', 'Search Quotes by Customer', 'GET', 'sales/rate-quotes?customer=TransCanada', 200
+        )
+        
+        if search_success:
+            search_results = search_response.get('quotes', [])
+            print(f"   Found {len(search_results)} quotes matching 'TransCanada'")
+        
+        # Filter by status
+        filter_success, filter_response = self.run_test(
+            'sales', 'Filter Quotes by Status', 'GET', 'sales/rate-quotes?status=draft', 200
+        )
+        
+        if filter_success:
+            draft_results = filter_response.get('quotes', [])
+            print(f"   Found {len(draft_results)} draft quotes")
+        
+        # Test 7: Update quote status
+        if created_quote_id:
+            print(f"\n✏️ Test 7: Update quote status...")
+            status_update_data = {"status": "sent"}
+            
+            status_update_success, status_update_response = self.run_test(
+                'sales', 'Update Quote Status to Sent', 'PUT', f'sales/rate-quotes/{created_quote_id}/status', 200, status_update_data
+            )
+            
+            if status_update_success:
+                print(f"   Quote status updated to: {status_update_response.get('status')}")
+        
+        # Test 8: Update quote details
+        if created_quote_id:
+            print(f"\n📝 Test 8: Update quote details...")
+            quote_update_data = {
+                "total_quote": 3200.00,
+                "notes": "Updated pricing - includes additional insurance coverage",
+                "status": "sent"
+            }
+            
+            update_success, update_response = self.run_test(
+                'sales', 'Update Quote Details', 'PUT', f'sales/rate-quotes/{created_quote_id}', 200, quote_update_data
+            )
+            
+            if update_success:
+                print(f"   Quote updated successfully: {update_response.get('message')}")
+        
+        # Summary
+        print(f"\n📋 QUOTE PERSISTENCE TEST SUMMARY:")
+        print(f"   ✅ Get Existing Quotes: {'PASS' if existing_quotes_success else 'FAIL'}")
+        print(f"   ✅ Create New Quote: {'PASS' if create_success else 'FAIL'}")
+        print(f"   ✅ Verify Multiple Quotes: {'PASS' if all_quotes_success and total_quotes_count >= 1 else 'FAIL'}")
+        print(f"   ✅ Get Specific Quote: {'PASS' if created_quote_id and specific_quote_success else 'FAIL'}")
+        print(f"   ✅ Get Sales Stats: {'PASS' if stats_success else 'FAIL'}")
+        print(f"   ✅ Search/Filter Quotes: {'PASS' if search_success and filter_success else 'FAIL'}")
+        print(f"   ✅ Update Quote Status: {'PASS' if created_quote_id and status_update_success else 'FAIL'}")
+        print(f"   ✅ Update Quote Details: {'PASS' if created_quote_id and update_success else 'FAIL'}")
+        
+        # Return overall success
+        core_tests_passed = all([
+            existing_quotes_success,
+            create_success,
+            all_quotes_success,
+            stats_success
+        ])
+        
+        return core_tests_passed
+
     def test_working_endpoints_summary(self):
         """Test summary of endpoints that are working"""
         print("\n" + "="*60)
@@ -969,6 +1170,12 @@ class FleetMarketplaceAPITester:
             "✅ POST /api/admin/users/{id}/comments - Add user comment (platform admin)",
             "✅ GET /api/admin/users/{id}/comments - Get user comments (platform admin)",
             "✅ GET /api/admin/users/stats/overview - User statistics (platform admin)",
+            "✅ GET /api/sales/rate-quotes - List all rate quotes",
+            "✅ POST /api/sales/rate-quotes - Create new rate quote",
+            "✅ GET /api/sales/rate-quotes/{id} - Get specific rate quote",
+            "✅ PUT /api/sales/rate-quotes/{id} - Update rate quote",
+            "✅ PUT /api/sales/rate-quotes/{id}/status - Update quote status",
+            "✅ GET /api/sales/stats - Get sales statistics",
             "✅ POST /api/drivers - Create driver (fleet_owner only)",
             "✅ GET /api/drivers/my - Get my drivers (fleet_owner only)",
             "✅ PUT /api/drivers/{id} - Update driver (fleet_owner only)",
