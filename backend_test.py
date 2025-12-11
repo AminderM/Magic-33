@@ -1220,10 +1220,11 @@ class FleetMarketplaceAPITester:
         # Test sequence
         test_sequence = [
             ('Health Check', self.test_health_check),
+            ('Platform Admin Login', self.test_platform_admin_login),
+            ('Quote Persistence Feature', self.test_quote_persistence_feature),
             ('User Registration', self.test_user_registration),
             ('User Login', self.test_user_login),
             ('Get Current User', self.test_get_current_user),
-            ('Platform Admin Login', self.test_platform_admin_login),
             ('Platform User Management APIs', self.test_platform_user_management_apis),
             ('TMS Chat Role-Based Access Control', self.test_tms_chat_role_based_access_control),
             ('Dispatcher Role Access Restrictions', self.test_dispatcher_role_access_restrictions),
