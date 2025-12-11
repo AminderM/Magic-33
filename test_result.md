@@ -429,6 +429,8 @@ test_plan:
     - "Google Maps Integration in Admin Console"
   stuck_tasks:
     - "AI-Powered Generate Email with Modal Display"
+  completed_tasks:
+    - "Quote Persistence Feature"
   test_all: false
   test_priority: "high_first"
 
