@@ -174,6 +174,18 @@ backend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETED: Theme functionality working perfectly (100% success rate). GET /api/companies/my correctly returns theme field (null initially, populated after update). PUT /api/companies/my accepts and persists theme objects with CSS variables (--primary, --secondary, --accent, --ring, --foreground). Theme data persists correctly after other field updates. All routes properly prefixed with /api. Backend using MONGO_URL environment variable correctly. Upload endpoints (logo and document) remain fully functional and unaffected."
 
+  - task: "Quote Persistence Feature"
+    implemented: true
+    working: true
+    file: "/app/backend/routes/sales_routes.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETED: Quote Persistence feature working perfectly (100% success rate - 10/10 tests passed). All backend APIs fully functional: GET /api/sales/rate-quotes (list quotes with filtering/search), POST /api/sales/rate-quotes (create new quotes), GET /api/sales/rate-quotes/{id} (get specific quote), PUT /api/sales/rate-quotes/{id} (update quote), PUT /api/sales/rate-quotes/{id}/status (update status), GET /api/sales/stats (sales statistics). VERIFIED: Existing RQ-0001 quote loads from database, successfully created RQ-0002 quote (Montreal→Calgary), both quotes persist correctly, sequential quote numbering working (RQ-0001, RQ-0002), CRUD operations functional, search/filtering working, status updates working. Database persistence confirmed with proper authentication and data validation. All specified test scenarios passed successfully."
+
 frontend:
   - task: "Integrated Route Mate Product Launch from Admin Console"
     implemented: true
