@@ -1153,6 +1153,213 @@ class FleetMarketplaceAPITester:
         
         return core_tests_passed
 
+    def test_fmcsa_qcmobile_api_integration(self):
+        """Test FMCSA QCMobile API integration for carrier data lookup"""
+        print("\n" + "="*60)
+        print("🚛 TESTING FMCSA QCMOBILE API INTEGRATION")
+        print("="*60)
+        
+        # Ensure we have platform admin token
+        if not self.token:
+            print("❌ No admin token available - running platform admin login first")
+            if not self.test_platform_admin_login():
+                return False
+        
+        # Test 1: DOT Number Lookup (Basic) - ALL TRANS SERVICES INC
+        print("\n🔍 Test 1: DOT Number Lookup (Basic) - DOT# 2233541...")
+        dot_basic_success, dot_basic_response = self.run_test(
+            'fmcsa', 'DOT Number Lookup Basic (2233541)', 'GET', 'fmcsa/carrier/dot/2233541', 200
+        )
+        
+        if dot_basic_success:
+            carrier = dot_basic_response.get('carrier', {})
+            print(f"   Company Name: {carrier.get('legal_name', 'N/A')}")
+            print(f"   DOT Number: {carrier.get('dot_number', 'N/A')}")
+            print(f"   MC Number: {carrier.get('mc_number', 'N/A')}")
+            print(f"   Phone: {carrier.get('phone', 'N/A')}")
+            print(f"   Address: {carrier.get('physical_address', 'N/A')}")
+            print(f"   Allow to Operate: {carrier.get('allow_to_operate', 'N/A')}")
+            print(f"   Out of Service: {carrier.get('out_of_service', 'N/A')}")
+            
+            # Verify expected company
+            expected_name = "ALL TRANS SERVICES INC"
+            actual_name = carrier.get('legal_name', '')
+            if expected_name.lower() in actual_name.lower():
+                print(f"   ✅ Correct company found: {actual_name}")
+            else:
+                print(f"   ⚠️  Expected '{expected_name}', got '{actual_name}'")
+        
+        # Test 2: DOT Number Lookup (Full Details)
+        print("\n📊 Test 2: DOT Number Lookup (Full Details) - DOT# 2233541...")
+        dot_full_success, dot_full_response = self.run_test(
+            'fmcsa', 'DOT Number Lookup Full (2233541)', 'GET', 'fmcsa/carrier/dot/2233541?full_details=true', 200
+        )
+        
+        if dot_full_success:
+            carrier = dot_full_response.get('carrier', {})
+            print(f"   Company Name: {carrier.get('legal_name', 'N/A')}")
+            print(f"   Entity Type: {carrier.get('entity_type', 'N/A')}")
+            print(f"   Operating Status: {carrier.get('operating_status', 'N/A')}")
+            print(f"   Total Drivers: {carrier.get('total_drivers', 'N/A')}")
+            print(f"   Total Power Units: {carrier.get('total_power_units', 'N/A')}")
+            print(f"   Safety Rating: {carrier.get('safety_rating', 'N/A')}")
+            print(f"   Total Crashes: {carrier.get('total_crashes', 'N/A')}")
+            print(f"   Vehicle Inspections: {carrier.get('vehicle_inspections', 'N/A')}")
+            print(f"   Driver Inspections: {carrier.get('driver_inspections', 'N/A')}")
+            
+            # Check if we have more detailed data than basic lookup
+            basic_fields = ['dot_number', 'mc_number', 'legal_name', 'physical_address', 'phone']
+            full_fields = ['safety_rating', 'total_drivers', 'total_power_units', 'total_crashes']
+            
+            has_full_data = any(carrier.get(field) is not None for field in full_fields)
+            if has_full_data:
+                print("   ✅ Full details successfully retrieved")
+            else:
+                print("   ⚠️  Full details may not be available for this carrier")
+        
+        # Test 3: Company Name Search - Swift
+        print("\n🔍 Test 3: Company Name Search - 'swift'...")
+        name_search_success, name_search_response = self.run_test(
+            'fmcsa', 'Company Name Search (swift)', 'GET', 'fmcsa/carrier/search?name=swift&limit=5', 200
+        )
+        
+        if name_search_success:
+            carriers = name_search_response.get('carriers', [])
+            total = name_search_response.get('total', 0)
+            print(f"   Found {total} carriers matching 'swift'")
+            
+            for i, carrier in enumerate(carriers[:3], 1):  # Show first 3 results
+                name = carrier.get('legal_name', 'N/A')
+                dot = carrier.get('dot_number', 'N/A')
+                mc = carrier.get('mc_number', 'N/A')
+                print(f"   {i}. {name} (DOT: {dot}, MC: {mc})")
+            
+            # Verify we got results with "swift" in the name
+            swift_results = [c for c in carriers if 'swift' in c.get('legal_name', '').lower()]
+            if swift_results:
+                print(f"   ✅ Found {len(swift_results)} carriers with 'swift' in name")
+            else:
+                print("   ⚠️  No carriers with 'swift' in name found")
+        
+        # Test 4: Universal Lookup (Auto-detect DOT#)
+        print("\n🎯 Test 4: Universal Lookup (Auto-detect DOT#) - 2233541...")
+        universal_dot_success, universal_dot_response = self.run_test(
+            'fmcsa', 'Universal Lookup DOT (2233541)', 'GET', 'fmcsa/carrier/lookup?query=2233541', 200
+        )
+        
+        if universal_dot_success:
+            carrier = universal_dot_response.get('carrier', {})
+            print(f"   Auto-detected as DOT lookup")
+            print(f"   Company Name: {carrier.get('legal_name', 'N/A')}")
+            print(f"   DOT Number: {carrier.get('dot_number', 'N/A')}")
+            
+            # Should match the direct DOT lookup
+            if carrier.get('legal_name') == dot_basic_response.get('carrier', {}).get('legal_name'):
+                print("   ✅ Universal lookup matches direct DOT lookup")
+            else:
+                print("   ⚠️  Universal lookup result differs from direct DOT lookup")
+        
+        # Test 5: Universal Lookup (Auto-detect Company Name)
+        print("\n🎯 Test 5: Universal Lookup (Auto-detect Company Name) - 'schneider'...")
+        universal_name_success, universal_name_response = self.run_test(
+            'fmcsa', 'Universal Lookup Name (schneider)', 'GET', 'fmcsa/carrier/lookup?query=schneider', 200
+        )
+        
+        if universal_name_success:
+            carriers = universal_name_response.get('carriers', [])
+            total = universal_name_response.get('total', 0)
+            print(f"   Auto-detected as name search")
+            print(f"   Found {total} carriers matching 'schneider'")
+            
+            if carriers:
+                first_carrier = carriers[0]
+                print(f"   First result: {first_carrier.get('legal_name', 'N/A')}")
+                print(f"   DOT: {first_carrier.get('dot_number', 'N/A')}")
+                
+                # Verify we got Schneider-related results
+                schneider_results = [c for c in carriers if 'schneider' in c.get('legal_name', '').lower()]
+                if schneider_results:
+                    print(f"   ✅ Found {len(schneider_results)} carriers with 'schneider' in name")
+                else:
+                    print("   ⚠️  No carriers with 'schneider' in name found")
+        
+        # Test 6: Error Handling - Non-existent DOT#
+        print("\n❌ Test 6: Error Handling - Non-existent DOT# (99999999999)...")
+        error_success, error_response = self.run_test(
+            'fmcsa', 'Non-existent DOT Number', 'GET', 'fmcsa/carrier/dot/99999999999', 404
+        )
+        
+        if error_success:
+            print("   ✅ Correctly returned 404 for non-existent carrier")
+            try:
+                error_detail = error_response.get('detail', 'No error detail')
+                print(f"   Error message: {error_detail}")
+            except:
+                print("   Error response received as expected")
+        
+        # Test 7: MC Number Lookup (if we have MC# from previous tests)
+        mc_number = None
+        if dot_basic_success:
+            mc_number = dot_basic_response.get('carrier', {}).get('mc_number')
+        
+        if mc_number:
+            print(f"\n🔍 Test 7: MC Number Lookup - MC# {mc_number}...")
+            mc_success, mc_response = self.run_test(
+                'fmcsa', f'MC Number Lookup ({mc_number})', 'GET', f'fmcsa/carrier/mc/{mc_number}', 200
+            )
+            
+            if mc_success:
+                carrier = mc_response.get('carrier', {})
+                print(f"   Company Name: {carrier.get('legal_name', 'N/A')}")
+                print(f"   MC Number: {carrier.get('mc_number', 'N/A')}")
+                
+                # Should match the DOT lookup result
+                if carrier.get('legal_name') == dot_basic_response.get('carrier', {}).get('legal_name'):
+                    print("   ✅ MC lookup matches DOT lookup result")
+                else:
+                    print("   ⚠️  MC lookup result differs from DOT lookup")
+        else:
+            print("\n⏭️  Test 7: Skipped MC Number Lookup (no MC# available from previous tests)")
+        
+        # Test 8: API Key Validation (test with invalid endpoint to check error handling)
+        print("\n🔑 Test 8: API Configuration Check...")
+        
+        # Check if API key is configured
+        import os
+        api_key = os.environ.get("FMCSA_API_KEY", "")
+        if api_key:
+            print(f"   ✅ FMCSA API key is configured (length: {len(api_key)})")
+        else:
+            print("   ❌ FMCSA API key is not configured")
+        
+        # Summary
+        print(f"\n📋 FMCSA API INTEGRATION TEST SUMMARY:")
+        print(f"   ✅ DOT Lookup (Basic): {'PASS' if dot_basic_success else 'FAIL'}")
+        print(f"   ✅ DOT Lookup (Full): {'PASS' if dot_full_success else 'FAIL'}")
+        print(f"   ✅ Name Search: {'PASS' if name_search_success else 'FAIL'}")
+        print(f"   ✅ Universal DOT Lookup: {'PASS' if universal_dot_success else 'FAIL'}")
+        print(f"   ✅ Universal Name Lookup: {'PASS' if universal_name_success else 'FAIL'}")
+        print(f"   ✅ Error Handling: {'PASS' if error_success else 'FAIL'}")
+        if mc_number:
+            print(f"   ✅ MC Number Lookup: {'PASS' if mc_success else 'FAIL'}")
+        
+        # Return overall success
+        core_tests_passed = all([
+            dot_basic_success,
+            dot_full_success,
+            name_search_success,
+            universal_dot_success,
+            universal_name_success,
+            error_success
+        ])
+        
+        if core_tests_passed:
+            print("\n🎉 FMCSA API Integration: ALL CORE TESTS PASSED")
+        else:
+            print("\n⚠️  FMCSA API Integration: SOME TESTS FAILED")
+        
+        return core_tests_passed
+
     def test_working_endpoints_summary(self):
         """Test summary of endpoints that are working"""
         print("\n" + "="*60)
