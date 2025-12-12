@@ -561,11 +561,70 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
       </Card>
 
       {/* Create User Modal */}
-      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
+      <Dialog open={showCreateModal} onOpenChange={(open) => {
+        setShowCreateModal(open);
+        if (!open) {
+          setCarrierSearchQuery('');
+          setCarrierInfo(null);
+        }
+      }}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create New User</DialogTitle>
           </DialogHeader>
+          
+          {/* FMCSA Carrier Lookup Section */}
+          <div className="border rounded-lg p-4 bg-blue-50 mb-4">
+            <Label className="text-sm font-medium text-blue-800 mb-2 block">
+              <Search className="w-4 h-4 inline mr-1" />
+              FMCSA Carrier Lookup (Auto-fill from DOT#, MC#, or company name)
+            </Label>
+            <div className="flex gap-2">
+              <Input
+                value={carrierSearchQuery}
+                onChange={(e) => setCarrierSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && lookupCarrier()}
+                placeholder="Enter DOT#, MC#, or company name..."
+                className="flex-1 bg-white"
+              />
+              <Button 
+                type="button" 
+                onClick={lookupCarrier}
+                disabled={carrierSearchLoading}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {carrierSearchLoading ? (
+                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                ) : (
+                  <Search className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+            {carrierInfo && (
+              <div className="mt-3 p-3 bg-white rounded border text-sm">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-semibold text-gray-900">{carrierInfo.legal_name}</span>
+                  {carrierInfo.allow_to_operate === 'Y' && !carrierInfo.out_of_service ? (
+                    <Badge className="bg-green-100 text-green-800 text-xs">
+                      <CheckCircle className="w-3 h-3 mr-1" />Authorized
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-red-100 text-red-800 text-xs">
+                      <AlertTriangle className="w-3 h-3 mr-1" />Not Authorized
+                    </Badge>
+                  )}
+                </div>
+                <div className="text-gray-600 text-xs">
+                  {carrierInfo.dot_number && <span className="mr-3">DOT# {carrierInfo.dot_number}</span>}
+                  {carrierInfo.mc_number && <span className="mr-3">MC# {carrierInfo.mc_number}</span>}
+                </div>
+                {carrierInfo.physical_address && (
+                  <div className="text-gray-500 text-xs mt-1">{carrierInfo.physical_address}</div>
+                )}
+              </div>
+            )}
+          </div>
+          
           <div className="grid grid-cols-2 gap-4 py-4">
             <div>
               <Label className="text-sm font-medium">Name *</Label>
@@ -617,7 +676,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
               <Label className="text-sm font-medium">Company Name</Label>
               <Input
                 value={newUser.company_name}
-                onChange={(e) => setNewUser({...newUser, company_name: e.target.value})}
+                onChange={(e) => setNewUser({...newUser, company_name: e.target.value})}}
                 placeholder="Company LLC"
                 className="mt-1"
               />
