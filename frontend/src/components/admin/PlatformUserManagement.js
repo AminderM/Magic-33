@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import { Edit, MessageSquare, ChevronDown, Plus, Trash2, X } from 'lucide-react';
+import { Edit, MessageSquare, ChevronDown, Plus, Trash2, X, Search, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const USER_STATUSES = [
   { value: 'active', label: 'Active', color: 'bg-green-100 text-green-800' },
