@@ -142,12 +142,13 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
             <div className="flex-1">
               <Label className="text-sm font-medium mb-2 block">Search Query</Label>
               <Input
-                placeholder="Enter DOT#, MC#, or company name..."
+                placeholder="Enter DOT# (e.g., 2233541) or MC# (e.g., MC-123456) or company name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 className="text-lg"
               />
+              <p className="text-xs text-gray-500 mt-1">Examples: DOT-2233541, MC-123456, or "Swift Transportation"</p>
             </div>
             <div className="w-full md:w-48">
               <Label className="text-sm font-medium mb-2 block">Search Type</Label>
