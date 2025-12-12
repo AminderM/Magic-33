@@ -77,6 +77,74 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
   const [newComment, setNewComment] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
 
+  // FMCSA Carrier Lookup for Create User
+  const [carrierSearchQuery, setCarrierSearchQuery] = useState('');
+  const [carrierSearchLoading, setCarrierSearchLoading] = useState(false);
+  const [carrierInfo, setCarrierInfo] = useState(null);
+
+  const lookupCarrier = async () => {
+    if (!carrierSearchQuery.trim()) {
+      toast.error('Please enter a DOT#, MC#, or company name');
+      return;
+    }
+
+    setCarrierSearchLoading(true);
+    setCarrierInfo(null);
+
+    try {
+      const response = await fetchWithAuth(
+        `${BACKEND_URL}/api/fmcsa/carrier/lookup?query=${encodeURIComponent(carrierSearchQuery.trim())}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Handle single carrier result
+        if (data.carrier) {
+          setCarrierInfo(data.carrier);
+          // Auto-fill form fields
+          setNewUser(prev => ({
+            ...prev,
+            full_name: data.carrier.legal_name || prev.full_name,
+            phone: data.carrier.phone || prev.phone,
+            mc_number: data.carrier.mc_number ? `MC-${data.carrier.mc_number}` : prev.mc_number,
+            dot_number: data.carrier.dot_number ? `DOT-${data.carrier.dot_number}` : prev.dot_number,
+            company_name: data.carrier.legal_name || prev.company_name
+          }));
+          toast.success('Carrier found! Form fields auto-filled.');
+        } 
+        // Handle multiple results - take the first one
+        else if (data.carriers && data.carriers.length > 0) {
+          const carrier = data.carriers[0];
+          setCarrierInfo(carrier);
+          setNewUser(prev => ({
+            ...prev,
+            full_name: carrier.legal_name || prev.full_name,
+            phone: carrier.phone || prev.phone,
+            mc_number: carrier.mc_number ? `MC-${carrier.mc_number}` : prev.mc_number,
+            dot_number: carrier.dot_number ? `DOT-${carrier.dot_number}` : prev.dot_number,
+            company_name: carrier.legal_name || prev.company_name
+          }));
+          toast.success(`Found ${data.carriers.length} carrier(s). First result auto-filled.`);
+        } else {
+          toast.info('No carrier found matching your search');
+        }
+      } else {
+        const error = await response.json();
+        if (response.status === 404) {
+          toast.info('No carrier found matching your search');
+        } else {
+          toast.error(error.detail || 'Carrier lookup failed');
+        }
+      }
+    } catch (error) {
+      console.error('Carrier lookup error:', error);
+      toast.error('Failed to lookup carrier');
+    } finally {
+      setCarrierSearchLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
     fetchStats();
