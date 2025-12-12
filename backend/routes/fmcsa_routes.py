@@ -312,13 +312,14 @@ async def search_by_name(
             data = response.json()
             content = data.get("content", [])
             
-            # Parse results
+            # Parse results - for search, each item has a 'carrier' key
             carriers = []
             for item in content:
+                carrier_data = item.get("carrier", item)  # Get carrier from item or use item itself
                 if full_details:
-                    carriers.append(parse_carrier_full({"carrier": item}).dict(exclude_none=True))
+                    carriers.append(parse_carrier_full({"carrier": carrier_data}).dict(exclude_none=True))
                 else:
-                    carriers.append(parse_carrier_basic({"carrier": item}).dict(exclude_none=True))
+                    carriers.append(parse_carrier_basic({"carrier": carrier_data}).dict(exclude_none=True))
             
             return {
                 "carriers": carriers,
