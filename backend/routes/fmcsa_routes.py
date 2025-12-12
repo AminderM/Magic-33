@@ -135,10 +135,17 @@ def parse_carrier_full(data: dict) -> CarrierFullInfo:
         if cargo:
             cargo_carried.append(cargo)
     
-    # Calculate total crashes
-    fatal = carrier.get("crashTotal", {}).get("fatalCrash", 0) or 0
-    injury = carrier.get("crashTotal", {}).get("injCrash", 0) or 0
-    tow = carrier.get("crashTotal", {}).get("towawayCrash", 0) or 0
+    # Calculate total crashes - crashTotal might be an int or a dict
+    crash_total = carrier.get("crashTotal", {})
+    if isinstance(crash_total, dict):
+        fatal = crash_total.get("fatalCrash", 0) or 0
+        injury = crash_total.get("injCrash", 0) or 0
+        tow = crash_total.get("towawayCrash", 0) or 0
+    else:
+        # crashTotal is just an integer
+        fatal = carrier.get("fatalCrash", 0) or 0
+        injury = carrier.get("injCrash", 0) or 0
+        tow = carrier.get("towawayCrash", 0) or 0
     
     return CarrierFullInfo(
         # Basic Info
