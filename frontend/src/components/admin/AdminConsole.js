@@ -224,6 +224,8 @@ const AdminConsole = () => {
         return <HomeView tenants={tenants} plans={plans} loading={loading} />;
       case 'users':
         return <PlatformUserManagement fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
+      case 'carrier-lookup':
+        return <CarrierLookup fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'subscription':
         return <SubscriptionManagerNew 
           tenants={tenants}
