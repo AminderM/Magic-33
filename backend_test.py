@@ -1430,6 +1430,7 @@ class FleetMarketplaceAPITester:
         test_sequence = [
             ('Health Check', self.test_health_check),
             ('Platform Admin Login', self.test_platform_admin_login),
+            ('FMCSA QCMobile API Integration', self.test_fmcsa_qcmobile_api_integration),
             ('Quote Persistence Feature', self.test_quote_persistence_feature),
             ('User Registration', self.test_user_registration),
             ('User Login', self.test_user_login),
