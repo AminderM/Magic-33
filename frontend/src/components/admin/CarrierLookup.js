@@ -215,10 +215,28 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                       {carrier.dba_name && (
                         <p className="text-sm text-gray-600 mb-1">DBA: {carrier.dba_name}</p>
                       )}
-                      <div className="flex gap-3 text-sm text-gray-500">
+                      <div className="flex flex-wrap gap-3 text-sm text-gray-500 mb-1">
                         <span className="font-medium">DOT# {carrier.dot_number}</span>
                         {carrier.mc_number && <span>MC# {carrier.mc_number}</span>}
                       </div>
+                      {/* Phone and Email */}
+                      <div className="flex flex-wrap gap-3 text-sm">
+                        {carrier.phone && (
+                          <span className="flex items-center gap-1 text-gray-600">
+                            <Phone className="w-3 h-3" />
+                            {carrier.phone}
+                          </span>
+                        )}
+                        {carrier.email && (
+                          <span className="flex items-center gap-1 text-gray-600">
+                            <Mail className="w-3 h-3" />
+                            {carrier.email}
+                          </span>
+                        )}
+                      </div>
+                      {carrier.physical_address && (
+                        <p className="text-xs text-gray-400 mt-1 truncate">{carrier.physical_address}</p>
+                      )}
                     </div>
                   ))
                 )}
