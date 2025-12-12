@@ -181,6 +181,7 @@ const AdminConsole = () => {
   const navigationItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'users', label: 'User Management', icon: Users },
+    { id: 'carrier-lookup', label: 'Carrier Lookup', icon: Truck },
     { id: 'subscription', label: 'Subscription Manager', icon: Users },
     { id: 'analytics', label: 'Sales Analytics', icon: TrendingUp },
     { id: 'products', label: 'Products', icon: Package },
