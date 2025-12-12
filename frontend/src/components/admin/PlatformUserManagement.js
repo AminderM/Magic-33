@@ -676,7 +676,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
               <Label className="text-sm font-medium">Company Name</Label>
               <Input
                 value={newUser.company_name}
-                onChange={(e) => setNewUser({...newUser, company_name: e.target.value})}}
+                onChange={(e) => setNewUser({...newUser, company_name: e.target.value})}
                 placeholder="Company LLC"
                 className="mt-1"
               />
