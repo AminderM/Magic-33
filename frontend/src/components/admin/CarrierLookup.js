@@ -151,18 +151,7 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
       {/* Search Card */}
       <Card>
         <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* MC# Field */}
-            <div>
-              <Label className="text-sm font-medium mb-2 block">MC#</Label>
-              <Input
-                placeholder="e.g., 123456"
-                value={mcNumber}
-                onChange={(e) => setMcNumber(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              />
-            </div>
-            
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* DOT# Field */}
             <div>
               <Label className="text-sm font-medium mb-2 block">DOT#</Label>
