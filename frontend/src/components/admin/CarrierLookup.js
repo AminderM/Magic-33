@@ -128,7 +128,6 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
   };
 
   const clearSearch = () => {
-    setMcNumber('');
     setDotNumber('');
     setCompanyName('');
     setSearchResults(null);
