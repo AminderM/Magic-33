@@ -131,6 +131,15 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
     return `${score}%`;
   };
 
+  const clearSearch = () => {
+    setMcNumber('');
+    setDotNumber('');
+    setCompanyName('');
+    setSearchResults(null);
+    setSelectedCarrier(null);
+    setCarrierDetails(null);
+  };
+
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
@@ -147,37 +156,46 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
       {/* Search Card */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <Label className="text-sm font-medium mb-2 block">Search Query</Label>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* MC# Field */}
+            <div>
+              <Label className="text-sm font-medium mb-2 block">MC#</Label>
               <Input
-                placeholder="Enter DOT# (e.g., 2233541) or MC# (e.g., MC-123456) or company name..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="e.g., 123456"
+                value={mcNumber}
+                onChange={(e) => setMcNumber(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="text-lg"
               />
-              <p className="text-xs text-gray-500 mt-1">Examples: DOT-2233541, MC-123456, or "Swift Transportation"</p>
             </div>
-            <div className="w-full md:w-48">
-              <Label className="text-sm font-medium mb-2 block">Search Type</Label>
-              <Select value={searchType} onValueChange={setSearchType}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="auto">Auto Detect</SelectItem>
-                  <SelectItem value="dot">DOT Number</SelectItem>
-                  <SelectItem value="mc">MC Number</SelectItem>
-                  <SelectItem value="name">Company Name</SelectItem>
-                </SelectContent>
-              </Select>
+            
+            {/* DOT# Field */}
+            <div>
+              <Label className="text-sm font-medium mb-2 block">DOT#</Label>
+              <Input
+                placeholder="e.g., 2233541"
+                value={dotNumber}
+                onChange={(e) => setDotNumber(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              />
             </div>
-            <div className="flex items-end">
+            
+            {/* Company Name Field */}
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Company Name</Label>
+              <Input
+                placeholder="e.g., Swift Transportation"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              />
+            </div>
+            
+            {/* Search Button */}
+            <div className="flex items-end gap-2">
               <Button 
                 onClick={handleSearch} 
                 disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 h-10 px-6"
+                className="bg-blue-600 hover:bg-blue-700 h-10 px-6 flex-1"
               >
                 {loading ? (
                   <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
