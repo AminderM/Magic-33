@@ -4,19 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { toast } from 'sonner';
 import { Search, Truck, Shield, AlertTriangle, CheckCircle, XCircle, Building2, Users, FileText, Phone, MapPin, Mail } from 'lucide-react';
 
 const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchType, setSearchType] = useState('auto');
+  // Separate search fields
+  const [mcNumber, setMcNumber] = useState('');
+  const [dotNumber, setDotNumber] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  
   const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState(null);
   const [selectedCarrier, setSelectedCarrier] = useState(null);
@@ -24,8 +20,21 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
   const [loadingDetails, setLoadingDetails] = useState(false);
 
   const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      toast.error('Please enter a search query');
+    // Determine which field to search with (priority: DOT > MC > Company Name)
+    let searchQuery = '';
+    let searchType = 'name';
+    
+    if (dotNumber.trim()) {
+      searchQuery = dotNumber.trim().replace(/^DOT[-#]?/i, '');
+      searchType = 'dot';
+    } else if (mcNumber.trim()) {
+      searchQuery = mcNumber.trim().replace(/^MC[-#]?/i, '');
+      searchType = 'mc';
+    } else if (companyName.trim()) {
+      searchQuery = companyName.trim();
+      searchType = 'name';
+    } else {
+      toast.error('Please enter at least one search criteria (MC#, DOT#, or Company Name)');
       return;
     }
 
@@ -36,7 +45,7 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
 
     try {
       const params = new URLSearchParams({
-        query: searchQuery.trim(),
+        query: searchQuery,
         search_type: searchType
       });
 
