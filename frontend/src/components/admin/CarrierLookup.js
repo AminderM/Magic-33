@@ -9,7 +9,6 @@ import { Search, Truck, Shield, AlertTriangle, CheckCircle, XCircle, Building2, 
 
 const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
   // Separate search fields
-  const [mcNumber, setMcNumber] = useState('');
   const [dotNumber, setDotNumber] = useState('');
   const [companyName, setCompanyName] = useState('');
   
@@ -20,21 +19,18 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
   const [loadingDetails, setLoadingDetails] = useState(false);
 
   const handleSearch = async () => {
-    // Determine which field to search with (priority: DOT > MC > Company Name)
+    // Determine which field to search with (priority: DOT > Company Name)
     let searchQuery = '';
     let searchType = 'name';
     
     if (dotNumber.trim()) {
       searchQuery = dotNumber.trim().replace(/^DOT[-#]?/i, '');
       searchType = 'dot';
-    } else if (mcNumber.trim()) {
-      searchQuery = mcNumber.trim().replace(/^MC[-#]?/i, '');
-      searchType = 'mc';
     } else if (companyName.trim()) {
       searchQuery = companyName.trim();
       searchType = 'name';
     } else {
-      toast.error('Please enter at least one search criteria (MC#, DOT#, or Company Name)');
+      toast.error('Please enter a DOT# or Company Name to search');
       return;
     }
 
