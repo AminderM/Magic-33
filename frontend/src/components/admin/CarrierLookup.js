@@ -144,7 +144,7 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">FMCSA Carrier Lookup</h1>
-          <p className="text-gray-600">Search carrier data by DOT#, MC#, or company name</p>
+          <p className="text-gray-600">Search carrier data by DOT# or company name</p>
         </div>
       </div>
 
