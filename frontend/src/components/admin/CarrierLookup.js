@@ -485,7 +485,7 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Search for a Carrier</h3>
             <p className="text-gray-600 max-w-md mx-auto">
-              Enter a DOT number, MC number, or company name to lookup carrier information including safety scores, authority status, and crash history.
+              Enter a DOT number or company name to lookup carrier information including safety scores, authority status, and crash history.
             </p>
           </CardContent>
         </Card>
