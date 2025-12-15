@@ -1682,6 +1682,116 @@ Body:
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Loads Tab */}
+        <TabsContent value="loads" className="mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>
+                  <i className="fas fa-truck-loading mr-2 text-blue-600"></i>
+                  Loads ({loads.length})
+                </CardTitle>
+                <Button onClick={() => setActiveTab('quotes')} variant="outline">
+                  <i className="fas fa-file-invoice-dollar mr-2"></i>
+                  View Rate Quotes
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              {loads.length === 0 ? (
+                <div className="text-center py-12">
+                  <i className="fas fa-truck-loading text-gray-400 text-5xl mb-4"></i>
+                  <h3 className="text-xl font-semibold mb-2">No Loads Yet</h3>
+                  <p className="text-gray-600 mb-4">Create loads from your rate quotes to manage shipments</p>
+                  <Button onClick={() => setActiveTab('quotes')} className="bg-blue-600 hover:bg-blue-700">
+                    <i className="fas fa-file-invoice-dollar mr-2"></i>
+                    Go to Rate Quotes
+                  </Button>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Load #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Rate</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Source Quote</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {loads.map((load, index) => (
+                        <tr key={load.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                          <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
+                            {load.order_number || load.id?.substring(0, 8).toUpperCase()}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <Badge className={
+                              load.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                              load.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                              load.status === 'in_progress' ? 'bg-purple-100 text-purple-800' :
+                              load.status === 'completed' ? 'bg-green-100 text-green-800' :
+                              load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
+                              'bg-gray-100 text-gray-800'
+                            }>
+                              {load.status?.replace('_', ' ') || 'Pending'}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap font-semibold text-green-700">
+                            ${load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {load.shipper_name || '-'}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="max-w-[200px] truncate" title={load.pickup_location}>
+                              {load.pickup_location || `${load.pickup_city || ''}, ${load.pickup_state || ''}`}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="max-w-[200px] truncate" title={load.delivery_location}>
+                              {load.delivery_location || `${load.delivery_city || ''}, ${load.delivery_state || ''}`}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                            {load.pickup_time_planned ? new Date(load.pickup_time_planned).toLocaleDateString() : '-'}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                            {load.delivery_time_planned ? new Date(load.delivery_time_planned).toLocaleDateString() : '-'}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {load.source_quote_number ? (
+                              <Badge variant="outline" className="text-xs">
+                                {load.source_quote_number}
+                              </Badge>
+                            ) : '-'}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="flex gap-1">
+                              <Button variant="outline" size="sm" className="h-7 px-2">
+                                <i className="fas fa-eye text-gray-600"></i>
+                              </Button>
+                              <Button variant="outline" size="sm" className="h-7 px-2">
+                                <i className="fas fa-edit text-blue-600"></i>
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
       </div>
 
