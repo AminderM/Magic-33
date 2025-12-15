@@ -509,6 +509,19 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                         </Badge>
                       </td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.phone || '-'}</td>
+                      <td className="px-3 py-3 text-sm border-r border-gray-200 whitespace-nowrap">
+                        {user.subscriptions?.length > 0 ? (
+                          <div className="flex flex-col gap-1">
+                            {user.subscriptions.filter(s => s.status === 'active').map((sub, idx) => (
+                              <Badge key={idx} className="bg-purple-100 text-purple-800 text-xs">
+                                {sub.bundle_name}
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 text-xs">No subscription</span>
+                        )}
+                      </td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.mc_number || '-'}</td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.dot_number || '-'}</td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.company_name || '-'}</td>
