@@ -1641,7 +1641,7 @@ Body:
                         </div>
                       </div>
                       
-                      <div className="mt-3 flex gap-2">
+                      <div className="mt-3 flex gap-2 flex-wrap">
                         <Button variant="outline" size="sm">
                           <i className="fas fa-edit mr-1"></i>
                           Edit
@@ -1655,6 +1655,14 @@ Body:
                         >
                           <i className="fas fa-envelope mr-1"></i>
                           Generate Email
+                        </Button>
+                        <Button 
+                          size="sm"
+                          onClick={() => createLoadFromQuote(quote)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          <i className="fas fa-truck-loading mr-1"></i>
+                          Create Load
                         </Button>
                         <Button variant="outline" size="sm">
                           <i className="fas fa-check mr-1"></i>
