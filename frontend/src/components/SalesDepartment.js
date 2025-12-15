@@ -697,7 +697,7 @@ Body:
       {/* Main Content Tabs */}
       <div className="px-6 pt-4 bg-gray-50">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-6 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
+          <TabsList className="grid w-full grid-cols-7 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
           <TabsTrigger value="analytics" className="text-sm px-2">
             <i className="fas fa-chart-line mr-1.5 text-xs"></i>
             Analytics
@@ -721,6 +721,10 @@ Body:
           <TabsTrigger value="quotes" className="text-sm px-2">
             <i className="fas fa-file-invoice-dollar mr-1.5 text-xs"></i>
             <span className="hidden sm:inline">Rate </span>Quotes
+          </TabsTrigger>
+          <TabsTrigger value="loads" className="text-sm px-2">
+            <i className="fas fa-truck-loading mr-1.5 text-xs"></i>
+            Loads
           </TabsTrigger>
         </TabsList>
 
