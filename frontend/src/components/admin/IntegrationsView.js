@@ -5,8 +5,51 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Plus, Settings, Trash2, Check, X, Zap, Key, ExternalLink } from 'lucide-react';
+import { Plus, Settings, Trash2, Check, X, Zap, Key, ExternalLink, Truck, Map, Shield, CheckCircle } from 'lucide-react';
+
+// Built-in/Active Integrations that are already implemented in the app
+const ACTIVE_INTEGRATIONS = [
+  {
+    id: 'fmcsa',
+    name: 'FMCSA QCMobile API',
+    description: 'Federal Motor Carrier Safety Administration carrier data lookup. Search carriers by DOT# or company name to get safety scores, authority status, insurance info, and crash history.',
+    category: 'Transportation & Compliance',
+    status: 'active',
+    icon: Truck,
+    features: [
+      'DOT# lookup',
+      'Company name search',
+      'Safety BASIC scores',
+      'Authority & insurance status',
+      'Crash history data',
+      'Fleet information'
+    ],
+    usedIn: ['Admin Console → Carrier Lookup', 'User Management → Create User'],
+    apiEndpoints: ['/api/fmcsa/carrier/dot/{dot_number}', '/api/fmcsa/carrier/search', '/api/fmcsa/carrier/lookup'],
+    configuredDate: '2024-12-12'
+  },
+  {
+    id: 'google_maps',
+    name: 'Google Maps Platform',
+    description: 'Google Maps APIs for route calculation, distance/duration estimation, and location autocomplete in the Freight Calculator.',
+    category: 'Mapping & Routing',
+    status: 'active',
+    icon: Map,
+    features: [
+      'Route calculation',
+      'Distance estimation',
+      'Duration calculation',
+      'Multi-stop routing',
+      'Places autocomplete',
+      'Canadian location support'
+    ],
+    usedIn: ['Sales → Freight Calculator'],
+    apiEndpoints: ['/api/sales/calculate-route'],
+    configuredDate: '2024-12-10'
+  }
+];
 
 const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
   const [integrations, setIntegrations] = useState([]);
