@@ -870,7 +870,10 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
               <Label>Assign To *</Label>
               <Select 
                 value={assignForm.entity_type} 
-                onValueChange={(v) => setAssignForm({ ...assignForm, entity_type: v, entity_id: '' })}
+                onValueChange={(v) => {
+                  setAssignForm({ ...assignForm, entity_type: v, entity_id: '' });
+                  setEntitySearchQuery('');
+                }}
               >
                 <SelectTrigger className="mt-1">
                   <SelectValue />
