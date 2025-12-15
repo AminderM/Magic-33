@@ -219,6 +219,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
           company_name: '',
           company_website: '',
           role: 'company_admin',
+          user_type: 'other',
           status: 'active'
         });
         fetchUsers();
@@ -242,6 +243,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
       if (editUser.dot_number !== undefined) updateData.dot_number = editUser.dot_number;
       if (editUser.company_name !== undefined) updateData.company_name = editUser.company_name;
       if (editUser.company_website !== undefined) updateData.company_website = editUser.company_website;
+      if (editUser.user_type) updateData.user_type = editUser.user_type;
       if (editUser.status) updateData.status = editUser.status;
       if (editUser.password) updateData.password = editUser.password;
 
