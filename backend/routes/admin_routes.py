@@ -715,11 +715,15 @@ async def get_google_maps_key(current_user: User = Depends(get_current_user)):
 # USER MANAGEMENT ENDPOINTS (Platform Admin Only)
 # ============================================================================
 
+# User Types for categorization
+USER_TYPES = ["carrier", "broker", "shipper", "driver", "dispatcher", "owner_operator", "other"]
+
 class UserCreateAdmin(BaseModel):
     email: EmailStr
     full_name: str
     password: str
     role: UserRole
+    user_type: Optional[str] = "other"  # carrier, broker, shipper, driver, dispatcher, owner_operator, other
     company_id: Optional[str] = None
     phone: Optional[str] = None
     mc_number: Optional[str] = None
@@ -732,6 +736,7 @@ class UserCreateAdmin(BaseModel):
 class UserUpdateAdmin(BaseModel):
     full_name: Optional[str] = None
     role: Optional[UserRole] = None
+    user_type: Optional[str] = None  # carrier, broker, shipper, driver, dispatcher, owner_operator, other
     company_id: Optional[str] = None
     phone: Optional[str] = None
     mc_number: Optional[str] = None
