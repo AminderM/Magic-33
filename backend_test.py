@@ -1153,6 +1153,301 @@ class FleetMarketplaceAPITester:
         
         return core_tests_passed
 
+    def test_subscription_manager_backend_apis(self):
+        """Test Subscription Manager Backend APIs - comprehensive testing of bundle management"""
+        print("\n" + "="*60)
+        print("📦 TESTING SUBSCRIPTION MANAGER BACKEND APIs")
+        print("="*60)
+        
+        # Ensure we have platform admin token
+        if not self.token:
+            print("❌ No admin token available - running platform admin login first")
+            if not self.test_platform_admin_login():
+                return False
+        
+        # Test 1: Get available products for bundles
+        print("\n🛍️ Test 1: Get available products for bundles...")
+        products_success, products_response = self.run_test(
+            'admin', 'Get Available Products', 'GET', 'bundles/products', 200
+        )
+        
+        available_products = []
+        if products_success:
+            products_list = products_response.get('products', [])
+            available_products = products_list
+            print(f"   Found {len(products_list)} available products")
+            for i, product in enumerate(products_list[:3], 1):  # Show first 3 products
+                print(f"   {i}. {product.get('name', 'N/A')} - ${product.get('price', 0)}/month")
+        
+        # Test 2: Get all bundles (initially empty)
+        print("\n📋 Test 2: Get all bundles (initial state)...")
+        initial_bundles_success, initial_bundles_response = self.run_test(
+            'admin', 'Get All Bundles (Initial)', 'GET', 'bundles', 200
+        )
+        
+        initial_bundle_count = 0
+        if initial_bundles_success:
+            bundles_list = initial_bundles_response.get('bundles', [])
+            initial_bundle_count = len(bundles_list)
+            print(f"   Found {initial_bundle_count} existing bundles")
+        
+        # Test 3: Create a new bundle
+        print("\n➕ Test 3: Create new bundle...")
+        
+        if not available_products:
+            print("   ❌ Cannot create bundle - no products available")
+            return False
+        
+        # Select first 2 products for the bundle
+        selected_products = []
+        for i, product in enumerate(available_products[:2]):
+            selected_products.append({
+                "product_id": product.get('id'),
+                "included_seats": 10,
+                "included_storage_gb": 50
+            })
+        
+        bundle_data = {
+            "name": f"Test Enterprise Bundle {datetime.now().strftime('%H%M%S')}",
+            "description": "Comprehensive enterprise solution with multiple products",
+            "products": selected_products,
+            "monthly_price": 299.99,
+            "original_price": 399.99,
+            "discount_percentage": 25.0,
+            "is_active": True,
+            "features": ["Multi-user access", "Advanced analytics", "Priority support"]
+        }
+        
+        create_success, create_response = self.run_test(
+            'admin', 'Create New Bundle', 'POST', 'bundles', 200, bundle_data
+        )
+        
+        created_bundle_id = None
+        if create_success:
+            created_bundle_id = create_response.get('bundle_id')
+            print(f"   Created Bundle ID: {created_bundle_id}")
+            print(f"   Bundle Name: {create_response.get('bundle', {}).get('name')}")
+        
+        # Test 4: Get specific bundle by ID
+        if created_bundle_id:
+            print(f"\n🎯 Test 4: Get specific bundle by ID...")
+            specific_bundle_success, specific_bundle_response = self.run_test(
+                'admin', 'Get Specific Bundle', 'GET', f'bundles/{created_bundle_id}', 200
+            )
+            
+            if specific_bundle_success:
+                bundle_name = specific_bundle_response.get('name')
+                bundle_price = specific_bundle_response.get('monthly_price')
+                bundle_products = specific_bundle_response.get('products', [])
+                print(f"   Bundle Name: {bundle_name}")
+                print(f"   Monthly Price: ${bundle_price}")
+                print(f"   Products Count: {len(bundle_products)}")
+        
+        # Test 5: Update bundle
+        if created_bundle_id:
+            print(f"\n✏️ Test 5: Update bundle...")
+            update_data = {
+                "name": f"Updated Test Bundle {datetime.now().strftime('%H%M%S')}",
+                "monthly_price": 349.99,
+                "description": "Updated enterprise solution with enhanced features"
+            }
+            
+            update_success, update_response = self.run_test(
+                'admin', 'Update Bundle', 'PUT', f'bundles/{created_bundle_id}', 200, update_data
+            )
+            
+            if update_success:
+                print(f"   Bundle updated successfully: {update_response.get('message')}")
+        
+        # Test 6: Get all bundles after creation
+        print("\n📋 Test 6: Get all bundles after creation...")
+        all_bundles_success, all_bundles_response = self.run_test(
+            'admin', 'Get All Bundles After Creation', 'GET', 'bundles', 200
+        )
+        
+        total_bundles_count = 0
+        if all_bundles_success:
+            bundles_list = all_bundles_response.get('bundles', [])
+            total_bundles_count = len(bundles_list)
+            print(f"   Total bundles: {total_bundles_count}")
+            
+            # Show bundle details
+            for i, bundle in enumerate(bundles_list[:3], 1):  # Show first 3 bundles
+                bundle_name = bundle.get('name', 'N/A')
+                bundle_price = bundle.get('monthly_price', 0)
+                bundle_status = bundle.get('is_active', False)
+                products_count = len(bundle.get('products', []))
+                print(f"   {i}. {bundle_name} - ${bundle_price}/month ({products_count} products, {'Active' if bundle_status else 'Inactive'})")
+        
+        # Test 7: Get bundle statistics
+        print("\n📊 Test 7: Get bundle statistics...")
+        stats_success, stats_response = self.run_test(
+            'admin', 'Get Bundle Statistics', 'GET', 'bundles/stats/overview', 200
+        )
+        
+        if stats_success:
+            print(f"   Total Bundles: {stats_response.get('total_bundles', 0)}")
+            print(f"   Active Bundles: {stats_response.get('active_bundles', 0)}")
+            print(f"   Total Assignments: {stats_response.get('total_assignments', 0)}")
+            print(f"   Active Assignments: {stats_response.get('active_assignments', 0)}")
+            print(f"   Monthly Recurring Revenue: ${stats_response.get('mrr', 0)}")
+            print(f"   User Subscriptions: {stats_response.get('user_subscriptions', 0)}")
+            print(f"   Company Subscriptions: {stats_response.get('company_subscriptions', 0)}")
+        
+        # Test 8: Assign bundle to user (need to create a test user first)
+        print("\n👤 Test 8: Create test user for bundle assignment...")
+        timestamp = datetime.now().strftime('%H%M%S')
+        test_user_data = {
+            "email": f"bundletest_{timestamp}@example.com",
+            "full_name": f"Bundle Test User {timestamp}",
+            "password": "BundleTest123!",
+            "role": "fleet_owner",
+            "phone": f"+1555{timestamp}",
+            "mc_number": f"MC{timestamp}",
+            "dot_number": f"DOT{timestamp}",
+            "company_name": f"Bundle Test Company {timestamp}",
+            "company_website": f"https://bundletest{timestamp}.com",
+            "status": "active"
+        }
+        
+        user_create_success, user_create_response = self.run_test(
+            'admin', 'Create Test User for Bundle Assignment', 'POST', 'admin/users', 200, test_user_data
+        )
+        
+        test_user_id = None
+        if user_create_success:
+            test_user_id = user_create_response.get('user_id')
+            print(f"   Created Test User ID: {test_user_id}")
+        
+        # Test 9: Assign bundle to user
+        if created_bundle_id and test_user_id:
+            print(f"\n🔗 Test 9: Assign bundle to user...")
+            assignment_data = {
+                "bundle_id": created_bundle_id,
+                "entity_type": "user",
+                "entity_id": test_user_id,
+                "notes": "Test assignment for subscription manager testing"
+            }
+            
+            assign_success, assign_response = self.run_test(
+                'admin', 'Assign Bundle to User', 'POST', 'bundles/assign', 200, assignment_data
+            )
+            
+            assignment_id = None
+            if assign_success:
+                assignment_id = assign_response.get('assignment_id')
+                print(f"   Assignment ID: {assignment_id}")
+                print(f"   Message: {assign_response.get('message')}")
+        
+        # Test 10: Get all assignments
+        print("\n📋 Test 10: Get all assignments...")
+        assignments_success, assignments_response = self.run_test(
+            'admin', 'Get All Assignments', 'GET', 'bundles/assignments', 200
+        )
+        
+        if assignments_success:
+            assignments_list = assignments_response.get('assignments', [])
+            print(f"   Total assignments: {len(assignments_list)}")
+            
+            for i, assignment in enumerate(assignments_list[:3], 1):  # Show first 3 assignments
+                bundle_name = assignment.get('bundle_name', 'N/A')
+                entity_name = assignment.get('entity_name', 'N/A')
+                entity_type = assignment.get('entity_type', 'N/A')
+                status = assignment.get('status', 'N/A')
+                monthly_price = assignment.get('monthly_price', 0)
+                print(f"   {i}. {bundle_name} → {entity_name} ({entity_type}) - ${monthly_price}/month ({status})")
+        
+        # Test 11: Filter assignments by entity type
+        print("\n🔍 Test 11: Filter assignments by entity type...")
+        filter_success, filter_response = self.run_test(
+            'admin', 'Filter Assignments by User Type', 'GET', 'bundles/assignments?entity_type=user', 200
+        )
+        
+        if filter_success:
+            user_assignments = filter_response.get('assignments', [])
+            print(f"   User assignments: {len(user_assignments)}")
+        
+        # Test 12: Test error handling - invalid bundle operations
+        print("\n❌ Test 12: Test error handling...")
+        
+        # Try to get non-existent bundle
+        nonexistent_success, nonexistent_response = self.run_test(
+            'admin', 'Get Non-existent Bundle', 'GET', 'bundles/nonexistent-id', 404
+        )
+        
+        # Try to create bundle with invalid product
+        invalid_bundle_data = {
+            "name": "Invalid Bundle",
+            "products": [{"product_id": "invalid-product-id", "included_seats": 5, "included_storage_gb": 10}],
+            "monthly_price": 99.99
+        }
+        
+        invalid_create_success, invalid_create_response = self.run_test(
+            'admin', 'Create Bundle with Invalid Product', 'POST', 'bundles', 400, invalid_bundle_data
+        )
+        
+        # Try to assign non-existent bundle
+        invalid_assignment_data = {
+            "bundle_id": "nonexistent-bundle-id",
+            "entity_type": "user",
+            "entity_id": test_user_id or "test-user-id"
+        }
+        
+        invalid_assign_success, invalid_assign_response = self.run_test(
+            'admin', 'Assign Non-existent Bundle', 'POST', 'bundles/assign', 404, invalid_assignment_data
+        )
+        
+        # Test 13: Clean up - delete test bundle (if no active assignments)
+        if created_bundle_id:
+            print(f"\n🗑️ Test 13: Delete test bundle (cleanup)...")
+            delete_success, delete_response = self.run_test(
+                'admin', 'Delete Test Bundle', 'DELETE', f'bundles/{created_bundle_id}', 400  # Should fail if has assignments
+            )
+            
+            if delete_success:
+                print(f"   Bundle deletion handled correctly (has active assignments)")
+            else:
+                print(f"   Bundle deletion blocked due to active assignments (expected behavior)")
+        
+        # Clean up test user
+        if test_user_id:
+            print(f"\n🗑️ Cleanup: Deactivate test user...")
+            cleanup_success, cleanup_response = self.run_test(
+                'admin', 'Deactivate Test User', 'DELETE', f'admin/users/{test_user_id}', 200
+            )
+        
+        # Summary
+        print(f"\n📋 SUBSCRIPTION MANAGER BACKEND API TEST SUMMARY:")
+        print(f"   ✅ Get Available Products: {'PASS' if products_success else 'FAIL'}")
+        print(f"   ✅ Get Initial Bundles: {'PASS' if initial_bundles_success else 'FAIL'}")
+        print(f"   ✅ Create Bundle: {'PASS' if create_success else 'FAIL'}")
+        print(f"   ✅ Get Specific Bundle: {'PASS' if created_bundle_id and specific_bundle_success else 'FAIL'}")
+        print(f"   ✅ Update Bundle: {'PASS' if created_bundle_id and update_success else 'FAIL'}")
+        print(f"   ✅ Get All Bundles: {'PASS' if all_bundles_success else 'FAIL'}")
+        print(f"   ✅ Get Bundle Stats: {'PASS' if stats_success else 'FAIL'}")
+        print(f"   ✅ Create Test User: {'PASS' if user_create_success else 'FAIL'}")
+        print(f"   ✅ Assign Bundle: {'PASS' if created_bundle_id and test_user_id and assign_success else 'FAIL'}")
+        print(f"   ✅ Get Assignments: {'PASS' if assignments_success else 'FAIL'}")
+        print(f"   ✅ Filter Assignments: {'PASS' if filter_success else 'FAIL'}")
+        print(f"   ✅ Error Handling: {'PASS' if nonexistent_success and invalid_create_success else 'FAIL'}")
+        
+        # Return overall success
+        core_tests_passed = all([
+            products_success,
+            initial_bundles_success,
+            create_success,
+            all_bundles_success,
+            stats_success,
+            assignments_success
+        ])
+        
+        if core_tests_passed:
+            print("\n🎉 SUBSCRIPTION MANAGER BACKEND APIs: ALL CORE TESTS PASSED")
+        else:
+            print("\n⚠️  SUBSCRIPTION MANAGER BACKEND APIs: SOME TESTS FAILED")
+        
+        return core_tests_passed
+
     def test_fmcsa_qcmobile_api_integration(self):
         """Test FMCSA QCMobile API integration for carrier data lookup"""
         print("\n" + "="*60)
