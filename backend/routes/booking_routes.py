@@ -14,6 +14,73 @@ import json
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 logger = logging.getLogger(__name__)
 
+# Pydantic model for creating load from quote
+class LoadFromQuote(BaseModel):
+    pickup_location: str = ""
+    pickup_city: str = ""
+    pickup_state: str = ""
+    pickup_country: str = "USA"
+    delivery_location: str = ""
+    delivery_city: str = ""
+    delivery_state: str = ""
+    delivery_country: str = "USA"
+    shipper_name: str = ""
+    shipper_address: str = ""
+    commodity: str = ""
+    weight: Optional[float] = None
+    cubes: Optional[float] = None
+    confirmed_rate: float = 0
+    notes: str = ""
+    source_quote_id: Optional[str] = None
+    source_quote_number: Optional[str] = None
+
+@router.post("/from-quote", response_model=dict)
+async def create_load_from_quote(load_data: LoadFromQuote, current_user: User = Depends(get_current_user)):
+    """Create a new load/booking from a rate quote without requiring equipment"""
+    
+    # Generate order number
+    order_number = f"LD-{str(uuid.uuid4())[:8].upper()}"
+    
+    # Create load record
+    load_dict = {
+        "id": str(uuid.uuid4()),
+        "order_number": order_number,
+        "requester_id": current_user.id,
+        "equipment_owner_id": current_user.id,  # Same as requester for self-created loads
+        "equipment_id": None,  # No equipment assigned yet
+        "pickup_location": load_data.pickup_location,
+        "pickup_city": load_data.pickup_city,
+        "pickup_state": load_data.pickup_state,
+        "pickup_country": load_data.pickup_country,
+        "delivery_location": load_data.delivery_location,
+        "delivery_city": load_data.delivery_city,
+        "delivery_state": load_data.delivery_state,
+        "delivery_country": load_data.delivery_country,
+        "shipper_name": load_data.shipper_name,
+        "shipper_address": load_data.shipper_address,
+        "commodity": load_data.commodity,
+        "weight": load_data.weight,
+        "cubes": load_data.cubes,
+        "confirmed_rate": load_data.confirmed_rate,
+        "total_cost": load_data.confirmed_rate,
+        "notes": load_data.notes,
+        "source_quote_id": load_data.source_quote_id,
+        "source_quote_number": load_data.source_quote_number,
+        "status": "pending",
+        "start_date": datetime.now(timezone.utc).isoformat(),
+        "end_date": datetime.now(timezone.utc).isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_by": current_user.id
+    }
+    
+    await db.bookings.insert_one(load_dict)
+    
+    return {
+        "message": "Load created successfully",
+        "load_id": load_dict["id"],
+        "order_number": order_number
+    }
+
 @router.post("", response_model=dict)
 async def create_booking(booking_data: BookingCreate, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
     # Get equipment details
