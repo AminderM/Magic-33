@@ -484,16 +484,16 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
             </div>
           ) : (
             <div className="overflow-x-auto border border-gray-300 rounded-lg">
-              <table className="w-full border-collapse min-w-[1200px]">
+              <table className="w-full border-collapse min-w-[1400px]">
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Name</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Email</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">User Type</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Phone#</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">MC#</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">DOT#</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Company Name</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Company Website</th>
                     <th className="px-3 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-gray-300">Actions</th>
                   </tr>
                 </thead>
@@ -502,12 +502,16 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                     <tr key={user.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.full_name}</td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.email}</td>
+                      <td className="px-3 py-3 text-sm border-r border-gray-200 whitespace-nowrap">
+                        <Badge variant="outline" className="capitalize">
+                          {USER_TYPES.find(t => t.value === user.user_type)?.label || user.user_type || 'Other'}
+                        </Badge>
+                      </td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.phone || '-'}</td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.mc_number || '-'}</td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.dot_number || '-'}</td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.company_name || '-'}</td>
-                      <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">
-                        {user.company_website ? (
+                      <td className="px-3 py-3 text-sm border-gray-200">
                           <a href={user.company_website.startsWith('http') ? user.company_website : `https://${user.company_website}`} 
                              target="_blank" rel="noopener noreferrer" 
                              className="text-blue-600 hover:underline">
