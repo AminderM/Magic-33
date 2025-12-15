@@ -227,13 +227,7 @@ const AdminConsole = () => {
       case 'carrier-lookup':
         return <CarrierLookup fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'subscription':
-        return <SubscriptionManagerNew 
-          tenants={tenants}
-          plans={plans}
-          fetchWithAuth={fetchWithAuth}
-          BACKEND_URL={BACKEND_URL}
-          refreshTenants={refreshTenants}
-        />;
+        return <SubscriptionManager fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'analytics':
         return <SalesAnalyticsNew tenants={tenants} fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'products':
