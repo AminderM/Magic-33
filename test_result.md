@@ -557,6 +557,30 @@ test_plan:
         agent: "testing"
         comment: "❌ CRITICAL ISSUE IDENTIFIED: AI Generate Email feature has QUOTE PERSISTENCE PROBLEM blocking full testing. COMPREHENSIVE TEST RESULTS: ✅ PART 1 SUCCESS: Sales Department loads by default correctly - Sales/Business Development button is highlighted in yellow (bg-[#F7B501]) confirming it's the initial active state. FreightCalculator tab is visible and accessible. ✅ PART 2 SUCCESS: Complete quote creation works - successfully filled all required fields (Pickup: Los Angeles, CA; Destination: Miami, FL; Consignor: ABC Shipping Co; Consignee: XYZ Delivery Inc; Customer: Test Corporation) and clicked 'Push to Rate Quotes'. ❌ CRITICAL BLOCKING ISSUE: Quotes do not persist between sessions or navigation - Rate Quotes tab shows 'No Quotes Yet' even after successful quote creation. This prevents testing of Generate Email functionality as there are no quotes with required fields to generate emails for. ✅ BACKEND API CONFIRMED WORKING: /api/tms-chat/message endpoint responds correctly (200 OK) and AI email generation logic is properly implemented. ✅ UI COMPONENTS VERIFIED: Generate Email button, modal implementation, copy to clipboard functionality all properly coded in SalesDepartment.js. ROOT CAUSE: Quote data is stored in frontend state only and not persisted to backend or localStorage, causing quotes to disappear on page refresh/navigation. SOLUTION REQUIRED: Implement quote persistence to backend database or localStorage to maintain quotes across sessions for Generate Email testing."
 
+  - task: "Subscription Manager Table View with Duplication"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/admin/SubscriptionManager.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Converted Subscription Manager from card view to table view. Added duplicate bundle functionality with Copy button. Table includes columns: Bundle Name, Products, Price, Discount, Subscriptions, Status, Actions. Actions include Edit, Duplicate, Assign, and Delete buttons."
+
+  - task: "User Management Subscription Column"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/admin/PlatformUserManagement.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added SUBSCRIPTION column to User Management table between PHONE# and MC# columns. Shows purple badge with bundle name for users with active subscriptions, 'No subscription' in gray text for users without subscriptions."
+
 agent_communication:
   - agent: "main"
     message: "Please POST /api/admin/seed-platform-admin to create the admin user, then attempt login via /api/auth/login with email aminderpro@gmail.com and password Admin@123!. Return responses and any errors."
