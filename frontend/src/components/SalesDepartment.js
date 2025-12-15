@@ -545,6 +545,55 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     }
   };
 
+  // Create a load from a rate quote
+  const createLoadFromQuote = async (quote) => {
+    try {
+      // Parse pickup location to extract city/state
+      const pickupParts = quote.pickupLocation?.split(',').map(s => s.trim()) || [];
+      const deliveryParts = quote.destination?.split(',').map(s => s.trim()) || [];
+      
+      const loadData = {
+        pickup_location: quote.pickupLocation || '',
+        pickup_city: pickupParts[0] || '',
+        pickup_state: pickupParts[1] || '',
+        pickup_country: 'USA',
+        delivery_location: quote.destination || '',
+        delivery_city: deliveryParts[0] || '',
+        delivery_state: deliveryParts[1] || '',
+        delivery_country: 'USA',
+        shipper_name: quote.consignor || '',
+        shipper_address: '',
+        commodity: '',
+        weight: '',
+        cubes: '',
+        confirmed_rate: parseFloat(quote.totalAmount) || 0,
+        notes: `Created from Rate Quote ${quote.quoteNumber}`,
+        source_quote_id: quote.id,
+        source_quote_number: quote.quoteNumber
+      };
+
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/bookings/from-quote`, {
+        method: 'POST',
+        body: JSON.stringify(loadData)
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(`Load created successfully from ${quote.quoteNumber}`);
+        // Reload loads to show the new load
+        loadLoads();
+        // Switch to loads tab
+        setActiveTab('loads');
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to create load');
+      }
+    } catch (error) {
+      console.error('Error creating load:', error);
+      toast.error('Failed to create load. Please try again.');
+    }
+  };
+
   const [generatedEmail, setGeneratedEmail] = useState(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
 
