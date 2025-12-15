@@ -512,14 +512,6 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.dot_number || '-'}</td>
                       <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.company_name || '-'}</td>
                       <td className="px-3 py-3 text-sm border-gray-200">
-                          <a href={user.company_website.startsWith('http') ? user.company_website : `https://${user.company_website}`} 
-                             target="_blank" rel="noopener noreferrer" 
-                             className="text-blue-600 hover:underline">
-                            {user.company_website}
-                          </a>
-                        ) : '-'}
-                      </td>
-                      <td className="px-3 py-3 text-sm border-gray-200">
                         <div className="flex items-center justify-center gap-2">
                           {/* Edit Button */}
                           <Button
