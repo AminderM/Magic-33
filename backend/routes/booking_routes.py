@@ -3,13 +3,15 @@ from models import *
 from auth import get_current_user
 from database import db
 from datetime import datetime, timezone
-from typing import List, Literal
+from typing import List, Literal, Optional
 from email_service import send_booking_confirmation_emails
+from pydantic import BaseModel
 import base64
 import logging
 import traceback
 import os
 import json
+import uuid
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 logger = logging.getLogger(__name__)
