@@ -303,7 +303,87 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
         </Card>
       </div>
 
-      {/* Integrations by Category */}
+      {/* Active/Built-in Integrations Section */}
+      <div className="space-y-4">
+        <div className="flex items-center space-x-2">
+          <h3 className="text-xl font-semibold text-gray-800">Active Integrations</h3>
+          <Badge className="bg-green-100 text-green-800">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            {ACTIVE_INTEGRATIONS.length} Live
+          </Badge>
+        </div>
+        <p className="text-sm text-gray-600">These integrations are currently active and in use across the application.</p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {ACTIVE_INTEGRATIONS.map(integration => {
+            const IconComponent = integration.icon;
+            
+            return (
+              <Card key={integration.id} className="border-2 border-green-200 bg-gradient-to-br from-white to-green-50">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                        <IconComponent className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg flex items-center gap-2">
+                          {integration.name}
+                          <Badge className="bg-green-100 text-green-700 text-xs">Active</Badge>
+                        </CardTitle>
+                        <p className="text-sm text-gray-500 mt-1">{integration.category}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-gray-600">{integration.description}</p>
+                  
+                  {/* Features */}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Features</p>
+                    <div className="flex flex-wrap gap-1">
+                      {integration.features.map((feature, idx) => (
+                        <Badge key={idx} variant="outline" className="text-xs">
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Used In */}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Used In</p>
+                    <div className="flex flex-wrap gap-1">
+                      {integration.usedIn.map((location, idx) => (
+                        <Badge key={idx} className="bg-blue-100 text-blue-800 text-xs">
+                          {location}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* API Endpoints */}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">API Endpoints</p>
+                    <div className="bg-gray-50 rounded p-2 text-xs font-mono text-gray-600 space-y-1">
+                      {integration.apiEndpoints.map((endpoint, idx) => (
+                        <div key={idx}>{endpoint}</div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="text-xs text-gray-400 pt-2 border-t">
+                    Configured: {new Date(integration.configuredDate).toLocaleDateString()}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Configurable Integrations by Category */}
       {Object.entries(INTEGRATION_TYPES).map(([category, categoryData]) => {
         const categoryIntegrations = integrations.filter(i => {
           return categoryData.services.some(s => s.id === i.service_id);
