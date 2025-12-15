@@ -240,7 +240,23 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     loadSalesData();
     loadGoogleMapsKey();
     loadRateQuotes();
+    loadLoads();
   }, [fetchWithAuth, BACKEND_URL]);
+
+  // Load loads from database
+  const loadLoads = async () => {
+    if (!fetchWithAuth || !BACKEND_URL) return;
+    
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/bookings/requests`);
+      if (res.ok) {
+        const data = await res.json();
+        setLoads(data || []);
+      }
+    } catch (error) {
+      console.error('Error loading loads:', error);
+    }
+  };
 
   // Load rate quotes from database
   const loadRateQuotes = async () => {
