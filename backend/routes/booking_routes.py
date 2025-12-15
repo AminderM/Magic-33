@@ -145,10 +145,16 @@ async def get_my_bookings(current_user: User = Depends(get_current_user)):
     bookings = await db.bookings.find({"requester_id": current_user.id}).to_list(length=None)
     return [Booking(**booking) for booking in bookings]
 
-@router.get("/requests", response_model=List[Booking])
+@router.get("/requests")
 async def get_booking_requests(current_user: User = Depends(get_current_user)):
-    bookings = await db.bookings.find({"equipment_owner_id": current_user.id}).to_list(length=None)
-    return [Booking(**booking) for booking in bookings]
+    # Get bookings where user is equipment owner OR requester (for self-created loads)
+    bookings = await db.bookings.find({
+        "$or": [
+            {"equipment_owner_id": current_user.id},
+            {"requester_id": current_user.id}
+        ]
+    }, {"_id": 0}).sort("created_at", -1).to_list(length=500)
+    return bookings
 
 @router.patch("/{booking_id}/status", response_model=dict)
 async def update_booking_status(
