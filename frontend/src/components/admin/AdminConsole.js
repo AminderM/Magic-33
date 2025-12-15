@@ -9,7 +9,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Home, Users, TrendingUp, Package, LogOut, Zap, Truck } from 'lucide-react';
-import SubscriptionManagerNew from './SubscriptionManagerNew';
+import SubscriptionManager from './SubscriptionManager';
 import SalesAnalyticsNew from './SalesAnalyticsNew';
 import CRMView from './CRMView';
 import IntegrationsView from './IntegrationsView';
