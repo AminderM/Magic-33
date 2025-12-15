@@ -507,80 +507,102 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {bundles.map(bundle => (
-                <Card key={bundle.id} className={`relative ${!bundle.is_active ? 'opacity-60' : ''}`}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{bundle.name}</CardTitle>
-                        <CardDescription className="mt-1">{bundle.description}</CardDescription>
-                      </div>
-                      <Badge className={bundle.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
-                        {bundle.is_active ? 'Active' : 'Inactive'}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* Pricing */}
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold text-gray-900">${bundle.monthly_price}</span>
-                      <span className="text-gray-500">/month</span>
-                      {bundle.discount_percentage > 0 && (
-                        <Badge className="bg-red-100 text-red-800 ml-2">
-                          {bundle.discount_percentage}% OFF
-                        </Badge>
-                      )}
-                    </div>
-                    {bundle.original_price > bundle.monthly_price && (
-                      <p className="text-sm text-gray-500 line-through">
-                        Original: ${bundle.original_price}/month
-                      </p>
-                    )}
-
-                    {/* Products in Bundle */}
-                    <div>
-                      <p className="text-sm font-medium text-gray-700 mb-2">Included Products:</p>
-                      <div className="space-y-1">
-                        {bundle.products?.map((prod, idx) => (
-                          <div key={idx} className="flex items-center text-sm text-gray-600">
-                            <Check className="w-4 h-4 text-green-500 mr-2" />
-                            {prod.product_name} ({prod.included_seats} seats)
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Assignment Count */}
-                    <div className="pt-2 border-t">
-                      <p className="text-sm text-gray-500">
-                        {bundle.assignments_count || 0} active subscription(s)
-                      </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-2 pt-2">
-                      <Button size="sm" variant="outline" onClick={() => openEditBundle(bundle)}>
-                        <Edit className="w-4 h-4 mr-1" />
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => openAssignModal(bundle)}>
-                        <UserPlus className="w-4 h-4 mr-1" />
-                        Assign
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="text-red-600 hover:text-red-700"
-                        onClick={() => handleDeleteBundle(bundle.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <Card>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Bundle Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Products</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Discount</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Subscriptions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {bundles.map(bundle => (
+                        <tr key={bundle.id} className={`hover:bg-gray-50 ${!bundle.is_active ? 'opacity-60' : ''}`}>
+                          <td className="px-4 py-3">
+                            <div>
+                              <p className="font-medium text-gray-900">{bundle.name}</p>
+                              {bundle.description && (
+                                <p className="text-sm text-gray-500 truncate max-w-xs">{bundle.description}</p>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex flex-wrap gap-1">
+                              {bundle.products?.slice(0, 3).map((prod, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
+                                  {prod.product_name}
+                                </Badge>
+                              ))}
+                              {bundle.products?.length > 3 && (
+                                <Badge variant="outline" className="text-xs bg-gray-100">
+                                  +{bundle.products.length - 3} more
+                                </Badge>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex flex-col">
+                              <span className="font-bold text-gray-900">${bundle.monthly_price}/mo</span>
+                              {bundle.original_price > bundle.monthly_price && (
+                                <span className="text-xs text-gray-500 line-through">${bundle.original_price}/mo</span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            {bundle.discount_percentage > 0 ? (
+                              <Badge className="bg-red-100 text-red-800">
+                                {bundle.discount_percentage}% OFF
+                              </Badge>
+                            ) : (
+                              <span className="text-gray-400">-</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1">
+                              <Users className="w-4 h-4 text-gray-400" />
+                              <span className="font-medium">{bundle.assignments_count || 0}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge className={bundle.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
+                              {bundle.is_active ? 'Active' : 'Inactive'}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center justify-center gap-1">
+                              <Button size="sm" variant="ghost" onClick={() => openEditBundle(bundle)} title="Edit">
+                                <Edit className="w-4 h-4 text-gray-600" />
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={() => duplicateBundle(bundle)} title="Duplicate">
+                                <Copy className="w-4 h-4 text-blue-600" />
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={() => openAssignModal(bundle)} title="Assign">
+                                <UserPlus className="w-4 h-4 text-green-600" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                onClick={() => handleDeleteBundle(bundle.id)}
+                                title="Delete"
+                              >
+                                <Trash2 className="w-4 h-4 text-red-600" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
 
