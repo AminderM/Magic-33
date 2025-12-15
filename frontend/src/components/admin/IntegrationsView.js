@@ -12,6 +12,25 @@ import { Plus, Settings, Trash2, Check, X, Zap, Key, ExternalLink, Truck, Map, S
 // Built-in/Active Integrations that are already implemented in the app
 const ACTIVE_INTEGRATIONS = [
   {
+    id: 'openai_gpt4o',
+    name: 'OpenAI GPT-4o',
+    description: 'OpenAI\'s GPT-4o model powers the TMS AI Chat Assistant for department-specific help (Dispatch, Accounting, Sales, HR, Maintenance, Safety) and generates professional quotation emails in the Sales module.',
+    category: 'AI/LLM Services',
+    status: 'active',
+    icon: Zap,
+    features: [
+      'TMS Chat Assistant',
+      'Department-specific AI help',
+      'Role-based access control',
+      'Professional email generation',
+      'Rate quotation emails',
+      'Context-aware responses'
+    ],
+    usedIn: ['Dashboard → AI Assistant (all departments)', 'Sales → Generate Email'],
+    apiEndpoints: ['/api/tms-chat/message', '/api/tms-chat/history'],
+    configuredDate: '2024-12-08'
+  },
+  {
     id: 'fmcsa',
     name: 'FMCSA QCMobile API',
     description: 'Federal Motor Carrier Safety Administration carrier data lookup. Search carriers by DOT# or company name to get safety scores, authority status, insurance info, and crash history.',
