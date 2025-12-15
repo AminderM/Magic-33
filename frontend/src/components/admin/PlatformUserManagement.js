@@ -692,7 +692,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                 className="mt-1"
               />
             </div>
-            <div className="col-span-2">
+            <div>
               <Label className="text-sm font-medium">Company Website</Label>
               <Input
                 value={newUser.company_website}
@@ -700,6 +700,22 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                 placeholder="www.company.com"
                 className="mt-1"
               />
+            </div>
+            <div>
+              <Label className="text-sm font-medium">User Type</Label>
+              <Select 
+                value={newUser.user_type} 
+                onValueChange={(value) => setNewUser({...newUser, user_type: value})}
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {USER_TYPES.map(type => (
+                    <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label className="text-sm font-medium">Password *</Label>
