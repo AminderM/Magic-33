@@ -245,7 +245,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total Integrations</p>
-                <p className="text-2xl font-bold text-gray-900">{integrations.length}</p>
+                <p className="text-2xl font-bold text-gray-900">{ACTIVE_INTEGRATIONS.length + integrations.length}</p>
               </div>
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Zap className="w-5 h-5 text-blue-600" />
@@ -260,7 +260,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
               <div>
                 <p className="text-sm text-gray-600">Active</p>
                 <p className="text-2xl font-bold text-green-600">
-                  {integrations.filter(i => i.enabled).length}
+                  {ACTIVE_INTEGRATIONS.length + integrations.filter(i => i.enabled).length}
                 </p>
               </div>
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
