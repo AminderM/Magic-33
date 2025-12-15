@@ -29,7 +29,7 @@ import {
 import { toast } from 'sonner';
 import { 
   Plus, Package, Users, Building2, DollarSign, TrendingUp, 
-  Edit, Trash2, Check, X, Search, UserPlus, Zap
+  Edit, Trash2, Check, X, Search, UserPlus, Zap, Copy
 } from 'lucide-react';
 
 const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
