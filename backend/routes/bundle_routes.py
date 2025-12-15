@@ -174,6 +174,9 @@ async def create_bundle(bundle_data: BundleCreate, current_user: User = Depends(
     
     await db.product_bundles.insert_one(bundle_dict)
     
+    # Remove _id from response (MongoDB adds it during insert)
+    bundle_dict.pop("_id", None)
+    
     return {
         "message": "Bundle created successfully",
         "bundle_id": bundle_dict["id"],
