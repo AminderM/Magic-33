@@ -164,6 +164,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [opportunities, setOpportunities] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [quotes, setQuotes] = useState([]);
+  const [loads, setLoads] = useState([]);
   const [quoteCounter, setQuoteCounter] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showAddLeadModal, setShowAddLeadModal] = useState(false);
