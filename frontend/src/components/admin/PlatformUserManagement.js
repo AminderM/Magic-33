@@ -816,6 +816,22 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
               />
             </div>
             <div>
+              <Label className="text-sm font-medium">User Type</Label>
+              <Select 
+                value={editUser.user_type} 
+                onValueChange={(value) => setEditUser({...editUser, user_type: value})}
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {USER_TYPES.map(type => (
+                    <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
               <Label className="text-sm font-medium">Status</Label>
               <Select 
                 value={editUser.status} 
