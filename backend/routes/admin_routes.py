@@ -836,6 +836,7 @@ async def create_user_admin(user_data: UserCreateAdmin, current_user: User = Dep
         "full_name": user_data.full_name,
         "password_hash": hashed_password,
         "role": user_data.role,
+        "user_type": user_data.user_type,
         "company_id": user_data.company_id,
         "phone": user_data.phone,
         "mc_number": user_data.mc_number,
@@ -848,7 +849,8 @@ async def create_user_admin(user_data: UserCreateAdmin, current_user: User = Dep
         "registration_status": RegistrationStatus.VERIFIED,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "created_by": current_user.id,
-        "comments": []  # Initialize empty comments array
+        "comments": [],  # Initialize empty comments array
+        "subscriptions": []  # Initialize empty subscriptions array
     }
     
     # Insert user
