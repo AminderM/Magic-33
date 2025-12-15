@@ -65,6 +65,9 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
     notes: ''
   });
 
+  // Entity search for assignment modal
+  const [entitySearchQuery, setEntitySearchQuery] = useState('');
+
   useEffect(() => {
     loadData();
   }, []);
