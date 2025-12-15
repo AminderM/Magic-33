@@ -882,32 +882,132 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
               </Select>
             </div>
 
-            {/* Entity Selection */}
+            {/* Entity Selection with Search */}
             <div>
               <Label>{assignForm.entity_type === 'user' ? 'Select User *' : 'Select Company *'}</Label>
-              <Select 
-                value={assignForm.entity_id} 
-                onValueChange={(v) => setAssignForm({ ...assignForm, entity_id: v })}
-              >
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder={`Choose a ${assignForm.entity_type}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  {assignForm.entity_type === 'user' ? (
-                    users.map(user => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.full_name} ({user.email})
-                      </SelectItem>
-                    ))
-                  ) : (
-                    companies.map(company => (
-                      <SelectItem key={company.id} value={company.id}>
-                        {company.name}
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
+              <div className="mt-1 space-y-2">
+                {/* Search Input */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    value={entitySearchQuery}
+                    onChange={(e) => setEntitySearchQuery(e.target.value)}
+                    placeholder={`Search by name${assignForm.entity_type === 'user' ? ', email, or company' : ''}...`}
+                    className="pl-9"
+                  />
+                </div>
+                
+                {/* Selected Entity Display */}
+                {assignForm.entity_id && (
+                  <div className="flex items-center justify-between p-2 bg-blue-50 border border-blue-200 rounded-md">
+                    <div className="flex items-center gap-2">
+                      {assignForm.entity_type === 'user' ? (
+                        <Users className="w-4 h-4 text-blue-600" />
+                      ) : (
+                        <Building2 className="w-4 h-4 text-blue-600" />
+                      )}
+                      <span className="text-sm font-medium text-blue-900">
+                        {assignForm.entity_type === 'user' 
+                          ? users.find(u => u.id === assignForm.entity_id)?.full_name
+                          : companies.find(c => c.id === assignForm.entity_id)?.name
+                        }
+                      </span>
+                      {assignForm.entity_type === 'user' && (
+                        <span className="text-xs text-blue-600">
+                          ({users.find(u => u.id === assignForm.entity_id)?.email})
+                        </span>
+                      )}
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="h-6 w-6 p-0 text-blue-600 hover:text-blue-800"
+                      onClick={() => setAssignForm({ ...assignForm, entity_id: '' })}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+
+                {/* Filtered Entity List */}
+                {!assignForm.entity_id && (
+                  <div className="max-h-48 overflow-y-auto border rounded-md">
+                    {assignForm.entity_type === 'user' ? (
+                      users
+                        .filter(user => {
+                          if (!entitySearchQuery) return true;
+                          const query = entitySearchQuery.toLowerCase();
+                          return (
+                            user.full_name?.toLowerCase().includes(query) ||
+                            user.email?.toLowerCase().includes(query) ||
+                            user.company_name?.toLowerCase().includes(query) ||
+                            user.mc_number?.toLowerCase().includes(query) ||
+                            user.dot_number?.toLowerCase().includes(query)
+                          );
+                        })
+                        .slice(0, 50) // Limit to first 50 results
+                        .map(user => (
+                          <div
+                            key={user.id}
+                            onClick={() => {
+                              setAssignForm({ ...assignForm, entity_id: user.id });
+                              setEntitySearchQuery('');
+                            }}
+                            className="flex items-center justify-between p-2 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">{user.full_name}</p>
+                              <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                            </div>
+                            {user.company_name && (
+                              <span className="ml-2 text-xs text-gray-400 truncate max-w-[120px]">
+                                {user.company_name}
+                              </span>
+                            )}
+                          </div>
+                        ))
+                    ) : (
+                      companies
+                        .filter(company => {
+                          if (!entitySearchQuery) return true;
+                          const query = entitySearchQuery.toLowerCase();
+                          return company.name?.toLowerCase().includes(query);
+                        })
+                        .slice(0, 50)
+                        .map(company => (
+                          <div
+                            key={company.id}
+                            onClick={() => {
+                              setAssignForm({ ...assignForm, entity_id: company.id });
+                              setEntitySearchQuery('');
+                            }}
+                            className="flex items-center p-2 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                          >
+                            <Building2 className="w-4 h-4 text-gray-400 mr-2" />
+                            <span className="text-sm font-medium text-gray-900">{company.name}</span>
+                          </div>
+                        ))
+                    )}
+                    {/* No results message */}
+                    {entitySearchQuery && (
+                      (assignForm.entity_type === 'user' 
+                        ? users.filter(u => 
+                            u.full_name?.toLowerCase().includes(entitySearchQuery.toLowerCase()) ||
+                            u.email?.toLowerCase().includes(entitySearchQuery.toLowerCase()) ||
+                            u.company_name?.toLowerCase().includes(entitySearchQuery.toLowerCase())
+                          ).length === 0
+                        : companies.filter(c => 
+                            c.name?.toLowerCase().includes(entitySearchQuery.toLowerCase())
+                          ).length === 0
+                      ) && (
+                        <div className="p-4 text-center text-sm text-gray-500">
+                          No {assignForm.entity_type === 'user' ? 'users' : 'companies'} found matching "{entitySearchQuery}"
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Notes */}
