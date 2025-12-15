@@ -331,6 +331,25 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
     setShowAssignModal(true);
   };
 
+  const duplicateBundle = (bundle) => {
+    // Pre-populate form with existing bundle data, but with a new name
+    setBundleForm({
+      name: `${bundle.name} (Copy)`,
+      description: bundle.description || '',
+      products: bundle.products.map(p => ({
+        id: p.product_id,
+        name: p.product_name,
+        price: p.product_price || 0,
+        included_seats: p.included_seats || 5
+      })),
+      monthly_price: bundle.monthly_price.toString(),
+      is_active: true
+    });
+    setEditingBundle(null); // This is a new bundle, not editing existing
+    setShowBundleModal(true);
+    toast.info('Bundle duplicated. Modify as needed and save.');
+  };
+
   const resetBundleForm = () => {
     setBundleForm({
       name: '',
