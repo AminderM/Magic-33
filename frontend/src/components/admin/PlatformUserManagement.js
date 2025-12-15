@@ -491,6 +491,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Email</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">User Type</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Phone#</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Subscription</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">MC#</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">DOT#</th>
                     <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Company Name</th>
