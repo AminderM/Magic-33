@@ -319,6 +319,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
       dot_number: user.dot_number || '',
       company_name: user.company_name || '',
       company_website: user.company_website || '',
+      user_type: user.user_type || 'other',
       status: user.status || 'active',
       password: ''
     });
