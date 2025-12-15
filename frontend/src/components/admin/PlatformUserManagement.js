@@ -35,6 +35,16 @@ const USER_STATUSES = [
   { value: 'cancelled', label: 'Cancelled', color: 'bg-orange-100 text-orange-800' }
 ];
 
+const USER_TYPES = [
+  { value: 'carrier', label: 'Carrier' },
+  { value: 'broker', label: 'Broker' },
+  { value: 'shipper', label: 'Shipper' },
+  { value: 'driver', label: 'Driver' },
+  { value: 'dispatcher', label: 'Dispatcher' },
+  { value: 'owner_operator', label: 'Owner Operator' },
+  { value: 'other', label: 'Other' }
+];
+
 const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,6 +67,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
     company_name: '',
     company_website: '',
     role: 'company_admin',
+    user_type: 'other',
     status: 'active'
   });
   
@@ -68,6 +79,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
     dot_number: '',
     company_name: '',
     company_website: '',
+    user_type: 'other',
     status: 'active',
     password: ''
   });
