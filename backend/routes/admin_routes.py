@@ -897,6 +897,9 @@ async def update_user_admin(user_id: str, user_data: UserUpdateAdmin, current_us
     if user_data.role is not None:
         update_data["role"] = user_data.role
     
+    if user_data.user_type is not None:
+        update_data["user_type"] = user_data.user_type
+    
     if user_data.company_id is not None:
         # Validate company
         company = await db.companies.find_one({"id": user_data.company_id})
