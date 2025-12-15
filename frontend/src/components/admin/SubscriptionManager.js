@@ -331,6 +331,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
       entity_id: '',
       notes: ''
     });
+    setEntitySearchQuery('');
     setShowAssignModal(true);
   };
 
