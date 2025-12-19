@@ -1140,13 +1140,37 @@ Body:
         <TabsContent value="pipeline" className="mt-6 pb-6">
           <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
             <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
-              <CardTitle className="text-base font-bold text-gray-900">Active Opportunities</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-bold text-gray-900">Active Opportunities ({filteredOpportunities.length})</CardTitle>
+                <span className="text-xs text-gray-500">{opportunities.length} total</span>
+              </div>
             </CardHeader>
+            
+            {/* Filter Bar */}
+            <FilterBar
+              filters={pipelineFilters}
+              setFilters={setPipelineFilters}
+              columns={[
+                { value: 'name', label: 'Opportunity' },
+                { value: 'company', label: 'Company' },
+                { value: 'stage', label: 'Stage' },
+                { value: 'owner', label: 'Owner' }
+              ]}
+              statusOptions={[
+                { value: 'qualification', label: 'Qualification' },
+                { value: 'proposal', label: 'Proposal' },
+                { value: 'negotiation', label: 'Negotiation' },
+                { value: 'closed_won', label: 'Closed Won' },
+                { value: 'closed_lost', label: 'Closed Lost' }
+              ]}
+              placeholder="Search opportunities..."
+            />
+            
             <CardContent className="p-0">
-              {opportunities.length === 0 ? (
+              {filteredOpportunities.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-handshake text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">No opportunities yet</p>
+                  <p className="text-gray-600">{opportunities.length === 0 ? 'No opportunities yet' : 'No opportunities match your filters'}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -1163,7 +1187,7 @@ Body:
                       </tr>
                     </thead>
                     <tbody>
-                      {opportunities.map((opp) => (
+                      {filteredOpportunities.map((opp) => (
                         <tr key={opp.id} className="border-b border-gray-300 hover:bg-gray-50">
                           <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{opp.title}</td>
                           <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{opp.company}</td>
