@@ -158,6 +158,180 @@ const UnifiedConverter = () => {
   );
 };
 
+// Reusable Filter Bar Component
+const FilterBar = ({ 
+  filters, 
+  setFilters, 
+  columns, 
+  statusOptions = [],
+  sourceOptions = [],
+  showSource = false,
+  placeholder = "Search..."
+}) => {
+  const clearFilters = () => {
+    setFilters({
+      searchText: '',
+      filterColumn: 'all',
+      dateFrom: '',
+      dateTo: '',
+      status: 'all',
+      source: 'all'
+    });
+  };
+
+  const hasActiveFilters = filters.searchText || filters.dateFrom || filters.dateTo || 
+    filters.status !== 'all' || (showSource && filters.source !== 'all');
+
+  return (
+    <div className="p-4 bg-gray-50 border-b border-gray-200">
+      <div className="flex flex-wrap gap-3 items-end">
+        {/* Search Input */}
+        <div className="flex-1 min-w-[200px]">
+          <label className="block text-xs font-medium text-gray-600 mb-1">Search</label>
+          <div className="relative">
+            <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input
+              type="text"
+              value={filters.searchText}
+              onChange={(e) => setFilters({ ...filters, searchText: e.target.value })}
+              placeholder={placeholder}
+              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        {/* Column Filter */}
+        <div className="w-[150px]">
+          <label className="block text-xs font-medium text-gray-600 mb-1">Filter By Column</label>
+          <select
+            value={filters.filterColumn}
+            onChange={(e) => setFilters({ ...filters, filterColumn: e.target.value })}
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+          >
+            <option value="all">All Columns</option>
+            {columns.map(col => (
+              <option key={col.value} value={col.value}>{col.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Date From */}
+        <div className="w-[140px]">
+          <label className="block text-xs font-medium text-gray-600 mb-1">Date From</label>
+          <input
+            type="date"
+            value={filters.dateFrom}
+            onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Date To */}
+        <div className="w-[140px]">
+          <label className="block text-xs font-medium text-gray-600 mb-1">Date To</label>
+          <input
+            type="date"
+            value={filters.dateTo}
+            onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Status Filter */}
+        {statusOptions.length > 0 && (
+          <div className="w-[130px]">
+            <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+            <select
+              value={filters.status}
+              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="all">All Status</option>
+              {statusOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Source Filter (for Leads) */}
+        {showSource && sourceOptions.length > 0 && (
+          <div className="w-[130px]">
+            <label className="block text-xs font-medium text-gray-600 mb-1">Source</label>
+            <select
+              value={filters.source}
+              onChange={(e) => setFilters({ ...filters, source: e.target.value })}
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option value="all">All Sources</option>
+              {sourceOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Clear Filters Button */}
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1"
+          >
+            <i className="fas fa-times text-xs"></i>
+            Clear
+          </button>
+        )}
+      </div>
+
+      {/* Active Filters Summary */}
+      {hasActiveFilters && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {filters.searchText && (
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+              Search: "{filters.searchText}"
+              <button onClick={() => setFilters({ ...filters, searchText: '' })} className="ml-1 hover:text-blue-900">
+                <i className="fas fa-times"></i>
+              </button>
+            </span>
+          )}
+          {filters.dateFrom && (
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+              From: {filters.dateFrom}
+              <button onClick={() => setFilters({ ...filters, dateFrom: '' })} className="ml-1 hover:text-green-900">
+                <i className="fas fa-times"></i>
+              </button>
+            </span>
+          )}
+          {filters.dateTo && (
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+              To: {filters.dateTo}
+              <button onClick={() => setFilters({ ...filters, dateTo: '' })} className="ml-1 hover:text-green-900">
+                <i className="fas fa-times"></i>
+              </button>
+            </span>
+          )}
+          {filters.status !== 'all' && (
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">
+              Status: {filters.status}
+              <button onClick={() => setFilters({ ...filters, status: 'all' })} className="ml-1 hover:text-purple-900">
+                <i className="fas fa-times"></i>
+              </button>
+            </span>
+          )}
+          {showSource && filters.source !== 'all' && (
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full">
+              Source: {filters.source}
+              <button onClick={() => setFilters({ ...filters, source: 'all' })} className="ml-1 hover:text-orange-900">
+                <i className="fas fa-times"></i>
+              </button>
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [activeTab, setActiveTab] = useState('pipeline');
   const [leads, setLeads] = useState([]);
