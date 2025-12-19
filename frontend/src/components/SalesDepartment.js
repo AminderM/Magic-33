@@ -1347,13 +1347,34 @@ Body:
         <TabsContent value="customers" className="mt-6">
           <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
             <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
-              <CardTitle className="text-base font-bold text-gray-900">Customer Database</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-bold text-gray-900">Customer Database ({filteredCustomers.length})</CardTitle>
+                <span className="text-xs text-gray-500">{customers.length} total</span>
+              </div>
             </CardHeader>
+            
+            {/* Filter Bar */}
+            <FilterBar
+              filters={customersFilters}
+              setFilters={setCustomersFilters}
+              columns={[
+                { value: 'company_name', label: 'Company' },
+                { value: 'contact_person', label: 'Contact Person' },
+                { value: 'email', label: 'Email' },
+                { value: 'phone', label: 'Phone' }
+              ]}
+              statusOptions={[
+                { value: 'active', label: 'Active' },
+                { value: 'inactive', label: 'Inactive' }
+              ]}
+              placeholder="Search customers..."
+            />
+            
             <CardContent className="p-0">
-              {customers.length === 0 ? (
+              {filteredCustomers.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-building text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">No customers yet</p>
+                  <p className="text-gray-600">{customers.length === 0 ? 'No customers yet' : 'No customers match your filters'}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
