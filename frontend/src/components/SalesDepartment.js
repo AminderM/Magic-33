@@ -1233,16 +1233,58 @@ Body:
         <TabsContent value="leads" className="mt-6">
           <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
             <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
-              <CardTitle className="text-base font-bold text-gray-900">Lead Management</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-bold text-gray-900">Lead Management ({filteredLeads.length})</CardTitle>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">{leads.length} total</span>
+                  <Button onClick={() => setShowAddLeadModal(true)} size="sm">
+                    <i className="fas fa-plus mr-1"></i>
+                    Add Lead
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
+            
+            {/* Filter Bar */}
+            <FilterBar
+              filters={leadsFilters}
+              setFilters={setLeadsFilters}
+              columns={[
+                { value: 'company_name', label: 'Company' },
+                { value: 'contact_person', label: 'Contact Person' },
+                { value: 'email', label: 'Email' },
+                { value: 'phone', label: 'Phone' }
+              ]}
+              statusOptions={[
+                { value: 'new', label: 'New' },
+                { value: 'contacted', label: 'Contacted' },
+                { value: 'qualified', label: 'Qualified' },
+                { value: 'proposal', label: 'Proposal' },
+                { value: 'converted', label: 'Converted' },
+                { value: 'lost', label: 'Lost' }
+              ]}
+              showSource={true}
+              sourceOptions={[
+                { value: 'website', label: 'Website' },
+                { value: 'referral', label: 'Referral' },
+                { value: 'cold_call', label: 'Cold Call' },
+                { value: 'trade_show', label: 'Trade Show' },
+                { value: 'linkedin', label: 'LinkedIn' },
+                { value: 'other', label: 'Other' }
+              ]}
+              placeholder="Search leads..."
+            />
+            
             <CardContent className="p-0">
-              {leads.length === 0 ? (
+              {filteredLeads.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-user-plus text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">No leads yet</p>
-                  <Button onClick={() => setShowAddLeadModal(true)} className="mt-4">
-                    Add Your First Lead
-                  </Button>
+                  <p className="text-gray-600">{leads.length === 0 ? 'No leads yet' : 'No leads match your filters'}</p>
+                  {leads.length === 0 && (
+                    <Button onClick={() => setShowAddLeadModal(true)} className="mt-4">
+                      Add Your First Lead
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -1259,7 +1301,7 @@ Body:
                       </tr>
                     </thead>
                     <tbody>
-                      {leads.map((lead) => (
+                      {filteredLeads.map((lead) => (
                         <tr key={lead.id} className="border-b border-gray-300 hover:bg-gray-50">
                           <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{lead.company_name}</td>
                           <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{lead.contact_person}</td>
