@@ -1914,27 +1914,56 @@ Body:
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Rate Quotes</CardTitle>
+                <div className="flex items-center gap-3">
+                  <CardTitle>Rate Quotes ({filteredQuotes.length})</CardTitle>
+                  <span className="text-xs text-gray-500">{quotes.length} total</span>
+                </div>
                 <Button onClick={() => setActiveTab('calculator')}>
                   <i className="fas fa-plus mr-2"></i>
                   Create New Quote
                 </Button>
               </div>
             </CardHeader>
+            
+            {/* Filter Bar */}
+            <FilterBar
+              filters={quotesFilters}
+              setFilters={setQuotesFilters}
+              columns={[
+                { value: 'quoteNumber', label: 'Quote #' },
+                { value: 'pickupLocation', label: 'Pickup Location' },
+                { value: 'destination', label: 'Destination' },
+                { value: 'consignor', label: 'Consignor' },
+                { value: 'consignee', label: 'Consignee' },
+                { value: 'customer', label: 'Customer' }
+              ]}
+              statusOptions={[
+                { value: 'draft', label: 'Draft' },
+                { value: 'incomplete', label: 'Incomplete' },
+                { value: 'complete', label: 'Complete' },
+                { value: 'sent', label: 'Sent' },
+                { value: 'accepted', label: 'Accepted' },
+                { value: 'rejected', label: 'Rejected' }
+              ]}
+              placeholder="Search quotes..."
+            />
+            
             <CardContent>
-              {quotes.length === 0 ? (
+              {filteredQuotes.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-file-invoice-dollar text-gray-400 text-5xl mb-4"></i>
-                  <h3 className="text-xl font-semibold mb-2">No Quotes Yet</h3>
-                  <p className="text-gray-600 mb-4">Create professional rate quotes using the Freight Calculator</p>
-                  <Button onClick={() => setActiveTab('calculator')} className="bg-blue-600 hover:bg-blue-700">
-                    <i className="fas fa-calculator mr-2"></i>
-                    Go to Freight Calculator
-                  </Button>
+                  <h3 className="text-xl font-semibold mb-2">{quotes.length === 0 ? 'No Quotes Yet' : 'No Quotes Match Your Filters'}</h3>
+                  <p className="text-gray-600 mb-4">{quotes.length === 0 ? 'Create professional rate quotes using the Freight Calculator' : 'Try adjusting your filters'}</p>
+                  {quotes.length === 0 && (
+                    <Button onClick={() => setActiveTab('calculator')} className="bg-blue-600 hover:bg-blue-700">
+                      <i className="fas fa-calculator mr-2"></i>
+                      Go to Freight Calculator
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {quotes.map((quote) => (
+                  {filteredQuotes.map((quote) => (
                     <div key={quote.id} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
