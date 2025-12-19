@@ -176,6 +176,109 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     source: 'website',
     status: 'new'
   });
+
+  // Filter states for each tab
+  const [pipelineFilters, setPipelineFilters] = useState({
+    searchText: '',
+    filterColumn: 'all',
+    dateFrom: '',
+    dateTo: '',
+    status: 'all'
+  });
+  
+  const [leadsFilters, setLeadsFilters] = useState({
+    searchText: '',
+    filterColumn: 'all',
+    dateFrom: '',
+    dateTo: '',
+    status: 'all',
+    source: 'all'
+  });
+  
+  const [customersFilters, setCustomersFilters] = useState({
+    searchText: '',
+    filterColumn: 'all',
+    dateFrom: '',
+    dateTo: '',
+    status: 'all'
+  });
+  
+  const [quotesFilters, setQuotesFilters] = useState({
+    searchText: '',
+    filterColumn: 'all',
+    dateFrom: '',
+    dateTo: '',
+    status: 'all'
+  });
+  
+  const [loadsFilters, setLoadsFilters] = useState({
+    searchText: '',
+    filterColumn: 'all',
+    dateFrom: '',
+    dateTo: '',
+    status: 'all'
+  });
+
+  // Filter helper functions
+  const filterByDate = (item, dateField, dateFrom, dateTo) => {
+    if (!dateFrom && !dateTo) return true;
+    const itemDate = new Date(item[dateField] || item.created_at || item.createdAt);
+    if (dateFrom && itemDate < new Date(dateFrom)) return false;
+    if (dateTo && itemDate > new Date(dateTo + 'T23:59:59')) return false;
+    return true;
+  };
+
+  const filterByText = (item, searchText, filterColumn, columns) => {
+    if (!searchText) return true;
+    const search = searchText.toLowerCase();
+    
+    if (filterColumn === 'all') {
+      return columns.some(col => {
+        const value = item[col];
+        return value && String(value).toLowerCase().includes(search);
+      });
+    }
+    
+    const value = item[filterColumn];
+    return value && String(value).toLowerCase().includes(search);
+  };
+
+  // Filtered data
+  const filteredOpportunities = opportunities.filter(opp => {
+    if (pipelineFilters.status !== 'all' && opp.stage !== pipelineFilters.status) return false;
+    if (!filterByDate(opp, 'created_at', pipelineFilters.dateFrom, pipelineFilters.dateTo)) return false;
+    return filterByText(opp, pipelineFilters.searchText, pipelineFilters.filterColumn, 
+      ['name', 'company', 'stage', 'owner']);
+  });
+
+  const filteredLeads = leads.filter(lead => {
+    if (leadsFilters.status !== 'all' && lead.status !== leadsFilters.status) return false;
+    if (leadsFilters.source !== 'all' && lead.source !== leadsFilters.source) return false;
+    if (!filterByDate(lead, 'created_at', leadsFilters.dateFrom, leadsFilters.dateTo)) return false;
+    return filterByText(lead, leadsFilters.searchText, leadsFilters.filterColumn,
+      ['company_name', 'contact_person', 'email', 'phone', 'source', 'status']);
+  });
+
+  const filteredCustomers = customers.filter(customer => {
+    if (customersFilters.status !== 'all' && customer.status !== customersFilters.status) return false;
+    if (!filterByDate(customer, 'created_at', customersFilters.dateFrom, customersFilters.dateTo)) return false;
+    return filterByText(customer, customersFilters.searchText, customersFilters.filterColumn,
+      ['company_name', 'contact_person', 'email', 'phone']);
+  });
+
+  const filteredQuotes = quotes.filter(quote => {
+    if (quotesFilters.status !== 'all' && quote.status !== quotesFilters.status) return false;
+    if (!filterByDate(quote, 'createdAt', quotesFilters.dateFrom, quotesFilters.dateTo)) return false;
+    return filterByText(quote, quotesFilters.searchText, quotesFilters.filterColumn,
+      ['quoteNumber', 'pickupLocation', 'destination', 'consignor', 'consignee', 'customer']);
+  });
+
+  const filteredLoads = loads.filter(load => {
+    if (loadsFilters.status !== 'all' && load.status !== loadsFilters.status) return false;
+    if (!filterByDate(load, 'created_at', loadsFilters.dateFrom, loadsFilters.dateTo)) return false;
+    return filterByText(load, loadsFilters.searchText, loadsFilters.filterColumn,
+      ['order_number', 'shipper_name', 'pickup_location', 'delivery_location', 'source_quote_number']);
+  });
   
   // Multi-tab Freight Calculator state
   const [quoteTabs, setQuoteTabs] = useState([
