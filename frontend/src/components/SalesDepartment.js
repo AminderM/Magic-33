@@ -2081,26 +2081,57 @@ Body:
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>
-                  <i className="fas fa-truck-loading mr-2 text-blue-600"></i>
-                  Loads ({loads.length})
-                </CardTitle>
+                <div className="flex items-center gap-3">
+                  <CardTitle>
+                    <i className="fas fa-truck-loading mr-2 text-blue-600"></i>
+                    Loads ({filteredLoads.length})
+                  </CardTitle>
+                  <span className="text-xs text-gray-500">{loads.length} total</span>
+                </div>
                 <Button onClick={() => setActiveTab('quotes')} variant="outline">
                   <i className="fas fa-file-invoice-dollar mr-2"></i>
                   View Rate Quotes
                 </Button>
               </div>
             </CardHeader>
+            
+            {/* Filter Bar */}
+            <FilterBar
+              filters={loadsFilters}
+              setFilters={setLoadsFilters}
+              columns={[
+                { value: 'order_number', label: 'Load #' },
+                { value: 'shipper_name', label: 'Shipper' },
+                { value: 'pickup_location', label: 'Pickup Location' },
+                { value: 'delivery_location', label: 'Delivery Location' },
+                { value: 'source_quote_number', label: 'Source Quote' }
+              ]}
+              statusOptions={[
+                { value: 'pending', label: 'Pending' },
+                { value: 'planned', label: 'Planned' },
+                { value: 'in_transit_pickup', label: 'In Transit (Pickup)' },
+                { value: 'at_pickup', label: 'At Pickup' },
+                { value: 'in_transit_delivery', label: 'In Transit (Delivery)' },
+                { value: 'at_delivery', label: 'At Delivery' },
+                { value: 'delivered', label: 'Delivered' },
+                { value: 'invoiced', label: 'Invoiced' },
+                { value: 'paid', label: 'Paid' }
+              ]}
+              placeholder="Search loads..."
+            />
+            
             <CardContent className="p-0">
-              {loads.length === 0 ? (
+              {filteredLoads.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-truck-loading text-gray-400 text-5xl mb-4"></i>
-                  <h3 className="text-xl font-semibold mb-2">No Loads Yet</h3>
-                  <p className="text-gray-600 mb-4">Create loads from your rate quotes to manage shipments</p>
-                  <Button onClick={() => setActiveTab('quotes')} className="bg-blue-600 hover:bg-blue-700">
-                    <i className="fas fa-file-invoice-dollar mr-2"></i>
-                    Go to Rate Quotes
-                  </Button>
+                  <h3 className="text-xl font-semibold mb-2">{loads.length === 0 ? 'No Loads Yet' : 'No Loads Match Your Filters'}</h3>
+                  <p className="text-gray-600 mb-4">{loads.length === 0 ? 'Create loads from your rate quotes to manage shipments' : 'Try adjusting your filters'}</p>
+                  {loads.length === 0 && (
+                    <Button onClick={() => setActiveTab('quotes')} className="bg-blue-600 hover:bg-blue-700">
+                      <i className="fas fa-file-invoice-dollar mr-2"></i>
+                      Go to Rate Quotes
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -2120,7 +2151,7 @@ Body:
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {loads.map((load, index) => (
+                      {filteredLoads.map((load, index) => (
                         <tr key={load.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
                           <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
