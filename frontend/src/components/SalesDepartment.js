@@ -1392,7 +1392,7 @@ Body:
                       </tr>
                     </thead>
                     <tbody>
-                      {customers.map((customer) => (
+                      {filteredCustomers.map((customer) => (
                         <tr key={customer.id} className="border-b border-gray-300 hover:bg-gray-50">
                           <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.company_name}</td>
                           <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.contact_person}</td>
