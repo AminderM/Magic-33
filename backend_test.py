@@ -1706,7 +1706,7 @@ class FleetMarketplaceAPITester:
         
         load_found_in_list = False
         if requests_success:
-            bookings_list = requests_response.get('bookings', [])
+            bookings_list = requests_response if isinstance(requests_response, list) else []
             total_bookings = len(bookings_list)
             print(f"   Total bookings in list: {total_bookings}")
             
