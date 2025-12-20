@@ -2526,30 +2526,154 @@ Body:
               </div>
             </CardHeader>
             
-            {/* Filter Bar */}
-            <FilterBar
-              filters={loadsFilters}
-              setFilters={setLoadsFilters}
-              columns={[
-                { value: 'order_number', label: 'Load #' },
-                { value: 'shipper_name', label: 'Shipper' },
-                { value: 'pickup_location', label: 'Pickup Location' },
-                { value: 'delivery_location', label: 'Delivery Location' },
-                { value: 'source_quote_number', label: 'Source Quote' }
-              ]}
-              statusOptions={[
-                { value: 'pending', label: 'Pending' },
-                { value: 'planned', label: 'Planned' },
-                { value: 'in_transit_pickup', label: 'In Transit (Pickup)' },
-                { value: 'at_pickup', label: 'At Pickup' },
-                { value: 'in_transit_delivery', label: 'In Transit (Delivery)' },
-                { value: 'at_delivery', label: 'At Delivery' },
-                { value: 'delivered', label: 'Delivered' },
-                { value: 'invoiced', label: 'Invoiced' },
-                { value: 'paid', label: 'Paid' }
-              ]}
-              placeholder="Search loads..."
-            />
+            {/* Custom Loads Filter Bar - Single Line */}
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+              <div className="flex items-end gap-2 overflow-x-auto">
+                {/* Load Number Filter */}
+                <div className="min-w-[100px] max-w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Load #</label>
+                  <select
+                    value={loadsFilters.loadNumber}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, loadNumber: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueLoadNumbers.map(num => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Shipper Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Shipper</label>
+                  <select
+                    value={loadsFilters.shipper}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, shipper: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueShippers.map(shipper => (
+                      <option key={shipper} value={shipper}>{shipper.length > 15 ? shipper.substring(0, 15) + '...' : shipper}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Pickup Location Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Pickup</label>
+                  <select
+                    value={loadsFilters.pickupLocation}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, pickupLocation: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueLoadPickups.map(loc => (
+                      <option key={loc} value={loc}>{loc.length > 15 ? loc.substring(0, 15) + '...' : loc}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Delivery Location Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Delivery</label>
+                  <select
+                    value={loadsFilters.deliveryLocation}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, deliveryLocation: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueLoadDeliveries.map(loc => (
+                      <option key={loc} value={loc}>{loc.length > 15 ? loc.substring(0, 15) + '...' : loc}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Rate Range Filter */}
+                <div className="w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Rate ($)</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="number"
+                      value={loadsFilters.rateMin}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, rateMin: e.target.value })}
+                      placeholder="Min"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="number"
+                      value={loadsFilters.rateMax}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, rateMax: e.target.value })}
+                      placeholder="Max"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Status Filter */}
+                <div className="w-[90px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <select
+                    value={loadsFilters.status}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, status: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="planned">Planned</option>
+                    <option value="in_transit">In Transit</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="invoiced">Invoiced</option>
+                    <option value="paid">Paid</option>
+                  </select>
+                </div>
+
+                {/* Creation Date Range Filter */}
+                <div className="w-[170px] flex-shrink-0">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="date"
+                      value={loadsFilters.dateFrom}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, dateFrom: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="date"
+                      value={loadsFilters.dateTo}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, dateTo: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Filters Button */}
+                {(loadsFilters.loadNumber !== 'all' || loadsFilters.shipper !== 'all' || 
+                  loadsFilters.pickupLocation !== 'all' || loadsFilters.deliveryLocation !== 'all' ||
+                  loadsFilters.rateMin || loadsFilters.rateMax || loadsFilters.status !== 'all' ||
+                  loadsFilters.dateFrom || loadsFilters.dateTo) && (
+                  <button
+                    onClick={() => setLoadsFilters({
+                      loadNumber: 'all',
+                      shipper: 'all',
+                      pickupLocation: 'all',
+                      deliveryLocation: 'all',
+                      rateMin: '',
+                      rateMax: '',
+                      status: 'all',
+                      dateFrom: '',
+                      dateTo: ''
+                    })}
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                  >
+                    <i className="fas fa-times mr-1"></i>
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
             
             <CardContent className="p-0">
               {filteredLoads.length === 0 ? (
