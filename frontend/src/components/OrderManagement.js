@@ -337,6 +337,66 @@ const OrderManagement = () => {
     }
   };
 
+  // Open dispatch edit modal
+  const openDispatchModal = (load) => {
+    setDispatchingLoad(load);
+    setDispatchData({
+      assigned_carrier: load.assigned_carrier || '',
+      assigned_driver: load.assigned_driver || '',
+      pickup_time_actual_in: load.pickup_time_actual_in ? load.pickup_time_actual_in.slice(0, 16) : '',
+      pickup_time_actual_out: load.pickup_time_actual_out ? load.pickup_time_actual_out.slice(0, 16) : '',
+      delivery_time_actual_in: load.delivery_time_actual_in ? load.delivery_time_actual_in.slice(0, 16) : '',
+      delivery_time_actual_out: load.delivery_time_actual_out ? load.delivery_time_actual_out.slice(0, 16) : ''
+    });
+    setShowDispatchModal(true);
+  };
+
+  // Save dispatch info
+  const handleSaveDispatch = async () => {
+    if (!dispatchingLoad) return;
+    
+    try {
+      const payload = {};
+      // Only include non-empty values
+      if (dispatchData.assigned_carrier) payload.assigned_carrier = dispatchData.assigned_carrier;
+      if (dispatchData.assigned_driver) payload.assigned_driver = dispatchData.assigned_driver;
+      if (dispatchData.pickup_time_actual_in) payload.pickup_time_actual_in = new Date(dispatchData.pickup_time_actual_in).toISOString();
+      if (dispatchData.pickup_time_actual_out) payload.pickup_time_actual_out = new Date(dispatchData.pickup_time_actual_out).toISOString();
+      if (dispatchData.delivery_time_actual_in) payload.delivery_time_actual_in = new Date(dispatchData.delivery_time_actual_in).toISOString();
+      if (dispatchData.delivery_time_actual_out) payload.delivery_time_actual_out = new Date(dispatchData.delivery_time_actual_out).toISOString();
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${dispatchingLoad.id}/dispatch`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        toast.success('Dispatch info updated successfully');
+        setShowDispatchModal(false);
+        setDispatchingLoad(null);
+        loadOrders();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update dispatch info');
+      }
+    } catch (error) {
+      console.error('Error updating dispatch info:', error);
+      toast.error('Error updating dispatch info');
+    }
+  };
+
+  // Format short datetime for display
+  const formatShortDateTime = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   const formatDateTime = (dateTime) => {
     if (!dateTime) return 'N/A';
     const date = new Date(dateTime);
