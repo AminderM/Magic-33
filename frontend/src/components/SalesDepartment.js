@@ -981,6 +981,37 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     }
   };
 
+  // Handle status change for loads (Sales view)
+  const handleLoadStatusChange = async (loadId, newStatus) => {
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${loadId}/status?status=${newStatus}`, {
+        method: 'PATCH'
+      });
+
+      if (response.ok) {
+        toast.success('Status updated successfully');
+        loadLoads();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update status');
+      }
+    } catch (error) {
+      toast.error('Error updating status');
+    }
+  };
+
+  // Format short datetime for display
+  const formatShortDateTime = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   const [generatedEmail, setGeneratedEmail] = useState(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
 
