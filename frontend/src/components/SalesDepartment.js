@@ -1058,13 +1058,13 @@ Body:
             <i className="fas fa-chart-line mr-1.5 text-xs"></i>
             Analytics
           </TabsTrigger>
-          <TabsTrigger value="pipeline" className="text-sm px-2">
-            <i className="fas fa-funnel-dollar mr-1.5 text-xs"></i>
-            <span className="hidden sm:inline">Sales </span>Pipeline
-          </TabsTrigger>
           <TabsTrigger value="leads" className="text-sm px-2">
             <i className="fas fa-user-plus mr-1.5 text-xs"></i>
             Leads
+          </TabsTrigger>
+          <TabsTrigger value="pipeline" className="text-sm px-2">
+            <i className="fas fa-funnel-dollar mr-1.5 text-xs"></i>
+            <span className="hidden sm:inline">Sales </span>Pipeline
           </TabsTrigger>
           <TabsTrigger value="customers" className="text-sm px-2">
             <i className="fas fa-building mr-1.5 text-xs"></i>
