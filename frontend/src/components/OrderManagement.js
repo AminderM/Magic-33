@@ -208,28 +208,28 @@ const OrderManagement = () => {
       };
 
       // Determine if we're creating or updating
-      const isEditing = editingOrder !== null;
-      const url = isEditing 
+      const isEditingOrder = editingOrder !== null;
+      const url = isEditingOrder 
         ? `${BACKEND_URL}/api/bookings/${editingOrder.id}`
         : `${BACKEND_URL}/api/bookings`;
       
       const response = await fetchWithAuth(url, {
-        method: isEditing ? 'PUT' : 'POST',
+        method: isEditingOrder ? 'PUT' : 'POST',
         body: JSON.stringify(orderData)
       });
 
       if (response.ok) {
-        toast.success(isEditing ? 'Order updated successfully!' : 'Order created successfully!');
+        toast.success(isEditingOrder ? 'Order updated successfully!' : 'Order created successfully!');
         setShowOrderForm(false);
         setEditingOrder(null);
         resetForm();
         loadOrders();
       } else {
         const error = await response.json();
-        toast.error(error.detail || (isEditing ? 'Failed to update order' : 'Failed to create order'));
+        toast.error(error.detail || (isEditingOrder ? 'Failed to update order' : 'Failed to create order'));
       }
     } catch (error) {
-      toast.error(isEditing ? 'Error updating order' : 'Error creating order');
+      toast.error(editingOrder ? 'Error updating order' : 'Error creating order');
     }
   };
 
