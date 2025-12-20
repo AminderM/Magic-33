@@ -1274,9 +1274,9 @@ Body:
                   </div>
                 </div>
 
-                {/* Close Date Range Filter */}
+                {/* Creation Date Range Filter */}
                 <div className="w-[170px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Close Date</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
