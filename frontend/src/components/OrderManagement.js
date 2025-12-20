@@ -22,12 +22,26 @@ const OrderManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [activeTab, setActiveTab] = useState('active-loads');
+  const [activeTab, setActiveTab] = useState('loads');
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [showRateConfirmation, setShowRateConfirmation] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [parsingDocument, setParsingDocument] = useState(false);
   const [editingOrder, setEditingOrder] = useState(null);
+  
+  // Loads filter state (synced with Sales/Business Development)
+  const [loadsFilters, setLoadsFilters] = useState({
+    loadNumber: 'all',
+    shipper: 'all',
+    pickupLocation: 'all',
+    deliveryLocation: 'all',
+    rateMin: '',
+    rateMax: '',
+    status: 'all',
+    dateFrom: '',
+    dateTo: ''
+  });
+  
   const [formData, setFormData] = useState({
     equipment_id: '',
     shipper_name: '',
