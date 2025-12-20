@@ -2125,10 +2125,11 @@ class FleetMarketplaceAPITester:
         print(f"🌐 Backend URL: {self.base_url}")
         print("="*80)
         
-        # Test sequence
+        # Test sequence - prioritize the new Loads tab functionality
         test_sequence = [
             ('Health Check', self.test_health_check),
             ('Platform Admin Login', self.test_platform_admin_login),
+            ('Loads Tab Dispatch Functionality', self.test_loads_tab_dispatch_functionality),
             ('Create Load from Quote Feature', self.test_create_load_from_quote_feature),
             ('Subscription Manager Backend APIs', self.test_subscription_manager_backend_apis),
             ('FMCSA QCMobile API Integration', self.test_fmcsa_qcmobile_api_integration),
