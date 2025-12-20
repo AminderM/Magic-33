@@ -441,11 +441,11 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     if (pipelineFilters.probabilityMin && opp.probability < parseFloat(pipelineFilters.probabilityMin)) return false;
     if (pipelineFilters.probabilityMax && opp.probability > parseFloat(pipelineFilters.probabilityMax)) return false;
     
-    // Close Date range filter
+    // Creation Date range filter (using created_at)
     if (pipelineFilters.closeDateFrom || pipelineFilters.closeDateTo) {
-      const closeDate = new Date(opp.close_date);
-      if (pipelineFilters.closeDateFrom && closeDate < new Date(pipelineFilters.closeDateFrom)) return false;
-      if (pipelineFilters.closeDateTo && closeDate > new Date(pipelineFilters.closeDateTo + 'T23:59:59')) return false;
+      const createdDate = new Date(opp.created_at || opp.createdAt);
+      if (pipelineFilters.closeDateFrom && createdDate < new Date(pipelineFilters.closeDateFrom)) return false;
+      if (pipelineFilters.closeDateTo && createdDate > new Date(pipelineFilters.closeDateTo + 'T23:59:59')) return false;
     }
     
     return true;
