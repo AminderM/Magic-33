@@ -1655,6 +1655,184 @@ class FleetMarketplaceAPITester:
         
         return core_tests_passed
 
+    def test_create_load_from_quote_feature(self):
+        """Test Create Load from Quote feature - new Sales/Business Development functionality"""
+        print("\n" + "="*60)
+        print("📦 TESTING CREATE LOAD FROM QUOTE FEATURE")
+        print("="*60)
+        
+        # Ensure we have platform admin token
+        if not self.token:
+            print("❌ No admin token available - running platform admin login first")
+            if not self.test_platform_admin_login():
+                return False
+        
+        # Test 1: Create Load from Quote with specified payload
+        print("\n➕ Test 1: Create Load from Quote with specified payload...")
+        
+        load_payload = {
+            "pickup_location": "Los Angeles, CA",
+            "delivery_location": "San Francisco, CA", 
+            "shipper_name": "Test Shipper",
+            "confirmed_rate": 1500,
+            "notes": "Test load",
+            "source_quote_number": "RQ-TEST"
+        }
+        
+        create_success, create_response = self.run_test(
+            'bookings', 'Create Load from Quote', 'POST', 'bookings/from-quote', 200, load_payload
+        )
+        
+        created_load_id = None
+        created_order_number = None
+        if create_success:
+            created_load_id = create_response.get('load_id')
+            created_order_number = create_response.get('order_number')
+            print(f"   Created Load ID: {created_load_id}")
+            print(f"   Created Order Number: {created_order_number}")
+            
+            # Verify response includes required fields
+            if created_load_id and created_order_number:
+                print("   ✅ Response includes load_id and order_number as required")
+            else:
+                print("   ❌ Response missing required fields (load_id or order_number)")
+        
+        # Test 2: Verify the newly created load appears in booking requests list
+        print("\n🔍 Test 2: Verify newly created load appears in booking requests...")
+        
+        requests_success, requests_response = self.run_test(
+            'bookings', 'Get Booking Requests', 'GET', 'bookings/requests', 200
+        )
+        
+        load_found_in_list = False
+        if requests_success:
+            bookings_list = requests_response.get('bookings', [])
+            total_bookings = len(bookings_list)
+            print(f"   Total bookings in list: {total_bookings}")
+            
+            # Look for our created load
+            if created_load_id:
+                for booking in bookings_list:
+                    if booking.get('id') == created_load_id:
+                        load_found_in_list = True
+                        print(f"   ✅ Created load found in booking requests list")
+                        print(f"   Load Details: {booking.get('order_number')} - {booking.get('pickup_location')} → {booking.get('delivery_location')}")
+                        print(f"   Shipper: {booking.get('shipper_name')}")
+                        print(f"   Rate: ${booking.get('confirmed_rate', 0)}")
+                        print(f"   Status: {booking.get('status')}")
+                        break
+                
+                if not load_found_in_list:
+                    print(f"   ❌ Created load (ID: {created_load_id}) not found in booking requests list")
+            else:
+                print("   ⚠️  Cannot verify load in list - no load_id from creation")
+        
+        # Test 3: Test with additional optional fields
+        print("\n🧪 Test 3: Create Load with additional optional fields...")
+        
+        extended_payload = {
+            "pickup_location": "Chicago, IL",
+            "pickup_city": "Chicago",
+            "pickup_state": "IL",
+            "pickup_country": "USA",
+            "delivery_location": "Detroit, MI",
+            "delivery_city": "Detroit", 
+            "delivery_state": "MI",
+            "delivery_country": "USA",
+            "shipper_name": "Extended Test Shipper Inc",
+            "shipper_address": "123 Shipper St, Chicago, IL 60601",
+            "commodity": "Electronics",
+            "weight": 15000.0,
+            "cubes": 500.0,
+            "confirmed_rate": 2200.50,
+            "notes": "Extended test load with all optional fields",
+            "source_quote_id": "test-quote-id-123",
+            "source_quote_number": "RQ-EXTENDED"
+        }
+        
+        extended_success, extended_response = self.run_test(
+            'bookings', 'Create Load with Extended Fields', 'POST', 'bookings/from-quote', 200, extended_payload
+        )
+        
+        if extended_success:
+            extended_load_id = extended_response.get('load_id')
+            extended_order_number = extended_response.get('order_number')
+            print(f"   Extended Load ID: {extended_load_id}")
+            print(f"   Extended Order Number: {extended_order_number}")
+        
+        # Test 4: Test error handling - invalid data
+        print("\n❌ Test 4: Test error handling with invalid data...")
+        
+        # Test with missing required fields
+        invalid_payload = {
+            "notes": "Missing required fields"
+        }
+        
+        invalid_success, invalid_response = self.run_test(
+            'bookings', 'Create Load with Missing Fields', 'POST', 'bookings/from-quote', 422, invalid_payload
+        )
+        
+        if invalid_success:
+            print("   ✅ Correctly rejected load creation with missing required fields")
+        
+        # Test 5: Verify load data persistence
+        if created_load_id:
+            print(f"\n🔍 Test 5: Verify load data persistence...")
+            
+            # Get all booking requests again to verify data persistence
+            verify_success, verify_response = self.run_test(
+                'bookings', 'Verify Load Data Persistence', 'GET', 'bookings/requests', 200
+            )
+            
+            if verify_success:
+                bookings_list = verify_response.get('bookings', [])
+                
+                # Find our load and verify all data is correct
+                for booking in bookings_list:
+                    if booking.get('id') == created_load_id:
+                        print("   ✅ Load data verification:")
+                        print(f"      Pickup: {booking.get('pickup_location')} (Expected: Los Angeles, CA)")
+                        print(f"      Delivery: {booking.get('delivery_location')} (Expected: San Francisco, CA)")
+                        print(f"      Shipper: {booking.get('shipper_name')} (Expected: Test Shipper)")
+                        print(f"      Rate: ${booking.get('confirmed_rate')} (Expected: $1500)")
+                        print(f"      Notes: {booking.get('notes')} (Expected: Test load)")
+                        print(f"      Source Quote: {booking.get('source_quote_number')} (Expected: RQ-TEST)")
+                        
+                        # Verify data matches
+                        data_correct = (
+                            booking.get('pickup_location') == 'Los Angeles, CA' and
+                            booking.get('delivery_location') == 'San Francisco, CA' and
+                            booking.get('shipper_name') == 'Test Shipper' and
+                            booking.get('confirmed_rate') == 1500 and
+                            booking.get('notes') == 'Test load' and
+                            booking.get('source_quote_number') == 'RQ-TEST'
+                        )
+                        
+                        if data_correct:
+                            print("   ✅ All load data persisted correctly")
+                        else:
+                            print("   ❌ Some load data not persisted correctly")
+                        
+                        break
+        
+        # Summary
+        print(f"\n📋 CREATE LOAD FROM QUOTE TEST SUMMARY:")
+        print(f"   ✅ Create Load (Basic): {'PASS' if create_success else 'FAIL'}")
+        print(f"   ✅ Response Fields: {'PASS' if created_load_id and created_order_number else 'FAIL'}")
+        print(f"   ✅ Load in Requests List: {'PASS' if load_found_in_list else 'FAIL'}")
+        print(f"   ✅ Create Load (Extended): {'PASS' if extended_success else 'FAIL'}")
+        print(f"   ✅ Error Handling: {'PASS' if invalid_success else 'FAIL'}")
+        
+        # Return overall success
+        core_tests_passed = all([
+            create_success,
+            created_load_id is not None,
+            created_order_number is not None,
+            requests_success
+        ])
+        
+        return core_tests_passed
+
     def test_working_endpoints_summary(self):
         """Test summary of endpoints that are working"""
         print("\n" + "="*60)
