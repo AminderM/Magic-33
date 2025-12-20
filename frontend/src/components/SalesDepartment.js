@@ -1176,33 +1176,33 @@ Body:
               </div>
             </CardHeader>
             
-            {/* Custom Pipeline Filter Bar */}
-            <div className="p-4 bg-gray-50 border-b border-gray-200">
-              <div className="flex flex-wrap gap-3 items-end">
+            {/* Custom Pipeline Filter Bar - Single Line */}
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+              <div className="flex items-end gap-2">
                 {/* Opportunity Filter */}
-                <div className="w-[160px]">
+                <div className="flex-1 min-w-0">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Opportunity</label>
                   <select
                     value={pipelineFilters.opportunity}
                     onChange={(e) => setPipelineFilters({ ...pipelineFilters, opportunity: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
                   >
-                    <option value="all">All Opportunities</option>
+                    <option value="all">All</option>
                     {uniqueOpportunities.map(opp => (
-                      <option key={opp} value={opp}>{opp}</option>
+                      <option key={opp} value={opp}>{opp.length > 20 ? opp.substring(0, 20) + '...' : opp}</option>
                     ))}
                   </select>
                 </div>
 
                 {/* Company Filter */}
-                <div className="w-[160px]">
+                <div className="flex-1 min-w-0">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Company</label>
                   <select
                     value={pipelineFilters.company}
                     onChange={(e) => setPipelineFilters({ ...pipelineFilters, company: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
                   >
-                    <option value="all">All Companies</option>
+                    <option value="all">All</option>
                     {uniqueCompanies.map(company => (
                       <option key={company} value={company}>{company}</option>
                     ))}
@@ -1210,48 +1210,48 @@ Body:
                 </div>
 
                 {/* Value Range Filter */}
-                <div className="w-[180px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Value Range ($)</label>
-                  <div className="flex gap-1 items-center">
+                <div className="w-[130px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Value ($)</label>
+                  <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
                       value={pipelineFilters.valueMin}
                       onChange={(e) => setPipelineFilters({ ...pipelineFilters, valueMin: e.target.value })}
                       placeholder="Min"
-                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400">-</span>
+                    <span className="text-gray-400 text-xs">-</span>
                     <input
                       type="number"
                       value={pipelineFilters.valueMax}
                       onChange={(e) => setPipelineFilters({ ...pipelineFilters, valueMax: e.target.value })}
                       placeholder="Max"
-                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 {/* Stage Filter */}
-                <div className="w-[140px]">
+                <div className="w-[100px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Stage</label>
                   <select
                     value={pipelineFilters.stage}
                     onChange={(e) => setPipelineFilters({ ...pipelineFilters, stage: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
                   >
-                    <option value="all">All Stages</option>
+                    <option value="all">All</option>
                     <option value="qualification">Qualification</option>
                     <option value="proposal">Proposal</option>
                     <option value="negotiation">Negotiation</option>
-                    <option value="closed_won">Closed Won</option>
-                    <option value="closed_lost">Closed Lost</option>
+                    <option value="closed_won">Won</option>
+                    <option value="closed_lost">Lost</option>
                   </select>
                 </div>
 
                 {/* Probability Range Filter */}
-                <div className="w-[160px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Probability (%)</label>
-                  <div className="flex gap-1 items-center">
+                <div className="w-[110px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Probability</label>
+                  <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
                       value={pipelineFilters.probabilityMin}
@@ -1259,9 +1259,9 @@ Body:
                       placeholder="Min"
                       min="0"
                       max="100"
-                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400">-</span>
+                    <span className="text-gray-400 text-xs">-</span>
                     <input
                       type="number"
                       value={pipelineFilters.probabilityMax}
@@ -1269,15 +1269,56 @@ Body:
                       placeholder="Max"
                       min="0"
                       max="100"
-                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 {/* Close Date Range Filter */}
-                <div className="w-[280px]">
+                <div className="w-[200px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Close Date</label>
-                  <div className="flex gap-1 items-center">
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="date"
+                      value={pipelineFilters.closeDateFrom}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, closeDateFrom: e.target.value })}
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="date"
+                      value={pipelineFilters.closeDateTo}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, closeDateTo: e.target.value })}
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Filters Button */}
+                {(pipelineFilters.opportunity !== 'all' || pipelineFilters.company !== 'all' || 
+                  pipelineFilters.valueMin || pipelineFilters.valueMax || pipelineFilters.stage !== 'all' ||
+                  pipelineFilters.probabilityMin || pipelineFilters.probabilityMax ||
+                  pipelineFilters.closeDateFrom || pipelineFilters.closeDateTo) && (
+                  <button
+                    onClick={() => setPipelineFilters({
+                      opportunity: 'all',
+                      company: 'all',
+                      valueMin: '',
+                      valueMax: '',
+                      stage: 'all',
+                      probabilityMin: '',
+                      probabilityMax: '',
+                      closeDateFrom: '',
+                      closeDateTo: ''
+                    })}
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                  >
+                    <i className="fas fa-times mr-1"></i>
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
                     <input
                       type="date"
                       value={pipelineFilters.closeDateFrom}
