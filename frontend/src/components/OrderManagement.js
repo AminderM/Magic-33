@@ -397,6 +397,46 @@ const OrderManagement = () => {
     });
   };
 
+  // Format datetime for input
+  const formatDateTimeForInput = (dateTime) => {
+    if (!dateTime) return '';
+    const date = new Date(dateTime);
+    return date.toISOString().slice(0, 16);
+  };
+
+  // Handle inline field update for dispatch info
+  const handleInlineDispatchUpdate = async (loadId, field, value) => {
+    try {
+      const payload = {};
+      if (field.includes('time')) {
+        // It's a datetime field
+        payload[field] = value ? new Date(value).toISOString() : null;
+      } else {
+        payload[field] = value || null;
+      }
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${loadId}/dispatch`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        toast.success('Updated successfully');
+        loadOrders();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update');
+      }
+    } catch (error) {
+      console.error('Error updating field:', error);
+      toast.error('Error updating field');
+    }
+  };
+
+  // Get unique drivers and carriers for dropdowns
+  const uniqueDrivers = [...new Set(orders.map(o => o.assigned_driver).filter(Boolean))];
+  const uniqueCarriers = [...new Set(orders.map(o => o.assigned_carrier).filter(Boolean))];
+
   const formatDateTime = (dateTime) => {
     if (!dateTime) return 'N/A';
     const date = new Date(dateTime);
