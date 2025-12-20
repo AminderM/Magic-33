@@ -1456,27 +1456,32 @@ const OrderManagement = () => {
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b-2 border-gray-200">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Load #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver/Carrier</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Rate</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Actual (In/Out)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Actual (In/Out)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Source Quote</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Load #</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Status</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Driver</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Carrier</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Rate</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Source Quote</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredLoads.map((load, index) => (
                         <tr key={load.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                          <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
+                          <td className="px-3 py-2 whitespace-nowrap font-medium text-blue-600 text-xs">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-3 py-2 whitespace-nowrap">
                             <Select value={load.status || 'pending'} onValueChange={(value) => handleStatusChange(load.id, value)}>
-                              <SelectTrigger className={`h-7 w-[130px] text-xs border-0 ${
+                              <SelectTrigger className={`h-7 w-[120px] text-xs border-0 ${
                                 load.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                 load.status === 'planned' ? 'bg-indigo-100 text-indigo-800' :
                                 load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-purple-800' :
@@ -1505,45 +1510,99 @@ const OrderManagement = () => {
                               </SelectContent>
                             </Select>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-xs">
-                              <div className="font-medium">{load.assigned_driver || '-'}</div>
-                              <div className="text-gray-500">{load.assigned_carrier || '-'}</div>
-                            </div>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <Select 
+                              value={load.assigned_driver || ''} 
+                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_driver', value)}
+                            >
+                              <SelectTrigger className="h-7 w-[110px] text-xs">
+                                <SelectValue placeholder="Select Driver" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="">None</SelectItem>
+                                {uniqueDrivers.map(driver => (
+                                  <SelectItem key={driver} value={driver}>{driver}</SelectItem>
+                                ))}
+                                <SelectItem value="__new__">+ Add New</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap font-semibold text-green-700">
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <Select 
+                              value={load.assigned_carrier || ''} 
+                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_carrier', value)}
+                            >
+                              <SelectTrigger className="h-7 w-[110px] text-xs">
+                                <SelectValue placeholder="Select Carrier" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="">None</SelectItem>
+                                {uniqueCarriers.map(carrier => (
+                                  <SelectItem key={carrier} value={carrier}>{carrier}</SelectItem>
+                                ))}
+                                <SelectItem value="__new__">+ Add New</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap font-semibold text-green-700 text-xs">
                             ${load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="max-w-[150px] truncate text-xs" title={load.pickup_location}>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <div className="max-w-[120px] truncate text-xs" title={load.pickup_location}>
                               {load.pickup_location || `${load.pickup_city || ''}, ${load.pickup_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-xs">
-                              <div>In: {formatShortDateTime(load.pickup_time_actual_in)}</div>
-                              <div>Out: {formatShortDateTime(load.pickup_time_actual_out)}</div>
-                            </div>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.pickup_time_planned)}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="max-w-[150px] truncate text-xs" title={load.delivery_location}>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.pickup_time_actual_in)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'pickup_time_actual_in', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.pickup_time_actual_out)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'pickup_time_actual_out', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <div className="max-w-[120px] truncate text-xs" title={load.delivery_location}>
                               {load.delivery_location || `${load.delivery_city || ''}, ${load.delivery_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-xs">
-                              <div>In: {formatShortDateTime(load.delivery_time_actual_in)}</div>
-                              <div>Out: {formatShortDateTime(load.delivery_time_actual_out)}</div>
-                            </div>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.delivery_time_planned)}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.delivery_time_actual_in)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'delivery_time_actual_in', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.delivery_time_actual_out)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'delivery_time_actual_out', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
                             {load.source_quote_number ? (
                               <Badge variant="outline" className="text-xs">
                                 {load.source_quote_number}
                               </Badge>
                             ) : '-'}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-3 py-2 whitespace-nowrap">
                             <div className="flex gap-1">
                               <Button variant="outline" size="sm" className="h-7 px-2" onClick={() => openDispatchModal(load)} title="Edit Dispatch Info">
                                 <i className="fas fa-truck text-purple-600"></i>
