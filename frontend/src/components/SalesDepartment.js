@@ -2784,12 +2784,12 @@ Body:
                       <tr>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Load #</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver/Carrier</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Rate</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Actual (In/Out)</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Date</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Actual (In/Out)</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Source Quote</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
                       </tr>
@@ -2801,38 +2801,66 @@ Body:
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <Badge className={
-                              load.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                              load.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                              load.status === 'in_progress' ? 'bg-purple-100 text-purple-800' :
-                              load.status === 'completed' ? 'bg-green-100 text-green-800' :
-                              load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
-                              'bg-gray-100 text-gray-800'
-                            }>
-                              {load.status?.replace('_', ' ') || 'Pending'}
-                            </Badge>
+                            <Select value={load.status || 'pending'} onValueChange={(value) => handleLoadStatusChange(load.id, value)}>
+                              <SelectTrigger className={`h-7 w-[130px] text-xs border-0 ${
+                                load.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                load.status === 'planned' ? 'bg-indigo-100 text-indigo-800' :
+                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-purple-800' :
+                                load.status === 'at_pickup' ? 'bg-blue-100 text-blue-800' :
+                                load.status === 'in_transit_delivery' ? 'bg-purple-100 text-purple-800' :
+                                load.status === 'at_delivery' ? 'bg-blue-100 text-blue-800' :
+                                load.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                load.status === 'invoiced' ? 'bg-orange-100 text-orange-800' :
+                                load.status === 'payment_overdue' ? 'bg-red-100 text-red-800' :
+                                load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                <SelectValue placeholder="Status" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="planned">Planned</SelectItem>
+                                <SelectItem value="in_transit_pickup">In-Transit Pickup</SelectItem>
+                                <SelectItem value="at_pickup">At Pickup</SelectItem>
+                                <SelectItem value="in_transit_delivery">In-Transit Delivery</SelectItem>
+                                <SelectItem value="at_delivery">At Delivery</SelectItem>
+                                <SelectItem value="delivered">Delivered</SelectItem>
+                                <SelectItem value="invoiced">Invoiced</SelectItem>
+                                <SelectItem value="payment_overdue">Payment Overdue</SelectItem>
+                                <SelectItem value="paid">Paid</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="text-xs">
+                              <div className="font-medium text-gray-700">{load.assigned_driver || '-'}</div>
+                              <div className="text-gray-500">{load.assigned_carrier || '-'}</div>
+                            </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap font-semibold text-green-700">
                             ${load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            {load.shipper_name || '-'}
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="max-w-[200px] truncate" title={load.pickup_location}>
+                            <div className="max-w-[150px] truncate text-xs" title={load.pickup_location}>
                               {load.pickup_location || `${load.pickup_city || ''}, ${load.pickup_state || ''}`}
                             </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="max-w-[200px] truncate" title={load.delivery_location}>
+                            <div className="text-xs text-gray-600">
+                              <div>In: {formatShortDateTime(load.pickup_time_actual_in)}</div>
+                              <div>Out: {formatShortDateTime(load.pickup_time_actual_out)}</div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="max-w-[150px] truncate text-xs" title={load.delivery_location}>
                               {load.delivery_location || `${load.delivery_city || ''}, ${load.delivery_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                            {load.pickup_time_planned ? new Date(load.pickup_time_planned).toLocaleDateString() : '-'}
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                            {load.delivery_time_planned ? new Date(load.delivery_time_planned).toLocaleDateString() : '-'}
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="text-xs text-gray-600">
+                              <div>In: {formatShortDateTime(load.delivery_time_actual_in)}</div>
+                              <div>Out: {formatShortDateTime(load.delivery_time_actual_out)}</div>
+                            </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
                             {load.source_quote_number ? (
@@ -2842,14 +2870,9 @@ Body:
                             ) : '-'}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="flex gap-1">
-                              <Button variant="outline" size="sm" className="h-7 px-2">
-                                <i className="fas fa-eye text-gray-600"></i>
-                              </Button>
-                              <Button variant="outline" size="sm" className="h-7 px-2">
-                                <i className="fas fa-edit text-blue-600"></i>
-                              </Button>
-                            </div>
+                            <Button variant="outline" size="sm" className="h-7 px-2" title="View Only">
+                              <i className="fas fa-eye text-gray-600"></i>
+                            </Button>
                           </td>
                         </tr>
                       ))}
