@@ -1176,25 +1176,206 @@ Body:
               </div>
             </CardHeader>
             
-            {/* Filter Bar */}
-            <FilterBar
-              filters={pipelineFilters}
-              setFilters={setPipelineFilters}
-              columns={[
-                { value: 'name', label: 'Opportunity' },
-                { value: 'company', label: 'Company' },
-                { value: 'stage', label: 'Stage' },
-                { value: 'owner', label: 'Owner' }
-              ]}
-              statusOptions={[
-                { value: 'qualification', label: 'Qualification' },
-                { value: 'proposal', label: 'Proposal' },
-                { value: 'negotiation', label: 'Negotiation' },
-                { value: 'closed_won', label: 'Closed Won' },
-                { value: 'closed_lost', label: 'Closed Lost' }
-              ]}
-              placeholder="Search opportunities..."
-            />
+            {/* Custom Pipeline Filter Bar */}
+            <div className="p-4 bg-gray-50 border-b border-gray-200">
+              <div className="flex flex-wrap gap-3 items-end">
+                {/* Opportunity Filter */}
+                <div className="w-[160px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Opportunity</label>
+                  <select
+                    value={pipelineFilters.opportunity}
+                    onChange={(e) => setPipelineFilters({ ...pipelineFilters, opportunity: e.target.value })}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All Opportunities</option>
+                    {uniqueOpportunities.map(opp => (
+                      <option key={opp} value={opp}>{opp}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Company Filter */}
+                <div className="w-[160px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Company</label>
+                  <select
+                    value={pipelineFilters.company}
+                    onChange={(e) => setPipelineFilters({ ...pipelineFilters, company: e.target.value })}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All Companies</option>
+                    {uniqueCompanies.map(company => (
+                      <option key={company} value={company}>{company}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Value Range Filter */}
+                <div className="w-[180px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Value Range ($)</label>
+                  <div className="flex gap-1 items-center">
+                    <input
+                      type="number"
+                      value={pipelineFilters.valueMin}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, valueMin: e.target.value })}
+                      placeholder="Min"
+                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400">-</span>
+                    <input
+                      type="number"
+                      value={pipelineFilters.valueMax}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, valueMax: e.target.value })}
+                      placeholder="Max"
+                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Stage Filter */}
+                <div className="w-[140px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Stage</label>
+                  <select
+                    value={pipelineFilters.stage}
+                    onChange={(e) => setPipelineFilters({ ...pipelineFilters, stage: e.target.value })}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All Stages</option>
+                    <option value="qualification">Qualification</option>
+                    <option value="proposal">Proposal</option>
+                    <option value="negotiation">Negotiation</option>
+                    <option value="closed_won">Closed Won</option>
+                    <option value="closed_lost">Closed Lost</option>
+                  </select>
+                </div>
+
+                {/* Probability Range Filter */}
+                <div className="w-[160px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Probability (%)</label>
+                  <div className="flex gap-1 items-center">
+                    <input
+                      type="number"
+                      value={pipelineFilters.probabilityMin}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, probabilityMin: e.target.value })}
+                      placeholder="Min"
+                      min="0"
+                      max="100"
+                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400">-</span>
+                    <input
+                      type="number"
+                      value={pipelineFilters.probabilityMax}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, probabilityMax: e.target.value })}
+                      placeholder="Max"
+                      min="0"
+                      max="100"
+                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Close Date Range Filter */}
+                <div className="w-[280px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Close Date</label>
+                  <div className="flex gap-1 items-center">
+                    <input
+                      type="date"
+                      value={pipelineFilters.closeDateFrom}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, closeDateFrom: e.target.value })}
+                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400">to</span>
+                    <input
+                      type="date"
+                      value={pipelineFilters.closeDateTo}
+                      onChange={(e) => setPipelineFilters({ ...pipelineFilters, closeDateTo: e.target.value })}
+                      className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Filters Button */}
+                {(pipelineFilters.opportunity !== 'all' || pipelineFilters.company !== 'all' || 
+                  pipelineFilters.valueMin || pipelineFilters.valueMax || pipelineFilters.stage !== 'all' ||
+                  pipelineFilters.probabilityMin || pipelineFilters.probabilityMax ||
+                  pipelineFilters.closeDateFrom || pipelineFilters.closeDateTo) && (
+                  <button
+                    onClick={() => setPipelineFilters({
+                      opportunity: 'all',
+                      company: 'all',
+                      valueMin: '',
+                      valueMax: '',
+                      stage: 'all',
+                      probabilityMin: '',
+                      probabilityMax: '',
+                      closeDateFrom: '',
+                      closeDateTo: ''
+                    })}
+                    className="px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1"
+                  >
+                    <i className="fas fa-times text-xs"></i>
+                    Clear All
+                  </button>
+                )}
+              </div>
+
+              {/* Active Filters Summary */}
+              {(pipelineFilters.opportunity !== 'all' || pipelineFilters.company !== 'all' || 
+                pipelineFilters.valueMin || pipelineFilters.valueMax || pipelineFilters.stage !== 'all' ||
+                pipelineFilters.probabilityMin || pipelineFilters.probabilityMax ||
+                pipelineFilters.closeDateFrom || pipelineFilters.closeDateTo) && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {pipelineFilters.opportunity !== 'all' && (
+                    <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                      Opportunity: {pipelineFilters.opportunity}
+                      <button onClick={() => setPipelineFilters({ ...pipelineFilters, opportunity: 'all' })} className="ml-1 hover:text-blue-900">
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </span>
+                  )}
+                  {pipelineFilters.company !== 'all' && (
+                    <span className="inline-flex items-center px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">
+                      Company: {pipelineFilters.company}
+                      <button onClick={() => setPipelineFilters({ ...pipelineFilters, company: 'all' })} className="ml-1 hover:text-purple-900">
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </span>
+                  )}
+                  {(pipelineFilters.valueMin || pipelineFilters.valueMax) && (
+                    <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                      Value: ${pipelineFilters.valueMin || '0'} - ${pipelineFilters.valueMax || '∞'}
+                      <button onClick={() => setPipelineFilters({ ...pipelineFilters, valueMin: '', valueMax: '' })} className="ml-1 hover:text-green-900">
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </span>
+                  )}
+                  {pipelineFilters.stage !== 'all' && (
+                    <span className="inline-flex items-center px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full">
+                      Stage: {pipelineFilters.stage.replace('_', ' ')}
+                      <button onClick={() => setPipelineFilters({ ...pipelineFilters, stage: 'all' })} className="ml-1 hover:text-orange-900">
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </span>
+                  )}
+                  {(pipelineFilters.probabilityMin || pipelineFilters.probabilityMax) && (
+                    <span className="inline-flex items-center px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                      Probability: {pipelineFilters.probabilityMin || '0'}% - {pipelineFilters.probabilityMax || '100'}%
+                      <button onClick={() => setPipelineFilters({ ...pipelineFilters, probabilityMin: '', probabilityMax: '' })} className="ml-1 hover:text-yellow-900">
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </span>
+                  )}
+                  {(pipelineFilters.closeDateFrom || pipelineFilters.closeDateTo) && (
+                    <span className="inline-flex items-center px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
+                      Close Date: {pipelineFilters.closeDateFrom || 'Any'} to {pipelineFilters.closeDateTo || 'Any'}
+                      <button onClick={() => setPipelineFilters({ ...pipelineFilters, closeDateFrom: '', closeDateTo: '' })} className="ml-1 hover:text-red-900">
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
             
             <CardContent className="p-0">
               {filteredOpportunities.length === 0 ? (
