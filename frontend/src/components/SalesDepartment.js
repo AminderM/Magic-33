@@ -374,27 +374,40 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   });
   
   const [customersFilters, setCustomersFilters] = useState({
-    searchText: '',
-    filterColumn: 'all',
+    company: 'all',
+    contactPerson: 'all',
+    email: 'all',
+    phone: 'all',
+    revenueMin: '',
+    revenueMax: '',
+    status: 'all',
     dateFrom: '',
-    dateTo: '',
-    status: 'all'
+    dateTo: ''
   });
   
   const [quotesFilters, setQuotesFilters] = useState({
-    searchText: '',
-    filterColumn: 'all',
+    quoteNumber: 'all',
+    pickupLocation: 'all',
+    destination: 'all',
+    consignor: 'all',
+    consignee: 'all',
+    amountMin: '',
+    amountMax: '',
+    status: 'all',
     dateFrom: '',
-    dateTo: '',
-    status: 'all'
+    dateTo: ''
   });
   
   const [loadsFilters, setLoadsFilters] = useState({
-    searchText: '',
-    filterColumn: 'all',
+    loadNumber: 'all',
+    shipper: 'all',
+    pickupLocation: 'all',
+    deliveryLocation: 'all',
+    rateMin: '',
+    rateMax: '',
+    status: 'all',
     dateFrom: '',
-    dateTo: '',
-    status: 'all'
+    dateTo: ''
   });
 
   // Filter helper functions
