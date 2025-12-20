@@ -270,13 +270,29 @@ class BookingBase(BaseModel):
     # Timing information
     pickup_time_planned: Optional[datetime] = None
     pickup_time_actual: Optional[datetime] = None
+    pickup_time_actual_in: Optional[datetime] = None
+    pickup_time_actual_out: Optional[datetime] = None
     delivery_time_planned: Optional[datetime] = None
     delivery_time_actual: Optional[datetime] = None
+    delivery_time_actual_in: Optional[datetime] = None
+    delivery_time_actual_out: Optional[datetime] = None
+    # Carrier/Driver assignment (for dispatch)
+    assigned_carrier: Optional[str] = None
+    assigned_driver: Optional[str] = None
     # Rate information
     confirmed_rate: Optional[float] = None
     
 class BookingCreate(BookingBase):
     pass
+
+class DispatchUpdate(BaseModel):
+    """Model for dispatch-specific updates"""
+    assigned_carrier: Optional[str] = None
+    assigned_driver: Optional[str] = None
+    pickup_time_actual_in: Optional[datetime] = None
+    pickup_time_actual_out: Optional[datetime] = None
+    delivery_time_actual_in: Optional[datetime] = None
+    delivery_time_actual_out: Optional[datetime] = None
 
 class Booking(BookingBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
