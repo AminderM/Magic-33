@@ -507,6 +507,12 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     if (quotesFilters.pickupLocation !== 'all' && quote.pickupLocation !== quotesFilters.pickupLocation) return false;
     // Destination filter
     if (quotesFilters.destination !== 'all' && quote.destination !== quotesFilters.destination) return false;
+    // Consignor filter
+    if (quotesFilters.consignor !== 'all' && quote.consignor !== quotesFilters.consignor) return false;
+    // Consignee filter
+    if (quotesFilters.consignee !== 'all' && quote.consignee !== quotesFilters.consignee) return false;
+    // Customer filter
+    if (quotesFilters.customer !== 'all' && quote.customer !== quotesFilters.customer) return false;
     // Amount range filter
     if (quotesFilters.amountMin && parseFloat(quote.totalAmount) < parseFloat(quotesFilters.amountMin)) return false;
     if (quotesFilters.amountMax && parseFloat(quote.totalAmount) > parseFloat(quotesFilters.amountMax)) return false;
@@ -525,6 +531,9 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const uniqueQuoteNumbers = [...new Set(quotes.map(q => q.quoteNumber).filter(Boolean))];
   const uniquePickupLocations = [...new Set(quotes.map(q => q.pickupLocation).filter(Boolean))];
   const uniqueDestinations = [...new Set(quotes.map(q => q.destination).filter(Boolean))];
+  const uniqueConsignors = [...new Set(quotes.map(q => q.consignor).filter(Boolean))];
+  const uniqueConsignees = [...new Set(quotes.map(q => q.consignee).filter(Boolean))];
+  const uniqueQuoteCustomers = [...new Set(quotes.map(q => q.customer).filter(Boolean))];
 
   const filteredLoads = loads.filter(load => {
     // Load Number filter
