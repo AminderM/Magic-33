@@ -423,11 +423,37 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   // Filtered data
   const filteredOpportunities = opportunities.filter(opp => {
-    if (pipelineFilters.status !== 'all' && opp.stage !== pipelineFilters.status) return false;
-    if (!filterByDate(opp, 'created_at', pipelineFilters.dateFrom, pipelineFilters.dateTo)) return false;
-    return filterByText(opp, pipelineFilters.searchText, pipelineFilters.filterColumn, 
-      ['name', 'company', 'stage', 'owner']);
+    // Opportunity filter (search by title)
+    if (pipelineFilters.opportunity !== 'all' && 
+        !opp.title?.toLowerCase().includes(pipelineFilters.opportunity.toLowerCase())) return false;
+    
+    // Company filter
+    if (pipelineFilters.company !== 'all' && opp.company !== pipelineFilters.company) return false;
+    
+    // Value range filter
+    if (pipelineFilters.valueMin && opp.value < parseFloat(pipelineFilters.valueMin)) return false;
+    if (pipelineFilters.valueMax && opp.value > parseFloat(pipelineFilters.valueMax)) return false;
+    
+    // Stage filter
+    if (pipelineFilters.stage !== 'all' && opp.stage !== pipelineFilters.stage) return false;
+    
+    // Probability range filter
+    if (pipelineFilters.probabilityMin && opp.probability < parseFloat(pipelineFilters.probabilityMin)) return false;
+    if (pipelineFilters.probabilityMax && opp.probability > parseFloat(pipelineFilters.probabilityMax)) return false;
+    
+    // Close Date range filter
+    if (pipelineFilters.closeDateFrom || pipelineFilters.closeDateTo) {
+      const closeDate = new Date(opp.close_date);
+      if (pipelineFilters.closeDateFrom && closeDate < new Date(pipelineFilters.closeDateFrom)) return false;
+      if (pipelineFilters.closeDateTo && closeDate > new Date(pipelineFilters.closeDateTo + 'T23:59:59')) return false;
+    }
+    
+    return true;
   });
+
+  // Get unique values for dropdown options
+  const uniqueCompanies = [...new Set(opportunities.map(opp => opp.company).filter(Boolean))];
+  const uniqueOpportunities = [...new Set(opportunities.map(opp => opp.title).filter(Boolean))];
 
   const filteredLeads = leads.filter(lead => {
     if (leadsFilters.status !== 'all' && lead.status !== leadsFilters.status) return false;
