@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, File, UploadFile, BackgroundTasks
-from models import *
+from models import User, Booking, BookingCreate, DispatchUpdate
 from auth import get_current_user
 from database import db
 from datetime import datetime, timezone
