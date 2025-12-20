@@ -2782,27 +2782,32 @@ Body:
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b-2 border-gray-200">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Load #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver/Carrier</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Rate</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Actual (In/Out)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Actual (In/Out)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Source Quote</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Load #</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Status</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Driver</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Carrier</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Rate</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Source Quote</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredLoads.map((load, index) => (
                         <tr key={load.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                          <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
+                          <td className="px-3 py-2 whitespace-nowrap font-medium text-blue-600 text-xs">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-3 py-2 whitespace-nowrap">
                             <Select value={load.status || 'pending'} onValueChange={(value) => handleLoadStatusChange(load.id, value)}>
-                              <SelectTrigger className={`h-7 w-[130px] text-xs border-0 ${
+                              <SelectTrigger className={`h-7 w-[120px] text-xs border-0 ${
                                 load.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                 load.status === 'planned' ? 'bg-indigo-100 text-indigo-800' :
                                 load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-purple-800' :
@@ -2831,45 +2836,51 @@ Body:
                               </SelectContent>
                             </Select>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-xs">
-                              <div className="font-medium text-gray-700">{load.assigned_driver || '-'}</div>
-                              <div className="text-gray-500">{load.assigned_carrier || '-'}</div>
-                            </div>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-700">
+                            {load.assigned_driver || '-'}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap font-semibold text-green-700">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                            {load.assigned_carrier || '-'}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap font-semibold text-green-700 text-xs">
                             ${load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="max-w-[150px] truncate text-xs" title={load.pickup_location}>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <div className="max-w-[120px] truncate text-xs" title={load.pickup_location}>
                               {load.pickup_location || `${load.pickup_city || ''}, ${load.pickup_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-xs text-gray-600">
-                              <div>In: {formatShortDateTime(load.pickup_time_actual_in)}</div>
-                              <div>Out: {formatShortDateTime(load.pickup_time_actual_out)}</div>
-                            </div>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.pickup_time_planned)}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="max-w-[150px] truncate text-xs" title={load.delivery_location}>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.pickup_time_actual_in)}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.pickup_time_actual_out)}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <div className="max-w-[120px] truncate text-xs" title={load.delivery_location}>
                               {load.delivery_location || `${load.delivery_city || ''}, ${load.delivery_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-xs text-gray-600">
-                              <div>In: {formatShortDateTime(load.delivery_time_actual_in)}</div>
-                              <div>Out: {formatShortDateTime(load.delivery_time_actual_out)}</div>
-                            </div>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.delivery_time_planned)}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.delivery_time_actual_in)}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatShortDateTime(load.delivery_time_actual_out)}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
                             {load.source_quote_number ? (
                               <Badge variant="outline" className="text-xs">
                                 {load.source_quote_number}
                               </Badge>
                             ) : '-'}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-3 py-2 whitespace-nowrap">
                             <Button variant="outline" size="sm" className="h-7 px-2" title="View Only">
                               <i className="fas fa-eye text-gray-600"></i>
                             </Button>
