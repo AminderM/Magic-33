@@ -1177,10 +1177,10 @@ Body:
             </CardHeader>
             
             {/* Custom Pipeline Filter Bar - Single Line */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-              <div className="flex items-end gap-2">
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+              <div className="flex items-end gap-2 overflow-x-auto">
                 {/* Opportunity Filter */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-[120px] max-w-[140px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Opportunity</label>
                   <select
                     value={pipelineFilters.opportunity}
@@ -1195,7 +1195,7 @@ Body:
                 </div>
 
                 {/* Company Filter */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-[120px] max-w-[140px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Company</label>
                   <select
                     value={pipelineFilters.company}
@@ -1210,7 +1210,7 @@ Body:
                 </div>
 
                 {/* Value Range Filter */}
-                <div className="w-[130px]">
+                <div className="w-[120px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Value ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
@@ -1218,7 +1218,7 @@ Body:
                       value={pipelineFilters.valueMin}
                       onChange={(e) => setPipelineFilters({ ...pipelineFilters, valueMin: e.target.value })}
                       placeholder="Min"
-                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <span className="text-gray-400 text-xs">-</span>
                     <input
@@ -1226,13 +1226,13 @@ Body:
                       value={pipelineFilters.valueMax}
                       onChange={(e) => setPipelineFilters({ ...pipelineFilters, valueMax: e.target.value })}
                       placeholder="Max"
-                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 {/* Stage Filter */}
-                <div className="w-[100px]">
+                <div className="w-[95px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Stage</label>
                   <select
                     value={pipelineFilters.stage}
@@ -1249,8 +1249,8 @@ Body:
                 </div>
 
                 {/* Probability Range Filter */}
-                <div className="w-[110px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Probability</label>
+                <div className="w-[100px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Prob. (%)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -1259,7 +1259,7 @@ Body:
                       placeholder="Min"
                       min="0"
                       max="100"
-                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <span className="text-gray-400 text-xs">-</span>
                     <input
@@ -1269,27 +1269,27 @@ Body:
                       placeholder="Max"
                       min="0"
                       max="100"
-                      className="w-full px-1.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 {/* Close Date Range Filter */}
-                <div className="w-[200px]">
+                <div className="w-[170px] flex-shrink-0">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Close Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
                       value={pipelineFilters.closeDateFrom}
                       onChange={(e) => setPipelineFilters({ ...pipelineFilters, closeDateFrom: e.target.value })}
-                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <span className="text-gray-400 text-xs">-</span>
                     <input
                       type="date"
                       value={pipelineFilters.closeDateTo}
                       onChange={(e) => setPipelineFilters({ ...pipelineFilters, closeDateTo: e.target.value })}
-                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
