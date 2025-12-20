@@ -179,6 +179,40 @@ async def update_booking_status(
     
     return {"message": "Status updated successfully", "status": status}
 
+
+@router.patch("/{booking_id}/dispatch", response_model=dict)
+async def update_dispatch_info(
+    booking_id: str,
+    dispatch_data: DispatchUpdate,
+    current_user: User = Depends(get_current_user)
+):
+    """Update dispatch-specific information (carrier, driver, actual times)"""
+    # Find the booking
+    booking = await db.bookings.find_one({"id": booking_id})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    # Check if user has permission to update
+    if booking["requester_id"] != current_user.id and booking["equipment_owner_id"] != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this booking")
+    
+    # Build update data, only including non-None values
+    update_data = {}
+    for field, value in dispatch_data.dict().items():
+        if value is not None:
+            if isinstance(value, datetime):
+                update_data[field] = value.isoformat()
+            else:
+                update_data[field] = value
+    
+    if update_data:
+        await db.bookings.update_one(
+            {"id": booking_id},
+            {"$set": update_data}
+        )
+    
+    return {"message": "Dispatch info updated successfully", "updated_fields": list(update_data.keys())}
+
 @router.put("/{booking_id}", response_model=Booking)
 async def update_booking(
     booking_id: str,
