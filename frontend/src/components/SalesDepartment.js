@@ -2260,7 +2260,7 @@ Body:
             <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 {/* Quote Number Filter */}
-                <div className="min-w-[100px] max-w-[120px]">
+                <div className="min-w-[90px] max-w-[100px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Quote #</label>
                   <select
                     value={quotesFilters.quoteNumber}
@@ -2275,7 +2275,7 @@ Body:
                 </div>
 
                 {/* Pickup Location Filter */}
-                <div className="min-w-[120px] max-w-[140px]">
+                <div className="min-w-[100px] max-w-[120px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Pickup</label>
                   <select
                     value={quotesFilters.pickupLocation}
@@ -2284,13 +2284,13 @@ Body:
                   >
                     <option value="all">All</option>
                     {uniquePickupLocations.map(loc => (
-                      <option key={loc} value={loc}>{loc.length > 15 ? loc.substring(0, 15) + '...' : loc}</option>
+                      <option key={loc} value={loc}>{loc.length > 12 ? loc.substring(0, 12) + '...' : loc}</option>
                     ))}
                   </select>
                 </div>
 
                 {/* Destination Filter */}
-                <div className="min-w-[120px] max-w-[140px]">
+                <div className="min-w-[100px] max-w-[120px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Destination</label>
                   <select
                     value={quotesFilters.destination}
@@ -2299,13 +2299,58 @@ Body:
                   >
                     <option value="all">All</option>
                     {uniqueDestinations.map(dest => (
-                      <option key={dest} value={dest}>{dest.length > 15 ? dest.substring(0, 15) + '...' : dest}</option>
+                      <option key={dest} value={dest}>{dest.length > 12 ? dest.substring(0, 12) + '...' : dest}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Consignor Filter */}
+                <div className="min-w-[100px] max-w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Consignor</label>
+                  <select
+                    value={quotesFilters.consignor}
+                    onChange={(e) => setQuotesFilters({ ...quotesFilters, consignor: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueConsignors.map(c => (
+                      <option key={c} value={c}>{c.length > 12 ? c.substring(0, 12) + '...' : c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Consignee Filter */}
+                <div className="min-w-[100px] max-w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Consignee</label>
+                  <select
+                    value={quotesFilters.consignee}
+                    onChange={(e) => setQuotesFilters({ ...quotesFilters, consignee: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueConsignees.map(c => (
+                      <option key={c} value={c}>{c.length > 12 ? c.substring(0, 12) + '...' : c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Customer Filter */}
+                <div className="min-w-[100px] max-w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Customer</label>
+                  <select
+                    value={quotesFilters.customer}
+                    onChange={(e) => setQuotesFilters({ ...quotesFilters, customer: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueQuoteCustomers.map(c => (
+                      <option key={c} value={c}>{c.length > 12 ? c.substring(0, 12) + '...' : c}</option>
                     ))}
                   </select>
                 </div>
 
                 {/* Amount Range Filter */}
-                <div className="w-[120px]">
+                <div className="w-[110px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Amount ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
@@ -2327,7 +2372,7 @@ Body:
                 </div>
 
                 {/* Status Filter */}
-                <div className="w-[90px]">
+                <div className="w-[80px]">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
                   <select
                     value={quotesFilters.status}
@@ -2344,28 +2389,30 @@ Body:
                 </div>
 
                 {/* Creation Date Range Filter */}
-                <div className="w-[170px] flex-shrink-0">
+                <div className="w-[160px] flex-shrink-0">
                   <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
                       value={quotesFilters.dateFrom}
                       onChange={(e) => setQuotesFilters({ ...quotesFilters, dateFrom: e.target.value })}
-                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-[70px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <span className="text-gray-400 text-xs">-</span>
                     <input
                       type="date"
                       value={quotesFilters.dateTo}
                       onChange={(e) => setQuotesFilters({ ...quotesFilters, dateTo: e.target.value })}
-                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-[70px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 {/* Clear Filters Button */}
                 {(quotesFilters.quoteNumber !== 'all' || quotesFilters.pickupLocation !== 'all' || 
-                  quotesFilters.destination !== 'all' || quotesFilters.amountMin || quotesFilters.amountMax || 
+                  quotesFilters.destination !== 'all' || quotesFilters.consignor !== 'all' ||
+                  quotesFilters.consignee !== 'all' || quotesFilters.customer !== 'all' ||
+                  quotesFilters.amountMin || quotesFilters.amountMax || 
                   quotesFilters.status !== 'all' || quotesFilters.dateFrom || quotesFilters.dateTo) && (
                   <button
                     onClick={() => setQuotesFilters({
