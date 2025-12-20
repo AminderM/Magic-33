@@ -1512,14 +1512,14 @@ const OrderManagement = () => {
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             <Select 
-                              value={load.assigned_driver || ''} 
-                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_driver', value)}
+                              value={load.assigned_driver || 'none'} 
+                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_driver', value === 'none' ? '' : value)}
                             >
                               <SelectTrigger className="h-7 w-[110px] text-xs">
                                 <SelectValue placeholder="Select Driver" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="">None</SelectItem>
+                                <SelectItem value="none">None</SelectItem>
                                 {uniqueDrivers.map(driver => (
                                   <SelectItem key={driver} value={driver}>{driver}</SelectItem>
                                 ))}
@@ -1529,14 +1529,14 @@ const OrderManagement = () => {
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             <Select 
-                              value={load.assigned_carrier || ''} 
-                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_carrier', value)}
+                              value={load.assigned_carrier || 'none'} 
+                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_carrier', value === 'none' ? '' : value)}
                             >
                               <SelectTrigger className="h-7 w-[110px] text-xs">
                                 <SelectValue placeholder="Select Carrier" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="">None</SelectItem>
+                                <SelectItem value="none">None</SelectItem>
                                 {uniqueCarriers.map(carrier => (
                                   <SelectItem key={carrier} value={carrier}>{carrier}</SelectItem>
                                 ))}
