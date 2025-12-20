@@ -763,6 +763,30 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Loads Tab in Sales/Business Development"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/SalesDepartment.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added Loads tab to Sales/Business Development section. Loads are shared with Dispatch Operations via the same bookings collection. Added 'Create Load' button on Rate Quotes to push quote to Loads. Backend endpoint /api/bookings/from-quote created."
+
+  - task: "Filter Bars for Sales Tabs"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/SalesDepartment.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added comprehensive filter bars to Sales Pipeline, Leads, Customers, Rate Quotes, and Loads tabs. Filters include: Search text, Filter By Column dropdown, Date From/To pickers, Status dropdown, and Source dropdown (for Leads only). Active filters show as removable badges."
+
 agent_communication:
   - agent: "main"
     message: "Completed implementation of three major features: 1) Strict numerical currency validation for Confirmed Rate field 2) Complete rebuild of Company Profile with split view layout (left sidebar sticky, right panel switchable) 3) Full user/driver management with add/edit/delete operations 4) Document upload with 10MB size validation and version history tracking. Backend includes new Company model with document versioning, new user creation endpoint, driver update/delete endpoints. Frontend includes new split view layout, dialogs for user/driver management, and document version history display. Ready for backend testing first."
