@@ -634,6 +634,36 @@ const OrderManagement = () => {
   const activeOrders = filteredOrders.filter(order => order.status !== 'paid');
   const paidOrders = filteredOrders.filter(order => order.status === 'paid');
 
+  // Filtered loads for the new Loads tab (synced with Sales/Business Development)
+  const filteredLoads = orders.filter(load => {
+    // Load Number filter
+    if (loadsFilters.loadNumber !== 'all' && load.order_number !== loadsFilters.loadNumber) return false;
+    // Shipper filter
+    if (loadsFilters.shipper !== 'all' && load.shipper_name !== loadsFilters.shipper) return false;
+    // Pickup Location filter
+    if (loadsFilters.pickupLocation !== 'all' && load.pickup_location !== loadsFilters.pickupLocation) return false;
+    // Delivery Location filter
+    if (loadsFilters.deliveryLocation !== 'all' && load.delivery_location !== loadsFilters.deliveryLocation) return false;
+    // Rate range filter
+    if (loadsFilters.rateMin && (load.confirmed_rate || load.total_cost || 0) < parseFloat(loadsFilters.rateMin)) return false;
+    if (loadsFilters.rateMax && (load.confirmed_rate || load.total_cost || 0) > parseFloat(loadsFilters.rateMax)) return false;
+    // Status filter
+    if (loadsFilters.status !== 'all' && load.status !== loadsFilters.status) return false;
+    // Date filter
+    if (loadsFilters.dateFrom || loadsFilters.dateTo) {
+      const createdDate = new Date(load.created_at);
+      if (loadsFilters.dateFrom && createdDate < new Date(loadsFilters.dateFrom)) return false;
+      if (loadsFilters.dateTo && createdDate > new Date(loadsFilters.dateTo + 'T23:59:59')) return false;
+    }
+    return true;
+  });
+
+  // Get unique values for Loads filters
+  const uniqueLoadNumbers = [...new Set(orders.map(l => l.order_number).filter(Boolean))];
+  const uniqueShippers = [...new Set(orders.map(l => l.shipper_name).filter(Boolean))];
+  const uniqueLoadPickups = [...new Set(orders.map(l => l.pickup_location).filter(Boolean))];
+  const uniqueLoadDeliveries = [...new Set(orders.map(l => l.delivery_location).filter(Boolean))];
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
