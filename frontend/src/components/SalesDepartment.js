@@ -1577,22 +1577,119 @@ Body:
               </div>
             </CardHeader>
             
-            {/* Filter Bar */}
-            <FilterBar
-              filters={customersFilters}
-              setFilters={setCustomersFilters}
-              columns={[
-                { value: 'company_name', label: 'Company' },
-                { value: 'contact_person', label: 'Contact Person' },
-                { value: 'email', label: 'Email' },
-                { value: 'phone', label: 'Phone' }
-              ]}
-              statusOptions={[
-                { value: 'active', label: 'Active' },
-                { value: 'inactive', label: 'Inactive' }
-              ]}
-              placeholder="Search customers..."
-            />
+            {/* Custom Customers Filter Bar - Single Line */}
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+              <div className="flex items-end gap-2 overflow-x-auto">
+                {/* Company Filter */}
+                <div className="min-w-[130px] max-w-[150px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Company</label>
+                  <select
+                    value={customersFilters.company}
+                    onChange={(e) => setCustomersFilters({ ...customersFilters, company: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueCustomerCompanies.map(company => (
+                      <option key={company} value={company}>{company.length > 20 ? company.substring(0, 20) + '...' : company}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Contact Person Filter */}
+                <div className="min-w-[130px] max-w-[150px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Contact</label>
+                  <select
+                    value={customersFilters.contactPerson}
+                    onChange={(e) => setCustomersFilters({ ...customersFilters, contactPerson: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueCustomerContacts.map(contact => (
+                      <option key={contact} value={contact}>{contact}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Revenue Range Filter */}
+                <div className="w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Revenue ($)</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="number"
+                      value={customersFilters.revenueMin}
+                      onChange={(e) => setCustomersFilters({ ...customersFilters, revenueMin: e.target.value })}
+                      placeholder="Min"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="number"
+                      value={customersFilters.revenueMax}
+                      onChange={(e) => setCustomersFilters({ ...customersFilters, revenueMax: e.target.value })}
+                      placeholder="Max"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Status Filter */}
+                <div className="w-[90px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <select
+                    value={customersFilters.status}
+                    onChange={(e) => setCustomersFilters({ ...customersFilters, status: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+
+                {/* Creation Date Range Filter */}
+                <div className="w-[170px] flex-shrink-0">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="date"
+                      value={customersFilters.dateFrom}
+                      onChange={(e) => setCustomersFilters({ ...customersFilters, dateFrom: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="date"
+                      value={customersFilters.dateTo}
+                      onChange={(e) => setCustomersFilters({ ...customersFilters, dateTo: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Filters Button */}
+                {(customersFilters.company !== 'all' || customersFilters.contactPerson !== 'all' || 
+                  customersFilters.revenueMin || customersFilters.revenueMax || customersFilters.status !== 'all' ||
+                  customersFilters.dateFrom || customersFilters.dateTo) && (
+                  <button
+                    onClick={() => setCustomersFilters({
+                      company: 'all',
+                      contactPerson: 'all',
+                      email: 'all',
+                      phone: 'all',
+                      revenueMin: '',
+                      revenueMax: '',
+                      status: 'all',
+                      dateFrom: '',
+                      dateTo: ''
+                    })}
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                  >
+                    <i className="fas fa-times mr-1"></i>
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
             
             <CardContent className="p-0">
               {filteredCustomers.length === 0 ? (
