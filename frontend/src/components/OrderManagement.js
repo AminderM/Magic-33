@@ -1820,6 +1820,105 @@ const OrderManagement = () => {
         </TabsContent>
       </Tabs>
 
+      {/* Dispatch Edit Modal */}
+      <Dialog open={showDispatchModal} onOpenChange={setShowDispatchModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <i className="fas fa-truck text-purple-600"></i>
+              Edit Dispatch Info - {dispatchingLoad?.order_number || 'Load'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {/* Driver/Carrier Assignment */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="assigned_driver">Assigned Driver</Label>
+                <Input
+                  id="assigned_driver"
+                  value={dispatchData.assigned_driver}
+                  onChange={(e) => setDispatchData({ ...dispatchData, assigned_driver: e.target.value })}
+                  placeholder="Enter driver name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="assigned_carrier">Assigned Carrier</Label>
+                <Input
+                  id="assigned_carrier"
+                  value={dispatchData.assigned_carrier}
+                  onChange={(e) => setDispatchData({ ...dispatchData, assigned_carrier: e.target.value })}
+                  placeholder="Enter carrier name"
+                />
+              </div>
+            </div>
+
+            {/* Actual Pickup Times */}
+            <div className="border-t pt-4">
+              <h4 className="text-sm font-semibold text-gray-700 mb-3">Actual Pickup Time</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="pickup_time_actual_in">Time In</Label>
+                  <Input
+                    id="pickup_time_actual_in"
+                    type="datetime-local"
+                    value={dispatchData.pickup_time_actual_in}
+                    onChange={(e) => setDispatchData({ ...dispatchData, pickup_time_actual_in: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pickup_time_actual_out">Time Out</Label>
+                  <Input
+                    id="pickup_time_actual_out"
+                    type="datetime-local"
+                    value={dispatchData.pickup_time_actual_out}
+                    onChange={(e) => setDispatchData({ ...dispatchData, pickup_time_actual_out: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Actual Delivery Times */}
+            <div className="border-t pt-4">
+              <h4 className="text-sm font-semibold text-gray-700 mb-3">Actual Delivery Time</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="delivery_time_actual_in">Time In</Label>
+                  <Input
+                    id="delivery_time_actual_in"
+                    type="datetime-local"
+                    value={dispatchData.delivery_time_actual_in}
+                    onChange={(e) => setDispatchData({ ...dispatchData, delivery_time_actual_in: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="delivery_time_actual_out">Time Out</Label>
+                  <Input
+                    id="delivery_time_actual_out"
+                    type="datetime-local"
+                    value={dispatchData.delivery_time_actual_out}
+                    onChange={(e) => setDispatchData({ ...dispatchData, delivery_time_actual_out: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Form Actions */}
+            <div className="flex justify-end space-x-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => {
+                setShowDispatchModal(false);
+                setDispatchingLoad(null);
+              }}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveDispatch} className="bg-purple-600 hover:bg-purple-700">
+                <i className="fas fa-save mr-2"></i>
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Summary Stats - Removed per user request */}
     </div>
   );
