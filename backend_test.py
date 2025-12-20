@@ -1785,7 +1785,7 @@ class FleetMarketplaceAPITester:
             )
             
             if verify_success:
-                bookings_list = verify_response.get('bookings', [])
+                bookings_list = verify_response if isinstance(verify_response, list) else []
                 
                 # Find our load and verify all data is correct
                 for booking in bookings_list:
