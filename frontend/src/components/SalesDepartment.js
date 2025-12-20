@@ -353,11 +353,15 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   // Filter states for each tab
   const [pipelineFilters, setPipelineFilters] = useState({
-    searchText: '',
-    filterColumn: 'all',
-    dateFrom: '',
-    dateTo: '',
-    status: 'all'
+    opportunity: 'all',
+    company: 'all',
+    valueMin: '',
+    valueMax: '',
+    stage: 'all',
+    probabilityMin: '',
+    probabilityMax: '',
+    closeDateFrom: '',
+    closeDateTo: ''
   });
   
   const [leadsFilters, setLeadsFilters] = useState({
