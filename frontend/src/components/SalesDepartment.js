@@ -477,25 +477,82 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   });
 
   const filteredCustomers = customers.filter(customer => {
+    // Company filter
+    if (customersFilters.company !== 'all' && customer.company_name !== customersFilters.company) return false;
+    // Contact Person filter
+    if (customersFilters.contactPerson !== 'all' && customer.contact_person !== customersFilters.contactPerson) return false;
+    // Revenue range filter
+    if (customersFilters.revenueMin && customer.total_revenue < parseFloat(customersFilters.revenueMin)) return false;
+    if (customersFilters.revenueMax && customer.total_revenue > parseFloat(customersFilters.revenueMax)) return false;
+    // Status filter
     if (customersFilters.status !== 'all' && customer.status !== customersFilters.status) return false;
-    if (!filterByDate(customer, 'created_at', customersFilters.dateFrom, customersFilters.dateTo)) return false;
-    return filterByText(customer, customersFilters.searchText, customersFilters.filterColumn,
-      ['company_name', 'contact_person', 'email', 'phone']);
+    // Date filter
+    if (customersFilters.dateFrom || customersFilters.dateTo) {
+      const createdDate = new Date(customer.created_at || customer.createdAt);
+      if (customersFilters.dateFrom && createdDate < new Date(customersFilters.dateFrom)) return false;
+      if (customersFilters.dateTo && createdDate > new Date(customersFilters.dateTo + 'T23:59:59')) return false;
+    }
+    return true;
   });
+
+  // Get unique values for Customers filters
+  const uniqueCustomerCompanies = [...new Set(customers.map(c => c.company_name).filter(Boolean))];
+  const uniqueCustomerContacts = [...new Set(customers.map(c => c.contact_person).filter(Boolean))];
 
   const filteredQuotes = quotes.filter(quote => {
+    // Quote Number filter
+    if (quotesFilters.quoteNumber !== 'all' && quote.quoteNumber !== quotesFilters.quoteNumber) return false;
+    // Pickup Location filter
+    if (quotesFilters.pickupLocation !== 'all' && quote.pickupLocation !== quotesFilters.pickupLocation) return false;
+    // Destination filter
+    if (quotesFilters.destination !== 'all' && quote.destination !== quotesFilters.destination) return false;
+    // Amount range filter
+    if (quotesFilters.amountMin && parseFloat(quote.totalAmount) < parseFloat(quotesFilters.amountMin)) return false;
+    if (quotesFilters.amountMax && parseFloat(quote.totalAmount) > parseFloat(quotesFilters.amountMax)) return false;
+    // Status filter
     if (quotesFilters.status !== 'all' && quote.status !== quotesFilters.status) return false;
-    if (!filterByDate(quote, 'createdAt', quotesFilters.dateFrom, quotesFilters.dateTo)) return false;
-    return filterByText(quote, quotesFilters.searchText, quotesFilters.filterColumn,
-      ['quoteNumber', 'pickupLocation', 'destination', 'consignor', 'consignee', 'customer']);
+    // Date filter
+    if (quotesFilters.dateFrom || quotesFilters.dateTo) {
+      const createdDate = new Date(quote.createdAt);
+      if (quotesFilters.dateFrom && createdDate < new Date(quotesFilters.dateFrom)) return false;
+      if (quotesFilters.dateTo && createdDate > new Date(quotesFilters.dateTo + 'T23:59:59')) return false;
+    }
+    return true;
   });
 
+  // Get unique values for Quotes filters
+  const uniqueQuoteNumbers = [...new Set(quotes.map(q => q.quoteNumber).filter(Boolean))];
+  const uniquePickupLocations = [...new Set(quotes.map(q => q.pickupLocation).filter(Boolean))];
+  const uniqueDestinations = [...new Set(quotes.map(q => q.destination).filter(Boolean))];
+
   const filteredLoads = loads.filter(load => {
+    // Load Number filter
+    if (loadsFilters.loadNumber !== 'all' && load.order_number !== loadsFilters.loadNumber) return false;
+    // Shipper filter
+    if (loadsFilters.shipper !== 'all' && load.shipper_name !== loadsFilters.shipper) return false;
+    // Pickup Location filter
+    if (loadsFilters.pickupLocation !== 'all' && load.pickup_location !== loadsFilters.pickupLocation) return false;
+    // Delivery Location filter
+    if (loadsFilters.deliveryLocation !== 'all' && load.delivery_location !== loadsFilters.deliveryLocation) return false;
+    // Rate range filter
+    if (loadsFilters.rateMin && (load.confirmed_rate || load.total_cost || 0) < parseFloat(loadsFilters.rateMin)) return false;
+    if (loadsFilters.rateMax && (load.confirmed_rate || load.total_cost || 0) > parseFloat(loadsFilters.rateMax)) return false;
+    // Status filter
     if (loadsFilters.status !== 'all' && load.status !== loadsFilters.status) return false;
-    if (!filterByDate(load, 'created_at', loadsFilters.dateFrom, loadsFilters.dateTo)) return false;
-    return filterByText(load, loadsFilters.searchText, loadsFilters.filterColumn,
-      ['order_number', 'shipper_name', 'pickup_location', 'delivery_location', 'source_quote_number']);
+    // Date filter
+    if (loadsFilters.dateFrom || loadsFilters.dateTo) {
+      const createdDate = new Date(load.created_at);
+      if (loadsFilters.dateFrom && createdDate < new Date(loadsFilters.dateFrom)) return false;
+      if (loadsFilters.dateTo && createdDate > new Date(loadsFilters.dateTo + 'T23:59:59')) return false;
+    }
+    return true;
   });
+
+  // Get unique values for Loads filters
+  const uniqueLoadNumbers = [...new Set(loads.map(l => l.order_number).filter(Boolean))];
+  const uniqueShippers = [...new Set(loads.map(l => l.shipper_name).filter(Boolean))];
+  const uniqueLoadPickups = [...new Set(loads.map(l => l.pickup_location).filter(Boolean))];
+  const uniqueLoadDeliveries = [...new Set(loads.map(l => l.delivery_location).filter(Boolean))];
   
   // Multi-tab Freight Calculator state
   const [quoteTabs, setQuoteTabs] = useState([
