@@ -2246,28 +2246,138 @@ Body:
               </div>
             </CardHeader>
             
-            {/* Filter Bar */}
-            <FilterBar
-              filters={quotesFilters}
-              setFilters={setQuotesFilters}
-              columns={[
-                { value: 'quoteNumber', label: 'Quote #' },
-                { value: 'pickupLocation', label: 'Pickup Location' },
-                { value: 'destination', label: 'Destination' },
-                { value: 'consignor', label: 'Consignor' },
-                { value: 'consignee', label: 'Consignee' },
-                { value: 'customer', label: 'Customer' }
-              ]}
-              statusOptions={[
-                { value: 'draft', label: 'Draft' },
-                { value: 'incomplete', label: 'Incomplete' },
-                { value: 'complete', label: 'Complete' },
-                { value: 'sent', label: 'Sent' },
-                { value: 'accepted', label: 'Accepted' },
-                { value: 'rejected', label: 'Rejected' }
-              ]}
-              placeholder="Search quotes..."
-            />
+            {/* Custom Quotes Filter Bar - Single Line */}
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+              <div className="flex items-end gap-2 overflow-x-auto">
+                {/* Quote Number Filter */}
+                <div className="min-w-[100px] max-w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Quote #</label>
+                  <select
+                    value={quotesFilters.quoteNumber}
+                    onChange={(e) => setQuotesFilters({ ...quotesFilters, quoteNumber: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueQuoteNumbers.map(num => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Pickup Location Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Pickup</label>
+                  <select
+                    value={quotesFilters.pickupLocation}
+                    onChange={(e) => setQuotesFilters({ ...quotesFilters, pickupLocation: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniquePickupLocations.map(loc => (
+                      <option key={loc} value={loc}>{loc.length > 15 ? loc.substring(0, 15) + '...' : loc}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Destination Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Destination</label>
+                  <select
+                    value={quotesFilters.destination}
+                    onChange={(e) => setQuotesFilters({ ...quotesFilters, destination: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    {uniqueDestinations.map(dest => (
+                      <option key={dest} value={dest}>{dest.length > 15 ? dest.substring(0, 15) + '...' : dest}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Amount Range Filter */}
+                <div className="w-[120px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Amount ($)</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="number"
+                      value={quotesFilters.amountMin}
+                      onChange={(e) => setQuotesFilters({ ...quotesFilters, amountMin: e.target.value })}
+                      placeholder="Min"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="number"
+                      value={quotesFilters.amountMax}
+                      onChange={(e) => setQuotesFilters({ ...quotesFilters, amountMax: e.target.value })}
+                      placeholder="Max"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Status Filter */}
+                <div className="w-[90px]">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <select
+                    value={quotesFilters.status}
+                    onChange={(e) => setQuotesFilters({ ...quotesFilters, status: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="all">All</option>
+                    <option value="draft">Draft</option>
+                    <option value="complete">Complete</option>
+                    <option value="sent">Sent</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+
+                {/* Creation Date Range Filter */}
+                <div className="w-[170px] flex-shrink-0">
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="date"
+                      value={quotesFilters.dateFrom}
+                      onChange={(e) => setQuotesFilters({ ...quotesFilters, dateFrom: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-gray-400 text-xs">-</span>
+                    <input
+                      type="date"
+                      value={quotesFilters.dateTo}
+                      onChange={(e) => setQuotesFilters({ ...quotesFilters, dateTo: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Filters Button */}
+                {(quotesFilters.quoteNumber !== 'all' || quotesFilters.pickupLocation !== 'all' || 
+                  quotesFilters.destination !== 'all' || quotesFilters.amountMin || quotesFilters.amountMax || 
+                  quotesFilters.status !== 'all' || quotesFilters.dateFrom || quotesFilters.dateTo) && (
+                  <button
+                    onClick={() => setQuotesFilters({
+                      quoteNumber: 'all',
+                      pickupLocation: 'all',
+                      destination: 'all',
+                      consignor: 'all',
+                      consignee: 'all',
+                      amountMin: '',
+                      amountMax: '',
+                      status: 'all',
+                      dateFrom: '',
+                      dateTo: ''
+                    })}
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                  >
+                    <i className="fas fa-times mr-1"></i>
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
             
             <CardContent>
               {filteredQuotes.length === 0 ? (
