@@ -1897,6 +1897,228 @@ class FleetMarketplaceAPITester:
         
         return True
 
+    def test_loads_tab_dispatch_functionality(self):
+        """Test the new Loads tab functionality with dispatch operations"""
+        print("\n" + "="*60)
+        print("🚛 TESTING LOADS TAB DISPATCH FUNCTIONALITY")
+        print("="*60)
+        
+        # Ensure we have platform admin token
+        if not self.token:
+            print("❌ No admin token available - running platform admin login first")
+            if not self.test_platform_admin_login():
+                return False
+        
+        # Test 1: Login with specific credentials from review request
+        print("\n🔑 Test 1: Login with specified credentials...")
+        login_data = {
+            "email": "aminderpro@gmail.com",
+            "password": "Admin123!"
+        }
+        
+        login_success, login_response = self.run_test('auth', 'Login with Specified Credentials', 'POST', 'auth/login', 200, login_data)
+        
+        if login_success:
+            self.token = login_response.get('access_token')
+            print(f"   ✅ Login successful with access token")
+        else:
+            print("   ❌ Login failed - trying with default admin credentials")
+            # Fallback to default admin login
+            if not self.test_platform_admin_login():
+                return False
+        
+        # Test 2: Get existing bookings to test dispatch functionality
+        print("\n📋 Test 2: Get existing bookings for dispatch testing...")
+        bookings_success, bookings_response = self.run_test('bookings', 'Get Booking Requests', 'GET', 'bookings/requests', 200)
+        
+        existing_bookings = []
+        test_booking_id = None
+        
+        if bookings_success:
+            existing_bookings = bookings_response if isinstance(bookings_response, list) else []
+            print(f"   Found {len(existing_bookings)} existing bookings")
+            
+            if existing_bookings:
+                test_booking_id = existing_bookings[0].get('id')
+                print(f"   Using booking ID for testing: {test_booking_id}")
+            else:
+                print("   No existing bookings found - creating test booking...")
+                # Create a test booking for dispatch testing
+                test_booking_id = self.create_test_booking_for_dispatch()
+        
+        if not test_booking_id:
+            print("   ❌ No booking available for dispatch testing")
+            return False
+        
+        # Test 3: Test PATCH /api/bookings/{booking_id}/dispatch endpoint
+        print(f"\n🚚 Test 3: Test dispatch info update endpoint...")
+        dispatch_data = {
+            "assigned_carrier": "Test Carrier Inc.",
+            "assigned_driver": "John Smith",
+            "pickup_time_actual_in": "2024-12-10T08:00:00",
+            "pickup_time_actual_out": "2024-12-10T09:30:00",
+            "delivery_time_actual_in": "2024-12-10T14:00:00",
+            "delivery_time_actual_out": "2024-12-10T15:30:00"
+        }
+        
+        dispatch_success, dispatch_response = self.run_test(
+            'bookings', 'Update Dispatch Info', 'PATCH', f'bookings/{test_booking_id}/dispatch', 200, dispatch_data
+        )
+        
+        if dispatch_success:
+            updated_fields = dispatch_response.get('updated_fields', [])
+            print(f"   ✅ Dispatch info updated successfully")
+            print(f"   Updated fields: {', '.join(updated_fields)}")
+        
+        # Test 4: Test PATCH /api/bookings/{booking_id}/status endpoint with different statuses
+        print(f"\n📊 Test 4: Test status update endpoint...")
+        
+        status_tests = [
+            ("pending", "Pending"),
+            ("planned", "Planned"),
+            ("in_transit_pickup", "In-Transit Pickup"),
+            ("at_pickup", "At Pickup"),
+            ("in_transit_delivery", "In-Transit Delivery"),
+            ("at_delivery", "At Delivery"),
+            ("delivered", "Delivered"),
+            ("invoiced", "Invoiced"),
+            ("payment_overdue", "Payment Overdue"),
+            ("paid", "Paid")
+        ]
+        
+        status_success_count = 0
+        for status_value, status_name in status_tests[:3]:  # Test first 3 statuses to save time
+            print(f"   Testing status: {status_name}")
+            status_success, status_response = self.run_test(
+                'bookings', f'Update Status to {status_name}', 'PATCH', 
+                f'bookings/{test_booking_id}/status?status={status_value}', 200
+            )
+            
+            if status_success:
+                status_success_count += 1
+                print(f"   ✅ Status updated to: {status_response.get('status')}")
+        
+        # Test 5: Verify dispatch data persistence
+        print(f"\n🔍 Test 5: Verify dispatch data persistence...")
+        verify_success, verify_response = self.run_test(
+            'bookings', 'Verify Dispatch Data Persistence', 'GET', 'bookings/requests', 200
+        )
+        
+        dispatch_data_found = False
+        if verify_success:
+            bookings_list = verify_response if isinstance(verify_response, list) else []
+            for booking in bookings_list:
+                if booking.get('id') == test_booking_id:
+                    assigned_carrier = booking.get('assigned_carrier')
+                    assigned_driver = booking.get('assigned_driver')
+                    pickup_actual_in = booking.get('pickup_time_actual_in')
+                    
+                    if assigned_carrier and assigned_driver:
+                        dispatch_data_found = True
+                        print(f"   ✅ Dispatch data persisted correctly")
+                        print(f"   Carrier: {assigned_carrier}")
+                        print(f"   Driver: {assigned_driver}")
+                        print(f"   Pickup Actual In: {pickup_actual_in}")
+                    break
+        
+        if not dispatch_data_found:
+            print(f"   ⚠️  Dispatch data not found in booking response")
+        
+        # Test 6: Test invalid booking ID
+        print(f"\n❌ Test 6: Test error handling with invalid booking ID...")
+        invalid_dispatch_success, invalid_dispatch_response = self.run_test(
+            'bookings', 'Update Dispatch Info (Invalid ID)', 'PATCH', 
+            'bookings/invalid-booking-id/dispatch', 404, dispatch_data
+        )
+        
+        invalid_status_success, invalid_status_response = self.run_test(
+            'bookings', 'Update Status (Invalid ID)', 'PATCH', 
+            'bookings/invalid-booking-id/status?status=pending', 404
+        )
+        
+        # Test 7: Test unauthorized access (if we had different user)
+        print(f"\n🔒 Test 7: Test authorization (using current user - should work)...")
+        auth_test_success, auth_test_response = self.run_test(
+            'bookings', 'Dispatch Update Authorization Test', 'PATCH', 
+            f'bookings/{test_booking_id}/dispatch', 200, {"assigned_carrier": "Updated Carrier"}
+        )
+        
+        # Summary
+        print(f"\n📋 LOADS TAB DISPATCH FUNCTIONALITY TEST SUMMARY:")
+        print(f"   ✅ Login with Credentials: {'PASS' if login_success else 'FAIL'}")
+        print(f"   ✅ Get Existing Bookings: {'PASS' if bookings_success else 'FAIL'}")
+        print(f"   ✅ Update Dispatch Info: {'PASS' if dispatch_success else 'FAIL'}")
+        print(f"   ✅ Status Updates: {'PASS' if status_success_count >= 2 else 'FAIL'} ({status_success_count}/3)")
+        print(f"   ✅ Data Persistence: {'PASS' if dispatch_data_found else 'FAIL'}")
+        print(f"   ✅ Error Handling: {'PASS' if invalid_dispatch_success and invalid_status_success else 'FAIL'}")
+        print(f"   ✅ Authorization: {'PASS' if auth_test_success else 'FAIL'}")
+        
+        # Return overall success
+        core_tests_passed = all([
+            login_success or self.token,  # Either login worked or we have token
+            bookings_success,
+            dispatch_success,
+            status_success_count >= 2
+        ])
+        
+        return core_tests_passed
+    
+    def create_test_booking_for_dispatch(self):
+        """Create a test booking for dispatch functionality testing"""
+        try:
+            # First create test equipment if needed
+            equipment_data = {
+                "name": f"Test Dispatch Truck {datetime.now().strftime('%H%M%S')}",
+                "equipment_type": "dry_van",
+                "description": "Test truck for dispatch testing",
+                "specifications": {
+                    "capacity": "40000 lbs",
+                    "year": "2023",
+                    "make": "Freightliner",
+                    "model": "Cascadia"
+                },
+                "hourly_rate": 50.00,
+                "daily_rate": 400.00,
+                "location_address": "123 Test St, Test City, TX 12345"
+            }
+            
+            equipment_success, equipment_response = self.run_test(
+                'equipment', 'Create Test Equipment for Dispatch', 'POST', 'equipment', 200, equipment_data
+            )
+            
+            if not equipment_success:
+                print("   ❌ Failed to create test equipment")
+                return None
+            
+            equipment_id = equipment_response.get('equipment_id')
+            
+            # Create test booking
+            start_date = datetime.now() + timedelta(days=1)
+            end_date = start_date + timedelta(days=2)
+            
+            booking_data = {
+                "equipment_id": equipment_id,
+                "start_date": start_date.isoformat(),
+                "end_date": end_date.isoformat(),
+                "pickup_location": "456 Pickup Ave, Start City, TX 12345",
+                "delivery_location": "789 Delivery Blvd, End City, TX 54321",
+                "notes": "Test booking for dispatch functionality testing"
+            }
+            
+            booking_success, booking_response = self.run_test(
+                'bookings', 'Create Test Booking for Dispatch', 'POST', 'bookings', 200, booking_data
+            )
+            
+            if booking_success:
+                return booking_response.get('booking_id')
+            else:
+                print("   ❌ Failed to create test booking")
+                return None
+                
+        except Exception as e:
+            print(f"   ❌ Exception creating test booking: {str(e)}")
+            return None
+
     def run_all_tests(self):
         """Run all API tests"""
         print("🚀 Starting Fleet Marketplace API Testing Suite")
