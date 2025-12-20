@@ -29,6 +29,18 @@ const OrderManagement = () => {
   const [parsingDocument, setParsingDocument] = useState(false);
   const [editingOrder, setEditingOrder] = useState(null);
   
+  // Dispatch edit modal state
+  const [showDispatchModal, setShowDispatchModal] = useState(false);
+  const [dispatchingLoad, setDispatchingLoad] = useState(null);
+  const [dispatchData, setDispatchData] = useState({
+    assigned_carrier: '',
+    assigned_driver: '',
+    pickup_time_actual_in: '',
+    pickup_time_actual_out: '',
+    delivery_time_actual_in: '',
+    delivery_time_actual_out: ''
+  });
+  
   // Loads filter state (synced with Sales/Business Development)
   const [loadsFilters, setLoadsFilters] = useState({
     loadNumber: 'all',
