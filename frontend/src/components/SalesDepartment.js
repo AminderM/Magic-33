@@ -2421,6 +2421,7 @@ Body:
                       destination: 'all',
                       consignor: 'all',
                       consignee: 'all',
+                      customer: 'all',
                       amountMin: '',
                       amountMax: '',
                       status: 'all',
