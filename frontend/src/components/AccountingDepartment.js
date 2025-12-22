@@ -664,7 +664,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
                     <option value="overdue">Overdue</option>
-                    <option value="partial">Partial</SelectItem>
+                    <option value="partial">Partial</option>
                     <option value="paid">Paid</option>
                   </select>
                 </div>
