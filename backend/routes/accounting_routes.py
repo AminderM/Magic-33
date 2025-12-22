@@ -243,3 +243,97 @@ async def get_accounting_summary(current_user: User = Depends(get_current_user))
         "accounts_receivable": {stat["_id"]: {"total": stat["total"], "count": stat["count"]} for stat in ar_stats},
         "accounts_payable": {stat["_id"]: {"total": stat["total"], "count": stat["count"]} for stat in ap_stats}
     }
+
+
+# ==================== RECEIPT PARSING ====================
+
+@router.post("/parse-receipt")
+async def parse_receipt(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    """Parse receipt image using AI to extract financial data"""
+    try:
+        # Read the file
+        contents = await file.read()
+        base64_image = base64.b64encode(contents).decode('utf-8')
+        
+        # Determine mime type
+        content_type = file.content_type or 'image/jpeg'
+        
+        # Use OpenAI Vision API to parse the receipt
+        try:
+            from emergentintegrations.llm.chat import chat, LlmModel
+            
+            prompt = """Analyze this receipt/invoice image and extract the following information in JSON format:
+            {
+                "party_name": "Name of the vendor/customer/company on the receipt",
+                "amount": 0.00,
+                "date": "YYYY-MM-DD",
+                "document_number": "Invoice/Receipt number if visible",
+                "description": "Brief description of items/services",
+                "category": "fuel/maintenance/insurance/tolls/supplies/other",
+                "is_expense": true/false (true if it's a bill/expense to pay, false if it's income/payment received),
+                "email": "Email if visible on receipt",
+                "reference": "Any reference number like PO, Load#, etc."
+            }
+            
+            Return ONLY valid JSON, no other text. If a field is not found, use null.
+            For amount, extract the total/grand total amount as a number without currency symbols.
+            For is_expense: true means this is a bill/expense (Accounts Payable), false means it's income (Accounts Receivable).
+            """
+            
+            response = await chat(
+                model=LlmModel.GPT4O,
+                system_message="You are a receipt/invoice parsing assistant. Extract financial data from images accurately.",
+                user_message=prompt,
+                image_urls=[f"data:{content_type};base64,{base64_image}"]
+            )
+            
+            # Parse the response
+            import json
+            import re
+            
+            # Try to extract JSON from the response
+            response_text = response.strip()
+            
+            # Remove markdown code blocks if present
+            if response_text.startswith('```'):
+                response_text = re.sub(r'^```(?:json)?\s*', '', response_text)
+                response_text = re.sub(r'\s*```$', '', response_text)
+            
+            parsed_data = json.loads(response_text)
+            
+            # Determine suggested type based on is_expense flag
+            suggested_type = 'ap' if parsed_data.get('is_expense', True) else 'ar'
+            
+            return {
+                "parsed_data": {
+                    "party_name": parsed_data.get('party_name'),
+                    "amount": parsed_data.get('amount'),
+                    "date": parsed_data.get('date'),
+                    "document_number": parsed_data.get('document_number'),
+                    "description": parsed_data.get('description'),
+                    "category": parsed_data.get('category', 'other'),
+                    "email": parsed_data.get('email'),
+                    "reference": parsed_data.get('reference')
+                },
+                "suggested_type": suggested_type
+            }
+            
+        except ImportError:
+            # Fallback if emergentintegrations not available
+            raise HTTPException(
+                status_code=500, 
+                detail="AI integration not configured. Please install emergentintegrations."
+            )
+        except json.JSONDecodeError as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to parse AI response: {str(e)}"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process receipt: {str(e)}")
