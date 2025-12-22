@@ -200,7 +200,7 @@ async def delete_payable(
     """Delete a payable"""
     result = await db.accounts_payable.delete_one({
         "id": payable_id,
-        "company_id": current_user.company_id or current_user.id
+        "company_id": current_user.id  # Use user ID as company identifier
     })
     
     if result.deleted_count == 0:
