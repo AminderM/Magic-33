@@ -2849,6 +2849,8 @@ Body:
                     <thead className="bg-gray-50 border-b-2 border-gray-200">
                       <tr>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Load #</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Creation Date</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Creation Time</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Status</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Driver</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Carrier</th>
