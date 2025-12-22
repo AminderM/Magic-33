@@ -411,6 +411,36 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </div>
         </TabsContent>
 
+        {/* Receipts Tab */}
+        <TabsContent value="receipts" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center">
+                <i className="fas fa-receipt text-blue-600 mr-2"></i>
+                AI-Powered Receipt Processing
+              </CardTitle>
+              <p className="text-sm text-gray-600">Upload receipt images to automatically extract and categorize financial data</p>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <i className="fas fa-camera text-gray-400 text-5xl mb-4"></i>
+                <h3 className="text-xl font-semibold mb-2">Receipt Scanner Coming Soon</h3>
+                <p className="text-gray-600 mb-4">AI-powered receipt processing will be available in the next update</p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+                  <h4 className="font-semibold text-blue-800 mb-2">Planned Features:</h4>
+                  <ul className="text-sm text-blue-700 space-y-1 text-left">
+                    <li>• Upload receipt photos</li>
+                    <li>• AI extraction of vendor, amount, date</li>
+                    <li>• Automatic AR/AP categorization</li>
+                    <li>• Smart expense categorization</li>
+                    <li>• Integration with accounting records</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Accounts Receivable Tab */}
         <TabsContent value="receivables" className="mt-6">
           <Card>
