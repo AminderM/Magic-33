@@ -342,8 +342,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </TabsTrigger>
         </TabsList>
 
-        {/* Overview Tab */}
-        <TabsContent value="overview" className="mt-6">
+        {/* Analytics Tab */}
+        <TabsContent value="analytics" className="mt-6">
           <div className="grid grid-cols-2 gap-6">
             {/* AR Summary */}
             <Card>
