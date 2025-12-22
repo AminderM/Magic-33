@@ -18,6 +18,13 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [showBillModal, setShowBillModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
+  // Receipt processing state
+  const [receiptFile, setReceiptFile] = useState(null);
+  const [receiptPreview, setReceiptPreview] = useState(null);
+  const [processingReceipt, setProcessingReceipt] = useState(false);
+  const [parsedReceiptData, setParsedReceiptData] = useState(null);
+  const [receiptType, setReceiptType] = useState(null); // 'ar' or 'ap'
+
   // AR Filters
   const [arFilters, setArFilters] = useState({
     invoiceNumber: 'all',
