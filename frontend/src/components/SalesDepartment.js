@@ -2930,7 +2930,7 @@ Body:
                             {load.assigned_carrier || '-'}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap font-semibold text-green-700 text-xs">
-                            ${load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
+                            ${load.customer_rate?.toFixed(2) || load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             <div className="max-w-[120px] truncate text-xs" title={load.pickup_location}>
