@@ -2180,6 +2180,7 @@ class FleetMarketplaceAPITester:
                 print(f"   {i}. {inv_num} - {customer} - ${amount} ({status})")
         
         # Test 3: Update invoice status (using PUT, not PATCH as mentioned in review)
+        update_status_success = False
         if created_invoice_id:
             print(f"\n✏️ Test 3: Update invoice status to 'paid'...")
             status_update_data = {"status": "paid"}
