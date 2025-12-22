@@ -178,7 +178,7 @@ async def update_payable(
 ):
     """Update payable status"""
     result = await db.accounts_payable.update_one(
-        {"id": payable_id, "company_id": current_user.company_id or current_user.id},
+        {"id": payable_id, "company_id": current_user.id},  # Use user ID as company identifier
         {
             "$set": {
                 "status": data.status,
