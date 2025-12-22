@@ -188,6 +188,8 @@ const Dashboard = () => {
           {/* Department-Specific Views */}
           {activeDepartment === 'sales' ? (
             <SalesDepartment BACKEND_URL={BACKEND_URL} fetchWithAuth={fetchWithAuth} />
+          ) : activeDepartment === 'accounting' ? (
+            <AccountingDepartment BACKEND_URL={BACKEND_URL} fetchWithAuth={fetchWithAuth} />
           ) : (
             <div>
               {/* Main Content Tabs */}
