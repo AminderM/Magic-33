@@ -581,7 +581,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         accessorialCharges: 0,
         accessoryName: '',
         margin: 0,
-        ftlLtlPercentage: 0,
+        ftlLtlPercentage: 100,
         consignor: '',
         consignee: '',
         customer: ''
