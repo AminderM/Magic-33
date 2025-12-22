@@ -64,7 +64,7 @@ async def create_receivable(
     
     receivable = {
         "id": str(uuid.uuid4()),
-        "company_id": current_user.company_id or current_user.id,
+        "company_id": current_user.id,  # Use user ID as company identifier
         "customer_name": data.customer_name,
         "customer_email": data.customer_email,
         "invoice_number": data.invoice_number,
