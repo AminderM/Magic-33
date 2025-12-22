@@ -330,11 +330,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </TabsTrigger>
           <TabsTrigger value="receivables" className="text-sm">
             <i className="fas fa-file-invoice-dollar mr-2"></i>
-            Receivables
+            Accounts Receivable
           </TabsTrigger>
           <TabsTrigger value="payables" className="text-sm">
             <i className="fas fa-file-invoice mr-2"></i>
-            Payables
+            Accounts Payable
           </TabsTrigger>
         </TabsList>
 
