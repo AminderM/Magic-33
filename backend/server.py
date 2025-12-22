@@ -64,6 +64,7 @@ api_router.include_router(driver_app_routes.router)
 api_router.include_router(sales_routes.router)
 api_router.include_router(fmcsa_routes.router)
 api_router.include_router(bundle_routes.router)
+api_router.include_router(accounting_routes.router)
 
 # WebSocket endpoint for real-time vehicle tracking
 @api_router.websocket("/ws/vehicle/{vehicle_id}")
