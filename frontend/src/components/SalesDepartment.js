@@ -856,13 +856,22 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   };
 
   const calculateTotalQuote = () => {
-    const subtotal = 
+    // Calculate base subtotal
+    const baseSubtotal = 
       (quoteData.distance * quoteData.ratePerMile) +
       quoteData.fuelSurcharge +
       (quoteData.stops.length * quoteData.ratePerStop) +
       quoteData.accessorialCharges;
     
-    const total = subtotal + (subtotal * (quoteData.margin / 100));
+    // Apply FTL/LTL percentage (truck capacity utilization)
+    // 100% = Full Truck Load (pay full rate)
+    // 25% = Use 25% of truck (pay 25% of rate)
+    const ftlLtlPercentage = quoteData.ftlLtlPercentage || 100;
+    const ftlLtlMultiplier = ftlLtlPercentage / 100;
+    const adjustedSubtotal = baseSubtotal * ftlLtlMultiplier;
+    
+    // Apply margin on the adjusted subtotal
+    const total = adjustedSubtotal + (adjustedSubtotal * (quoteData.margin / 100));
     return total.toFixed(2);
   };
 
