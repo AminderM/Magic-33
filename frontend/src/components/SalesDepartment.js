@@ -975,6 +975,15 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       const pickupParts = quote.pickupLocation?.split(',').map(s => s.trim()) || [];
       const deliveryParts = quote.destination?.split(',').map(s => s.trim()) || [];
       
+      // Calculate rate WITHOUT margin
+      // Total = RateWithoutMargin × (1 + Margin%)
+      // So: RateWithoutMargin = Total / (1 + Margin%)
+      const totalAmount = parseFloat(quote.totalAmount) || 0;
+      const marginPercent = parseFloat(quote.margin) || 0;
+      const rateWithoutMargin = marginPercent > 0 
+        ? totalAmount / (1 + marginPercent / 100)
+        : totalAmount;
+      
       const loadData = {
         pickup_location: quote.pickupLocation || '',
         pickup_city: pickupParts[0] || '',
@@ -989,8 +998,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         commodity: '',
         weight: null,
         cubes: null,
-        confirmed_rate: parseFloat(quote.totalAmount) || 0,
-        notes: `Created from Rate Quote ${quote.quoteNumber}`,
+        confirmed_rate: parseFloat(rateWithoutMargin.toFixed(2)),
+        notes: `Created from Rate Quote ${quote.quoteNumber} (Margin: ${marginPercent}% excluded)`,
         source_quote_id: quote.id,
         source_quote_number: quote.quoteNumber
       };
@@ -1002,7 +1011,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
       if (res.ok) {
         const data = await res.json();
-        toast.success(`Load ${data.order_number} created from ${quote.quoteNumber}`);
+        toast.success(`Load ${data.order_number} created from ${quote.quoteNumber} (Rate: $${rateWithoutMargin.toFixed(2)} without margin)`);
         // Reload loads to show the new load
         await loadLoads();
         // Switch to loads tab
