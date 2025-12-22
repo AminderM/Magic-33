@@ -463,7 +463,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Loads Tab Dispatch Functionality"
+    - "Accounting Department Frontend UI"
     - "Platform User Management UI"
     - "AI-Powered Generate Email with Modal Display"
     - "Google Maps Integration in Admin Console"
