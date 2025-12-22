@@ -323,10 +323,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3 bg-white rounded-xl p-1 border border-gray-200 shadow-sm max-w-lg">
-          <TabsTrigger value="overview" className="text-sm">
-            <i className="fas fa-chart-pie mr-2"></i>
-            Overview
+        <TabsList className="grid w-full grid-cols-4 bg-white rounded-xl p-1 border border-gray-200 shadow-sm max-w-2xl">
+          <TabsTrigger value="analytics" className="text-sm">
+            <i className="fas fa-chart-line mr-2"></i>
+            Analytics
+          </TabsTrigger>
+          <TabsTrigger value="receipts" className="text-sm">
+            <i className="fas fa-receipt mr-2"></i>
+            Receipts
           </TabsTrigger>
           <TabsTrigger value="receivables" className="text-sm">
             <i className="fas fa-file-invoice-dollar mr-2"></i>
