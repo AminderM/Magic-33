@@ -199,9 +199,9 @@ const Dashboard = () => {
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-gray-100 p-1 rounded-xl`}>
                     {showAdminTabs && (
-                      <TabsTrigger value="fleet" data-testid="fleet-tab">
-                        <i className="fas fa-tachometer-alt mr-2"></i>
-                        Transport Hub - TMS
+                      <TabsTrigger value="analytics" data-testid="analytics-tab">
+                        <i className="fas fa-chart-bar mr-2"></i>
+                        Analytics
                       </TabsTrigger>
                     )}
                     <TabsTrigger value="equipment" data-testid="equipment-tab">
