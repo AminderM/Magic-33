@@ -143,7 +143,7 @@ async def create_payable(
     # Check for duplicate bill number
     existing = await db.accounts_payable.find_one({
         "bill_number": data.bill_number,
-        "company_id": current_user.company_id or current_user.id
+        "company_id": current_user.id  # Use user ID as company identifier
     })
     if existing:
         raise HTTPException(status_code=400, detail="Bill number already exists")
