@@ -17,6 +17,7 @@ import TMSChatAssistant from './TMSChatAssistant';
 import DepartmentPanel from './DepartmentPanel';
 import SalesDepartment from './SalesDepartment';
 import AccountingDepartment from './AccountingDepartment';
+import DispatchAnalytics from './DispatchAnalytics';
 
 const Dashboard = () => {
   const { user, logout, fetchWithAuth } = useAuth();
