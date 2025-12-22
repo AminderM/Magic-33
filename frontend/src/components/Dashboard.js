@@ -230,8 +230,8 @@ const Dashboard = () => {
                   </TabsList>
 
                   {showAdminTabs && (
-                    <TabsContent value="fleet" className="mt-6">
-                      <FleetManagement />
+                    <TabsContent value="analytics" className="mt-6">
+                      <DispatchAnalytics />
                     </TabsContent>
                   )}
 
