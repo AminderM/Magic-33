@@ -150,7 +150,7 @@ async def create_payable(
     
     payable = {
         "id": str(uuid.uuid4()),
-        "company_id": current_user.company_id or current_user.id,
+        "company_id": current_user.id,  # Use user ID as company identifier
         "vendor_name": data.vendor_name,
         "vendor_email": data.vendor_email,
         "bill_number": data.bill_number,
