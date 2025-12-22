@@ -730,9 +730,6 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             </Card>
           </div>
         </TabsContent>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         {/* Accounts Receivable Tab */}
         <TabsContent value="receivables" className="mt-6">
