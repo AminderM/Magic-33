@@ -114,7 +114,7 @@ async def delete_receivable(
     """Delete a receivable"""
     result = await db.accounts_receivable.delete_one({
         "id": receivable_id,
-        "company_id": current_user.company_id or current_user.id
+        "company_id": current_user.id  # Use user ID as company identifier
     })
     
     if result.deleted_count == 0:
