@@ -42,7 +42,7 @@ class StatusUpdate(BaseModel):
 async def get_receivables(current_user: User = Depends(get_current_user)):
     """Get all accounts receivable for the current user's company"""
     receivables = await db.accounts_receivable.find(
-        {"company_id": current_user.company_id or current_user.id},
+        {"company_id": current_user.id},  # Use user ID as company identifier
         {"_id": 0}
     ).sort("created_at", -1).to_list(500)
     
