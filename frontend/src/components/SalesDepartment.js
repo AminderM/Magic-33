@@ -544,9 +544,10 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     if (loadsFilters.pickupLocation !== 'all' && load.pickup_location !== loadsFilters.pickupLocation) return false;
     // Delivery Location filter
     if (loadsFilters.deliveryLocation !== 'all' && load.delivery_location !== loadsFilters.deliveryLocation) return false;
-    // Rate range filter
-    if (loadsFilters.rateMin && (load.confirmed_rate || load.total_cost || 0) < parseFloat(loadsFilters.rateMin)) return false;
-    if (loadsFilters.rateMax && (load.confirmed_rate || load.total_cost || 0) > parseFloat(loadsFilters.rateMax)) return false;
+    // Rate range filter (use customer_rate for Sales view)
+    const loadRate = load.customer_rate || load.confirmed_rate || load.total_cost || 0;
+    if (loadsFilters.rateMin && loadRate < parseFloat(loadsFilters.rateMin)) return false;
+    if (loadsFilters.rateMax && loadRate > parseFloat(loadsFilters.rateMax)) return false;
     // Status filter
     if (loadsFilters.status !== 'all' && load.status !== loadsFilters.status) return false;
     // Date filter
