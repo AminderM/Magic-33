@@ -213,7 +213,7 @@ async def delete_payable(
 @router.get("/summary")
 async def get_accounting_summary(current_user: User = Depends(get_current_user)):
     """Get accounting summary statistics"""
-    company_id = current_user.company_id or current_user.id
+    company_id = current_user.id  # Use user ID as company identifier
     
     # AR totals
     ar_pipeline = [
