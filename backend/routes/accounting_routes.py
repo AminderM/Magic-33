@@ -1,7 +1,7 @@
 """
 Accounting Routes - Accounts Receivable and Accounts Payable
 """
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
 from models import User
 from auth import get_current_user
 from database import db
@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from typing import Optional
 from pydantic import BaseModel
 import uuid
+import base64
+import os
 
 router = APIRouter(prefix="/accounting", tags=["Accounting"])
 
