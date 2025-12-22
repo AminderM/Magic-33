@@ -291,7 +291,8 @@ async def parse_receipt(
                 model=LlmModel.GPT4O,
                 system_message="You are a receipt/invoice parsing assistant. Extract financial data from images accurately.",
                 user_message=prompt,
-                image_urls=[f"data:{content_type};base64,{base64_image}"]
+                image_urls=[f"data:{content_type};base64,{base64_image}"],
+                api_key=emergent_key
             )
             
             # Parse the response
