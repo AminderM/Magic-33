@@ -960,8 +960,8 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         shipper_name: quote.consignor || '',
         shipper_address: '',
         commodity: '',
-        weight: '',
-        cubes: '',
+        weight: null,
+        cubes: null,
         confirmed_rate: parseFloat(quote.totalAmount) || 0,
         notes: `Created from Rate Quote ${quote.quoteNumber}`,
         source_quote_id: quote.id,
@@ -975,9 +975,9 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
       if (res.ok) {
         const data = await res.json();
-        toast.success(`Load created successfully from ${quote.quoteNumber}`);
+        toast.success(`Load ${data.order_number} created from ${quote.quoteNumber}`);
         // Reload loads to show the new load
-        loadLoads();
+        await loadLoads();
         // Switch to loads tab
         setActiveTab('loads');
       } else {
