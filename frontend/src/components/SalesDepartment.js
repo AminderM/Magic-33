@@ -2868,7 +2868,7 @@ Body:
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Status</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Driver</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Carrier</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Rate</th>
+                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Customer Rate</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Location</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Planned</th>
                         <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual In</th>
