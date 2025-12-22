@@ -36,7 +36,8 @@ class FleetMarketplaceAPITester:
             'tms_chat': [],
             'admin': [],
             'sales': [],
-            'fmcsa': []
+            'fmcsa': [],
+            'accounting': []
         }
 
     def run_test(self, category: str, name: str, method: str, endpoint: str, expected_status: int, data=None, headers=None):
