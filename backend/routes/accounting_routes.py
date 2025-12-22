@@ -128,7 +128,7 @@ async def delete_receivable(
 async def get_payables(current_user: User = Depends(get_current_user)):
     """Get all accounts payable for the current user's company"""
     payables = await db.accounts_payable.find(
-        {"company_id": current_user.company_id or current_user.id},
+        {"company_id": current_user.id},  # Use user ID as company identifier
         {"_id": 0}
     ).sort("created_at", -1).to_list(500)
     
