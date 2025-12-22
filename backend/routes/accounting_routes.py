@@ -57,7 +57,7 @@ async def create_receivable(
     # Check for duplicate invoice number
     existing = await db.accounts_receivable.find_one({
         "invoice_number": data.invoice_number,
-        "company_id": current_user.company_id or current_user.id
+        "company_id": current_user.id  # Use user ID as company identifier
     })
     if existing:
         raise HTTPException(status_code=400, detail="Invoice number already exists")
