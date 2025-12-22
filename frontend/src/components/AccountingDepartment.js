@@ -534,30 +534,202 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Receipts Tab */}
         <TabsContent value="receipts" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center">
-                <i className="fas fa-receipt text-blue-600 mr-2"></i>
-                AI-Powered Receipt Processing
-              </CardTitle>
-              <p className="text-sm text-gray-600">Upload receipt images to automatically extract and categorize financial data</p>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <i className="fas fa-camera text-gray-400 text-5xl mb-4"></i>
-                <h3 className="text-xl font-semibold mb-2">Receipt Scanner Coming Soon</h3>
-                <p className="text-gray-600 mb-4">AI-powered receipt processing will be available in the next update</p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
-                  <h4 className="font-semibold text-blue-800 mb-2">Planned Features:</h4>
-                  <ul className="text-sm text-blue-700 space-y-1 text-left">
-                    <li>• Upload receipt photos</li>
-                    <li>• AI extraction of vendor, amount, date</li>
-                    <li>• Automatic AR/AP categorization</li>
-                    <li>• Smart expense categorization</li>
-                    <li>• Integration with accounting records</li>
-                  </ul>
-                </div>
-              </div>
+          <div className="grid grid-cols-2 gap-6">
+            {/* Upload Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center">
+                  <i className="fas fa-upload text-blue-600 mr-2"></i>
+                  Upload Receipt
+                </CardTitle>
+                <p className="text-sm text-gray-600">Upload a receipt image for AI processing</p>
+              </CardHeader>
+              <CardContent>
+                {!receiptPreview ? (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleReceiptUpload}
+                      className="hidden"
+                      id="receipt-upload"
+                    />
+                    <label htmlFor="receipt-upload" className="cursor-pointer">
+                      <i className="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-4"></i>
+                      <p className="text-gray-600 mb-2">Click to upload or drag and drop</p>
+                      <p className="text-sm text-gray-400">PNG, JPG, JPEG up to 10MB</p>
+                    </label>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <img 
+                        src={receiptPreview} 
+                        alt="Receipt preview" 
+                        className="w-full max-h-64 object-contain rounded-lg border"
+                      />
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="absolute top-2 right-2"
+                        onClick={clearReceipt}
+                      >
+                        <i className="fas fa-times"></i>
+                      </Button>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button 
+                        onClick={processReceipt} 
+                        disabled={processingReceipt}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                      >
+                        {processingReceipt ? (
+                          <>
+                            <i className="fas fa-spinner fa-spin mr-2"></i>
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <i className="fas fa-magic mr-2"></i>
+                            Process with AI
+                          </>
+                        )}
+                      </Button>
+                      <Button variant="outline" onClick={clearReceipt}>
+                        <i className="fas fa-redo mr-2"></i>
+                        Clear
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Parsed Data Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center">
+                  <i className="fas fa-file-alt text-purple-600 mr-2"></i>
+                  Extracted Data
+                </CardTitle>
+                <p className="text-sm text-gray-600">Review and confirm extracted information</p>
+              </CardHeader>
+              <CardContent>
+                {!parsedReceiptData ? (
+                  <div className="text-center py-12">
+                    <i className="fas fa-file-invoice text-gray-300 text-5xl mb-4"></i>
+                    <p className="text-gray-500">Upload and process a receipt to see extracted data</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Suggested Type */}
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
+                      <span className="font-medium text-gray-700">Suggested Category:</span>
+                      <Badge className={receiptType === 'ar' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                        {receiptType === 'ar' ? '📥 Accounts Receivable' : '📤 Accounts Payable'}
+                      </Badge>
+                    </div>
+
+                    {/* Toggle Type */}
+                    <div className="flex gap-2">
+                      <Button
+                        variant={receiptType === 'ar' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setReceiptType('ar')}
+                        className={receiptType === 'ar' ? 'bg-green-600 hover:bg-green-700' : ''}
+                      >
+                        <i className="fas fa-arrow-down mr-1"></i> Receivable
+                      </Button>
+                      <Button
+                        variant={receiptType === 'ap' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setReceiptType('ap')}
+                        className={receiptType === 'ap' ? 'bg-red-600 hover:bg-red-700' : ''}
+                      >
+                        <i className="fas fa-arrow-up mr-1"></i> Payable
+                      </Button>
+                    </div>
+
+                    {/* Extracted Fields */}
+                    <div className="space-y-3 border-t pt-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs text-gray-500">{receiptType === 'ar' ? 'Customer' : 'Vendor'}</Label>
+                          <Input 
+                            value={parsedReceiptData.party_name || ''} 
+                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, party_name: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-500">Amount ($)</Label>
+                          <Input 
+                            type="number"
+                            value={parsedReceiptData.amount || ''} 
+                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, amount: parseFloat(e.target.value)})}
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs text-gray-500">Date</Label>
+                          <Input 
+                            type="date"
+                            value={parsedReceiptData.date || ''} 
+                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, date: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-500">Document #</Label>
+                          <Input 
+                            value={parsedReceiptData.document_number || ''} 
+                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, document_number: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-500">Description</Label>
+                        <Input 
+                          value={parsedReceiptData.description || ''} 
+                          onChange={(e) => setParsedReceiptData({...parsedReceiptData, description: e.target.value})}
+                        />
+                      </div>
+                      {receiptType === 'ap' && (
+                        <div>
+                          <Label className="text-xs text-gray-500">Category</Label>
+                          <Select 
+                            value={parsedReceiptData.category || 'other'} 
+                            onValueChange={(value) => setParsedReceiptData({...parsedReceiptData, category: value})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="fuel">Fuel</SelectItem>
+                              <SelectItem value="maintenance">Maintenance</SelectItem>
+                              <SelectItem value="insurance">Insurance</SelectItem>
+                              <SelectItem value="tolls">Tolls</SelectItem>
+                              <SelectItem value="supplies">Supplies</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <Button 
+                      onClick={submitParsedReceipt} 
+                      className={`w-full ${receiptType === 'ar' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                    >
+                      <i className={`fas ${receiptType === 'ar' ? 'fa-file-invoice-dollar' : 'fa-file-invoice'} mr-2`}></i>
+                      Add to {receiptType === 'ar' ? 'Accounts Receivable' : 'Accounts Payable'}
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
             </CardContent>
           </Card>
         </TabsContent>
