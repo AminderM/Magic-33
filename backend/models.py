@@ -280,7 +280,9 @@ class BookingBase(BaseModel):
     assigned_carrier: Optional[str] = None
     assigned_driver: Optional[str] = None
     # Rate information
-    confirmed_rate: Optional[float] = None
+    confirmed_rate: Optional[float] = None  # Rate WITHOUT margin (for Dispatch)
+    customer_rate: Optional[float] = None   # Rate WITH margin (for Sales)
+    margin_percentage: Optional[float] = None  # Margin % applied
     
 class BookingCreate(BookingBase):
     pass
