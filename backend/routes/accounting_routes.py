@@ -264,6 +264,10 @@ async def parse_receipt(
         # Use OpenAI Vision API to parse the receipt
         try:
             from emergentintegrations.llm.chat import chat, LlmModel
+            import os
+            
+            # Set the Emergent LLM key
+            emergent_key = os.environ.get('EMERGENT_LLM_KEY', 'sk-emergent-73b04E1E4779758EfC')
             
             prompt = """Analyze this receipt/invoice image and extract the following information in JSON format:
             {
