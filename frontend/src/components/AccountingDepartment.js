@@ -237,6 +237,120 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     return styles[status] || 'bg-gray-100 text-gray-800';
   };
 
+  // Receipt processing functions
+  const handleReceiptUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setReceiptFile(file);
+      setParsedReceiptData(null);
+      setReceiptType(null);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReceiptPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const processReceipt = async () => {
+    if (!receiptFile) {
+      toast.error('Please upload a receipt image first');
+      return;
+    }
+
+    setProcessingReceipt(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', receiptFile);
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/accounting/parse-receipt`, {
+        method: 'POST',
+        headers: {}, // Let browser set content-type for FormData
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setParsedReceiptData(data.parsed_data);
+        setReceiptType(data.suggested_type); // 'ar' or 'ap'
+        toast.success('Receipt processed successfully!');
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to process receipt');
+      }
+    } catch (error) {
+      console.error('Error processing receipt:', error);
+      toast.error('Failed to process receipt');
+    } finally {
+      setProcessingReceipt(false);
+    }
+  };
+
+  const submitParsedReceipt = async () => {
+    if (!parsedReceiptData || !receiptType) {
+      toast.error('Please process a receipt first');
+      return;
+    }
+
+    try {
+      const endpoint = receiptType === 'ar' 
+        ? `${BACKEND_URL}/api/accounting/receivables`
+        : `${BACKEND_URL}/api/accounting/payables`;
+
+      const payload = receiptType === 'ar' 
+        ? {
+            customer_name: parsedReceiptData.party_name || 'Unknown Customer',
+            customer_email: parsedReceiptData.email || '',
+            invoice_number: parsedReceiptData.document_number || `INV-${Date.now()}`,
+            amount: parsedReceiptData.amount || 0,
+            due_date: parsedReceiptData.date || new Date().toISOString().split('T')[0],
+            description: parsedReceiptData.description || 'Imported from receipt',
+            load_reference: parsedReceiptData.reference || ''
+          }
+        : {
+            vendor_name: parsedReceiptData.party_name || 'Unknown Vendor',
+            vendor_email: parsedReceiptData.email || '',
+            bill_number: parsedReceiptData.document_number || `BILL-${Date.now()}`,
+            amount: parsedReceiptData.amount || 0,
+            due_date: parsedReceiptData.date || new Date().toISOString().split('T')[0],
+            description: parsedReceiptData.description || 'Imported from receipt',
+            category: parsedReceiptData.category || 'other'
+          };
+
+      const response = await fetchWithAuth(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        toast.success(`Entry added to ${receiptType === 'ar' ? 'Accounts Receivable' : 'Accounts Payable'}!`);
+        // Reset receipt state
+        setReceiptFile(null);
+        setReceiptPreview(null);
+        setParsedReceiptData(null);
+        setReceiptType(null);
+        loadData();
+        // Switch to the appropriate tab
+        setActiveTab(receiptType === 'ar' ? 'receivables' : 'payables');
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to create entry');
+      }
+    } catch (error) {
+      console.error('Error submitting receipt:', error);
+      toast.error('Failed to create entry');
+    }
+  };
+
+  const clearReceipt = () => {
+    setReceiptFile(null);
+    setReceiptPreview(null);
+    setParsedReceiptData(null);
+    setReceiptType(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
