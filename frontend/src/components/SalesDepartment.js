@@ -2110,14 +2110,44 @@ Body:
                   </div>
 
                   {/* Total Rate Card - Below Quote Calculator */}
-                  <div className="bg-gradient-to-br from-[#F7B501] to-[#e5a701] rounded-2xl shadow-md border border-[#e5a701] p-5 h-[275px] flex flex-col justify-between">
+                  <div className="bg-gradient-to-br from-[#F7B501] to-[#e5a701] rounded-2xl shadow-md border border-[#e5a701] p-5 h-auto flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-semibold text-white/90">Total Quote</h4>
                       <i className="fas fa-file-invoice-dollar text-white/60 text-lg"></i>
                     </div>
-                    <div className="flex-1 flex flex-col justify-center">
-                      <div className="text-5xl font-bold text-white mb-2">${calculateTotalQuote()}</div>
-                      <p className="text-sm text-white/90">Generated from calculator inputs</p>
+                    <div className="flex-1 flex flex-col justify-center py-3">
+                      <div className="text-4xl font-bold text-white mb-1">${calculateTotalQuote()}</div>
+                      {/* FTL/LTL Breakdown */}
+                      <div className="bg-white/20 rounded-lg p-2 mt-2 space-y-1">
+                        <div className="flex justify-between text-xs text-white/90">
+                          <span>Base Rate ({quoteData.distance || 0} mi × ${quoteData.ratePerMile || 0}/mi)</span>
+                          <span>${((quoteData.distance || 0) * (quoteData.ratePerMile || 0)).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-white/90">
+                          <span>+ Fuel Surcharge</span>
+                          <span>${(quoteData.fuelSurcharge || 0).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-white/90">
+                          <span>+ Stops ({quoteData.stops?.length || 0} × ${quoteData.ratePerStop || 0})</span>
+                          <span>${((quoteData.stops?.length || 0) * (quoteData.ratePerStop || 0)).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-white/90">
+                          <span>+ Accessorials</span>
+                          <span>${(quoteData.accessorialCharges || 0).toFixed(2)}</span>
+                        </div>
+                        <div className="border-t border-white/30 pt-1 flex justify-between text-xs font-semibold text-white">
+                          <span>Subtotal</span>
+                          <span>${(((quoteData.distance || 0) * (quoteData.ratePerMile || 0)) + (quoteData.fuelSurcharge || 0) + ((quoteData.stops?.length || 0) * (quoteData.ratePerStop || 0)) + (quoteData.accessorialCharges || 0)).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-white/90">
+                          <span>× {quoteData.ftlLtlPercentage || 100}% {(quoteData.ftlLtlPercentage || 100) === 100 ? '(FTL)' : '(LTL)'}</span>
+                          <span>${((((quoteData.distance || 0) * (quoteData.ratePerMile || 0)) + (quoteData.fuelSurcharge || 0) + ((quoteData.stops?.length || 0) * (quoteData.ratePerStop || 0)) + (quoteData.accessorialCharges || 0)) * ((quoteData.ftlLtlPercentage || 100) / 100)).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-white/90">
+                          <span>+ Margin ({quoteData.margin || 0}%)</span>
+                          <span>${(((((quoteData.distance || 0) * (quoteData.ratePerMile || 0)) + (quoteData.fuelSurcharge || 0) + ((quoteData.stops?.length || 0) * (quoteData.ratePerStop || 0)) + (quoteData.accessorialCharges || 0)) * ((quoteData.ftlLtlPercentage || 100) / 100)) * ((quoteData.margin || 0) / 100)).toFixed(2)}</span>
+                        </div>
+                      </div>
                     </div>
                     <Button 
                       onClick={pushToRateQuotes}
