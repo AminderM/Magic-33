@@ -2873,6 +2873,12 @@ Body:
                           <td className="px-3 py-2 whitespace-nowrap font-medium text-blue-600 text-xs">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatCreationDate(load.created_at)}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                            {formatCreationTime(load.created_at)}
+                          </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             <Select value={load.status || 'pending'} onValueChange={(value) => handleLoadStatusChange(load.id, value)}>
                               <SelectTrigger className={`h-7 w-[120px] text-xs border-0 ${
