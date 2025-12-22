@@ -265,9 +265,13 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       const formData = new FormData();
       formData.append('file', receiptFile);
 
-      const response = await fetchWithAuth(`${BACKEND_URL}/api/accounting/parse-receipt`, {
+      // Use fetch directly for FormData (don't set Content-Type, let browser handle it)
+      const token = localStorage.getItem('auth_token');
+      const response = await fetch(`${BACKEND_URL}/api/accounting/parse-receipt`, {
         method: 'POST',
-        headers: {}, // Let browser set content-type for FormData
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData
       });
 
