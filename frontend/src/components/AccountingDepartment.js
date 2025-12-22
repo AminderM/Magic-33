@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 
 const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('analytics');
   const [receivables, setReceivables] = useState([]);
   const [payables, setPayables] = useState([]);
   const [loading, setLoading] = useState(true);
