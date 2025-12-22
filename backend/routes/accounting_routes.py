@@ -92,7 +92,7 @@ async def update_receivable(
 ):
     """Update receivable status"""
     result = await db.accounts_receivable.update_one(
-        {"id": receivable_id, "company_id": current_user.company_id or current_user.id},
+        {"id": receivable_id, "company_id": current_user.id},  # Use user ID as company identifier
         {
             "$set": {
                 "status": data.status,
