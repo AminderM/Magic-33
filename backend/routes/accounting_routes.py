@@ -161,6 +161,7 @@ async def create_payable(
         "amount_paid": 0,
         "due_date": data.due_date,
         "description": data.description,
+        "load_reference": data.load_reference,
         "category": data.category,
         "status": data.status,
         "created_by": current_user.id,
