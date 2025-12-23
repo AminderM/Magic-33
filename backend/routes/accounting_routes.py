@@ -33,6 +33,7 @@ class PayableCreate(BaseModel):
     due_date: str
     description: Optional[str] = None
     category: str = "other"
+    load_reference: Optional[str] = None
     status: str = "pending"
 
 class StatusUpdate(BaseModel):
