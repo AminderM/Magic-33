@@ -516,3 +516,179 @@ async def parse_receipt(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process receipt: {str(e)}")
+
+
+# ==================== NOTIFICATIONS & ALERTS ====================
+
+class NotificationAlert(BaseModel):
+    id: str
+    type: str  # 'overdue_ar', 'upcoming_ap', 'payment_due', 'collection_reminder'
+    priority: str  # 'high', 'medium', 'low'
+    title: str
+    message: str
+    amount: float
+    due_date: str
+    days_overdue: int = 0
+    related_id: str
+    related_type: str  # 'ar' or 'ap'
+    created_at: str
+
+@router.get("/alerts")
+async def get_accounting_alerts(
+    current_user: User = Depends(get_current_user)
+):
+    """Get notifications and alerts for overdue invoices and upcoming payments"""
+    company_id = current_user.id
+    today = datetime.now(timezone.utc)
+    alerts = []
+    
+    # 1. Overdue AR (invoices past due date)
+    overdue_ar = await db.accounts_receivable.find({
+        "company_id": company_id,
+        "status": {"$nin": ["paid", "cancelled"]}
+    }, {"_id": 0}).to_list(1000)
+    
+    for ar in overdue_ar:
+        try:
+            due_date = datetime.fromisoformat(ar["due_date"].replace("Z", "+00:00")) if isinstance(ar["due_date"], str) else ar["due_date"]
+            if isinstance(due_date, str):
+                due_date = datetime.strptime(due_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            
+            days_overdue = (today - due_date).days
+            
+            if days_overdue > 0:
+                priority = "high" if days_overdue > 30 else ("medium" if days_overdue > 14 else "low")
+                alerts.append(NotificationAlert(
+                    id=str(uuid.uuid4()),
+                    type="overdue_ar",
+                    priority=priority,
+                    title=f"Overdue Invoice: {ar.get('invoice_number')}",
+                    message=f"Invoice from {ar.get('customer_name')} is {days_overdue} days overdue. Outstanding: ${(ar.get('amount', 0) - ar.get('amount_paid', 0)):,.2f}",
+                    amount=ar.get('amount', 0) - ar.get('amount_paid', 0),
+                    due_date=ar.get('due_date'),
+                    days_overdue=days_overdue,
+                    related_id=ar.get('id'),
+                    related_type="ar",
+                    created_at=today.isoformat()
+                ))
+        except Exception as e:
+            continue
+    
+    # 2. Upcoming AP (bills due within 7 days)
+    upcoming_ap = await db.accounts_payable.find({
+        "company_id": company_id,
+        "status": {"$nin": ["paid", "cancelled"]}
+    }, {"_id": 0}).to_list(1000)
+    
+    for ap in upcoming_ap:
+        try:
+            due_date = datetime.fromisoformat(ap["due_date"].replace("Z", "+00:00")) if isinstance(ap["due_date"], str) else ap["due_date"]
+            if isinstance(due_date, str):
+                due_date = datetime.strptime(due_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            
+            days_until = (due_date - today).days
+            
+            if days_until <= 7 and days_until >= 0:
+                priority = "high" if days_until <= 2 else ("medium" if days_until <= 5 else "low")
+                alerts.append(NotificationAlert(
+                    id=str(uuid.uuid4()),
+                    type="upcoming_ap",
+                    priority=priority,
+                    title=f"Payment Due Soon: {ap.get('bill_number')}",
+                    message=f"Payment to {ap.get('vendor_name')} is due in {days_until} days. Amount: ${(ap.get('amount', 0) - ap.get('amount_paid', 0)):,.2f}",
+                    amount=ap.get('amount', 0) - ap.get('amount_paid', 0),
+                    due_date=ap.get('due_date'),
+                    days_overdue=-days_until,  # Negative means future
+                    related_id=ap.get('id'),
+                    related_type="ap",
+                    created_at=today.isoformat()
+                ))
+            elif days_until < 0:
+                # Overdue AP
+                days_overdue = abs(days_until)
+                priority = "high"
+                alerts.append(NotificationAlert(
+                    id=str(uuid.uuid4()),
+                    type="overdue_ap",
+                    priority=priority,
+                    title=f"Overdue Payment: {ap.get('bill_number')}",
+                    message=f"Payment to {ap.get('vendor_name')} is {days_overdue} days overdue! Amount: ${(ap.get('amount', 0) - ap.get('amount_paid', 0)):,.2f}",
+                    amount=ap.get('amount', 0) - ap.get('amount_paid', 0),
+                    due_date=ap.get('due_date'),
+                    days_overdue=days_overdue,
+                    related_id=ap.get('id'),
+                    related_type="ap",
+                    created_at=today.isoformat()
+                ))
+        except Exception as e:
+            continue
+    
+    # 3. Collection reminders (AR with partial payment but not fully paid after 60+ days)
+    for ar in overdue_ar:
+        try:
+            due_date = datetime.fromisoformat(ar["due_date"].replace("Z", "+00:00")) if isinstance(ar["due_date"], str) else ar["due_date"]
+            if isinstance(due_date, str):
+                due_date = datetime.strptime(due_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            
+            days_overdue = (today - due_date).days
+            amount_paid = ar.get('amount_paid', 0) or 0
+            total_amount = ar.get('amount', 0)
+            
+            if days_overdue > 60 and amount_paid > 0 and amount_paid < total_amount:
+                alerts.append(NotificationAlert(
+                    id=str(uuid.uuid4()),
+                    type="collection_reminder",
+                    priority="high",
+                    title=f"Collection Follow-up: {ar.get('invoice_number')}",
+                    message=f"Partial payment received from {ar.get('customer_name')} but ${(total_amount - amount_paid):,.2f} still outstanding after {days_overdue} days.",
+                    amount=total_amount - amount_paid,
+                    due_date=ar.get('due_date'),
+                    days_overdue=days_overdue,
+                    related_id=ar.get('id'),
+                    related_type="ar",
+                    created_at=today.isoformat()
+                ))
+        except Exception as e:
+            continue
+    
+    # Sort alerts by priority (high first) and days_overdue
+    priority_order = {"high": 0, "medium": 1, "low": 2}
+    alerts.sort(key=lambda x: (priority_order.get(x.priority, 3), -x.days_overdue))
+    
+    # Summary stats
+    high_priority = sum(1 for a in alerts if a.priority == "high")
+    medium_priority = sum(1 for a in alerts if a.priority == "medium")
+    low_priority = sum(1 for a in alerts if a.priority == "low")
+    
+    total_ar_overdue = sum(a.amount for a in alerts if a.type in ["overdue_ar", "collection_reminder"])
+    total_ap_upcoming = sum(a.amount for a in alerts if a.type in ["upcoming_ap", "overdue_ap"])
+    
+    return {
+        "alerts": [a.dict() for a in alerts],
+        "summary": {
+            "total_alerts": len(alerts),
+            "high_priority": high_priority,
+            "medium_priority": medium_priority,
+            "low_priority": low_priority,
+            "total_ar_overdue": total_ar_overdue,
+            "total_ap_upcoming": total_ap_upcoming
+        }
+    }
+
+@router.post("/alerts/{alert_id}/dismiss")
+async def dismiss_alert(
+    alert_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Dismiss an alert (mark as read/acknowledged)"""
+    # Store dismissed alerts in the database
+    dismissed_alert = {
+        "id": str(uuid.uuid4()),
+        "alert_id": alert_id,
+        "user_id": current_user.id,
+        "dismissed_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.dismissed_alerts.insert_one(dismissed_alert)
+    
+    return {"message": "Alert dismissed", "alert_id": alert_id}
