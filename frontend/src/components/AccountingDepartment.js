@@ -472,7 +472,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   };
 
   // Payment functions
-  const openPaymentModal = async (type, item) => {
+  const openPaymentModal = (type, item) => {
     setPaymentType(type);
     setPaymentItem(item);
     setPaymentForm({
@@ -483,8 +483,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     });
     setShowPaymentModal(true);
     
-    // Load payment history
-    await loadPaymentHistory(type, item.id);
+    // Load payment history asynchronously
+    loadPaymentHistory(type, item.id);
   };
 
   const loadPaymentHistory = async (type, itemId) => {
