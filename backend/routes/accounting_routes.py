@@ -542,6 +542,26 @@ async def get_accounting_alerts(
     today = datetime.now(timezone.utc)
     alerts = []
     
+    def parse_due_date(date_val):
+        """Parse due date from various formats"""
+        if date_val is None:
+            return None
+        if isinstance(date_val, datetime):
+            return date_val.replace(tzinfo=timezone.utc) if date_val.tzinfo is None else date_val
+        if isinstance(date_val, str):
+            # Try various formats
+            try:
+                # ISO format with timezone
+                return datetime.fromisoformat(date_val.replace("Z", "+00:00"))
+            except:
+                pass
+            try:
+                # Simple date format YYYY-MM-DD
+                return datetime.strptime(date_val[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            except:
+                pass
+        return None
+    
     # 1. Overdue AR (invoices past due date)
     overdue_ar = await db.accounts_receivable.find({
         "company_id": company_id,
@@ -550,9 +570,9 @@ async def get_accounting_alerts(
     
     for ar in overdue_ar:
         try:
-            due_date = datetime.fromisoformat(ar["due_date"].replace("Z", "+00:00")) if isinstance(ar["due_date"], str) else ar["due_date"]
-            if isinstance(due_date, str):
-                due_date = datetime.strptime(due_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            due_date = parse_due_date(ar.get("due_date"))
+            if not due_date:
+                continue
             
             days_overdue = (today - due_date).days
             
