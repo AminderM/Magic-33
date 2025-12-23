@@ -881,14 +881,30 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <tbody className="divide-y divide-gray-200">
                       {filteredReceivables.map((item, index) => (
                         <tr key={item.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                          <td className="px-4 py-3 font-medium text-blue-600">{item.invoice_number}</td>
+                          <td className="px-4 py-3 font-medium text-blue-600">
+                            <div className="flex items-center gap-1">
+                              {item.invoice_number}
+                              {item.auto_generated && (
+                                <span className="text-xs text-green-600" title="Auto-generated from load">
+                                  <i className="fas fa-link"></i>
+                                </span>
+                              )}
+                            </div>
+                          </td>
                           <td className="px-4 py-3">{item.customer_name}</td>
                           <td className="px-4 py-3 font-semibold text-green-700">${item.amount?.toLocaleString()}</td>
                           <td className="px-4 py-3">{item.due_date ? new Date(item.due_date).toLocaleDateString() : '-'}</td>
                           <td className="px-4 py-3">
                             <Badge className={getStatusBadge(item.status)}>{item.status}</Badge>
                           </td>
-                          <td className="px-4 py-3">{item.load_reference || '-'}</td>
+                          <td className="px-4 py-3">
+                            {item.load_reference ? (
+                              <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                                <i className="fas fa-truck mr-1"></i>
+                                {item.load_reference}
+                              </Badge>
+                            ) : '-'}
+                          </td>
                           <td className="px-4 py-3">
                             <Select value={item.status} onValueChange={(value) => handleStatusChange('ar', item.id, value)}>
                               <SelectTrigger className="h-7 w-[100px] text-xs">
