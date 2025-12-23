@@ -2123,9 +2123,9 @@ class FleetMarketplaceAPITester:
             return None
 
     def test_accounting_department_features(self):
-        """Test Accounting Department AR, AP, and Invoice Generation features"""
+        """Test Accounting Department workflow features as specified in review request"""
         print("\n" + "="*60)
-        print("💰 TESTING ACCOUNTING DEPARTMENT FEATURES")
+        print("💰 TESTING ACCOUNTING DEPARTMENT WORKFLOW FEATURES")
         print("="*60)
         
         # Ensure we have platform admin token with correct credentials
@@ -2134,253 +2134,304 @@ class FleetMarketplaceAPITester:
             if not self.test_platform_admin_login():
                 return False
         
-        # Test 1: Create a new invoice (Accounts Receivable)
-        print("\n📄 Test 1: Create new invoice (Accounts Receivable)...")
-        invoice_data = {
-            "invoice_number": "INV-001",
-            "customer_name": "Test Customer",
-            "customer_email": "test@example.com",
-            "amount": 5000.00,
-            "due_date": "2025-01-15",
-            "load_reference": "LD-12345678",
-            "description": "Freight charge for load"
-        }
+        # Test Feature 1: Link AR/AP to Loads
+        print("\n🔗 FEATURE 1: LINK AR/AP TO LOADS")
+        print("-" * 40)
         
-        create_invoice_success, create_invoice_response = self.run_test(
-            'accounting', 'Create New Invoice', 'POST', 'accounting/receivables', 200, invoice_data
+        # Step 1: Get existing loads
+        print("Step 1: Getting existing loads...")
+        loads_success, loads_response = self.run_test(
+            'accounting', 'Get Existing Loads', 'GET', 'bookings/requests', 200
         )
         
-        created_invoice_id = None
-        if create_invoice_success:
-            receivable = create_invoice_response.get('receivable', {})
-            created_invoice_id = receivable.get('id')
-            print(f"   Created Invoice ID: {created_invoice_id}")
-            print(f"   Invoice Number: {receivable.get('invoice_number')}")
-            print(f"   Amount: ${receivable.get('amount')}")
+        if not loads_success:
+            print("❌ Failed to get existing loads")
+            return False
         
-        # Test 2: List all receivables
-        print("\n📋 Test 2: List all receivables...")
-        list_receivables_success, list_receivables_response = self.run_test(
-            'accounting', 'List All Receivables', 'GET', 'accounting/receivables', 200
-        )
+        loads = loads_response if isinstance(loads_response, list) else []
+        print(f"   Found {len(loads)} existing loads")
         
-        receivables_count = 0
-        if list_receivables_success:
-            receivables = list_receivables_response.get('receivables', [])
-            receivables_count = len(receivables)
-            total_count = list_receivables_response.get('total', 0)
-            print(f"   Found {receivables_count} receivables (total: {total_count})")
+        # Find a load that hasn't been delivered yet
+        undelivered_load = None
+        for load in loads:
+            if load.get('status') != 'delivered':
+                undelivered_load = load
+                break
+        
+        if not undelivered_load:
+            print("   No undelivered loads found, creating a test load...")
+            # Create a test load first
+            test_load_data = {
+                "pickup_location": "123 Test Pickup St, Dallas, TX 75201",
+                "pickup_city": "Dallas",
+                "pickup_state": "TX",
+                "pickup_country": "USA",
+                "delivery_location": "456 Test Delivery Ave, Houston, TX 77001",
+                "delivery_city": "Houston", 
+                "delivery_state": "TX",
+                "delivery_country": "USA",
+                "shipper_name": "Test Shipper Corp",
+                "shipper_address": "789 Shipper Blvd, Dallas, TX 75202",
+                "commodity": "General Freight",
+                "weight": 25000.0,
+                "cubes": 1500.0,
+                "confirmed_rate": 2500.00,
+                "notes": "Test load for accounting workflow testing"
+            }
             
-            # Show details of first few receivables
-            for i, receivable in enumerate(receivables[:3], 1):
-                inv_num = receivable.get('invoice_number', 'N/A')
-                customer = receivable.get('customer_name', 'N/A')
-                amount = receivable.get('amount', 0)
-                status = receivable.get('status', 'N/A')
-                print(f"   {i}. {inv_num} - {customer} - ${amount} ({status})")
-        
-        # Test 3: Update invoice status (using PUT, not PATCH as mentioned in review)
-        update_status_success = False
-        if created_invoice_id:
-            print(f"\n✏️ Test 3: Update invoice status to 'paid'...")
-            status_update_data = {"status": "paid"}
-            
-            update_status_success, update_status_response = self.run_test(
-                'accounting', 'Update Invoice Status to Paid', 'PUT', f'accounting/receivables/{created_invoice_id}', 200, status_update_data
+            create_success, create_response = self.run_test(
+                'accounting', 'Create Test Load', 'POST', 'bookings/from-quote', 200, test_load_data
             )
             
-            if update_status_success:
-                print(f"   Status update message: {update_status_response.get('message')}")
+            if create_success:
+                load_id = create_response.get('load_id')
+                order_number = create_response.get('order_number')
+                print(f"   Created test load: {order_number} (ID: {load_id})")
+                
+                # Get the created load details
+                loads_success, loads_response = self.run_test(
+                    'accounting', 'Get Updated Loads', 'GET', 'bookings/requests', 200
+                )
+                
+                if loads_success:
+                    loads = loads_response if isinstance(loads_response, list) else []
+                    for load in loads:
+                        if load.get('id') == load_id:
+                            undelivered_load = load
+                            break
+            else:
+                print("❌ Failed to create test load")
+                return False
         
-        # Test 4: Create a new bill (Accounts Payable)
-        print("\n📄 Test 4: Create new bill (Accounts Payable)...")
-        bill_data = {
-            "bill_number": "BILL-001",
-            "vendor_name": "ABC Trucking",
-            "vendor_email": "vendor@example.com",
-            "amount": 3000.00,
-            "due_date": "2025-01-20",
-            "description": "Carrier payment",
-            "category": "transportation"
-        }
+        if not undelivered_load:
+            print("❌ No suitable load found for testing")
+            return False
         
-        create_bill_success, create_bill_response = self.run_test(
-            'accounting', 'Create New Bill', 'POST', 'accounting/payables', 200, bill_data
+        load_id = undelivered_load.get('id')
+        order_number = undelivered_load.get('order_number')
+        print(f"   Using load: {order_number} (Status: {undelivered_load.get('status')})")
+        
+        # Step 2: Change load status to "delivered"
+        print(f"Step 2: Changing load {order_number} status to 'delivered'...")
+        status_success, status_response = self.run_test(
+            'accounting', 'Change Load Status to Delivered', 'PATCH', 
+            f'bookings/{load_id}/status?status=delivered', 200
         )
         
-        created_bill_id = None
-        if create_bill_success:
-            payable = create_bill_response.get('payable', {})
-            created_bill_id = payable.get('id')
-            print(f"   Created Bill ID: {created_bill_id}")
-            print(f"   Bill Number: {payable.get('bill_number')}")
-            print(f"   Vendor: {payable.get('vendor_name')}")
-            print(f"   Amount: ${payable.get('amount')}")
+        if not status_success:
+            print("❌ Failed to change load status to delivered")
+            return False
         
-        # Test 5: List all payables
-        print("\n📋 Test 5: List all payables...")
-        list_payables_success, list_payables_response = self.run_test(
-            'accounting', 'List All Payables', 'GET', 'accounting/payables', 200
+        # Step 3: Verify response includes accounting_entries
+        print("Step 3: Verifying accounting entries were created...")
+        accounting_entries = status_response.get('accounting_entries', {})
+        ar_created = accounting_entries.get('ar_created', False)
+        ap_created = accounting_entries.get('ap_created', False)
+        
+        print(f"   AR Created: {ar_created}")
+        print(f"   AP Created: {ap_created}")
+        
+        # Step 4: Verify AR entry was created
+        print("Step 4: Verifying AR entry in receivables...")
+        ar_success, ar_response = self.run_test(
+            'accounting', 'Get Accounts Receivable', 'GET', 'accounting/receivables', 200
         )
         
-        payables_count = 0
-        if list_payables_success:
-            payables = list_payables_response.get('payables', [])
-            payables_count = len(payables)
-            total_count = list_payables_response.get('total', 0)
-            print(f"   Found {payables_count} payables (total: {total_count})")
+        ar_found = False
+        ar_item = None
+        if ar_success:
+            receivables = ar_response.get('receivables', [])
+            print(f"   Found {len(receivables)} receivables")
             
-            # Show details of first few payables
-            for i, payable in enumerate(payables[:3], 1):
-                bill_num = payable.get('bill_number', 'N/A')
-                vendor = payable.get('vendor_name', 'N/A')
-                amount = payable.get('amount', 0)
-                status = payable.get('status', 'N/A')
-                print(f"   {i}. {bill_num} - {vendor} - ${amount} ({status})")
+            for ar in receivables:
+                if ar.get('load_reference') == order_number:
+                    ar_found = True
+                    ar_item = ar
+                    print(f"   ✅ AR entry found: {ar.get('invoice_number')} - ${ar.get('amount')}")
+                    break
         
-        # Test 6: Get summary statistics
-        print("\n📊 Test 6: Get accounting summary statistics...")
-        summary_success, summary_response = self.run_test(
-            'accounting', 'Get Accounting Summary', 'GET', 'accounting/summary', 200
+        # Step 5: Verify AP entry was created  
+        print("Step 5: Verifying AP entry in payables...")
+        ap_success, ap_response = self.run_test(
+            'accounting', 'Get Accounts Payable', 'GET', 'accounting/payables', 200
         )
         
-        if summary_success:
-            ar_data = summary_response.get('accounts_receivable', {})
-            ap_data = summary_response.get('accounts_payable', {})
+        ap_found = False
+        ap_item = None
+        if ap_success:
+            payables = ap_response.get('payables', [])
+            print(f"   Found {len(payables)} payables")
             
-            print(f"   Accounts Receivable Summary:")
-            for status, data in ar_data.items():
-                print(f"     {status}: ${data.get('total', 0)} ({data.get('count', 0)} invoices)")
+            for ap in payables:
+                if ap.get('load_reference') == order_number:
+                    ap_found = True
+                    ap_item = ap
+                    print(f"   ✅ AP entry found: {ap.get('bill_number')} - ${ap.get('amount')}")
+                    break
+        
+        feature1_success = ar_found and ap_found
+        print(f"\n🔗 FEATURE 1 RESULT: {'✅ PASS' if feature1_success else '❌ FAIL'}")
+        
+        # Test Feature 2: Enhanced Analytics
+        print("\n📊 FEATURE 2: ENHANCED ANALYTICS")
+        print("-" * 40)
+        
+        # Test AR data for analytics
+        print("Testing AR data for chart calculations...")
+        ar_analytics_success = ar_success and len(ar_response.get('receivables', [])) > 0
+        if ar_analytics_success:
+            receivables = ar_response.get('receivables', [])
+            total_ar = sum(r.get('amount', 0) for r in receivables)
+            print(f"   ✅ AR data available: {len(receivables)} items, Total: ${total_ar:,.2f}")
+        
+        # Test AP data for analytics
+        print("Testing AP data for chart calculations...")
+        ap_analytics_success = ap_success and len(ap_response.get('payables', [])) > 0
+        if ap_analytics_success:
+            payables = ap_response.get('payables', [])
+            total_ap = sum(p.get('amount', 0) for p in payables)
+            print(f"   ✅ AP data available: {len(payables)} items, Total: ${total_ap:,.2f}")
+        
+        feature2_success = ar_analytics_success and ap_analytics_success
+        print(f"\n📊 FEATURE 2 RESULT: {'✅ PASS' if feature2_success else '❌ FAIL'}")
+        
+        # Test Feature 3: Payment Tracking
+        print("\n💳 FEATURE 3: PAYMENT TRACKING")
+        print("-" * 40)
+        
+        # Find an unpaid AR item (use the one we just created or find another)
+        unpaid_ar = ar_item if ar_item and ar_item.get('status') != 'paid' else None
+        if not unpaid_ar and ar_success:
+            for ar in ar_response.get('receivables', []):
+                if ar.get('status') != 'paid':
+                    unpaid_ar = ar
+                    break
+        
+        ar_payment_success = False
+        if unpaid_ar:
+            ar_id = unpaid_ar.get('id')
+            print(f"Testing AR payment for invoice: {unpaid_ar.get('invoice_number')}")
             
-            print(f"   Accounts Payable Summary:")
-            for status, data in ap_data.items():
-                print(f"     {status}: ${data.get('total', 0)} ({data.get('count', 0)} bills)")
-        
-        # Test 7: Test duplicate invoice number validation
-        print("\n❌ Test 7: Test duplicate invoice number validation...")
-        duplicate_invoice_data = invoice_data.copy()  # Same invoice number as Test 1
-        
-        duplicate_invoice_success, duplicate_invoice_response = self.run_test(
-            'accounting', 'Create Duplicate Invoice Number', 'POST', 'accounting/receivables', 400, duplicate_invoice_data
-        )
-        
-        if duplicate_invoice_success:
-            print("   ✅ Correctly rejected duplicate invoice number")
-        
-        # Test 8: Test duplicate bill number validation
-        print("\n❌ Test 8: Test duplicate bill number validation...")
-        duplicate_bill_data = bill_data.copy()  # Same bill number as Test 4
-        
-        duplicate_bill_success, duplicate_bill_response = self.run_test(
-            'accounting', 'Create Duplicate Bill Number', 'POST', 'accounting/payables', 400, duplicate_bill_data
-        )
-        
-        if duplicate_bill_success:
-            print("   ✅ Correctly rejected duplicate bill number")
-        
-        # Test 9: Test invalid receivable ID update
-        print("\n❌ Test 9: Test invalid receivable ID update...")
-        invalid_update_success, invalid_update_response = self.run_test(
-            'accounting', 'Update Non-existent Receivable', 'PUT', 'accounting/receivables/invalid-id', 404, {"status": "paid"}
-        )
-        
-        if invalid_update_success:
-            print("   ✅ Correctly returned 404 for non-existent receivable")
-        
-        # Test 10: Create additional test data for better summary
-        print("\n📄 Test 10: Create additional test data...")
-        
-        # Create another invoice with different status
-        invoice_data_2 = {
-            "invoice_number": "INV-002",
-            "customer_name": "Another Customer Corp",
-            "customer_email": "customer2@example.com",
-            "amount": 7500.00,
-            "due_date": "2025-01-25",
-            "load_reference": "LD-87654321",
-            "description": "Express delivery service",
-            "status": "overdue"
-        }
-        
-        create_invoice_2_success, create_invoice_2_response = self.run_test(
-            'accounting', 'Create Second Invoice', 'POST', 'accounting/receivables', 200, invoice_data_2
-        )
-        
-        # Create another bill
-        bill_data_2 = {
-            "bill_number": "BILL-002",
-            "vendor_name": "XYZ Logistics",
-            "vendor_email": "billing@xyzlogistics.com",
-            "amount": 4500.00,
-            "due_date": "2025-01-30",
-            "description": "Fuel and maintenance costs",
-            "category": "fuel",
-            "status": "pending"
-        }
-        
-        create_bill_2_success, create_bill_2_response = self.run_test(
-            'accounting', 'Create Second Bill', 'POST', 'accounting/payables', 200, bill_data_2
-        )
-        
-        # Test 11: Get updated summary with multiple entries
-        print("\n📊 Test 11: Get updated accounting summary...")
-        final_summary_success, final_summary_response = self.run_test(
-            'accounting', 'Get Final Accounting Summary', 'GET', 'accounting/summary', 200
-        )
-        
-        if final_summary_success:
-            ar_data = final_summary_response.get('accounts_receivable', {})
-            ap_data = final_summary_response.get('accounts_payable', {})
+            # Record partial payment
+            payment_data = {
+                "amount": 100,
+                "payment_method": "check",
+                "reference_number": "TEST-001"
+            }
             
-            print(f"   Final Accounts Receivable Summary:")
-            total_ar = 0
-            for status, data in ar_data.items():
-                amount = data.get('total', 0)
-                count = data.get('count', 0)
-                total_ar += amount
-                print(f"     {status}: ${amount} ({count} invoices)")
-            print(f"     TOTAL AR: ${total_ar}")
+            payment_success, payment_response = self.run_test(
+                'accounting', 'Record AR Payment', 'POST', 
+                f'accounting/receivables/{ar_id}/payments', 200, payment_data
+            )
             
-            print(f"   Final Accounts Payable Summary:")
-            total_ap = 0
-            for status, data in ap_data.items():
-                amount = data.get('total', 0)
-                count = data.get('count', 0)
-                total_ap += amount
-                print(f"     {status}: ${amount} ({count} bills)")
-            print(f"     TOTAL AP: ${total_ap}")
+            if payment_success:
+                print(f"   ✅ Payment recorded: ${payment_response.get('amount_paid')} paid")
+                print(f"   Status: {payment_response.get('status')}")
+                
+                # Get payment history
+                history_success, history_response = self.run_test(
+                    'accounting', 'Get AR Payment History', 'GET',
+                    f'accounting/receivables/{ar_id}/payments', 200
+                )
+                
+                if history_success:
+                    payments = history_response.get('payments', [])
+                    print(f"   ✅ Payment history: {len(payments)} payments")
+                    ar_payment_success = True
+        
+        # Find an unpaid AP item (use the one we just created or find another)
+        unpaid_ap = ap_item if ap_item and ap_item.get('status') != 'paid' else None
+        if not unpaid_ap and ap_success:
+            for ap in ap_response.get('payables', []):
+                if ap.get('status') != 'paid':
+                    unpaid_ap = ap
+                    break
+        
+        ap_payment_success = False
+        if unpaid_ap:
+            ap_id = unpaid_ap.get('id')
+            print(f"Testing AP payment for bill: {unpaid_ap.get('bill_number')}")
             
-            net_position = total_ar - total_ap
-            print(f"   NET POSITION: ${net_position}")
+            # Record partial payment
+            payment_data = {
+                "amount": 200,
+                "payment_method": "wire",
+                "reference_number": "WIRE-001"
+            }
+            
+            payment_success, payment_response = self.run_test(
+                'accounting', 'Record AP Payment', 'POST',
+                f'accounting/payables/{ap_id}/payments', 200, payment_data
+            )
+            
+            if payment_success:
+                print(f"   ✅ Payment recorded: ${payment_response.get('amount_paid')} paid")
+                print(f"   Status: {payment_response.get('status')}")
+                
+                # Get payment history
+                history_success, history_response = self.run_test(
+                    'accounting', 'Get AP Payment History', 'GET',
+                    f'accounting/payables/{ap_id}/payments', 200
+                )
+                
+                if history_success:
+                    payments = history_response.get('payments', [])
+                    print(f"   ✅ Payment history: {len(payments)} payments")
+                    ap_payment_success = True
         
-        # Summary
-        print(f"\n📋 ACCOUNTING DEPARTMENT TEST SUMMARY:")
-        print(f"   ✅ Create Invoice: {'PASS' if create_invoice_success else 'FAIL'}")
-        print(f"   ✅ List Receivables: {'PASS' if list_receivables_success else 'FAIL'}")
-        print(f"   ✅ Update Invoice Status: {'PASS' if created_invoice_id and update_status_success else 'FAIL'}")
-        print(f"   ✅ Create Bill: {'PASS' if create_bill_success else 'FAIL'}")
-        print(f"   ✅ List Payables: {'PASS' if list_payables_success else 'FAIL'}")
-        print(f"   ✅ Get Summary: {'PASS' if summary_success else 'FAIL'}")
-        print(f"   ✅ Duplicate Validation: {'PASS' if duplicate_invoice_success and duplicate_bill_success else 'FAIL'}")
-        print(f"   ✅ Error Handling: {'PASS' if invalid_update_success else 'FAIL'}")
-        print(f"   ✅ Additional Data: {'PASS' if create_invoice_2_success and create_bill_2_success else 'FAIL'}")
-        print(f"   ✅ Final Summary: {'PASS' if final_summary_success else 'FAIL'}")
+        feature3_success = ar_payment_success and ap_payment_success
+        print(f"\n💳 FEATURE 3 RESULT: {'✅ PASS' if feature3_success else '❌ FAIL'}")
         
-        # Note about PATCH vs PUT discrepancy
-        if update_status_success:
-            print(f"\n📝 NOTE: Review request mentioned PATCH endpoint, but implementation uses PUT")
-            print(f"   PUT /api/accounting/receivables/{{id}} works correctly for status updates")
+        # Test Feature 4: Notifications & Alerts
+        print("\n🔔 FEATURE 4: NOTIFICATIONS & ALERTS")
+        print("-" * 40)
         
-        # Return overall success
-        core_tests_passed = all([
-            create_invoice_success,
-            list_receivables_success,
-            create_bill_success,
-            list_payables_success,
-            summary_success
-        ])
+        alerts_success, alerts_response = self.run_test(
+            'accounting', 'Get Accounting Alerts', 'GET', 'accounting/alerts', 200
+        )
         
-        return core_tests_passed
+        feature4_success = False
+        if alerts_success:
+            alerts = alerts_response.get('alerts', [])
+            summary = alerts_response.get('summary', {})
+            
+            print(f"   Total alerts: {summary.get('total_alerts', 0)}")
+            print(f"   High priority: {summary.get('high_priority', 0)}")
+            print(f"   Medium priority: {summary.get('medium_priority', 0)}")
+            print(f"   Low priority: {summary.get('low_priority', 0)}")
+            
+            # Verify alert structure
+            if alerts:
+                sample_alert = alerts[0]
+                required_fields = ['id', 'type', 'priority', 'title', 'message', 'amount', 'due_date', 'related_id', 'related_type']
+                has_all_fields = all(field in sample_alert for field in required_fields)
+                
+                if has_all_fields:
+                    print(f"   ✅ Alert structure valid")
+                    print(f"   Sample alert: {sample_alert.get('title')} (${sample_alert.get('amount', 0):,.2f})")
+                    feature4_success = True
+                else:
+                    missing_fields = [field for field in required_fields if field not in sample_alert]
+                    print(f"   ❌ Missing alert fields: {missing_fields}")
+            else:
+                print(f"   ✅ No alerts found (system working correctly)")
+                feature4_success = True
+        
+        print(f"\n🔔 FEATURE 4 RESULT: {'✅ PASS' if feature4_success else '❌ FAIL'}")
+        
+        # Overall summary
+        all_features_success = feature1_success and feature2_success and feature3_success and feature4_success
+        
+        print(f"\n{'='*60}")
+        print(f"💰 ACCOUNTING WORKFLOW TEST SUMMARY")
+        print(f"{'='*60}")
+        print(f"Feature 1 - Link AR/AP to Loads: {'✅ PASS' if feature1_success else '❌ FAIL'}")
+        print(f"Feature 2 - Enhanced Analytics: {'✅ PASS' if feature2_success else '❌ FAIL'}")
+        print(f"Feature 3 - Payment Tracking: {'✅ PASS' if feature3_success else '❌ FAIL'}")
+        print(f"Feature 4 - Notifications & Alerts: {'✅ PASS' if feature4_success else '❌ FAIL'}")
+        print(f"Overall Result: {'✅ ALL FEATURES WORKING' if all_features_success else '❌ SOME FEATURES FAILED'}")
+        
+        return all_features_success
 
     def run_all_tests(self):
         """Run all API tests"""
