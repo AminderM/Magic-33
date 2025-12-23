@@ -471,6 +471,86 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     }
   };
 
+  // Payment functions
+  const openPaymentModal = async (type, item) => {
+    setPaymentType(type);
+    setPaymentItem(item);
+    setPaymentForm({
+      amount: '',
+      payment_method: 'check',
+      reference_number: '',
+      notes: ''
+    });
+    setShowPaymentModal(true);
+    
+    // Load payment history
+    await loadPaymentHistory(type, item.id);
+  };
+
+  const loadPaymentHistory = async (type, itemId) => {
+    setLoadingPayments(true);
+    try {
+      const endpoint = type === 'ar' 
+        ? `${BACKEND_URL}/api/accounting/receivables/${itemId}/payments`
+        : `${BACKEND_URL}/api/accounting/payables/${itemId}/payments`;
+      
+      const res = await fetchWithAuth(endpoint);
+      if (res.ok) {
+        const data = await res.json();
+        setPaymentHistory(data.payments || []);
+      }
+    } catch (error) {
+      console.error('Error loading payment history:', error);
+    } finally {
+      setLoadingPayments(false);
+    }
+  };
+
+  const handleRecordPayment = async () => {
+    if (!paymentForm.amount || parseFloat(paymentForm.amount) <= 0) {
+      toast.error('Please enter a valid payment amount');
+      return;
+    }
+
+    try {
+      const endpoint = paymentType === 'ar'
+        ? `${BACKEND_URL}/api/accounting/receivables/${paymentItem.id}/payments`
+        : `${BACKEND_URL}/api/accounting/payables/${paymentItem.id}/payments`;
+
+      const res = await fetchWithAuth(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: parseFloat(paymentForm.amount),
+          payment_method: paymentForm.payment_method,
+          reference_number: paymentForm.reference_number,
+          notes: paymentForm.notes
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(`Payment of $${parseFloat(paymentForm.amount).toLocaleString()} recorded successfully`);
+        
+        // Reset form and reload
+        setPaymentForm({
+          amount: '',
+          payment_method: 'check',
+          reference_number: '',
+          notes: ''
+        });
+        
+        // Reload payment history and data
+        await loadPaymentHistory(paymentType, paymentItem.id);
+        loadData();
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to record payment');
+      }
+    } catch (error) {
+      toast.error('Failed to record payment');
+    }
+  };
+
   const getStatusBadge = (status) => {
     const styles = {
       pending: 'bg-yellow-100 text-yellow-800',
