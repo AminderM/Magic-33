@@ -648,7 +648,7 @@ async def get_accounting_alerts(
         try:
             due_date = parse_due_date(ar.get("due_date"))
             if not due_date:
-                due_date = datetime.strptime(due_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+                continue
             
             days_overdue = (today - due_date).days
             amount_paid = ar.get('amount_paid', 0) or 0
