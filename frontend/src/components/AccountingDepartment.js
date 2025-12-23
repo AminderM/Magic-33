@@ -1476,6 +1476,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Bill #</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Vendor</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Amount</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Paid/Balance</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Due Date</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Category</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Load Ref</th>
@@ -1498,6 +1499,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           </td>
                           <td className="px-4 py-3">{item.vendor_name}</td>
                           <td className="px-4 py-3 font-semibold text-red-700">${item.amount?.toLocaleString()}</td>
+                          <td className="px-4 py-3">
+                            <div className="text-xs">
+                              <div className="text-green-600">Paid: ${(item.amount_paid || 0).toLocaleString()}</div>
+                              <div className="text-red-600">Due: ${((item.amount || 0) - (item.amount_paid || 0)).toLocaleString()}</div>
+                              {/* Mini progress bar */}
+                              <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
+                                <div 
+                                  className="bg-blue-500 h-1 rounded-full"
+                                  style={{ width: `${Math.min(100, ((item.amount_paid || 0) / (item.amount || 1)) * 100)}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          </td>
                           <td className="px-4 py-3">{item.due_date ? new Date(item.due_date).toLocaleDateString() : '-'}</td>
                           <td className="px-4 py-3 capitalize">{item.category || '-'}</td>
                           <td className="px-4 py-3">
@@ -1512,17 +1526,30 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             <Badge className={getStatusBadge(item.status)}>{item.status}</Badge>
                           </td>
                           <td className="px-4 py-3">
-                            <Select value={item.status} onValueChange={(value) => handleStatusChange('ap', item.id, value)}>
-                              <SelectTrigger className="h-7 w-[100px] text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="pending">Pending</SelectItem>
-                                <SelectItem value="overdue">Overdue</SelectItem>
-                                <SelectItem value="partial">Partial</SelectItem>
-                                <SelectItem value="paid">Paid</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            <div className="flex gap-1">
+                              {item.status !== 'paid' && (
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  className="h-7 text-xs text-blue-600 border-blue-300 hover:bg-blue-50"
+                                  onClick={() => openPaymentModal('ap', item)}
+                                >
+                                  <i className="fas fa-dollar-sign mr-1"></i>
+                                  Pay
+                                </Button>
+                              )}
+                              <Select value={item.status} onValueChange={(value) => handleStatusChange('ap', item.id, value)}>
+                                <SelectTrigger className="h-7 w-[90px] text-xs">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="pending">Pending</SelectItem>
+                                  <SelectItem value="overdue">Overdue</SelectItem>
+                                  <SelectItem value="partial">Partial</SelectItem>
+                                  <SelectItem value="paid">Paid</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
                           </td>
                         </tr>
                       ))}
