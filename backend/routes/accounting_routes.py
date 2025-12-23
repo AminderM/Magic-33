@@ -87,6 +87,95 @@ async def create_receivable(
     
     return {"message": "Invoice created successfully", "receivable": receivable}
 
+class PaymentRecord(BaseModel):
+    amount: float
+    payment_method: str = "check"  # check, wire, ach, card, cash
+    reference_number: Optional[str] = None
+    notes: Optional[str] = None
+
+@router.post("/receivables/{receivable_id}/payments")
+async def record_ar_payment(
+    receivable_id: str,
+    payment: PaymentRecord,
+    current_user: User = Depends(get_current_user)
+):
+    """Record a payment for an accounts receivable item"""
+    receivable = await db.accounts_receivable.find_one({
+        "id": receivable_id,
+        "company_id": current_user.id
+    })
+    
+    if not receivable:
+        raise HTTPException(status_code=404, detail="Receivable not found")
+    
+    # Create payment record
+    payment_entry = {
+        "id": str(uuid.uuid4()),
+        "amount": payment.amount,
+        "payment_method": payment.payment_method,
+        "reference_number": payment.reference_number,
+        "notes": payment.notes,
+        "recorded_by": current_user.id,
+        "recorded_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    # Calculate new amount_paid
+    current_paid = receivable.get("amount_paid", 0) or 0
+    new_paid = current_paid + payment.amount
+    total_amount = receivable.get("amount", 0)
+    
+    # Determine new status
+    if new_paid >= total_amount:
+        new_status = "paid"
+    elif new_paid > 0:
+        new_status = "partial"
+    else:
+        new_status = receivable.get("status", "pending")
+    
+    # Update receivable
+    await db.accounts_receivable.update_one(
+        {"id": receivable_id, "company_id": current_user.id},
+        {
+            "$set": {
+                "amount_paid": new_paid,
+                "status": new_status,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            },
+            "$push": {"payments": payment_entry}
+        }
+    )
+    
+    return {
+        "message": "Payment recorded successfully",
+        "payment": payment_entry,
+        "amount_paid": new_paid,
+        "amount_remaining": max(0, total_amount - new_paid),
+        "status": new_status
+    }
+
+@router.get("/receivables/{receivable_id}/payments")
+async def get_ar_payment_history(
+    receivable_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Get payment history for an accounts receivable item"""
+    receivable = await db.accounts_receivable.find_one(
+        {"id": receivable_id, "company_id": current_user.id},
+        {"_id": 0}
+    )
+    
+    if not receivable:
+        raise HTTPException(status_code=404, detail="Receivable not found")
+    
+    return {
+        "receivable_id": receivable_id,
+        "invoice_number": receivable.get("invoice_number"),
+        "total_amount": receivable.get("amount", 0),
+        "amount_paid": receivable.get("amount_paid", 0),
+        "amount_remaining": max(0, (receivable.get("amount", 0) - receivable.get("amount_paid", 0))),
+        "payments": receivable.get("payments", [])
+    }
+
 @router.put("/receivables/{receivable_id}")
 async def update_receivable(
     receivable_id: str,
