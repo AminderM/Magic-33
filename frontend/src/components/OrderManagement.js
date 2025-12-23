@@ -768,7 +768,34 @@ const OrderManagement = () => {
       if (loadsFilters.dateTo && createdDate > new Date(loadsFilters.dateTo + 'T23:59:59')) return false;
     }
     return true;
+  }).sort((a, b) => {
+    // Sort by created_at descending (most recent first)
+    const dateA = new Date(a.created_at || 0);
+    const dateB = new Date(b.created_at || 0);
+    return dateB - dateA;
   });
+
+  // Format date for display (date only)
+  const formatCreationDate = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  // Format time for display (time only)
+  const formatCreationTime = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
 
   // Get unique values for Loads filters
   const uniqueLoadNumbers = [...new Set(orders.map(l => l.order_number).filter(Boolean))];
