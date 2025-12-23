@@ -317,9 +317,27 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     status: 'pending'
   });
 
+  // Alerts state
+  const [alerts, setAlerts] = useState([]);
+  const [alertsSummary, setAlertsSummary] = useState({});
+
   useEffect(() => {
     loadData();
+    loadAlerts();
   }, [fetchWithAuth, BACKEND_URL]);
+
+  const loadAlerts = async () => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/alerts`);
+      if (res.ok) {
+        const data = await res.json();
+        setAlerts(data.alerts || []);
+        setAlertsSummary(data.summary || {});
+      }
+    } catch (error) {
+      console.error('Error loading alerts:', error);
+    }
+  };
 
   const loadData = async () => {
     setLoading(true);
