@@ -1667,6 +1667,146 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Payment Recording Modal */}
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {paymentType === 'ar' ? 'Record Payment Received' : 'Record Payment Made'}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {paymentItem && (
+            <div className="space-y-4">
+              {/* Invoice/Bill Summary */}
+              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">{paymentType === 'ar' ? 'Invoice #' : 'Bill #'}:</span>
+                  <span className="font-medium">{paymentType === 'ar' ? paymentItem.invoice_number : paymentItem.bill_number}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">{paymentType === 'ar' ? 'Customer' : 'Vendor'}:</span>
+                  <span className="font-medium">{paymentType === 'ar' ? paymentItem.customer_name : paymentItem.vendor_name}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total Amount:</span>
+                  <span className="font-bold text-gray-900">${paymentItem.amount?.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Amount Paid:</span>
+                  <span className="font-medium text-green-600">${(paymentItem.amount_paid || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm border-t pt-2">
+                  <span className="text-gray-600">Balance Due:</span>
+                  <span className="font-bold text-red-600">${((paymentItem.amount || 0) - (paymentItem.amount_paid || 0)).toLocaleString()}</span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="mt-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-green-500 h-2 rounded-full transition-all"
+                      style={{ width: `${Math.min(100, ((paymentItem.amount_paid || 0) / (paymentItem.amount || 1)) * 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1 text-right">
+                    {((paymentItem.amount_paid || 0) / (paymentItem.amount || 1) * 100).toFixed(0)}% paid
+                  </p>
+                </div>
+              </div>
+
+              {/* Payment History */}
+              {paymentHistory.length > 0 && (
+                <div className="border rounded-lg">
+                  <div className="p-3 bg-gray-50 border-b">
+                    <h4 className="font-medium text-sm">Payment History</h4>
+                  </div>
+                  <div className="max-h-32 overflow-y-auto">
+                    {paymentHistory.map((payment, idx) => (
+                      <div key={idx} className="p-2 border-b last:border-b-0 text-sm flex justify-between items-center">
+                        <div>
+                          <span className="font-medium text-green-600">${payment.amount?.toLocaleString()}</span>
+                          <span className="text-gray-500 ml-2">via {payment.payment_method}</span>
+                          {payment.reference_number && (
+                            <span className="text-gray-400 ml-2">#{payment.reference_number}</span>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {new Date(payment.recorded_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* New Payment Form */}
+              <div className="space-y-3 border-t pt-4">
+                <h4 className="font-medium text-sm">Record New Payment</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-xs">Amount ($) *</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={paymentForm.amount}
+                      onChange={(e) => setPaymentForm({ ...paymentForm, amount: e.target.value })}
+                      placeholder="0.00"
+                      max={(paymentItem.amount || 0) - (paymentItem.amount_paid || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Payment Method</Label>
+                    <Select 
+                      value={paymentForm.payment_method} 
+                      onValueChange={(v) => setPaymentForm({ ...paymentForm, payment_method: v })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="check">Check</SelectItem>
+                        <SelectItem value="wire">Wire Transfer</SelectItem>
+                        <SelectItem value="ach">ACH</SelectItem>
+                        <SelectItem value="card">Credit Card</SelectItem>
+                        <SelectItem value="cash">Cash</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-xs">Reference Number</Label>
+                  <Input
+                    value={paymentForm.reference_number}
+                    onChange={(e) => setPaymentForm({ ...paymentForm, reference_number: e.target.value })}
+                    placeholder="Check #, Transaction ID, etc."
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs">Notes</Label>
+                  <Input
+                    value={paymentForm.notes}
+                    onChange={(e) => setPaymentForm({ ...paymentForm, notes: e.target.value })}
+                    placeholder="Optional notes"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowPaymentModal(false)}>Cancel</Button>
+            <Button 
+              onClick={handleRecordPayment}
+              className={paymentType === 'ar' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}
+            >
+              <i className="fas fa-check mr-2"></i>
+              Record Payment
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
