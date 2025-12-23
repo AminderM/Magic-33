@@ -122,6 +122,15 @@ const CollectionsChart = ({ receivables }) => {
   );
 };
 
+// Aging Row Component (helper for AgingReport)
+const AgingRow = ({ label, ar, ap, colorClass }) => (
+  <div className={`grid grid-cols-3 gap-4 p-3 ${colorClass} rounded-lg`}>
+    <span className="font-medium">{label}</span>
+    <span className="text-right text-green-700">${ar.toLocaleString()}</span>
+    <span className="text-right text-red-700">${ap.toLocaleString()}</span>
+  </div>
+);
+
 // Aging Report Component
 const AgingReport = ({ receivables, payables }) => {
   const agingData = useMemo(() => {
@@ -149,14 +158,6 @@ const AgingReport = ({ receivables, payables }) => {
       ap: calculateAging(payables)
     };
   }, [receivables, payables]);
-
-  const AgingRow = ({ label, ar, ap, colorClass }) => (
-    <div className={`grid grid-cols-3 gap-4 p-3 ${colorClass} rounded-lg`}>
-      <span className="font-medium">{label}</span>
-      <span className="text-right text-green-700">${ar.toLocaleString()}</span>
-      <span className="text-right text-red-700">${ap.toLocaleString()}</span>
-    </div>
-  );
 
   return (
     <div className="space-y-2">
