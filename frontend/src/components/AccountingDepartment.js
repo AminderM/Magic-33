@@ -1051,6 +1051,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Amount</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Due Date</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Category</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Load Ref</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
                         <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
                       </tr>
@@ -1058,11 +1059,28 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <tbody className="divide-y divide-gray-200">
                       {filteredPayables.map((item, index) => (
                         <tr key={item.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                          <td className="px-4 py-3 font-medium text-blue-600">{item.bill_number}</td>
+                          <td className="px-4 py-3 font-medium text-blue-600">
+                            <div className="flex items-center gap-1">
+                              {item.bill_number}
+                              {item.auto_generated && (
+                                <span className="text-xs text-green-600" title="Auto-generated from load">
+                                  <i className="fas fa-link"></i>
+                                </span>
+                              )}
+                            </div>
+                          </td>
                           <td className="px-4 py-3">{item.vendor_name}</td>
                           <td className="px-4 py-3 font-semibold text-red-700">${item.amount?.toLocaleString()}</td>
                           <td className="px-4 py-3">{item.due_date ? new Date(item.due_date).toLocaleDateString() : '-'}</td>
                           <td className="px-4 py-3 capitalize">{item.category || '-'}</td>
+                          <td className="px-4 py-3">
+                            {item.load_reference ? (
+                              <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                                <i className="fas fa-truck mr-1"></i>
+                                {item.load_reference}
+                              </Badge>
+                            ) : '-'}
+                          </td>
                           <td className="px-4 py-3">
                             <Badge className={getStatusBadge(item.status)}>{item.status}</Badge>
                           </td>
