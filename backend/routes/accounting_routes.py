@@ -549,15 +549,15 @@ async def get_accounting_alerts(
         if isinstance(date_val, datetime):
             return date_val.replace(tzinfo=timezone.utc) if date_val.tzinfo is None else date_val
         if isinstance(date_val, str):
-            # Try various formats
+            # Try simple date format first YYYY-MM-DD
             try:
-                # ISO format with timezone
-                return datetime.fromisoformat(date_val.replace("Z", "+00:00"))
+                return datetime.strptime(date_val[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
             except:
                 pass
+            # Try ISO format with timezone
             try:
-                # Simple date format YYYY-MM-DD
-                return datetime.strptime(date_val[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+                dt = datetime.fromisoformat(date_val.replace("Z", "+00:00"))
+                return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt
             except:
                 pass
         return None
