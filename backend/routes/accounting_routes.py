@@ -602,9 +602,9 @@ async def get_accounting_alerts(
     
     for ap in upcoming_ap:
         try:
-            due_date = datetime.fromisoformat(ap["due_date"].replace("Z", "+00:00")) if isinstance(ap["due_date"], str) else ap["due_date"]
-            if isinstance(due_date, str):
-                due_date = datetime.strptime(due_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            due_date = parse_due_date(ap.get("due_date"))
+            if not due_date:
+                continue
             
             days_until = (due_date - today).days
             
@@ -646,8 +646,8 @@ async def get_accounting_alerts(
     # 3. Collection reminders (AR with partial payment but not fully paid after 60+ days)
     for ar in overdue_ar:
         try:
-            due_date = datetime.fromisoformat(ar["due_date"].replace("Z", "+00:00")) if isinstance(ar["due_date"], str) else ar["due_date"]
-            if isinstance(due_date, str):
+            due_date = parse_due_date(ar.get("due_date"))
+            if not due_date:
                 due_date = datetime.strptime(due_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
             
             days_overdue = (today - due_date).days
