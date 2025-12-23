@@ -469,68 +469,126 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
         {/* Analytics Tab */}
         <TabsContent value="analytics" className="mt-6">
-          <div className="grid grid-cols-2 gap-6">
-            {/* AR Summary */}
+          <div className="space-y-6">
+            {/* Top Row - Summary Cards */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* AR Summary */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <i className="fas fa-arrow-circle-down text-green-600 mr-2"></i>
+                    Accounts Receivable Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
+                      <span className="text-sm font-medium text-yellow-800">Pending</span>
+                      <span className="text-lg font-bold text-yellow-700">${totalARPending.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
+                      <span className="text-sm font-medium text-red-800">Overdue</span>
+                      <span className="text-lg font-bold text-red-700">${totalAROverdue.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                      <span className="text-sm font-medium text-green-800">Paid</span>
+                      <span className="text-lg font-bold text-green-700">${totalARPaid.toLocaleString()}</span>
+                    </div>
+                    <div className="border-t pt-3 mt-3">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold text-gray-700">Total</span>
+                        <span className="text-xl font-bold text-gray-900">${totalAR.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* AP Summary */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <i className="fas fa-arrow-circle-up text-red-600 mr-2"></i>
+                    Accounts Payable Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
+                      <span className="text-sm font-medium text-yellow-800">Pending</span>
+                      <span className="text-lg font-bold text-yellow-700">${totalAPPending.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
+                      <span className="text-sm font-medium text-red-800">Overdue</span>
+                      <span className="text-lg font-bold text-red-700">${totalAPOverdue.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                      <span className="text-sm font-medium text-green-800">Paid</span>
+                      <span className="text-lg font-bold text-green-700">${totalAPPaid.toLocaleString()}</span>
+                    </div>
+                    <div className="border-t pt-3 mt-3">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold text-gray-700">Total</span>
+                        <span className="text-xl font-bold text-gray-900">${totalAP.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Second Row - Charts */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* AR/AP Trend Chart */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <i className="fas fa-chart-line text-blue-600 mr-2"></i>
+                    Cash Flow Trend
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <AccountingTrendChart receivables={receivables} payables={payables} />
+                </CardContent>
+              </Card>
+
+              {/* Collections Performance */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <i className="fas fa-chart-pie text-purple-600 mr-2"></i>
+                    Collections Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CollectionsChart receivables={receivables} />
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Third Row - Aging Report */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center">
-                  <i className="fas fa-arrow-circle-down text-green-600 mr-2"></i>
-                  Accounts Receivable Summary
+                  <i className="fas fa-calendar-alt text-orange-600 mr-2"></i>
+                  Aging Report Summary
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-                    <span className="text-sm font-medium text-yellow-800">Pending</span>
-                    <span className="text-lg font-bold text-yellow-700">${totalARPending.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                    <span className="text-sm font-medium text-red-800">Overdue</span>
-                    <span className="text-lg font-bold text-red-700">${totalAROverdue.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                    <span className="text-sm font-medium text-green-800">Paid</span>
-                    <span className="text-lg font-bold text-green-700">${totalARPaid.toLocaleString()}</span>
-                  </div>
-                  <div className="border-t pt-3 mt-3">
-                    <div className="flex justify-between items-center">
-                      <span className="font-semibold text-gray-700">Total</span>
-                      <span className="text-xl font-bold text-gray-900">${totalAR.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
+                <AgingReport receivables={receivables} payables={payables} />
               </CardContent>
             </Card>
 
-            {/* AP Summary */}
+            {/* Fourth Row - Cash Flow Projection */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center">
-                  <i className="fas fa-arrow-circle-up text-red-600 mr-2"></i>
-                  Accounts Payable Summary
+                  <i className="fas fa-piggy-bank text-teal-600 mr-2"></i>
+                  Cash Flow Projection (Next 30 Days)
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-                    <span className="text-sm font-medium text-yellow-800">Pending</span>
-                    <span className="text-lg font-bold text-yellow-700">${totalAPPending.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                    <span className="text-sm font-medium text-red-800">Overdue</span>
-                    <span className="text-lg font-bold text-red-700">${totalAPOverdue.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                    <span className="text-sm font-medium text-green-800">Paid</span>
-                    <span className="text-lg font-bold text-green-700">${totalAPPaid.toLocaleString()}</span>
-                  </div>
-                  <div className="border-t pt-3 mt-3">
-                    <div className="flex justify-between items-center">
-                      <span className="font-semibold text-gray-700">Total</span>
-                      <span className="text-xl font-bold text-gray-900">${totalAP.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
+                <CashFlowProjection receivables={receivables} payables={payables} />
               </CardContent>
             </Card>
           </div>
