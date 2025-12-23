@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,238 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+
+// ==================== Chart Components ====================
+
+// Cash Flow Trend Chart
+const AccountingTrendChart = ({ receivables, payables }) => {
+  const chartData = useMemo(() => {
+    // Group by month
+    const monthlyData = {};
+    const today = new Date();
+    
+    // Initialize last 6 months
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const key = date.toLocaleString('default', { month: 'short', year: '2-digit' });
+      monthlyData[key] = { month: key, ar: 0, ap: 0, net: 0 };
+    }
+    
+    // Sum AR by month
+    receivables.forEach(r => {
+      const date = new Date(r.created_at);
+      const key = date.toLocaleString('default', { month: 'short', year: '2-digit' });
+      if (monthlyData[key]) {
+        monthlyData[key].ar += r.amount || 0;
+      }
+    });
+    
+    // Sum AP by month
+    payables.forEach(p => {
+      const date = new Date(p.created_at);
+      const key = date.toLocaleString('default', { month: 'short', year: '2-digit' });
+      if (monthlyData[key]) {
+        monthlyData[key].ap += p.amount || 0;
+      }
+    });
+    
+    // Calculate net
+    Object.values(monthlyData).forEach(d => {
+      d.net = d.ar - d.ap;
+    });
+    
+    return Object.values(monthlyData);
+  }, [receivables, payables]);
+
+  return (
+    <div className="h-64">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+          <YAxis tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 12 }} />
+          <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+          <Legend />
+          <Line type="monotone" dataKey="ar" name="Receivables" stroke="#22c55e" strokeWidth={2} dot={{ fill: '#22c55e' }} />
+          <Line type="monotone" dataKey="ap" name="Payables" stroke="#ef4444" strokeWidth={2} dot={{ fill: '#ef4444' }} />
+          <Line type="monotone" dataKey="net" name="Net Cash Flow" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" dot={{ fill: '#3b82f6' }} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// Collections Performance Pie Chart
+const CollectionsChart = ({ receivables }) => {
+  const COLORS = ['#22c55e', '#f59e0b', '#ef4444', '#6b7280'];
+  
+  const pieData = useMemo(() => {
+    const paid = receivables.filter(r => r.status === 'paid').reduce((sum, r) => sum + (r.amount || 0), 0);
+    const pending = receivables.filter(r => r.status === 'pending').reduce((sum, r) => sum + (r.amount || 0), 0);
+    const overdue = receivables.filter(r => r.status === 'overdue').reduce((sum, r) => sum + (r.amount || 0), 0);
+    const partial = receivables.filter(r => r.status === 'partial').reduce((sum, r) => sum + (r.amount || 0), 0);
+    
+    return [
+      { name: 'Paid', value: paid },
+      { name: 'Pending', value: pending },
+      { name: 'Overdue', value: overdue },
+      { name: 'Partial', value: partial }
+    ].filter(d => d.value > 0);
+  }, [receivables]);
+
+  const total = pieData.reduce((sum, d) => sum + d.value, 0);
+  const collectionRate = total > 0 
+    ? ((pieData.find(d => d.name === 'Paid')?.value || 0) / total * 100).toFixed(1) 
+    : 0;
+
+  return (
+    <div className="h-64 relative">
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={pieData}
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={90}
+            paddingAngle={2}
+            dataKey="value"
+          >
+            {pieData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+        <div className="text-2xl font-bold text-gray-900">{collectionRate}%</div>
+        <div className="text-xs text-gray-500">Collection Rate</div>
+      </div>
+    </div>
+  );
+};
+
+// Aging Report Component
+const AgingReport = ({ receivables, payables }) => {
+  const agingData = useMemo(() => {
+    const today = new Date();
+    
+    const calculateAging = (items, dateField = 'due_date') => {
+      const buckets = { current: 0, days30: 0, days60: 0, days90: 0, over90: 0 };
+      
+      items.filter(item => item.status !== 'paid').forEach(item => {
+        const dueDate = new Date(item[dateField]);
+        const daysOverdue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+        
+        if (daysOverdue <= 0) buckets.current += item.amount || 0;
+        else if (daysOverdue <= 30) buckets.days30 += item.amount || 0;
+        else if (daysOverdue <= 60) buckets.days60 += item.amount || 0;
+        else if (daysOverdue <= 90) buckets.days90 += item.amount || 0;
+        else buckets.over90 += item.amount || 0;
+      });
+      
+      return buckets;
+    };
+    
+    return {
+      ar: calculateAging(receivables),
+      ap: calculateAging(payables)
+    };
+  }, [receivables, payables]);
+
+  const AgingRow = ({ label, ar, ap, colorClass }) => (
+    <div className={`grid grid-cols-3 gap-4 p-3 ${colorClass} rounded-lg`}>
+      <span className="font-medium">{label}</span>
+      <span className="text-right text-green-700">${ar.toLocaleString()}</span>
+      <span className="text-right text-red-700">${ap.toLocaleString()}</span>
+    </div>
+  );
+
+  return (
+    <div className="space-y-2">
+      <div className="grid grid-cols-3 gap-4 px-3 py-2 bg-gray-100 rounded-lg font-semibold text-sm">
+        <span>Aging Bucket</span>
+        <span className="text-right text-green-700">AR Outstanding</span>
+        <span className="text-right text-red-700">AP Outstanding</span>
+      </div>
+      <AgingRow label="Current" ar={agingData.ar.current} ap={agingData.ap.current} colorClass="bg-green-50" />
+      <AgingRow label="1-30 Days" ar={agingData.ar.days30} ap={agingData.ap.days30} colorClass="bg-yellow-50" />
+      <AgingRow label="31-60 Days" ar={agingData.ar.days60} ap={agingData.ap.days60} colorClass="bg-orange-50" />
+      <AgingRow label="61-90 Days" ar={agingData.ar.days90} ap={agingData.ap.days90} colorClass="bg-red-50" />
+      <AgingRow label="Over 90 Days" ar={agingData.ar.over90} ap={agingData.ap.over90} colorClass="bg-red-100" />
+    </div>
+  );
+};
+
+// Cash Flow Projection Component
+const CashFlowProjection = ({ receivables, payables }) => {
+  const projectionData = useMemo(() => {
+    const today = new Date();
+    const projections = [];
+    let runningBalance = 0;
+    
+    // Get expected inflows (AR pending/sent) and outflows (AP pending)
+    const expectedInflows = receivables
+      .filter(r => ['pending', 'sent'].includes(r.status))
+      .map(r => ({ date: new Date(r.due_date), amount: r.amount, type: 'inflow', description: r.customer_name }));
+    
+    const expectedOutflows = payables
+      .filter(p => p.status === 'pending')
+      .map(p => ({ date: new Date(p.due_date), amount: p.amount, type: 'outflow', description: p.vendor_name }));
+    
+    // Combine and sort by date
+    const allTransactions = [...expectedInflows, ...expectedOutflows]
+      .filter(t => {
+        const daysDiff = Math.floor((t.date - today) / (1000 * 60 * 60 * 24));
+        return daysDiff >= 0 && daysDiff <= 30;
+      })
+      .sort((a, b) => a.date - b.date);
+    
+    // Generate weekly projections
+    for (let week = 1; week <= 4; week++) {
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() + (week - 1) * 7);
+      const weekEnd = new Date(today);
+      weekEnd.setDate(today.getDate() + week * 7);
+      
+      const weekTransactions = allTransactions.filter(t => t.date >= weekStart && t.date < weekEnd);
+      const inflow = weekTransactions.filter(t => t.type === 'inflow').reduce((sum, t) => sum + t.amount, 0);
+      const outflow = weekTransactions.filter(t => t.type === 'outflow').reduce((sum, t) => sum + t.amount, 0);
+      runningBalance += inflow - outflow;
+      
+      projections.push({
+        week: `Week ${week}`,
+        inflow,
+        outflow,
+        net: inflow - outflow,
+        balance: runningBalance
+      });
+    }
+    
+    return projections;
+  }, [receivables, payables]);
+
+  return (
+    <div className="h-64">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={projectionData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="week" tick={{ fontSize: 12 }} />
+          <YAxis tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 12 }} />
+          <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+          <Legend />
+          <Bar dataKey="inflow" name="Expected Inflow" fill="#22c55e" />
+          <Bar dataKey="outflow" name="Expected Outflow" fill="#ef4444" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// ==================== Main Component ====================
 
 const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [activeTab, setActiveTab] = useState('analytics');
