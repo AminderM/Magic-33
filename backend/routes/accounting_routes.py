@@ -263,6 +263,89 @@ async def create_payable(
     
     return {"message": "Bill created successfully", "payable": payable}
 
+@router.post("/payables/{payable_id}/payments")
+async def record_ap_payment(
+    payable_id: str,
+    payment: PaymentRecord,
+    current_user: User = Depends(get_current_user)
+):
+    """Record a payment for an accounts payable item"""
+    payable = await db.accounts_payable.find_one({
+        "id": payable_id,
+        "company_id": current_user.id
+    })
+    
+    if not payable:
+        raise HTTPException(status_code=404, detail="Payable not found")
+    
+    # Create payment record
+    payment_entry = {
+        "id": str(uuid.uuid4()),
+        "amount": payment.amount,
+        "payment_method": payment.payment_method,
+        "reference_number": payment.reference_number,
+        "notes": payment.notes,
+        "recorded_by": current_user.id,
+        "recorded_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    # Calculate new amount_paid
+    current_paid = payable.get("amount_paid", 0) or 0
+    new_paid = current_paid + payment.amount
+    total_amount = payable.get("amount", 0)
+    
+    # Determine new status
+    if new_paid >= total_amount:
+        new_status = "paid"
+    elif new_paid > 0:
+        new_status = "partial"
+    else:
+        new_status = payable.get("status", "pending")
+    
+    # Update payable
+    await db.accounts_payable.update_one(
+        {"id": payable_id, "company_id": current_user.id},
+        {
+            "$set": {
+                "amount_paid": new_paid,
+                "status": new_status,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            },
+            "$push": {"payments": payment_entry}
+        }
+    )
+    
+    return {
+        "message": "Payment recorded successfully",
+        "payment": payment_entry,
+        "amount_paid": new_paid,
+        "amount_remaining": max(0, total_amount - new_paid),
+        "status": new_status
+    }
+
+@router.get("/payables/{payable_id}/payments")
+async def get_ap_payment_history(
+    payable_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Get payment history for an accounts payable item"""
+    payable = await db.accounts_payable.find_one(
+        {"id": payable_id, "company_id": current_user.id},
+        {"_id": 0}
+    )
+    
+    if not payable:
+        raise HTTPException(status_code=404, detail="Payable not found")
+    
+    return {
+        "payable_id": payable_id,
+        "bill_number": payable.get("bill_number"),
+        "total_amount": payable.get("amount", 0),
+        "amount_paid": payable.get("amount_paid", 0),
+        "amount_remaining": max(0, (payable.get("amount", 0) - payable.get("amount_paid", 0))),
+        "payments": payable.get("payments", [])
+    }
+
 @router.put("/payables/{payable_id}")
 async def update_payable(
     payable_id: str,
