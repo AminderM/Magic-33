@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, File, UploadFile, Backgro
 from models import User, Booking, BookingCreate, DispatchUpdate
 from auth import get_current_user
 from database import db
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import List, Literal, Optional
 from email_service import send_booking_confirmation_emails
 from pydantic import BaseModel
