@@ -251,6 +251,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [showBillModal, setShowBillModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
+  // Payment modal state
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentType, setPaymentType] = useState(null); // 'ar' or 'ap'
+  const [paymentItem, setPaymentItem] = useState(null);
+  const [paymentForm, setPaymentForm] = useState({
+    amount: '',
+    payment_method: 'check',
+    reference_number: '',
+    notes: ''
+  });
+  const [paymentHistory, setPaymentHistory] = useState([]);
+  const [loadingPayments, setLoadingPayments] = useState(false);
+
   // Receipt processing state
   const [receiptFile, setReceiptFile] = useState(null);
   const [receiptPreview, setReceiptPreview] = useState(null);
