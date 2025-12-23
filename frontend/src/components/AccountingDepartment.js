@@ -814,6 +814,95 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         {/* Analytics Tab */}
         <TabsContent value="analytics" className="mt-6">
           <div className="space-y-6">
+            {/* Alerts & Notifications Section */}
+            {alerts.length > 0 && (
+              <Card className="border-orange-200 bg-orange-50/30">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center justify-between">
+                    <div className="flex items-center">
+                      <i className="fas fa-bell text-orange-600 mr-2"></i>
+                      Alerts & Notifications
+                      <Badge className="ml-2 bg-orange-100 text-orange-800">
+                        {alertsSummary.total_alerts || 0}
+                      </Badge>
+                    </div>
+                    <div className="flex gap-2 text-sm">
+                      {alertsSummary.high_priority > 0 && (
+                        <Badge className="bg-red-100 text-red-800">
+                          <i className="fas fa-exclamation-circle mr-1"></i>
+                          {alertsSummary.high_priority} High
+                        </Badge>
+                      )}
+                      {alertsSummary.medium_priority > 0 && (
+                        <Badge className="bg-yellow-100 text-yellow-800">
+                          {alertsSummary.medium_priority} Medium
+                        </Badge>
+                      )}
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {alerts.slice(0, 5).map((alert, idx) => (
+                      <div 
+                        key={idx} 
+                        className={`p-3 rounded-lg flex items-start justify-between ${
+                          alert.priority === 'high' ? 'bg-red-50 border border-red-200' :
+                          alert.priority === 'medium' ? 'bg-yellow-50 border border-yellow-200' :
+                          'bg-gray-50 border border-gray-200'
+                        }`}
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <i className={`fas ${
+                              alert.type === 'overdue_ar' ? 'fa-file-invoice-dollar text-red-500' :
+                              alert.type === 'overdue_ap' ? 'fa-exclamation-triangle text-red-500' :
+                              alert.type === 'upcoming_ap' ? 'fa-clock text-yellow-500' :
+                              'fa-bell text-orange-500'
+                            }`}></i>
+                            <span className="font-medium text-sm">{alert.title}</span>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-1">{alert.message}</p>
+                          <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                            <span>Due: {new Date(alert.due_date).toLocaleDateString()}</span>
+                            {alert.days_overdue > 0 && (
+                              <Badge variant="outline" className="text-xs bg-red-50 text-red-600 border-red-200">
+                                {alert.days_overdue} days overdue
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <div className="text-right ml-4">
+                          <span className={`text-lg font-bold ${
+                            alert.related_type === 'ar' ? 'text-green-700' : 'text-red-700'
+                          }`}>
+                            ${alert.amount?.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                    {alerts.length > 5 && (
+                      <div className="text-center pt-2 text-sm text-gray-500">
+                        <i className="fas fa-ellipsis-h mr-1"></i>
+                        {alerts.length - 5} more alerts
+                      </div>
+                    )}
+                  </div>
+                  {/* Alert Summary */}
+                  <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t">
+                    <div className="text-center p-3 bg-green-50 rounded-lg">
+                      <div className="text-xs text-green-600 font-medium">AR Overdue Total</div>
+                      <div className="text-xl font-bold text-green-700">${(alertsSummary.total_ar_overdue || 0).toLocaleString()}</div>
+                    </div>
+                    <div className="text-center p-3 bg-red-50 rounded-lg">
+                      <div className="text-xs text-red-600 font-medium">AP Due/Overdue Total</div>
+                      <div className="text-xl font-bold text-red-700">${(alertsSummary.total_ap_upcoming || 0).toLocaleString()}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Top Row - Summary Cards */}
             <div className="grid grid-cols-2 gap-6">
               {/* AR Summary */}
