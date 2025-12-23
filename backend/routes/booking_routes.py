@@ -171,13 +171,118 @@ async def update_booking_status(
     if booking["requester_id"] != current_user.id and booking["equipment_owner_id"] != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized to update this booking")
     
+    old_status = booking.get("status", "pending")
+    
     # Update the status
     await db.bookings.update_one(
         {"id": booking_id},
         {"$set": {"status": status}}
     )
     
-    return {"message": "Status updated successfully", "status": status}
+    # Auto-generate AR/AP entries when load is marked as "delivered"
+    ar_created = False
+    ap_created = False
+    if status == "delivered" and old_status != "delivered":
+        ar_created, ap_created = await create_ar_ap_for_load(booking, current_user)
+    
+    response = {"message": "Status updated successfully", "status": status}
+    if ar_created or ap_created:
+        response["accounting_entries"] = {
+            "ar_created": ar_created,
+            "ap_created": ap_created
+        }
+    
+    return response
+
+
+async def create_ar_ap_for_load(booking: dict, current_user: User) -> tuple:
+    """
+    Auto-generate Accounts Receivable and Accounts Payable entries 
+    when a load is marked as delivered.
+    Returns: (ar_created: bool, ap_created: bool)
+    """
+    order_number = booking.get("order_number", "")
+    company_id = current_user.id
+    
+    ar_created = False
+    ap_created = False
+    
+    # Check if AR already exists for this load
+    existing_ar = await db.accounts_receivable.find_one({
+        "load_reference": order_number,
+        "company_id": company_id
+    })
+    
+    # Create Accounts Receivable (Invoice to Customer) if not exists
+    if not existing_ar:
+        customer_rate = booking.get("customer_rate") or booking.get("confirmed_rate") or booking.get("total_cost") or 0
+        if customer_rate > 0:
+            # Calculate due date (30 days from delivery)
+            due_date = (datetime.now(timezone.utc) + timedelta(days=30)).strftime("%Y-%m-%d")
+            
+            ar_entry = {
+                "id": str(uuid.uuid4()),
+                "company_id": company_id,
+                "customer_name": booking.get("shipper_name") or "Customer",
+                "customer_email": "",
+                "invoice_number": f"INV-{order_number}",
+                "amount": float(customer_rate),
+                "amount_paid": 0,
+                "due_date": due_date,
+                "description": f"Freight charges for load {order_number}",
+                "load_reference": order_number,
+                "booking_id": booking.get("id"),
+                "status": "pending",
+                "created_by": current_user.id,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "auto_generated": True
+            }
+            
+            await db.accounts_receivable.insert_one(ar_entry)
+            ar_created = True
+            logger.info(f"Auto-created AR entry for load {order_number}: ${customer_rate}")
+    
+    # Check if AP already exists for this load
+    existing_ap = await db.accounts_payable.find_one({
+        "load_reference": order_number,
+        "company_id": company_id
+    })
+    
+    # Create Accounts Payable (Bill to Carrier) if not exists and carrier is assigned
+    if not existing_ap:
+        carrier_rate = booking.get("confirmed_rate") or booking.get("total_cost") or 0
+        carrier_name = booking.get("assigned_carrier")
+        
+        if carrier_rate > 0 and carrier_name:
+            # Calculate due date (15 days from delivery for carrier payment)
+            due_date = (datetime.now(timezone.utc) + timedelta(days=15)).strftime("%Y-%m-%d")
+            
+            ap_entry = {
+                "id": str(uuid.uuid4()),
+                "company_id": company_id,
+                "vendor_name": carrier_name,
+                "vendor_email": "",
+                "bill_number": f"BILL-{order_number}",
+                "amount": float(carrier_rate),
+                "amount_paid": 0,
+                "due_date": due_date,
+                "description": f"Carrier payment for load {order_number}",
+                "load_reference": order_number,
+                "booking_id": booking.get("id"),
+                "category": "carrier_payment",
+                "status": "pending",
+                "created_by": current_user.id,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+                "auto_generated": True
+            }
+            
+            await db.accounts_payable.insert_one(ap_entry)
+            ap_created = True
+            logger.info(f"Auto-created AP entry for load {order_number}: ${carrier_rate}")
+    
+    return ar_created, ap_created
 
 
 @router.patch("/{booking_id}/dispatch", response_model=dict)
