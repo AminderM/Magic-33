@@ -1184,23 +1184,6 @@ async def parse_receipt(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process receipt: {str(e)}")
-            
-        except ImportError:
-            # Fallback if emergentintegrations not available
-            raise HTTPException(
-                status_code=500, 
-                detail="AI integration not configured. Please install emergentintegrations."
-            )
-        except json.JSONDecodeError as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Failed to parse AI response: {str(e)}"
-            )
-            
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to process receipt: {str(e)}")
 
 
 # ==================== NOTIFICATIONS & ALERTS ====================
