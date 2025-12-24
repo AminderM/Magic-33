@@ -790,58 +790,48 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   };
 
   const submitParsedReceipt = async () => {
-    if (!parsedReceiptData || !receiptType) {
+    if (!parsedReceiptData) {
       toast.error('Please process a receipt first');
       return;
     }
 
     try {
-      const endpoint = receiptType === 'ar' 
-        ? `${BACKEND_URL}/api/accounting/receivables`
-        : `${BACKEND_URL}/api/accounting/payables`;
+      // Always create an expense entry first (goes to Expenses Ledger for approval)
+      const expensePayload = {
+        vendor_name: parsedReceiptData.vendor_name || 'Unknown Vendor',
+        expense_date: parsedReceiptData.expense_date || new Date().toISOString().split('T')[0],
+        amount: parsedReceiptData.amount || 0,
+        category: parsedReceiptData.category || 'other',
+        receipt_number: parsedReceiptData.receipt_number || `RCP-${Date.now()}`,
+        description: parsedReceiptData.description || 'Imported from receipt',
+        payment_method: parsedReceiptData.payment_method || 'card',
+        driver_name: parsedReceiptData.driver_name || null,
+        vehicle_name: parsedReceiptData.vehicle_number || null,
+        line_items: parsedReceiptData.line_items || []
+      };
 
-      const payload = receiptType === 'ar' 
-        ? {
-            customer_name: parsedReceiptData.party_name || 'Unknown Customer',
-            customer_email: parsedReceiptData.email || '',
-            invoice_number: parsedReceiptData.document_number || `INV-${Date.now()}`,
-            amount: parsedReceiptData.amount || 0,
-            due_date: parsedReceiptData.date || new Date().toISOString().split('T')[0],
-            description: parsedReceiptData.description || 'Imported from receipt',
-            load_reference: parsedReceiptData.reference || ''
-          }
-        : {
-            vendor_name: parsedReceiptData.party_name || 'Unknown Vendor',
-            vendor_email: parsedReceiptData.email || '',
-            bill_number: parsedReceiptData.document_number || `BILL-${Date.now()}`,
-            amount: parsedReceiptData.amount || 0,
-            due_date: parsedReceiptData.date || new Date().toISOString().split('T')[0],
-            description: parsedReceiptData.description || 'Imported from receipt',
-            category: parsedReceiptData.category || 'other'
-          };
-
-      const response = await fetchWithAuth(endpoint, {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expenses`, {
         method: 'POST',
-        body: JSON.stringify(payload)
+        body: JSON.stringify(expensePayload)
       });
 
       if (response.ok) {
-        toast.success(`Entry added to ${receiptType === 'ar' ? 'Accounts Receivable' : 'Accounts Payable'}!`);
+        toast.success('Expense added to ledger for approval!');
         // Reset receipt state
         setReceiptFile(null);
         setReceiptPreview(null);
         setParsedReceiptData(null);
         setReceiptType(null);
         loadData();
-        // Switch to the appropriate tab
-        setActiveTab(receiptType === 'ar' ? 'receivables' : 'payables');
+        // Switch to expenses tab
+        setActiveTab('expenses');
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to create entry');
+        toast.error(error.detail || 'Failed to create expense');
       }
     } catch (error) {
       console.error('Error submitting receipt:', error);
-      toast.error('Failed to create entry');
+      toast.error('Failed to create expense');
     }
   };
 
