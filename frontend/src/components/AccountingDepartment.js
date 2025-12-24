@@ -1373,6 +1373,183 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </div>
         </TabsContent>
 
+        {/* Expenses Ledger Tab */}
+        <TabsContent value="expenses" className="mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <CardTitle>Expenses Ledger ({filteredExpenses.length})</CardTitle>
+                  <div className="flex gap-2">
+                    <Badge className="bg-yellow-100 text-yellow-800">
+                      {expensesSummary.pending_count || 0} Pending
+                    </Badge>
+                    <Badge className="bg-green-100 text-green-800">
+                      {expensesSummary.approved_count || 0} Approved
+                    </Badge>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Select value={expenseFilter} onValueChange={setExpenseFilter}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="Filter status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Expenses</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="approved">Approved</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Summary Cards */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div className="text-sm text-yellow-600 font-medium">Pending Approval</div>
+                  <div className="text-2xl font-bold text-yellow-700">${(expensesSummary.pending_total || 0).toLocaleString()}</div>
+                  <div className="text-xs text-yellow-500">{expensesSummary.pending_count || 0} expenses</div>
+                </div>
+                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="text-sm text-green-600 font-medium">Approved (→ AP)</div>
+                  <div className="text-2xl font-bold text-green-700">${(expensesSummary.approved_total || 0).toLocaleString()}</div>
+                  <div className="text-xs text-green-500">{expensesSummary.approved_count || 0} expenses</div>
+                </div>
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200 col-span-2">
+                  <div className="text-sm text-blue-600 font-medium">Workflow</div>
+                  <div className="flex items-center gap-2 mt-2 text-xs">
+                    <Badge className="bg-gray-100">Upload Receipt</Badge>
+                    <i className="fas fa-arrow-right text-gray-400"></i>
+                    <Badge className="bg-yellow-100 text-yellow-800">Pending Review</Badge>
+                    <i className="fas fa-arrow-right text-gray-400"></i>
+                    <Badge className="bg-green-100 text-green-800">Approved</Badge>
+                    <i className="fas fa-arrow-right text-gray-400"></i>
+                    <Badge className="bg-blue-100 text-blue-800">Accounts Payable</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Expenses Table */}
+              {filteredExpenses.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  <i className="fas fa-receipt text-4xl mb-3 text-gray-300"></i>
+                  <p>No expenses found.</p>
+                  <p className="text-sm mt-1">Upload a receipt to create an expense entry.</p>
+                  <Button 
+                    variant="outline" 
+                    className="mt-4"
+                    onClick={() => setActiveTab('receipts')}
+                  >
+                    <i className="fas fa-upload mr-2"></i>
+                    Upload Receipt
+                  </Button>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Vendor</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Category</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Amount</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Receipt #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Links</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {filteredExpenses.map((expense, index) => (
+                        <tr key={expense.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                          <td className="px-4 py-3">
+                            {expense.expense_date ? new Date(expense.expense_date).toLocaleDateString() : '-'}
+                          </td>
+                          <td className="px-4 py-3 font-medium">{expense.vendor_name}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <i className={`fas ${getCategoryIcon(expense.category)} text-gray-500`}></i>
+                              <span className="capitalize">{getCategoryName(expense.category)}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 font-semibold text-red-700">${expense.amount?.toLocaleString()}</td>
+                          <td className="px-4 py-3 text-gray-600">{expense.receipt_number || '-'}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex flex-col gap-1 text-xs">
+                              {expense.load_reference && (
+                                <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                                  <i className="fas fa-truck mr-1"></i>{expense.load_reference}
+                                </Badge>
+                              )}
+                              {expense.driver_name && (
+                                <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                                  <i className="fas fa-user mr-1"></i>{expense.driver_name}
+                                </Badge>
+                              )}
+                              {expense.vehicle_name && (
+                                <Badge variant="outline" className="text-xs bg-gray-100 text-gray-700 border-gray-300">
+                                  <i className="fas fa-truck-pickup mr-1"></i>{expense.vehicle_name}
+                                </Badge>
+                              )}
+                              {!expense.load_reference && !expense.driver_name && !expense.vehicle_name && '-'}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge className={getStatusBadge(expense.status)}>{expense.status}</Badge>
+                          </td>
+                          <td className="px-4 py-3">
+                            {expense.status === 'pending' ? (
+                              <div className="flex gap-1">
+                                <Button 
+                                  size="sm" 
+                                  className="h-7 text-xs bg-green-600 hover:bg-green-700"
+                                  onClick={() => handleApproveExpense(expense.id)}
+                                >
+                                  <i className="fas fa-check mr-1"></i>
+                                  Approve
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  className="h-7 text-xs text-red-600 border-red-300 hover:bg-red-50"
+                                  onClick={() => handleRejectExpense(expense.id)}
+                                >
+                                  <i className="fas fa-times"></i>
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  className="h-7 text-xs text-gray-500"
+                                  onClick={() => handleDeleteExpense(expense.id)}
+                                >
+                                  <i className="fas fa-trash"></i>
+                                </Button>
+                              </div>
+                            ) : expense.status === 'approved' ? (
+                              <div className="text-xs text-green-600">
+                                <i className="fas fa-check-circle mr-1"></i>
+                                {expense.ap_bill_number ? (
+                                  <span>→ {expense.ap_bill_number}</span>
+                                ) : 'Approved'}
+                              </div>
+                            ) : (
+                              <div className="text-xs text-gray-400">
+                                {expense.status === 'rejected' ? 'Rejected' : '-'}
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Accounts Receivable Tab */}
         <TabsContent value="receivables" className="mt-6">
           <Card>
