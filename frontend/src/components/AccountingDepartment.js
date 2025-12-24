@@ -1254,7 +1254,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   <i className="fas fa-file-alt text-purple-600 mr-2"></i>
                   Extracted Data
                 </CardTitle>
-                <p className="text-sm text-gray-600">Review and confirm extracted information</p>
+                <p className="text-sm text-gray-600">Review and confirm before adding to Expenses Ledger</p>
               </CardHeader>
               <CardContent>
                 {!parsedReceiptData ? (
@@ -1264,42 +1264,29 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {/* Suggested Type */}
+                    {/* Category Badge */}
                     <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
-                      <span className="font-medium text-gray-700">Suggested Category:</span>
-                      <Badge className={receiptType === 'ar' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
-                        {receiptType === 'ar' ? '📥 Accounts Receivable' : '📤 Accounts Payable'}
+                      <span className="font-medium text-gray-700">Detected Category:</span>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        <i className={`fas ${getCategoryIcon(parsedReceiptData.category)} mr-1`}></i>
+                        {getCategoryName(parsedReceiptData.category || 'other')}
                       </Badge>
                     </div>
 
-                    {/* Toggle Type */}
-                    <div className="flex gap-2">
-                      <Button
-                        variant={receiptType === 'ar' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setReceiptType('ar')}
-                        className={receiptType === 'ar' ? 'bg-green-600 hover:bg-green-700' : ''}
-                      >
-                        <i className="fas fa-arrow-down mr-1"></i> Receivable
-                      </Button>
-                      <Button
-                        variant={receiptType === 'ap' ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setReceiptType('ap')}
-                        className={receiptType === 'ap' ? 'bg-red-600 hover:bg-red-700' : ''}
-                      >
-                        <i className="fas fa-arrow-up mr-1"></i> Payable
-                      </Button>
+                    {/* Workflow Note */}
+                    <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded flex items-center gap-2">
+                      <i className="fas fa-info-circle"></i>
+                      This expense will be added to the Expenses Ledger for approval before going to Accounts Payable.
                     </div>
 
                     {/* Extracted Fields */}
                     <div className="space-y-3 border-t pt-4">
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <Label className="text-xs text-gray-500">{receiptType === 'ar' ? 'Customer' : 'Vendor'}</Label>
+                          <Label className="text-xs text-gray-500">Vendor Name</Label>
                           <Input 
-                            value={parsedReceiptData.party_name || ''} 
-                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, party_name: e.target.value})}
+                            value={parsedReceiptData.vendor_name || ''} 
+                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, vendor_name: e.target.value})}
                           />
                         </div>
                         <div>
@@ -1309,6 +1296,146 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             value={parsedReceiptData.amount || ''} 
                             onChange={(e) => setParsedReceiptData({...parsedReceiptData, amount: parseFloat(e.target.value)})}
                           />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs text-gray-500">Date</Label>
+                          <Input 
+                            type="date"
+                            value={parsedReceiptData.expense_date || ''} 
+                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, expense_date: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-500">Receipt #</Label>
+                          <Input 
+                            value={parsedReceiptData.receipt_number || ''} 
+                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, receipt_number: e.target.value})}
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs text-gray-500">Category</Label>
+                          <Select 
+                            value={parsedReceiptData.category || 'other'} 
+                            onValueChange={(v) => setParsedReceiptData({...parsedReceiptData, category: v})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="fuel">🛢️ Fuel</SelectItem>
+                              <SelectItem value="repairs_maintenance">🔧 Repairs & Maintenance</SelectItem>
+                              <SelectItem value="tires">🚗 Tires</SelectItem>
+                              <SelectItem value="parts_supplies">⚙️ Parts & Supplies</SelectItem>
+                              <SelectItem value="tolls">🛣️ Tolls</SelectItem>
+                              <SelectItem value="permits_licenses">📋 Permits & Licenses</SelectItem>
+                              <SelectItem value="parking">🅿️ Parking</SelectItem>
+                              <SelectItem value="driver_meals">🍔 Driver Meals</SelectItem>
+                              <SelectItem value="lodging">🏨 Lodging</SelectItem>
+                              <SelectItem value="scale_fees">⚖️ Scale Fees</SelectItem>
+                              <SelectItem value="lumper_fees">📦 Lumper Fees</SelectItem>
+                              <SelectItem value="detention_fees">⏱️ Detention Fees</SelectItem>
+                              <SelectItem value="insurance">🛡️ Insurance</SelectItem>
+                              <SelectItem value="other">📋 Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-500">Payment Method</Label>
+                          <Select 
+                            value={parsedReceiptData.payment_method || 'card'} 
+                            onValueChange={(v) => setParsedReceiptData({...parsedReceiptData, payment_method: v})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="card">Credit Card</SelectItem>
+                              <SelectItem value="fleet_card">Fleet Card</SelectItem>
+                              <SelectItem value="cash">Cash</SelectItem>
+                              <SelectItem value="check">Check</SelectItem>
+                              <SelectItem value="ach">ACH</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-gray-500">Description</Label>
+                        <Input 
+                          value={parsedReceiptData.description || ''} 
+                          onChange={(e) => setParsedReceiptData({...parsedReceiptData, description: e.target.value})}
+                        />
+                      </div>
+
+                      {/* Optional linking fields */}
+                      <div className="border-t pt-3 mt-3">
+                        <Label className="text-xs text-gray-500 mb-2 block">Link to (Optional)</Label>
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <Label className="text-xs text-gray-400">Driver</Label>
+                            <Input 
+                              placeholder="Driver name"
+                              value={parsedReceiptData.driver_name || ''} 
+                              onChange={(e) => setParsedReceiptData({...parsedReceiptData, driver_name: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-400">Vehicle/Truck</Label>
+                            <Input 
+                              placeholder="Vehicle #"
+                              value={parsedReceiptData.vehicle_number || ''} 
+                              onChange={(e) => setParsedReceiptData({...parsedReceiptData, vehicle_number: e.target.value})}
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-400">Load Reference</Label>
+                            <Input 
+                              placeholder="Load #"
+                              value={parsedReceiptData.load_reference || ''} 
+                              onChange={(e) => setParsedReceiptData({...parsedReceiptData, load_reference: e.target.value})}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Fuel specific fields */}
+                      {parsedReceiptData.category === 'fuel' && (parsedReceiptData.gallons || parsedReceiptData.price_per_gallon) && (
+                        <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                          <Label className="text-xs text-yellow-700 font-medium">Fuel Details</Label>
+                          <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
+                            {parsedReceiptData.gallons && (
+                              <div>Gallons: <span className="font-medium">{parsedReceiptData.gallons}</span></div>
+                            )}
+                            {parsedReceiptData.price_per_gallon && (
+                              <div>Price/Gallon: <span className="font-medium">${parsedReceiptData.price_per_gallon}</span></div>
+                            )}
+                            {parsedReceiptData.odometer && (
+                              <div>Odometer: <span className="font-medium">{parsedReceiptData.odometer}</span></div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="flex gap-2 pt-4 border-t">
+                      <Button 
+                        onClick={submitParsedReceipt}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                      >
+                        <i className="fas fa-plus-circle mr-2"></i>
+                        Add to Expenses Ledger
+                      </Button>
+                      <Button variant="outline" onClick={clearReceipt}>
+                        Clear
+                      </Button>
+                    </div>
+                  </div>
+                )}                          />
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
