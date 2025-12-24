@@ -475,6 +475,287 @@ async def get_accounting_summary(current_user: User = Depends(get_current_user))
     }
 
 
+# ==================== EXPENSES LEDGER ====================
+
+@router.get("/expenses")
+async def get_expenses(
+    status: Optional[str] = None,
+    category: Optional[str] = None,
+    current_user: User = Depends(get_current_user)
+):
+    """Get all expenses for the current user's company"""
+    query = {"company_id": current_user.id}
+    
+    if status:
+        query["status"] = status
+    if category:
+        query["category"] = category
+    
+    expenses = await db.expenses.find(
+        query,
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(1000)
+    
+    # Calculate totals
+    pending_total = sum(e.get("amount", 0) for e in expenses if e.get("status") == "pending")
+    approved_total = sum(e.get("amount", 0) for e in expenses if e.get("status") == "approved")
+    
+    return {
+        "expenses": expenses,
+        "summary": {
+            "total_count": len(expenses),
+            "pending_count": sum(1 for e in expenses if e.get("status") == "pending"),
+            "approved_count": sum(1 for e in expenses if e.get("status") == "approved"),
+            "pending_total": pending_total,
+            "approved_total": approved_total
+        }
+    }
+
+@router.post("/expenses")
+async def create_expense(
+    data: ExpenseCreate,
+    current_user: User = Depends(get_current_user)
+):
+    """Create a new expense entry in the ledger"""
+    expense = {
+        "id": str(uuid.uuid4()),
+        "company_id": current_user.id,
+        "vendor_name": data.vendor_name,
+        "expense_date": data.expense_date,
+        "amount": data.amount,
+        "category": data.category if data.category in EXPENSE_CATEGORIES else "other",
+        "receipt_number": data.receipt_number,
+        "description": data.description,
+        "payment_method": data.payment_method,
+        "load_reference": data.load_reference,
+        "driver_id": data.driver_id,
+        "driver_name": data.driver_name,
+        "vehicle_id": data.vehicle_id,
+        "vehicle_name": data.vehicle_name,
+        "line_items": data.line_items or [],
+        "receipt_image_url": data.receipt_image_url,
+        "status": "pending",  # Always starts as pending
+        "created_by": current_user.id,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.expenses.insert_one(expense)
+    expense.pop("_id", None)
+    
+    return {"message": "Expense created successfully", "expense": expense}
+
+@router.get("/expenses/{expense_id}")
+async def get_expense(
+    expense_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Get a single expense by ID"""
+    expense = await db.expenses.find_one(
+        {"id": expense_id, "company_id": current_user.id},
+        {"_id": 0}
+    )
+    
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    
+    return expense
+
+@router.put("/expenses/{expense_id}")
+async def update_expense(
+    expense_id: str,
+    data: ExpenseUpdate,
+    current_user: User = Depends(get_current_user)
+):
+    """Update an expense entry (only if still pending)"""
+    expense = await db.expenses.find_one({
+        "id": expense_id,
+        "company_id": current_user.id
+    })
+    
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    
+    if expense.get("status") != "pending":
+        raise HTTPException(status_code=400, detail="Can only edit pending expenses")
+    
+    update_data = {k: v for k, v in data.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc).isoformat()
+    
+    await db.expenses.update_one(
+        {"id": expense_id, "company_id": current_user.id},
+        {"$set": update_data}
+    )
+    
+    updated_expense = await db.expenses.find_one(
+        {"id": expense_id},
+        {"_id": 0}
+    )
+    
+    return {"message": "Expense updated successfully", "expense": updated_expense}
+
+@router.post("/expenses/{expense_id}/approve")
+async def approve_expense(
+    expense_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Approve an expense and create corresponding AP entry"""
+    expense = await db.expenses.find_one({
+        "id": expense_id,
+        "company_id": current_user.id
+    })
+    
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    
+    if expense.get("status") != "pending":
+        raise HTTPException(status_code=400, detail="Expense is not pending approval")
+    
+    # Generate bill number for AP
+    bill_number = f"EXP-{expense.get('receipt_number', str(uuid.uuid4())[:8].upper())}"
+    
+    # Check if AP already exists
+    existing_ap = await db.accounts_payable.find_one({
+        "expense_id": expense_id,
+        "company_id": current_user.id
+    })
+    
+    if existing_ap:
+        raise HTTPException(status_code=400, detail="AP entry already exists for this expense")
+    
+    # Create AP entry from approved expense
+    ap_entry = {
+        "id": str(uuid.uuid4()),
+        "company_id": current_user.id,
+        "vendor_name": expense.get("vendor_name"),
+        "vendor_email": "",
+        "bill_number": bill_number,
+        "amount": expense.get("amount"),
+        "amount_paid": 0,
+        "due_date": expense.get("expense_date"),  # Due immediately for expenses
+        "description": expense.get("description") or f"{expense.get('category', 'Expense').replace('_', ' ').title()} - {expense.get('vendor_name')}",
+        "category": expense.get("category"),
+        "load_reference": expense.get("load_reference"),
+        "driver_id": expense.get("driver_id"),
+        "driver_name": expense.get("driver_name"),
+        "vehicle_id": expense.get("vehicle_id"),
+        "vehicle_name": expense.get("vehicle_name"),
+        "expense_id": expense_id,  # Link back to expense
+        "status": "pending",
+        "created_by": current_user.id,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "auto_generated": True,
+        "source": "expense_approval"
+    }
+    
+    await db.accounts_payable.insert_one(ap_entry)
+    
+    # Update expense status
+    await db.expenses.update_one(
+        {"id": expense_id, "company_id": current_user.id},
+        {
+            "$set": {
+                "status": "approved",
+                "approved_by": current_user.id,
+                "approved_at": datetime.now(timezone.utc).isoformat(),
+                "ap_id": ap_entry["id"],
+                "ap_bill_number": bill_number
+            }
+        }
+    )
+    
+    return {
+        "message": "Expense approved and AP entry created",
+        "expense_id": expense_id,
+        "ap_entry": {
+            "id": ap_entry["id"],
+            "bill_number": bill_number,
+            "amount": ap_entry["amount"]
+        }
+    }
+
+@router.post("/expenses/{expense_id}/reject")
+async def reject_expense(
+    expense_id: str,
+    reason: Optional[str] = None,
+    current_user: User = Depends(get_current_user)
+):
+    """Reject an expense"""
+    expense = await db.expenses.find_one({
+        "id": expense_id,
+        "company_id": current_user.id
+    })
+    
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    
+    if expense.get("status") != "pending":
+        raise HTTPException(status_code=400, detail="Expense is not pending")
+    
+    await db.expenses.update_one(
+        {"id": expense_id, "company_id": current_user.id},
+        {
+            "$set": {
+                "status": "rejected",
+                "rejected_by": current_user.id,
+                "rejected_at": datetime.now(timezone.utc).isoformat(),
+                "rejection_reason": reason
+            }
+        }
+    )
+    
+    return {"message": "Expense rejected", "expense_id": expense_id}
+
+@router.delete("/expenses/{expense_id}")
+async def delete_expense(
+    expense_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Delete an expense (only if pending)"""
+    expense = await db.expenses.find_one({
+        "id": expense_id,
+        "company_id": current_user.id
+    })
+    
+    if not expense:
+        raise HTTPException(status_code=404, detail="Expense not found")
+    
+    if expense.get("status") != "pending":
+        raise HTTPException(status_code=400, detail="Can only delete pending expenses")
+    
+    await db.expenses.delete_one({"id": expense_id, "company_id": current_user.id})
+    
+    return {"message": "Expense deleted", "expense_id": expense_id}
+
+@router.get("/expense-categories")
+async def get_expense_categories():
+    """Get list of available expense categories"""
+    return {
+        "categories": [
+            {"id": "fuel", "name": "Fuel", "icon": "gas-pump"},
+            {"id": "repairs_maintenance", "name": "Repairs & Maintenance", "icon": "wrench"},
+            {"id": "tires", "name": "Tires", "icon": "circle"},
+            {"id": "parts_supplies", "name": "Parts & Supplies", "icon": "cog"},
+            {"id": "tolls", "name": "Tolls", "icon": "road"},
+            {"id": "permits_licenses", "name": "Permits & Licenses", "icon": "id-card"},
+            {"id": "parking", "name": "Parking", "icon": "parking"},
+            {"id": "driver_meals", "name": "Driver Meals/Per Diem", "icon": "utensils"},
+            {"id": "lodging", "name": "Lodging", "icon": "bed"},
+            {"id": "scale_fees", "name": "Scale/Weigh Station Fees", "icon": "balance-scale"},
+            {"id": "lumper_fees", "name": "Lumper Fees", "icon": "dolly"},
+            {"id": "detention_fees", "name": "Detention Fees", "icon": "clock"},
+            {"id": "insurance", "name": "Insurance", "icon": "shield-alt"},
+            {"id": "registration", "name": "Registration", "icon": "file-alt"},
+            {"id": "cleaning", "name": "Cleaning", "icon": "broom"},
+            {"id": "communication", "name": "Communication", "icon": "phone"},
+            {"id": "office_supplies", "name": "Office Supplies", "icon": "paperclip"},
+            {"id": "professional_services", "name": "Professional Services", "icon": "briefcase"},
+            {"id": "other", "name": "Other", "icon": "ellipsis-h"}
+        ]
+    }
+
+
 # ==================== RECEIPT PARSING ====================
 
 @router.post("/parse-receipt")
