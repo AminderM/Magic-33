@@ -763,7 +763,7 @@ async def parse_receipt(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user)
 ):
-    """Parse receipt image using AI to extract financial data"""
+    """Parse receipt image using AI to extract expense data for trucking operations"""
     try:
         # Read the file
         contents = await file.read()
@@ -780,27 +780,48 @@ async def parse_receipt(
             # Set the Emergent LLM key
             emergent_key = os.environ.get('EMERGENT_LLM_KEY', 'sk-emergent-73b04E1E4779758EfC')
             
-            prompt = """Analyze this receipt/invoice image and extract the following information in JSON format:
+            prompt = """Analyze this receipt/invoice image for a trucking/transport company expense.
+            Extract the following information in JSON format:
             {
-                "party_name": "Name of the vendor/customer/company on the receipt",
+                "vendor_name": "Name of the vendor/business on the receipt",
                 "amount": 0.00,
-                "date": "YYYY-MM-DD",
-                "document_number": "Invoice/Receipt number if visible",
-                "description": "Brief description of items/services",
-                "category": "fuel/maintenance/insurance/tolls/supplies/other",
-                "is_expense": true/false (true if it's a bill/expense to pay, false if it's income/payment received),
-                "email": "Email if visible on receipt",
-                "reference": "Any reference number like PO, Load#, etc."
+                "expense_date": "YYYY-MM-DD",
+                "receipt_number": "Receipt/Invoice number if visible",
+                "description": "Brief description of items/services purchased",
+                "category": "one of: fuel, repairs_maintenance, tires, parts_supplies, tolls, permits_licenses, parking, driver_meals, lodging, scale_fees, lumper_fees, detention_fees, insurance, registration, cleaning, communication, office_supplies, professional_services, other",
+                "payment_method": "cash/card/check/fleet_card/ach/other",
+                "line_items": [
+                    {"description": "item name", "quantity": 1, "unit_price": 0.00, "total": 0.00}
+                ],
+                "gallons": null,
+                "price_per_gallon": null,
+                "odometer": null,
+                "vehicle_number": null,
+                "driver_name": null,
+                "tax_amount": null,
+                "subtotal": null
             }
             
-            Return ONLY valid JSON, no other text. If a field is not found, use null.
-            For amount, extract the total/grand total amount as a number without currency symbols.
-            For is_expense: true means this is a bill/expense (Accounts Payable), false means it's income (Accounts Receivable).
+            IMPORTANT CATEGORY DETECTION:
+            - Gas stations, diesel, fuel stops → "fuel"
+            - Repair shops, mechanics, service centers → "repairs_maintenance"
+            - Tire shops, tire service → "tires"
+            - Auto parts stores → "parts_supplies"
+            - Highway tolls, toll receipts → "tolls"
+            - DOT permits, license fees → "permits_licenses"
+            - Truck stops parking, lot fees → "parking"
+            - Restaurants, fast food, convenience stores (food) → "driver_meals"
+            - Hotels, motels → "lodging"
+            - CAT scales, weigh stations → "scale_fees"
+            
+            Return ONLY valid JSON, no other text.
+            If a field is not found, use null.
+            For amount, extract the TOTAL amount as a number without currency symbols.
             """
             
             response = await chat(
                 model=LlmModel.GPT4O,
-                system_message="You are a receipt/invoice parsing assistant. Extract financial data from images accurately.",
+                system_message="You are an expert at parsing trucking and transportation expense receipts. Extract all relevant financial and operational data accurately.",
                 user_message=prompt,
                 image_urls=[f"data:{content_type};base64,{base64_image}"],
                 api_key=emergent_key
@@ -820,21 +841,31 @@ async def parse_receipt(
             
             parsed_data = json.loads(response_text)
             
-            # Determine suggested type based on is_expense flag
-            suggested_type = 'ap' if parsed_data.get('is_expense', True) else 'ar'
+            # Validate and normalize category
+            category = parsed_data.get('category', 'other')
+            if category not in EXPENSE_CATEGORIES:
+                category = 'other'
             
             return {
                 "parsed_data": {
-                    "party_name": parsed_data.get('party_name'),
+                    "vendor_name": parsed_data.get('vendor_name'),
                     "amount": parsed_data.get('amount'),
-                    "date": parsed_data.get('date'),
-                    "document_number": parsed_data.get('document_number'),
+                    "expense_date": parsed_data.get('expense_date'),
+                    "receipt_number": parsed_data.get('receipt_number'),
                     "description": parsed_data.get('description'),
-                    "category": parsed_data.get('category', 'other'),
-                    "email": parsed_data.get('email'),
-                    "reference": parsed_data.get('reference')
+                    "category": category,
+                    "payment_method": parsed_data.get('payment_method'),
+                    "line_items": parsed_data.get('line_items'),
+                    "gallons": parsed_data.get('gallons'),
+                    "price_per_gallon": parsed_data.get('price_per_gallon'),
+                    "odometer": parsed_data.get('odometer'),
+                    "vehicle_number": parsed_data.get('vehicle_number'),
+                    "driver_name": parsed_data.get('driver_name'),
+                    "tax_amount": parsed_data.get('tax_amount'),
+                    "subtotal": parsed_data.get('subtotal')
                 },
-                "suggested_type": suggested_type
+                "suggested_category": category,
+                "message": "Receipt parsed successfully. Review the data and submit to create expense entry."
             }
             
         except ImportError:
