@@ -345,6 +345,31 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     }
   };
 
+  const loadExpenses = async () => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expenses`);
+      if (res.ok) {
+        const data = await res.json();
+        setExpenses(data.expenses || []);
+        setExpensesSummary(data.summary || {});
+      }
+    } catch (error) {
+      console.error('Error loading expenses:', error);
+    }
+  };
+
+  const loadExpenseCategories = async () => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expense-categories`);
+      if (res.ok) {
+        const data = await res.json();
+        setExpenseCategories(data.categories || []);
+      }
+    } catch (error) {
+      console.error('Error loading expense categories:', error);
+    }
+  };
+
   const loadData = async () => {
     setLoading(true);
     try {
@@ -361,12 +386,22 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
         const apData = await apRes.json();
         setPayables(apData.payables || []);
       }
+      
+      // Load Expenses
+      await loadExpenses();
+      await loadExpenseCategories();
     } catch (error) {
       console.error('Error loading accounting data:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Filtered Expenses
+  const filteredExpenses = expenses.filter(item => {
+    if (expenseFilter === 'all') return true;
+    return item.status === expenseFilter;
+  });
 
   // Filtered AR
   const filteredReceivables = receivables.filter(item => {
