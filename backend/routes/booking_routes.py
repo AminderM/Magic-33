@@ -31,7 +31,8 @@ class LoadFromQuote(BaseModel):
     commodity: str = ""
     weight: Optional[float] = None
     cubes: Optional[float] = None
-    confirmed_rate: float = 0
+    confirmed_rate: float = 0  # Carrier rate (what you pay carrier)
+    customer_rate: Optional[float] = None  # Customer rate (what customer pays, includes margin)
     notes: str = ""
     source_quote_id: Optional[str] = None
     source_quote_number: Optional[str] = None
