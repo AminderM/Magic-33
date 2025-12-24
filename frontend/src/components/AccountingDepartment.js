@@ -363,6 +363,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     }
   };
 
+  const loadIncome = async () => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/income`);
+      if (res.ok) {
+        const data = await res.json();
+        setIncome(data.income || []);
+        setIncomeSummary(data.summary || {});
+      }
+    } catch (error) {
+      console.error('Error loading income:', error);
+    }
+  };
+
   const loadExpenseCategories = async () => {
     try {
       const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expense-categories`);
@@ -395,6 +408,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       // Load Expenses
       await loadExpenses();
       await loadExpenseCategories();
+      
+      // Load Income
+      await loadIncome();
     } catch (error) {
       console.error('Error loading accounting data:', error);
     } finally {
