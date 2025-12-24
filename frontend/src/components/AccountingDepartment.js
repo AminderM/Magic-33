@@ -424,6 +424,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     return item.status === expenseFilter;
   });
 
+  // Filtered Income
+  const filteredIncome = income.filter(item => {
+    if (incomeFilter === 'all') return true;
+    if (incomeFilter === 'fully_paid') return item.status === 'paid';
+    if (incomeFilter === 'partial') return item.status === 'partial';
+    return true;
+  });
+
   // Filtered AR
   const filteredReceivables = receivables.filter(item => {
     if (arFilters.invoiceNumber !== 'all' && item.invoice_number !== arFilters.invoiceNumber) return false;
