@@ -39,6 +39,62 @@ class PayableCreate(BaseModel):
 class StatusUpdate(BaseModel):
     status: str
 
+# Expense Categories for Trucking/Transport industry
+EXPENSE_CATEGORIES = [
+    "fuel",
+    "repairs_maintenance", 
+    "tires",
+    "parts_supplies",
+    "tolls",
+    "permits_licenses",
+    "parking",
+    "driver_meals",
+    "lodging",
+    "scale_fees",
+    "lumper_fees",
+    "detention_fees",
+    "insurance",
+    "registration",
+    "cleaning",
+    "communication",
+    "office_supplies",
+    "professional_services",
+    "other"
+]
+
+class ExpenseCreate(BaseModel):
+    vendor_name: str
+    expense_date: str
+    amount: float
+    category: str = "other"
+    receipt_number: Optional[str] = None
+    description: Optional[str] = None
+    payment_method: Optional[str] = None
+    # Linking options
+    load_reference: Optional[str] = None
+    driver_id: Optional[str] = None
+    driver_name: Optional[str] = None
+    vehicle_id: Optional[str] = None
+    vehicle_name: Optional[str] = None
+    # Line items for detailed receipts
+    line_items: Optional[List[dict]] = None
+    # Receipt image reference
+    receipt_image_url: Optional[str] = None
+
+class ExpenseUpdate(BaseModel):
+    vendor_name: Optional[str] = None
+    expense_date: Optional[str] = None
+    amount: Optional[float] = None
+    category: Optional[str] = None
+    receipt_number: Optional[str] = None
+    description: Optional[str] = None
+    payment_method: Optional[str] = None
+    load_reference: Optional[str] = None
+    driver_id: Optional[str] = None
+    driver_name: Optional[str] = None
+    vehicle_id: Optional[str] = None
+    vehicle_name: Optional[str] = None
+
 # ==================== ACCOUNTS RECEIVABLE ====================
 
 @router.get("/receivables")
