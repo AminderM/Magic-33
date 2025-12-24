@@ -257,6 +257,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [expenseCategories, setExpenseCategories] = useState([]);
   const [expenseFilter, setExpenseFilter] = useState('all'); // 'all', 'pending', 'approved', 'rejected'
 
+  // Income state
+  const [income, setIncome] = useState([]);
+  const [incomeSummary, setIncomeSummary] = useState({});
+  const [incomeFilter, setIncomeFilter] = useState('all'); // 'all', 'fully_paid', 'partial'
+
   // Payment modal state
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentType, setPaymentType] = useState(null); // 'ar' or 'ap'
