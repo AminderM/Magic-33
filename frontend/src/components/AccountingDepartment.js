@@ -1474,6 +1474,154 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </div>
         </TabsContent>
 
+        {/* Income Tab */}
+        <TabsContent value="income" className="mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <CardTitle className="text-green-700">
+                    <i className="fas fa-hand-holding-usd mr-2"></i>
+                    Income ({filteredIncome.length})
+                  </CardTitle>
+                  <div className="flex gap-2">
+                    <Badge className="bg-green-100 text-green-800">
+                      {incomeSummary.fully_paid_count || 0} Fully Paid
+                    </Badge>
+                    <Badge className="bg-yellow-100 text-yellow-800">
+                      {incomeSummary.partial_count || 0} Partial
+                    </Badge>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Select value={incomeFilter} onValueChange={setIncomeFilter}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="Filter" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Income</SelectItem>
+                      <SelectItem value="fully_paid">Fully Paid</SelectItem>
+                      <SelectItem value="partial">Partial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Summary Cards */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="text-sm text-green-600 font-medium">Total Received</div>
+                  <div className="text-2xl font-bold text-green-700">${(incomeSummary.total_received || 0).toLocaleString()}</div>
+                </div>
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="text-sm text-blue-600 font-medium">Total Invoiced</div>
+                  <div className="text-2xl font-bold text-blue-700">${(incomeSummary.total_invoiced || 0).toLocaleString()}</div>
+                </div>
+                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div className="text-sm text-yellow-600 font-medium">Outstanding</div>
+                  <div className="text-2xl font-bold text-yellow-700">${(incomeSummary.total_outstanding || 0).toLocaleString()}</div>
+                </div>
+                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                  <div className="text-sm text-purple-600 font-medium">Collection Rate</div>
+                  <div className="text-2xl font-bold text-purple-700">
+                    {incomeSummary.total_invoiced > 0 
+                      ? ((incomeSummary.total_received / incomeSummary.total_invoiced) * 100).toFixed(1) 
+                      : 0}%
+                  </div>
+                </div>
+              </div>
+
+              {/* Income Table */}
+              {filteredIncome.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  <i className="fas fa-hand-holding-usd text-4xl mb-3 text-gray-300"></i>
+                  <p>No income received yet.</p>
+                  <p className="text-sm mt-1">Record payments in Accounts Receivable to see income here.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-green-50 border-b-2 border-green-200">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Invoice #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Customer</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Invoiced</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Received</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Outstanding</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Load Ref</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Last Payment</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {filteredIncome.map((item, index) => {
+                        const outstanding = (item.amount || 0) - (item.amount_paid || 0);
+                        const paymentPercent = item.amount > 0 ? ((item.amount_paid || 0) / item.amount * 100) : 0;
+                        return (
+                          <tr key={item.id} className={`hover:bg-green-50/50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                            <td className="px-4 py-3 font-medium text-blue-600">
+                              <div className="flex items-center gap-1">
+                                {item.invoice_number}
+                                {item.auto_generated && (
+                                  <span className="text-xs text-green-600" title="Auto-generated from load">
+                                    <i className="fas fa-link"></i>
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">{item.customer_name}</td>
+                            <td className="px-4 py-3 font-medium text-gray-700">${item.amount?.toLocaleString()}</td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-green-700">${(item.amount_paid || 0).toLocaleString()}</span>
+                                {/* Mini progress bar */}
+                                <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                                  <div 
+                                    className="bg-green-500 h-1.5 rounded-full"
+                                    style={{ width: `${Math.min(100, paymentPercent)}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              {outstanding > 0 ? (
+                                <span className="text-yellow-600">${outstanding.toLocaleString()}</span>
+                              ) : (
+                                <span className="text-green-600">$0</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">
+                              {item.load_reference ? (
+                                <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                                  <i className="fas fa-truck mr-1"></i>
+                                  {item.load_reference}
+                                </Badge>
+                              ) : '-'}
+                            </td>
+                            <td className="px-4 py-3">
+                              <Badge className={item.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+                                {item.status === 'paid' ? (
+                                  <><i className="fas fa-check-circle mr-1"></i>Paid</>
+                                ) : (
+                                  <><i className="fas fa-clock mr-1"></i>Partial</>
+                                )}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3 text-xs text-gray-500">
+                              {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Expenses Ledger Tab */}
         <TabsContent value="expenses" className="mt-6">
           <Card>
