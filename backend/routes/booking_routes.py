@@ -64,7 +64,8 @@ async def create_load_from_quote(load_data: LoadFromQuote, current_user: User = 
         "commodity": load_data.commodity,
         "weight": load_data.weight,
         "cubes": load_data.cubes,
-        "confirmed_rate": load_data.confirmed_rate,
+        "confirmed_rate": load_data.confirmed_rate,  # Carrier rate (for AP)
+        "customer_rate": load_data.customer_rate or load_data.confirmed_rate,  # Customer rate (for AR) - defaults to confirmed_rate if not provided
         "total_cost": load_data.confirmed_rate,
         "notes": load_data.notes,
         "source_quote_id": load_data.source_quote_id,
