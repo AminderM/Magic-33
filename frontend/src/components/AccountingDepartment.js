@@ -792,7 +792,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4 bg-white rounded-xl p-1 border border-gray-200 shadow-sm max-w-2xl">
+        <TabsList className="grid w-full grid-cols-5 bg-white rounded-xl p-1 border border-gray-200 shadow-sm max-w-3xl">
           <TabsTrigger value="analytics" className="text-sm">
             <i className="fas fa-chart-line mr-2"></i>
             Analytics
@@ -800,6 +800,10 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           <TabsTrigger value="receipts" className="text-sm">
             <i className="fas fa-receipt mr-2"></i>
             Receipts
+          </TabsTrigger>
+          <TabsTrigger value="expenses" className="text-sm">
+            <i className="fas fa-money-bill-wave mr-2"></i>
+            Expenses
           </TabsTrigger>
           <TabsTrigger value="receivables" className="text-sm">
             <i className="fas fa-file-invoice-dollar mr-2"></i>
