@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 class SeedAdminTester:
-    def __init__(self, base_url="https://dispatch-flows.preview.emergentagent.com"):
+    def __init__(self, base_url="https://freight-finance-2.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.results = []
