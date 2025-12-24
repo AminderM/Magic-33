@@ -475,6 +475,96 @@ async def get_accounting_summary(current_user: User = Depends(get_current_user))
     }
 
 
+# ==================== INCOME (Received AR Payments) ====================
+
+@router.get("/income")
+async def get_income(
+    status: Optional[str] = None,
+    current_user: User = Depends(get_current_user)
+):
+    """Get income entries - AR payments that have been received (paid or partial)"""
+    query = {
+        "company_id": current_user.id,
+        "$or": [
+            {"status": "paid"},
+            {"status": "partial"},
+            {"amount_paid": {"$gt": 0}}
+        ]
+    }
+    
+    if status:
+        if status == "fully_paid":
+            query = {"company_id": current_user.id, "status": "paid"}
+        elif status == "partial":
+            query = {"company_id": current_user.id, "status": "partial"}
+    
+    income_entries = await db.accounts_receivable.find(
+        query,
+        {"_id": 0}
+    ).sort("updated_at", -1).to_list(1000)
+    
+    # Calculate totals
+    total_received = sum(e.get("amount_paid", 0) or 0 for e in income_entries)
+    total_invoiced = sum(e.get("amount", 0) or 0 for e in income_entries)
+    total_outstanding = total_invoiced - total_received
+    fully_paid_count = sum(1 for e in income_entries if e.get("status") == "paid")
+    partial_count = sum(1 for e in income_entries if e.get("status") == "partial")
+    
+    return {
+        "income": income_entries,
+        "summary": {
+            "total_entries": len(income_entries),
+            "fully_paid_count": fully_paid_count,
+            "partial_count": partial_count,
+            "total_received": total_received,
+            "total_invoiced": total_invoiced,
+            "total_outstanding": total_outstanding
+        }
+    }
+
+@router.get("/income/summary")
+async def get_income_summary(
+    current_user: User = Depends(get_current_user)
+):
+    """Get income summary by category/load/customer"""
+    company_id = current_user.id
+    
+    # Get all paid/partial AR entries
+    income_entries = await db.accounts_receivable.find({
+        "company_id": company_id,
+        "$or": [
+            {"status": "paid"},
+            {"status": "partial"},
+            {"amount_paid": {"$gt": 0}}
+        ]
+    }, {"_id": 0}).to_list(1000)
+    
+    # Group by customer
+    by_customer = {}
+    for entry in income_entries:
+        customer = entry.get("customer_name", "Unknown")
+        if customer not in by_customer:
+            by_customer[customer] = {"received": 0, "invoiced": 0, "count": 0}
+        by_customer[customer]["received"] += entry.get("amount_paid", 0) or 0
+        by_customer[customer]["invoiced"] += entry.get("amount", 0) or 0
+        by_customer[customer]["count"] += 1
+    
+    # Group by load (for load-linked invoices)
+    by_load = {}
+    for entry in income_entries:
+        load_ref = entry.get("load_reference")
+        if load_ref:
+            if load_ref not in by_load:
+                by_load[load_ref] = {"received": 0, "invoiced": 0, "customer": entry.get("customer_name")}
+            by_load[load_ref]["received"] += entry.get("amount_paid", 0) or 0
+            by_load[load_ref]["invoiced"] += entry.get("amount", 0) or 0
+    
+    return {
+        "by_customer": by_customer,
+        "by_load": by_load
+    }
+
+
 # ==================== EXPENSES LEDGER ====================
 
 @router.get("/expenses")
