@@ -846,14 +846,17 @@ async def get_expense_categories():
     }
 
 
-# ==================== RECEIPT PARSING ====================
+# ==================== RECEIPT PARSING & AUTO-ENTRY ====================
 
-@router.post("/parse-receipt")
-async def parse_receipt(
+@router.post("/parse-and-create")
+async def parse_and_create_entry(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user)
 ):
-    """Parse receipt image using AI to extract expense data for trucking operations"""
+    """
+    Parse receipt image using AI, determine treatment (Expense vs AP), 
+    and automatically create the appropriate entry with receipt attached.
+    """
     try:
         # Read the file
         contents = await file.read()
@@ -861,67 +864,74 @@ async def parse_receipt(
         
         # Determine mime type
         content_type = file.content_type or 'image/jpeg'
+        file_extension = file.filename.split('.')[-1] if file.filename else 'jpg'
         
-        # Use OpenAI Vision API to parse the receipt
+        # Use OpenAI Vision API to parse the receipt with decision-making
         try:
-            from emergentintegrations.llm.chat import chat, LlmModel
+            from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
             import os
+            import json
+            import re
             
-            # Set the Emergent LLM key
+            # Get the Emergent LLM key
             emergent_key = os.environ.get('EMERGENT_LLM_KEY', 'sk-emergent-73b04E1E4779758EfC')
             
-            prompt = """Analyze this receipt/invoice image for a trucking/transport company expense.
-            Extract the following information in JSON format:
+            # Initialize chat with GPT-4o for vision
+            chat = LlmChat(
+                api_key=emergent_key,
+                session_id=f"receipt-{str(uuid.uuid4())[:8]}",
+                system_message="""You are an expert accountant for a trucking/transport company. 
+                Analyze receipts and invoices to extract financial data and determine the correct accounting treatment.
+                You must decide if this is an EXPENSE (already paid) or ACCOUNTS_PAYABLE (to be paid later)."""
+            ).with_model("openai", "gpt-4o")
+            
+            prompt = """Analyze this receipt/invoice image for a trucking/transport company.
+            
+            Extract information AND determine the accounting treatment:
+            
             {
-                "vendor_name": "Name of the vendor/business on the receipt",
+                "vendor_name": "Name of the vendor/business",
                 "amount": 0.00,
                 "expense_date": "YYYY-MM-DD",
                 "receipt_number": "Receipt/Invoice number if visible",
-                "description": "Brief description of items/services purchased",
-                "category": "one of: fuel, repairs_maintenance, tires, parts_supplies, tolls, permits_licenses, parking, driver_meals, lodging, scale_fees, lumper_fees, detention_fees, insurance, registration, cleaning, communication, office_supplies, professional_services, other",
-                "payment_method": "cash/card/check/fleet_card/ach/other",
-                "line_items": [
-                    {"description": "item name", "quantity": 1, "unit_price": 0.00, "total": 0.00}
-                ],
+                "description": "Brief description of items/services",
+                "category": "fuel/repairs_maintenance/tires/parts_supplies/tolls/permits_licenses/parking/driver_meals/lodging/scale_fees/lumper_fees/detention_fees/insurance/other",
+                "payment_method": "cash/card/check/fleet_card/ach/credit/other",
+                "payment_status": "paid/unpaid/unknown",
+                "treatment": "expense/accounts_payable",
+                "treatment_reason": "Brief explanation of why this treatment was chosen",
+                "line_items": [{"description": "item", "quantity": 1, "unit_price": 0.00, "total": 0.00}],
                 "gallons": null,
                 "price_per_gallon": null,
                 "odometer": null,
                 "vehicle_number": null,
                 "driver_name": null,
-                "tax_amount": null,
-                "subtotal": null
+                "due_date": "YYYY-MM-DD or null if already paid",
+                "tax_amount": null
             }
             
-            IMPORTANT CATEGORY DETECTION:
-            - Gas stations, diesel, fuel stops → "fuel"
-            - Repair shops, mechanics, service centers → "repairs_maintenance"
-            - Tire shops, tire service → "tires"
-            - Auto parts stores → "parts_supplies"
-            - Highway tolls, toll receipts → "tolls"
-            - DOT permits, license fees → "permits_licenses"
-            - Truck stops parking, lot fees → "parking"
-            - Restaurants, fast food, convenience stores (food) → "driver_meals"
-            - Hotels, motels → "lodging"
-            - CAT scales, weigh stations → "scale_fees"
+            TREATMENT DECISION RULES:
+            1. If the receipt shows "PAID", "CASH", "CARD PAYMENT", "THANK YOU" → treatment: "expense"
+            2. If it's an INVOICE with "DUE DATE", "PAYMENT TERMS", "NET 30" → treatment: "accounts_payable"
+            3. Gas station receipts, restaurant receipts, toll receipts → typically "expense" (paid at point of sale)
+            4. Repair shop invoices, parts invoices with balance due → typically "accounts_payable"
+            5. If payment_method is cash/card/fleet_card → "expense"
+            6. If payment_method is credit/terms/invoice → "accounts_payable"
             
-            Return ONLY valid JSON, no other text.
-            If a field is not found, use null.
-            For amount, extract the TOTAL amount as a number without currency symbols.
-            """
+            Return ONLY valid JSON, no other text."""
             
-            response = await chat(
-                model=LlmModel.GPT4O,
-                system_message="You are an expert at parsing trucking and transportation expense receipts. Extract all relevant financial and operational data accurately.",
-                user_message=prompt,
-                image_urls=[f"data:{content_type};base64,{base64_image}"],
-                api_key=emergent_key
+            # Create image content
+            image_content = ImageContent(image_base64=base64_image)
+            
+            # Send message with image
+            user_message = UserMessage(
+                text=prompt,
+                file_contents=[image_content]
             )
             
-            # Parse the response
-            import json
-            import re
+            response = await chat.send_message(user_message)
             
-            # Try to extract JSON from the response
+            # Parse the response
             response_text = response.strip()
             
             # Remove markdown code blocks if present
@@ -936,27 +946,244 @@ async def parse_receipt(
             if category not in EXPENSE_CATEGORIES:
                 category = 'other'
             
-            return {
-                "parsed_data": {
-                    "vendor_name": parsed_data.get('vendor_name'),
-                    "amount": parsed_data.get('amount'),
-                    "expense_date": parsed_data.get('expense_date'),
+            # Determine treatment
+            treatment = parsed_data.get('treatment', 'expense').lower()
+            if treatment not in ['expense', 'accounts_payable']:
+                # Default based on payment method
+                payment_method = parsed_data.get('payment_method', '').lower()
+                if payment_method in ['cash', 'card', 'fleet_card', 'debit']:
+                    treatment = 'expense'
+                else:
+                    treatment = 'accounts_payable'
+            
+            # Store the receipt image
+            receipt_id = str(uuid.uuid4())
+            receipt_record = {
+                "id": receipt_id,
+                "company_id": current_user.id,
+                "filename": file.filename or f"receipt_{receipt_id}.{file_extension}",
+                "content_type": content_type,
+                "image_base64": base64_image,
+                "uploaded_at": datetime.now(timezone.utc).isoformat(),
+                "uploaded_by": current_user.id
+            }
+            await db.receipt_images.insert_one(receipt_record)
+            
+            # Create the appropriate entry based on AI decision
+            entry_created = None
+            entry_type = None
+            
+            if treatment == 'expense':
+                # Create Expense entry (for already paid items)
+                expense_entry = {
+                    "id": str(uuid.uuid4()),
+                    "company_id": current_user.id,
+                    "vendor_name": parsed_data.get('vendor_name') or 'Unknown Vendor',
+                    "expense_date": parsed_data.get('expense_date') or datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                    "amount": parsed_data.get('amount') or 0,
+                    "category": category,
                     "receipt_number": parsed_data.get('receipt_number'),
                     "description": parsed_data.get('description'),
-                    "category": category,
                     "payment_method": parsed_data.get('payment_method'),
-                    "line_items": parsed_data.get('line_items'),
-                    "gallons": parsed_data.get('gallons'),
-                    "price_per_gallon": parsed_data.get('price_per_gallon'),
-                    "odometer": parsed_data.get('odometer'),
-                    "vehicle_number": parsed_data.get('vehicle_number'),
                     "driver_name": parsed_data.get('driver_name'),
-                    "tax_amount": parsed_data.get('tax_amount'),
-                    "subtotal": parsed_data.get('subtotal')
+                    "vehicle_name": parsed_data.get('vehicle_number'),
+                    "line_items": parsed_data.get('line_items') or [],
+                    "receipt_id": receipt_id,
+                    "receipt_image_url": f"/api/accounting/receipts/{receipt_id}/image",
+                    "status": "pending",  # Goes to expense ledger for approval
+                    "ai_treatment": treatment,
+                    "ai_treatment_reason": parsed_data.get('treatment_reason'),
+                    "created_by": current_user.id,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+                await db.expenses.insert_one(expense_entry)
+                entry_created = expense_entry
+                entry_type = "expense"
+                
+            else:
+                # Create Accounts Payable entry (for unpaid invoices)
+                bill_number = f"BILL-{parsed_data.get('receipt_number') or str(uuid.uuid4())[:8].upper()}"
+                due_date = parsed_data.get('due_date') or (datetime.now(timezone.utc) + timedelta(days=30)).strftime("%Y-%m-%d")
+                
+                ap_entry = {
+                    "id": str(uuid.uuid4()),
+                    "company_id": current_user.id,
+                    "vendor_name": parsed_data.get('vendor_name') or 'Unknown Vendor',
+                    "vendor_email": "",
+                    "bill_number": bill_number,
+                    "amount": parsed_data.get('amount') or 0,
+                    "amount_paid": 0,
+                    "due_date": due_date,
+                    "description": parsed_data.get('description') or f"{category.replace('_', ' ').title()} - {parsed_data.get('vendor_name')}",
+                    "category": category,
+                    "receipt_id": receipt_id,
+                    "receipt_image_url": f"/api/accounting/receipts/{receipt_id}/image",
+                    "status": "pending",
+                    "ai_treatment": treatment,
+                    "ai_treatment_reason": parsed_data.get('treatment_reason'),
+                    "created_by": current_user.id,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "auto_generated": True,
+                    "source": "receipt_ai"
+                }
+                await db.accounts_payable.insert_one(ap_entry)
+                entry_created = ap_entry
+                entry_type = "accounts_payable"
+            
+            # Remove _id from response
+            if entry_created:
+                entry_created.pop("_id", None)
+            
+            return {
+                "success": True,
+                "parsed_data": parsed_data,
+                "ai_decision": {
+                    "treatment": treatment,
+                    "reason": parsed_data.get('treatment_reason', 'Based on payment indicators on receipt'),
+                    "entry_type": entry_type
                 },
-                "suggested_category": category,
-                "message": "Receipt parsed successfully. Review the data and submit to create expense entry."
+                "entry_created": entry_created,
+                "receipt_id": receipt_id,
+                "receipt_url": f"/api/accounting/receipts/{receipt_id}/image",
+                "message": f"Receipt processed and {'Expense' if treatment == 'expense' else 'AP Bill'} entry created successfully!"
             }
+            
+        except ImportError as e:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"AI integration not configured: {str(e)}"
+            )
+        except json.JSONDecodeError as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to parse AI response: {str(e)}"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process receipt: {str(e)}")
+
+
+@router.get("/receipts/{receipt_id}/image")
+async def get_receipt_image(
+    receipt_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Get receipt image by ID"""
+    from fastapi.responses import Response
+    
+    receipt = await db.receipt_images.find_one({
+        "id": receipt_id,
+        "company_id": current_user.id
+    })
+    
+    if not receipt:
+        raise HTTPException(status_code=404, detail="Receipt image not found")
+    
+    image_data = base64.b64decode(receipt.get("image_base64", ""))
+    content_type = receipt.get("content_type", "image/jpeg")
+    
+    return Response(content=image_data, media_type=content_type)
+
+
+@router.post("/parse-receipt")
+async def parse_receipt(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    """Parse receipt image using AI to extract expense data (preview only, no entry created)"""
+    try:
+        # Read the file
+        contents = await file.read()
+        base64_image = base64.b64encode(contents).decode('utf-8')
+        
+        # Determine mime type
+        content_type = file.content_type or 'image/jpeg'
+        
+        # Use OpenAI Vision API to parse the receipt
+        try:
+            from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+            import os
+            import json
+            import re
+            
+            # Get the Emergent LLM key
+            emergent_key = os.environ.get('EMERGENT_LLM_KEY', 'sk-emergent-73b04E1E4779758EfC')
+            
+            # Initialize chat with GPT-4o for vision
+            chat = LlmChat(
+                api_key=emergent_key,
+                session_id=f"receipt-preview-{str(uuid.uuid4())[:8]}",
+                system_message="You are an expert at parsing trucking and transportation expense receipts."
+            ).with_model("openai", "gpt-4o")
+            
+            prompt = """Analyze this receipt/invoice image for a trucking/transport company.
+            Extract the following information in JSON format:
+            {
+                "vendor_name": "Name of the vendor/business on the receipt",
+                "amount": 0.00,
+                "expense_date": "YYYY-MM-DD",
+                "receipt_number": "Receipt/Invoice number if visible",
+                "description": "Brief description of items/services purchased",
+                "category": "fuel/repairs_maintenance/tires/parts_supplies/tolls/permits_licenses/parking/driver_meals/lodging/scale_fees/lumper_fees/detention_fees/insurance/other",
+                "payment_method": "cash/card/check/fleet_card/ach/credit/other",
+                "payment_status": "paid/unpaid",
+                "treatment": "expense/accounts_payable",
+                "treatment_reason": "Why this treatment was chosen",
+                "line_items": [{"description": "item", "quantity": 1, "unit_price": 0.00, "total": 0.00}],
+                "gallons": null,
+                "price_per_gallon": null,
+                "vehicle_number": null,
+                "driver_name": null,
+                "due_date": null
+            }
+            
+            TREATMENT RULES:
+            - "PAID", cash/card receipts → treatment: "expense"
+            - "INVOICE", "DUE DATE", "NET 30" → treatment: "accounts_payable"
+            
+            Return ONLY valid JSON."""
+            
+            # Create image content and send
+            image_content = ImageContent(image_base64=base64_image)
+            user_message = UserMessage(text=prompt, file_contents=[image_content])
+            response = await chat.send_message(user_message)
+            
+            # Parse response
+            response_text = response.strip()
+            if response_text.startswith('```'):
+                response_text = re.sub(r'^```(?:json)?\s*', '', response_text)
+                response_text = re.sub(r'\s*```$', '', response_text)
+            
+            parsed_data = json.loads(response_text)
+            
+            # Validate category
+            category = parsed_data.get('category', 'other')
+            if category not in EXPENSE_CATEGORIES:
+                category = 'other'
+            parsed_data['category'] = category
+            
+            return {
+                "parsed_data": parsed_data,
+                "ai_decision": {
+                    "treatment": parsed_data.get('treatment', 'expense'),
+                    "reason": parsed_data.get('treatment_reason', 'Based on receipt analysis')
+                },
+                "message": "Receipt parsed. Review and confirm to create entry."
+            }
+            
+        except ImportError as e:
+            raise HTTPException(status_code=500, detail=f"AI integration error: {str(e)}")
+        except json.JSONDecodeError as e:
+            raise HTTPException(status_code=500, detail=f"Failed to parse AI response: {str(e)}")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process receipt: {str(e)}")
             
         except ImportError:
             # Fallback if emergentintegrations not available
