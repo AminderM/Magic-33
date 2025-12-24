@@ -610,6 +610,116 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     }
   };
 
+  // Expense functions
+  const handleApproveExpense = async (expenseId) => {
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expenses/${expenseId}/approve`, {
+        method: 'POST'
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        toast.success(`Expense approved! AP Bill ${data.ap_entry.bill_number} created.`);
+        loadData(); // Reload all data
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to approve expense');
+      }
+    } catch (error) {
+      toast.error('Failed to approve expense');
+    }
+  };
+
+  const handleRejectExpense = async (expenseId) => {
+    if (!window.confirm('Are you sure you want to reject this expense?')) return;
+    
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expenses/${expenseId}/reject`, {
+        method: 'POST'
+      });
+      
+      if (res.ok) {
+        toast.success('Expense rejected');
+        loadExpenses();
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to reject expense');
+      }
+    } catch (error) {
+      toast.error('Failed to reject expense');
+    }
+  };
+
+  const handleDeleteExpense = async (expenseId) => {
+    if (!window.confirm('Are you sure you want to delete this expense?')) return;
+    
+    try {
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expenses/${expenseId}`, {
+        method: 'DELETE'
+      });
+      
+      if (res.ok) {
+        toast.success('Expense deleted');
+        loadExpenses();
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to delete expense');
+      }
+    } catch (error) {
+      toast.error('Failed to delete expense');
+    }
+  };
+
+  const getCategoryIcon = (category) => {
+    const icons = {
+      fuel: 'fa-gas-pump',
+      repairs_maintenance: 'fa-wrench',
+      tires: 'fa-circle',
+      parts_supplies: 'fa-cog',
+      tolls: 'fa-road',
+      permits_licenses: 'fa-id-card',
+      parking: 'fa-parking',
+      driver_meals: 'fa-utensils',
+      lodging: 'fa-bed',
+      scale_fees: 'fa-balance-scale',
+      lumper_fees: 'fa-dolly',
+      detention_fees: 'fa-clock',
+      insurance: 'fa-shield-alt',
+      registration: 'fa-file-alt',
+      cleaning: 'fa-broom',
+      communication: 'fa-phone',
+      office_supplies: 'fa-paperclip',
+      professional_services: 'fa-briefcase',
+      other: 'fa-ellipsis-h'
+    };
+    return icons[category] || 'fa-receipt';
+  };
+
+  const getCategoryName = (category) => {
+    const names = {
+      fuel: 'Fuel',
+      repairs_maintenance: 'Repairs & Maintenance',
+      tires: 'Tires',
+      parts_supplies: 'Parts & Supplies',
+      tolls: 'Tolls',
+      permits_licenses: 'Permits & Licenses',
+      parking: 'Parking',
+      driver_meals: 'Driver Meals',
+      lodging: 'Lodging',
+      scale_fees: 'Scale Fees',
+      lumper_fees: 'Lumper Fees',
+      detention_fees: 'Detention Fees',
+      insurance: 'Insurance',
+      registration: 'Registration',
+      cleaning: 'Cleaning',
+      communication: 'Communication',
+      office_supplies: 'Office Supplies',
+      professional_services: 'Professional Services',
+      other: 'Other'
+    };
+    return names[category] || category;
+  };
+
   const getStatusBadge = (status) => {
     const styles = {
       pending: 'bg-yellow-100 text-yellow-800',
@@ -617,7 +727,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       overdue: 'bg-red-100 text-red-800',
       paid: 'bg-green-100 text-green-800',
       partial: 'bg-orange-100 text-orange-800',
-      cancelled: 'bg-gray-100 text-gray-800'
+      cancelled: 'bg-gray-100 text-gray-800',
+      approved: 'bg-green-100 text-green-800',
+      rejected: 'bg-red-100 text-red-800'
     };
     return styles[status] || 'bg-gray-100 text-gray-800';
   };
