@@ -1435,65 +1435,6 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       </Button>
                     </div>
                   </div>
-                )}                          />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <Label className="text-xs text-gray-500">Date</Label>
-                          <Input 
-                            type="date"
-                            value={parsedReceiptData.date || ''} 
-                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, date: e.target.value})}
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-xs text-gray-500">Document #</Label>
-                          <Input 
-                            value={parsedReceiptData.document_number || ''} 
-                            onChange={(e) => setParsedReceiptData({...parsedReceiptData, document_number: e.target.value})}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Label className="text-xs text-gray-500">Description</Label>
-                        <Input 
-                          value={parsedReceiptData.description || ''} 
-                          onChange={(e) => setParsedReceiptData({...parsedReceiptData, description: e.target.value})}
-                        />
-                      </div>
-                      {receiptType === 'ap' && (
-                        <div>
-                          <Label className="text-xs text-gray-500">Category</Label>
-                          <Select 
-                            value={parsedReceiptData.category || 'other'} 
-                            onValueChange={(value) => setParsedReceiptData({...parsedReceiptData, category: value})}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="fuel">Fuel</SelectItem>
-                              <SelectItem value="maintenance">Maintenance</SelectItem>
-                              <SelectItem value="insurance">Insurance</SelectItem>
-                              <SelectItem value="tolls">Tolls</SelectItem>
-                              <SelectItem value="supplies">Supplies</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Submit Button */}
-                    <Button 
-                      onClick={submitParsedReceipt} 
-                      className={`w-full ${receiptType === 'ar' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
-                    >
-                      <i className={`fas ${receiptType === 'ar' ? 'fa-file-invoice-dollar' : 'fa-file-invoice'} mr-2`}></i>
-                      Add to {receiptType === 'ar' ? 'Accounts Receivable' : 'Accounts Payable'}
-                    </Button>
-                  </div>
                 )}
               </CardContent>
             </Card>
