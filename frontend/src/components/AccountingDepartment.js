@@ -773,6 +773,18 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     return styles[status] || 'bg-gray-100 text-gray-800';
   };
 
+  // Get display text for AR status
+  const getARStatusLabel = (status) => {
+    const labels = {
+      pending: 'Pending',
+      sent: 'Sent',
+      overdue: 'Overdue',
+      partial: 'Partial Payment',
+      paid: 'Fully Received'
+    };
+    return labels[status] || status;
+  };
+
   // Receipt processing functions
   const handleReceiptUpload = (e) => {
     const file = e.target.files[0];
