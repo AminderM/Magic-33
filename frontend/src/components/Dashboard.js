@@ -121,7 +121,7 @@ const Dashboard = () => {
                   Company
                   <i className="fas fa-chevron-down ml-2"></i>
                 </Button>
-                <div className="absolute right-0 mt-2 w-56 bg-white text-gray-900 rounded-xl shadow-lg border border-gray-200 py-1 z-50 hidden group-hover:block">
+                <div className="absolute right-0 mt-2 w-56 bg-card text-foreground rounded-xl shadow-lg border border-border py-1 z-50 hidden group-hover:block">
                   <button
                     onClick={() => navigate('/apps')}
                     className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
