@@ -198,7 +198,7 @@ const Dashboard = () => {
               <Card className="bg-card rounded-2xl shadow-sm border border-border">
                 <CardContent className="p-6">
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-gray-100 p-1 rounded-xl`}>
+                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-muted p-1 rounded-xl`}>
                     {showAdminTabs && (
                       <TabsTrigger value="analytics" data-testid="analytics-tab">
                         <i className="fas fa-chart-bar mr-2"></i>
