@@ -90,9 +90,9 @@ const Dashboard = () => {
   }, [user, BACKEND_URL, fetchWithAuth]);
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="bg-card border-b border-border flex-shrink-0 shadow-sm">
+      <div className="bg-white border-b border-gray-200 flex-shrink-0 shadow-sm">
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-6">
@@ -121,7 +121,7 @@ const Dashboard = () => {
                   Company
                   <i className="fas fa-chevron-down ml-2"></i>
                 </Button>
-                <div className="absolute right-0 mt-2 w-56 bg-card text-foreground rounded-xl shadow-lg border border-border py-1 z-50 hidden group-hover:block">
+                <div className="absolute right-0 mt-2 w-56 bg-white text-gray-900 rounded-xl shadow-lg border border-gray-200 py-1 z-50 hidden group-hover:block">
                   <button
                     onClick={() => navigate('/apps')}
                     className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
@@ -186,7 +186,7 @@ const Dashboard = () => {
         </div>
 
         {/* Middle Panel (66%) - Main Content */}
-        <div className="w-[66%] h-full overflow-y-auto bg-background p-6">
+        <div className="w-[66%] h-full overflow-y-auto bg-gray-50 p-6">
           {/* Department-Specific Views */}
           {activeDepartment === 'sales' ? (
             <SalesDepartment BACKEND_URL={BACKEND_URL} fetchWithAuth={fetchWithAuth} />
@@ -195,10 +195,10 @@ const Dashboard = () => {
           ) : (
             <div>
               {/* Main Content Tabs */}
-              <Card className="bg-card rounded-2xl shadow-sm border border-border">
+              <Card className="bg-white rounded-2xl shadow-sm border border-gray-100">
                 <CardContent className="p-6">
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-muted p-1 rounded-xl`}>
+                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-gray-100 p-1 rounded-xl`}>
                     {showAdminTabs && (
                       <TabsTrigger value="analytics" data-testid="analytics-tab">
                         <i className="fas fa-chart-bar mr-2"></i>
