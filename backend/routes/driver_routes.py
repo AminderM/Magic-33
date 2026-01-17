@@ -40,8 +40,60 @@ async def create_driver_account(driver_data: DriverCreate, current_user: User = 
 
 @router.get("/my", response_model=List[User])
 async def get_my_drivers(current_user: User = Depends(get_current_user)):
-    drivers = await db.users.find({"fleet_owner_id": current_user.id, "role": UserRole.DRIVER}).to_list(length=None)
-    return [User(**d) for d in drivers]
+    drivers = await db.users.find({"fleet_owner_id": current_user.id, "role": UserRole.DRIVER}, {"_id": 0}).to_list(length=None)
+    return drivers
+
+@router.put("/{driver_id}/status")
+async def update_driver_status(driver_id: str, status_data: dict, current_user: User = Depends(get_current_user)):
+    """Update driver status (available, on_route, off_duty, on_break, inactive)"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Only fleet owners and platform admins can update driver status")
+    
+    valid_statuses = ['available', 'on_route', 'off_duty', 'on_break', 'inactive']
+    new_status = status_data.get('status')
+    
+    if new_status not in valid_statuses:
+        raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {valid_statuses}")
+    
+    # Find and update driver
+    result = await db.users.update_one(
+        {"id": driver_id, "role": UserRole.DRIVER},
+        {"$set": {"driver_status": new_status, "updated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    return {"message": "Driver status updated successfully", "status": new_status}
+
+@router.get("/{driver_id}")
+async def get_driver(driver_id: str, current_user: User = Depends(get_current_user)):
+    """Get a specific driver's details"""
+    driver = await db.users.find_one({"id": driver_id, "role": UserRole.DRIVER}, {"_id": 0})
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    return driver
+
+@router.put("/{driver_id}")
+async def update_driver(driver_id: str, driver_data: dict, current_user: User = Depends(get_current_user)):
+    """Update driver details"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Only fleet owners and platform admins can update drivers")
+    
+    # Remove fields that shouldn't be updated
+    protected_fields = ['id', 'role', 'password_hash', 'created_at']
+    update_data = {k: v for k, v in driver_data.items() if k not in protected_fields and v is not None}
+    update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    result = await db.users.update_one(
+        {"id": driver_id, "role": UserRole.DRIVER},
+        {"$set": update_data}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    return {"message": "Driver updated successfully"}
 
 # ============= Admin APIs =============
 
