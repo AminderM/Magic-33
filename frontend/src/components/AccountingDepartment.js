@@ -543,6 +543,16 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   // Update status
   const handleStatusChange = async (type, id, newStatus) => {
+    // If user selects "partial" (Partial Payment Received), open the payment modal instead
+    if (newStatus === 'partial') {
+      const items = type === 'ar' ? receivables : payables;
+      const item = items.find(i => i.id === id);
+      if (item) {
+        openPaymentModal(type, item);
+        return;
+      }
+    }
+    
     try {
       const endpoint = type === 'ar' ? 'receivables' : 'payables';
       const res = await fetchWithAuth(`${BACKEND_URL}/api/accounting/${endpoint}/${id}`, {
