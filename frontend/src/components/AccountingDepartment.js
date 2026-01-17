@@ -1995,7 +1995,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           </td>
                           <td className="px-4 py-3">{item.due_date ? new Date(item.due_date).toLocaleDateString() : '-'}</td>
                           <td className="px-4 py-3">
-                            <Badge className={getStatusBadge(item.status)}>{item.status}</Badge>
+                            <Badge className={getStatusBadge(item.status)}>{getARStatusLabel(item.status)}</Badge>
                           </td>
                           <td className="px-4 py-3">
                             {item.load_reference ? (
