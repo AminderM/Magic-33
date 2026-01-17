@@ -186,7 +186,7 @@ const Dashboard = () => {
         </div>
 
         {/* Middle Panel (66%) - Main Content */}
-        <div className="w-[66%] h-full overflow-y-auto bg-gray-50 p-6">
+        <div className="w-[66%] h-full overflow-y-auto bg-background p-6">
           {/* Department-Specific Views */}
           {activeDepartment === 'sales' ? (
             <SalesDepartment BACKEND_URL={BACKEND_URL} fetchWithAuth={fetchWithAuth} />
