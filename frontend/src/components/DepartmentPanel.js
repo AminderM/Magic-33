@@ -41,11 +41,11 @@ const DepartmentPanel = ({ activeDepartment, onDepartmentChange }) => {
   ];
 
   return (
-    <div className="w-full h-full bg-card border-r border-border flex flex-col">
+    <div className="w-full h-full bg-white border-r border-gray-200 flex flex-col">
       {/* Header */}
-      <div className="p-5 border-b border-border">
-        <h2 className="font-bold text-base text-foreground">Departments</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Select workspace</p>
+      <div className="p-5 border-b border-gray-200">
+        <h2 className="font-bold text-base text-gray-900">Departments</h2>
+        <p className="text-xs text-gray-500 mt-0.5">Select workspace</p>
       </div>
 
       {/* Department List */}
@@ -56,17 +56,17 @@ const DepartmentPanel = ({ activeDepartment, onDepartmentChange }) => {
             onClick={() => onDepartmentChange(dept.id)}
             className={`w-full text-center p-4 rounded-xl transition-all ${
               activeDepartment === dept.id
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'bg-secondary border border-border text-foreground hover:bg-accent hover:border-primary/30'
+                ? 'bg-[#F7B501] text-white shadow-sm'
+                : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300'
             }`}
           >
             <div className={`font-bold text-lg ${
-              activeDepartment === dept.id ? 'text-primary-foreground' : 'text-foreground'
+              activeDepartment === dept.id ? 'text-white' : 'text-gray-900'
             }`}>
               {dept.label}
             </div>
             <div className={`text-xs mt-1 ${
-              activeDepartment === dept.id ? 'text-primary-foreground/80' : 'text-muted-foreground'
+              activeDepartment === dept.id ? 'text-gray-200' : 'text-gray-500'
             }`}>
               {dept.description}
             </div>
@@ -75,10 +75,10 @@ const DepartmentPanel = ({ activeDepartment, onDepartmentChange }) => {
       </div>
 
       {/* Footer Info */}
-      <div className="p-4 border-t border-border bg-secondary">
-        <div className="text-xs text-muted-foreground text-center">
-          <div className="font-semibold mb-1 text-foreground">🤖 AI Assistant</div>
-          <div>Context-aware help</div>
+      <div className="p-4 border-t border-gray-200 bg-gray-50">
+        <div className="text-xs text-gray-600 text-center">
+          <div className="font-semibold mb-1">🤖 AI Assistant</div>
+          <div className="text-gray-500">Context-aware help</div>
         </div>
       </div>
     </div>
