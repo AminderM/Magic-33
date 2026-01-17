@@ -571,6 +571,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   // Payment functions
   const openPaymentModal = (type, item) => {
+    console.log('openPaymentModal called:', type, item);
     setPaymentType(type);
     setPaymentItem(item);
     setPaymentForm({
@@ -580,6 +581,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       notes: ''
     });
     setShowPaymentModal(true);
+    console.log('showPaymentModal set to true');
     
     // Load payment history asynchronously
     loadPaymentHistory(type, item.id);
