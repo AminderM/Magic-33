@@ -251,11 +251,7 @@ const Dashboard = () => {
 
                   {showAdminTabs && (
                     <TabsContent value="drivers" className="mt-6">
-                      {/* <DriverManagement onStatsUpdate={setStats} /> */}
-                      <div className="p-8 text-center">
-                        <h3 className="text-xl font-semibold mb-2">Driver Management</h3>
-                        <p className="text-gray-600">Driver management features coming soon</p>
-                      </div>
+                      <DriverManagement onStatsUpdate={setStats} />
                     </TabsContent>
                   )}
 
