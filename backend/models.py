@@ -64,6 +64,19 @@ class DriverCreate(BaseModel):
     full_name: str
     phone: str
     password: str
+    # Extended driver fields
+    license_number: Optional[str] = None
+    license_type: Optional[str] = None  # CDL_A, CDL_B, CDL_C, NON_CDL
+    license_state: Optional[str] = None
+    license_expiry: Optional[str] = None
+    medical_card_expiry: Optional[str] = None
+    endorsements: Optional[List[str]] = []
+    hire_date: Optional[str] = None
+    home_terminal: Optional[str] = None
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
+    driver_status: Optional[str] = "available"
+    notes: Optional[str] = None
     
 class UserLogin(BaseModel):
     email: EmailStr
