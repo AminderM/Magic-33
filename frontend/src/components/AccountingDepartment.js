@@ -2007,15 +2007,15 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 </Button>
                               )}
                               <Select value={item.status} onValueChange={(value) => handleStatusChange('ar', item.id, value)}>
-                                <SelectTrigger className="h-7 w-[90px] text-xs">
+                                <SelectTrigger className="h-7 w-[140px] text-xs">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="pending">Pending</SelectItem>
                                   <SelectItem value="sent">Sent</SelectItem>
                                   <SelectItem value="overdue">Overdue</SelectItem>
-                                  <SelectItem value="partial">Partial</SelectItem>
-                                  <SelectItem value="paid">Paid</SelectItem>
+                                  <SelectItem value="partial">Partial Payment Received</SelectItem>
+                                  <SelectItem value="paid">Fully Received</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
