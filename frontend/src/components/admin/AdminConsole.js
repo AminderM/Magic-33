@@ -270,14 +270,14 @@ const AdminConsole = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveView(item.id)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 transition-colors ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 transition-colors whitespace-nowrap ${
                   isActive
                     ? 'bg-primary text-primary-foreground font-medium'
                     : 'text-foreground hover:bg-muted'
                 }`}
               >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
+                <Icon className="w-5 h-5 flex-shrink-0" />
+                <span className="truncate">{item.label}</span>
               </button>
             );
           })}
