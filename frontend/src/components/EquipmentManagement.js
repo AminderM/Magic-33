@@ -473,12 +473,12 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <Badge className="equipment-type">
+                        <Badge className="bg-secondary text-secondary-foreground border border-border">
                           {getEquipmentLabel(item.equipment_type)}
                         </Badge>
                       </td>
                       <td className="px-4 py-3">
-                        <Badge className={item.is_available ? 'status-available' : 'status-booked'}>
+                        <Badge className="bg-secondary text-secondary-foreground border border-border">
                           {item.is_available ? 'Available' : 'Unavailable'}
                         </Badge>
                       </td>
