@@ -80,18 +80,18 @@ const DispatchAnalytics = () => {
       }
     });
 
-    // Calculate status distribution for chart
+    // Format status for display
     const statusLabels = {
-      pending: 'Pending',
-      planned: 'Planned',
-      in_transit_pickup: 'In Transit (Pickup)',
-      at_pickup: 'At Pickup',
-      in_transit_delivery: 'In Transit (Delivery)',
-      at_delivery: 'At Delivery',
-      delivered: 'Delivered',
-      invoiced: 'Invoiced',
-      payment_overdue: 'Overdue',
-      paid: 'Paid'
+      'pending': 'Pending',
+      'planned': 'Planned',
+      'in_transit_pickup': 'In Transit (Pickup)',
+      'at_pickup': 'At Pickup',
+      'in_transit_delivery': 'In Transit (Delivery)',
+      'at_delivery': 'At Delivery',
+      'delivered': 'Delivered',
+      'invoiced': 'Invoiced',
+      'payment_overdue': 'Overdue',
+      'paid': 'Paid'
     };
 
     const distribution = Object.entries(statusCounts).map(([status, count]) => ({
@@ -136,7 +136,7 @@ const DispatchAnalytics = () => {
       deliveredLoads: deliveredCount,
       pendingLoads: statusCounts.pending || 0,
       onTimeDeliveryRate: bookings.length > 0 ? ((deliveredCount / bookings.length) * 100).toFixed(1) : 0,
-      avgDeliveryTime: 0, // Would need actual delivery time data
+      avgDeliveryTime: 0,
       totalRevenue,
       loadsThisMonth,
       loadsThisWeek,
@@ -146,22 +146,6 @@ const DispatchAnalytics = () => {
     setStatusDistribution(distribution);
     setRecentActivity(recent);
     setMonthlyTrend(months);
-  };
-
-  const getStatusColor = (status) => {
-    const colors = {
-      'Pending': 'bg-yellow-500',
-      'Planned': 'bg-indigo-500',
-      'In Transit (Pickup)': 'bg-purple-500',
-      'At Pickup': 'bg-blue-500',
-      'In Transit (Delivery)': 'bg-purple-600',
-      'At Delivery': 'bg-blue-600',
-      'Delivered': 'bg-green-500',
-      'Invoiced': 'bg-orange-500',
-      'Overdue': 'bg-red-500',
-      'Paid': 'bg-emerald-500'
-    };
-    return colors[status] || 'bg-muted0';
   };
 
   if (loading) {
@@ -177,7 +161,7 @@ const DispatchAnalytics = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">
+          <h2 className="text-2xl font-bold text-foreground">
             <i className="fas fa-chart-bar text-foreground mr-3"></i>
             Dispatch Analytics
           </h2>
@@ -185,7 +169,7 @@ const DispatchAnalytics = () => {
         </div>
         <button 
           onClick={loadAnalytics}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           <i className="fas fa-sync-alt mr-2"></i>
           Refresh
@@ -194,71 +178,71 @@ const DispatchAnalytics = () => {
 
       {/* KPI Cards - Row 1 */}
       <div className="grid grid-cols-5 gap-4">
-        <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+        <Card className="bg-card border border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100 text-xs uppercase tracking-wide">Total Loads</p>
-                <p className="text-3xl font-bold mt-1">{kpis.totalLoads}</p>
+                <p className="text-foreground text-xs uppercase tracking-wide">Total Loads</p>
+                <p className="text-3xl font-bold text-foreground mt-1">{kpis.totalLoads}</p>
               </div>
-              <div className="bg-card/20 p-3 rounded-full">
-                <i className="fas fa-truck-loading text-2xl"></i>
+              <div className="bg-muted p-3 rounded-full">
+                <i className="fas fa-truck-loading text-2xl text-foreground"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+        <Card className="bg-card border border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-100 text-xs uppercase tracking-wide">Active Loads</p>
-                <p className="text-3xl font-bold mt-1">{kpis.activeLoads}</p>
+                <p className="text-foreground text-xs uppercase tracking-wide">Active Loads</p>
+                <p className="text-3xl font-bold text-foreground mt-1">{kpis.activeLoads}</p>
               </div>
-              <div className="bg-card/20 p-3 rounded-full">
-                <i className="fas fa-truck text-2xl"></i>
+              <div className="bg-muted p-3 rounded-full">
+                <i className="fas fa-truck text-2xl text-foreground"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
+        <Card className="bg-card border border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-100 text-xs uppercase tracking-wide">Delivered</p>
-                <p className="text-3xl font-bold mt-1">{kpis.deliveredLoads}</p>
+                <p className="text-foreground text-xs uppercase tracking-wide">Delivered</p>
+                <p className="text-3xl font-bold text-foreground mt-1">{kpis.deliveredLoads}</p>
               </div>
-              <div className="bg-card/20 p-3 rounded-full">
-                <i className="fas fa-check-circle text-2xl"></i>
+              <div className="bg-muted p-3 rounded-full">
+                <i className="fas fa-check-circle text-2xl text-foreground"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white">
+        <Card className="bg-card border border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-yellow-100 text-xs uppercase tracking-wide">Pending</p>
-                <p className="text-3xl font-bold mt-1">{kpis.pendingLoads}</p>
+                <p className="text-foreground text-xs uppercase tracking-wide">Pending</p>
+                <p className="text-3xl font-bold text-foreground mt-1">{kpis.pendingLoads}</p>
               </div>
-              <div className="bg-card/20 p-3 rounded-full">
-                <i className="fas fa-clock text-2xl"></i>
+              <div className="bg-muted p-3 rounded-full">
+                <i className="fas fa-clock text-2xl text-foreground"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-red-500 to-red-600 text-white">
+        <Card className="bg-card border border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-100 text-xs uppercase tracking-wide">Overdue</p>
-                <p className="text-3xl font-bold mt-1">{kpis.overdueLoads}</p>
+                <p className="text-foreground text-xs uppercase tracking-wide">Overdue</p>
+                <p className="text-3xl font-bold text-foreground mt-1">{kpis.overdueLoads}</p>
               </div>
-              <div className="bg-card/20 p-3 rounded-full">
-                <i className="fas fa-exclamation-triangle text-2xl"></i>
+              <div className="bg-muted p-3 rounded-full">
+                <i className="fas fa-exclamation-triangle text-2xl text-foreground"></i>
               </div>
             </div>
           </CardContent>
@@ -267,59 +251,59 @@ const DispatchAnalytics = () => {
 
       {/* KPI Cards - Row 2 */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="border-l-4 border-l-emerald-500">
+        <Card className="border-l-4 border-l-primary bg-card">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-foreground text-xs uppercase tracking-wide">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-800 mt-1">${kpis.totalRevenue.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground mt-1">${kpis.totalRevenue.toLocaleString()}</p>
               </div>
-              <div className="bg-emerald-100 p-3 rounded-full">
-                <i className="fas fa-dollar-sign text-emerald-600 text-xl"></i>
+              <div className="bg-muted p-3 rounded-full">
+                <i className="fas fa-dollar-sign text-foreground text-xl"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-blue-500">
+        <Card className="border-l-4 border-l-primary bg-card">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-foreground text-xs uppercase tracking-wide">This Month</p>
-                <p className="text-2xl font-bold text-gray-800 mt-1">{kpis.loadsThisMonth}</p>
+                <p className="text-2xl font-bold text-foreground mt-1">{kpis.loadsThisMonth}</p>
                 <p className="text-xs text-foreground">loads created</p>
               </div>
-              <div className="bg-blue-100 p-3 rounded-full">
+              <div className="bg-muted p-3 rounded-full">
                 <i className="fas fa-calendar-alt text-foreground text-xl"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-purple-500">
+        <Card className="border-l-4 border-l-primary bg-card">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-foreground text-xs uppercase tracking-wide">This Week</p>
-                <p className="text-2xl font-bold text-gray-800 mt-1">{kpis.loadsThisWeek}</p>
+                <p className="text-2xl font-bold text-foreground mt-1">{kpis.loadsThisWeek}</p>
                 <p className="text-xs text-foreground">loads created</p>
               </div>
-              <div className="bg-purple-100 p-3 rounded-full">
+              <div className="bg-muted p-3 rounded-full">
                 <i className="fas fa-calendar-week text-foreground text-xl"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-green-500">
+        <Card className="border-l-4 border-l-primary bg-card">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-foreground text-xs uppercase tracking-wide">Completion Rate</p>
-                <p className="text-2xl font-bold text-gray-800 mt-1">{kpis.onTimeDeliveryRate}%</p>
+                <p className="text-2xl font-bold text-foreground mt-1">{kpis.onTimeDeliveryRate}%</p>
                 <p className="text-xs text-foreground">delivered/total</p>
               </div>
-              <div className="bg-green-100 p-3 rounded-full">
+              <div className="bg-muted p-3 rounded-full">
                 <i className="fas fa-percentage text-foreground text-xl"></i>
               </div>
             </div>
@@ -330,9 +314,9 @@ const DispatchAnalytics = () => {
       {/* Charts Row */}
       <div className="grid grid-cols-2 gap-6">
         {/* Status Distribution */}
-        <Card>
+        <Card className="bg-card border border-border">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center">
+            <CardTitle className="text-lg flex items-center text-foreground">
               <i className="fas fa-chart-pie text-foreground mr-2"></i>
               Load Status Distribution
             </CardTitle>
@@ -341,15 +325,15 @@ const DispatchAnalytics = () => {
             <div className="space-y-3">
               {statusDistribution.map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${getStatusColor(item.status)}`}></div>
+                  <div className="w-3 h-3 rounded-full bg-primary"></div>
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-sm font-medium text-foreground">{item.status}</span>
                       <span className="text-sm text-foreground">{item.count} ({item.percentage}%)</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div 
-                        className={`h-2 rounded-full ${getStatusColor(item.status)}`}
+                        className="h-2 rounded-full bg-primary"
                         style={{ width: `${item.percentage}%` }}
                       ></div>
                     </div>
@@ -367,9 +351,9 @@ const DispatchAnalytics = () => {
         </Card>
 
         {/* Monthly Trend */}
-        <Card>
+        <Card className="bg-card border border-border">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center">
+            <CardTitle className="text-lg flex items-center text-foreground">
               <i className="fas fa-chart-line text-foreground mr-2"></i>
               Monthly Load Trend
             </CardTitle>
@@ -384,7 +368,7 @@ const DispatchAnalytics = () => {
                     <div className="w-full flex flex-col items-center justify-end h-40">
                       <span className="text-xs font-semibold text-foreground mb-1">{item.count}</span>
                       <div 
-                        className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500"
+                        className="w-full bg-primary transition-all duration-500"
                         style={{ height: `${Math.max(height, 5)}%` }}
                       ></div>
                     </div>
@@ -398,9 +382,9 @@ const DispatchAnalytics = () => {
       </div>
 
       {/* Recent Activity */}
-      <Card>
+      <Card className="bg-card border border-border">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center">
+          <CardTitle className="text-lg flex items-center text-foreground">
             <i className="fas fa-history text-foreground mr-2"></i>
             Recent Load Activity
           </CardTitle>
@@ -416,17 +400,12 @@ const DispatchAnalytics = () => {
                   <th className="px-4 py-3 text-right text-xs font-semibold text-foreground">Rate</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-border">
                 {recentActivity.map((item, index) => (
                   <tr key={index} className="hover:bg-muted">
                     <td className="px-4 py-3 text-sm font-medium text-foreground">{item.id}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        item.status === 'delivered' || item.status === 'paid' ? 'bg-green-100 text-green-800' :
-                        item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        item.status === 'payment_overdue' ? 'bg-red-100 text-red-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
+                      <span className="px-2 py-1 bg-secondary text-secondary-foreground text-xs font-medium">
                         {item.status?.replace('_', ' ') || 'Pending'}
                       </span>
                     </td>
