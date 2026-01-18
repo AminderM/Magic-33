@@ -9,12 +9,13 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const DispatchAnalytics = () => {
   const { fetchWithAuth } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [kpis, setKpis] = useState({
     totalLoads: 0,
     activeLoads: 0,
     deliveredLoads: 0,
     pendingLoads: 0,
-    onTimeDeliveryRate: 0,
+    completionRate: 0,
     avgDeliveryTime: 0,
     totalRevenue: 0,
     loadsThisMonth: 0,
@@ -31,32 +32,47 @@ const DispatchAnalytics = () => {
 
   const loadAnalytics = async () => {
     setLoading(true);
+    setError(null);
+    
     try {
-      const res = await fetchWithAuth(`${BACKEND_URL}/api/bookings/requests`);
+      // Fetch all analytics data from the dedicated endpoint
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/analytics/dispatch/summary`);
+      
       if (res.ok) {
-        const bookings = await res.json();
-        calculateKPIs(bookings);
+        const data = await res.json();
+        
+        // Set KPIs from backend
+        setKpis({
+          totalLoads: data.kpis.totalLoads || 0,
+          activeLoads: data.kpis.activeLoads || 0,
+          deliveredLoads: data.kpis.deliveredLoads || 0,
+          pendingLoads: data.kpis.pendingLoads || 0,
+          completionRate: data.kpis.completionRate || 0,
+          avgDeliveryTime: data.kpis.avgDeliveryTime || 0,
+          totalRevenue: data.kpis.totalRevenue || 0,
+          loadsThisMonth: data.kpis.loadsThisMonth || 0,
+          loadsThisWeek: data.kpis.loadsThisWeek || 0,
+          overdueLoads: data.kpis.overdueLoads || 0
+        });
+        
+        // Set status distribution
+        setStatusDistribution(data.statusDistribution || []);
+        
+        // Set monthly trend
+        setMonthlyTrend(data.monthlyTrend || []);
+        
+        // Set recent activity
+        setRecentActivity(data.recentActivity || []);
+      } else {
+        throw new Error('Failed to fetch analytics data');
       }
-    } catch (error) {
-      console.error('Error loading analytics:', error);
+    } catch (err) {
+      console.error('Error loading analytics:', err);
+      setError('Failed to load analytics data. Please try again.');
     } finally {
       setLoading(false);
     }
   };
-
-  const calculateKPIs = (bookings) => {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay());
-
-    // Status counts
-    const statusCounts = {};
-    let totalRevenue = 0;
-    let loadsThisMonth = 0;
-    let loadsThisWeek = 0;
-    let deliveredCount = 0;
-    let overdueCount = 0;
 
     bookings.forEach(booking => {
       // Count by status
