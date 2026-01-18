@@ -100,7 +100,7 @@ const UnifiedConverter = () => {
     <Card className="h-[280px] flex flex-col">
       <CardHeader className="flex-shrink-0 px-4 py-2.5 border-b border-border">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+          <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
             <i className={`fas ${config.icon} text-muted-foreground`}></i>
             Unit Converter
           </CardTitle>
@@ -275,7 +275,7 @@ const FilterBar = ({
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1"
+            className="px-3 py-2 text-sm text-red-600 hover:text-foreground hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1"
           >
             <i className="fas fa-times text-xs"></i>
             Clear
@@ -287,7 +287,7 @@ const FilterBar = ({
       {hasActiveFilters && (
         <div className="mt-2 flex flex-wrap gap-2">
           {filters.searchText && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-foreground rounded-full">
               Search: "{filters.searchText}"
               <button onClick={() => setFilters({ ...filters, searchText: '' })} className="ml-1 hover:text-blue-900">
                 <i className="fas fa-times"></i>
@@ -295,7 +295,7 @@ const FilterBar = ({
             </span>
           )}
           {filters.dateFrom && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-foreground rounded-full">
               From: {filters.dateFrom}
               <button onClick={() => setFilters({ ...filters, dateFrom: '' })} className="ml-1 hover:text-green-900">
                 <i className="fas fa-times"></i>
@@ -303,7 +303,7 @@ const FilterBar = ({
             </span>
           )}
           {filters.dateTo && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-foreground rounded-full">
               To: {filters.dateTo}
               <button onClick={() => setFilters({ ...filters, dateTo: '' })} className="ml-1 hover:text-green-900">
                 <i className="fas fa-times"></i>
@@ -311,7 +311,7 @@ const FilterBar = ({
             </span>
           )}
           {filters.status !== 'all' && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-purple-100 text-foreground rounded-full">
               Status: {filters.status}
               <button onClick={() => setFilters({ ...filters, status: 'all' })} className="ml-1 hover:text-purple-900">
                 <i className="fas fa-times"></i>
@@ -319,7 +319,7 @@ const FilterBar = ({
             </span>
           )}
           {showSource && filters.source !== 'all' && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-orange-100 text-foreground rounded-full">
               Source: {filters.source}
               <button onClick={() => setFilters({ ...filters, source: 'all' })} className="ml-1 hover:text-orange-900">
                 <i className="fas fa-times"></i>
@@ -860,15 +860,15 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   const getStatusColor = (status) => {
     const colors = {
-      new: 'bg-blue-100 text-blue-800',
-      contacted: 'bg-yellow-100 text-yellow-800',
-      qualified: 'bg-green-100 text-green-800',
-      proposal: 'bg-purple-100 text-purple-800',
-      negotiation: 'bg-orange-100 text-orange-800',
+      new: 'bg-blue-100 text-foreground',
+      contacted: 'bg-yellow-100 text-foreground',
+      qualified: 'bg-green-100 text-foreground',
+      proposal: 'bg-purple-100 text-foreground',
+      negotiation: 'bg-orange-100 text-foreground',
       won: 'bg-green-500 text-white',
-      lost: 'bg-red-100 text-red-800'
+      lost: 'bg-red-100 text-foreground'
     };
-    return colors[status] || 'bg-muted text-gray-800';
+    return colors[status] || 'bg-muted text-foreground';
   };
 
   const getStageColor = (stage) => {
@@ -1316,7 +1316,7 @@ Body:
               </CardHeader>
               <CardContent className="p-6">
                 <div className="text-center py-20">
-                  <i className="fas fa-chart-pie text-gray-300 text-6xl mb-4"></i>
+                  <i className="fas fa-chart-pie text-foreground text-6xl mb-4"></i>
                   <h3 className="text-xl font-semibold text-foreground mb-2">Analytics Dashboard Coming Soon</h3>
                   <p className="text-muted-foreground max-w-md mx-auto">
                     Comprehensive sales analytics, performance metrics, and business insights will be displayed here.
@@ -1472,7 +1472,7 @@ Body:
                       closeDateFrom: '',
                       closeDateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -1773,7 +1773,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -1956,7 +1956,7 @@ Body:
                   {/* Quote Calculator */}
                   <div className="bg-card rounded-2xl shadow-sm border border-border h-[480px] flex flex-col">
                     <div className="px-4 py-2.5 border-b border-border flex-shrink-0">
-                      <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                      <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                         <i className="fas fa-dollar-sign text-muted-foreground"></i>
                         Quote Calculator
                       </h4>
@@ -2225,7 +2225,7 @@ Body:
                     {/* Route Calculator - 404px width */}
                     <div className="border border-border rounded-xl bg-card shadow-sm h-[280px] flex-1 flex flex-col overflow-hidden">
                       <div className="px-4 py-2.5 border-b border-border flex-shrink-0">
-                        <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                           <i className="fas fa-route text-blue-500"></i>
                           Route Calculator
                         </h4>
@@ -2539,7 +2539,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -2575,7 +2575,7 @@ Body:
                               <h4 className="font-bold text-blue-600 text-lg">
                                 {quote.quoteNumber}
                               </h4>
-                              <Badge className="bg-blue-100 text-blue-800 text-xs">Rate Quote</Badge>
+                              <Badge className="bg-blue-100 text-foreground text-xs">Rate Quote</Badge>
                             </div>
                             <h4 className="font-semibold text-foreground">
                               {quote.pickupLocation} → {quote.destination}
@@ -2586,8 +2586,8 @@ Body:
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold text-green-700">${quote.totalAmount}</div>
-                          <Badge className={quote.status === 'incomplete' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}>
+                          <div className="text-2xl font-bold text-foreground">${quote.totalAmount}</div>
+                          <Badge className={quote.status === 'incomplete' ? 'bg-yellow-100 text-foreground' : 'bg-green-100 text-foreground'}>
                             {quote.status}
                           </Badge>
                         </div>
@@ -2835,7 +2835,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -2896,17 +2896,17 @@ Body:
                           <td className="px-3 py-2 whitespace-nowrap">
                             <Select value={load.status || 'pending'} onValueChange={(value) => handleLoadStatusChange(load.id, value)}>
                               <SelectTrigger className={`h-7 w-[120px] text-xs border-0 ${
-                                load.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                load.status === 'planned' ? 'bg-indigo-100 text-indigo-800' :
-                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-purple-800' :
-                                load.status === 'at_pickup' ? 'bg-blue-100 text-blue-800' :
-                                load.status === 'in_transit_delivery' ? 'bg-purple-100 text-purple-800' :
-                                load.status === 'at_delivery' ? 'bg-blue-100 text-blue-800' :
-                                load.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                                load.status === 'invoiced' ? 'bg-orange-100 text-orange-800' :
-                                load.status === 'payment_overdue' ? 'bg-red-100 text-red-800' :
+                                load.status === 'pending' ? 'bg-yellow-100 text-foreground' :
+                                load.status === 'planned' ? 'bg-indigo-100 text-foreground' :
+                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-foreground' :
+                                load.status === 'at_pickup' ? 'bg-blue-100 text-foreground' :
+                                load.status === 'in_transit_delivery' ? 'bg-purple-100 text-foreground' :
+                                load.status === 'at_delivery' ? 'bg-blue-100 text-foreground' :
+                                load.status === 'delivered' ? 'bg-green-100 text-foreground' :
+                                load.status === 'invoiced' ? 'bg-orange-100 text-foreground' :
+                                load.status === 'payment_overdue' ? 'bg-red-100 text-foreground' :
                                 load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
-                                'bg-muted text-gray-800'
+                                'bg-muted text-foreground'
                               }`}>
                                 <SelectValue placeholder="Status" />
                               </SelectTrigger>
@@ -2930,7 +2930,7 @@ Body:
                           <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {load.assigned_carrier || '-'}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap font-semibold text-green-700 text-xs">
+                          <td className="px-3 py-2 whitespace-nowrap font-semibold text-foreground text-xs">
                             ${load.customer_rate?.toFixed(2) || load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
@@ -3082,7 +3082,7 @@ Body:
                     <i className="fas fa-info-circle text-blue-600"></i>
                     <span className="font-semibold text-blue-900">AI-Generated Professional Email</span>
                   </div>
-                  <p className="text-sm text-blue-800">
+                  <p className="text-sm text-foreground">
                     Review the generated email below. You can copy it to your clipboard and paste it into your email client.
                   </p>
                 </div>
