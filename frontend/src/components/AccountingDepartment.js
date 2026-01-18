@@ -919,14 +919,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-green-600">Total Receivable</p>
+                <p className="text-xs font-medium text-foreground">Total Receivable</p>
                 <p className="text-2xl font-bold text-foreground">${totalAR.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center">
-                <i className="fas fa-arrow-down text-green-600"></i>
+                <i className="fas fa-arrow-down text-foreground"></i>
               </div>
             </div>
-            <div className="mt-2 text-xs text-green-600">
+            <div className="mt-2 text-xs text-foreground">
               <span className="font-medium">{receivables.length}</span> invoices
             </div>
           </CardContent>
@@ -936,14 +936,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-red-600">Total Payable</p>
+                <p className="text-xs font-medium text-foreground">Total Payable</p>
                 <p className="text-2xl font-bold text-foreground">${totalAP.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center">
-                <i className="fas fa-arrow-up text-red-600"></i>
+                <i className="fas fa-arrow-up text-foreground"></i>
               </div>
             </div>
-            <div className="mt-2 text-xs text-red-600">
+            <div className="mt-2 text-xs text-foreground">
               <span className="font-medium">{payables.length}</span> bills
             </div>
           </CardContent>
@@ -953,14 +953,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-yellow-600">Overdue AR</p>
+                <p className="text-xs font-medium text-foreground">Overdue AR</p>
                 <p className="text-2xl font-bold text-foreground">${totalAROverdue.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center">
-                <i className="fas fa-exclamation-triangle text-yellow-600"></i>
+                <i className="fas fa-exclamation-triangle text-foreground"></i>
               </div>
             </div>
-            <div className="mt-2 text-xs text-yellow-600">
+            <div className="mt-2 text-xs text-foreground">
               <span className="font-medium">{receivables.filter(r => r.status === 'overdue').length}</span> overdue
             </div>
           </CardContent>
@@ -970,16 +970,16 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-blue-600">Net Position</p>
+                <p className="text-xs font-medium text-foreground">Net Position</p>
                 <p className={`text-2xl font-bold ${totalAR - totalAP >= 0 ? 'text-foreground' : 'text-foreground'}`}>
                   ${(totalAR - totalAP).toLocaleString()}
                 </p>
               </div>
               <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center">
-                <i className="fas fa-balance-scale text-blue-600"></i>
+                <i className="fas fa-balance-scale text-foreground"></i>
               </div>
             </div>
-            <div className="mt-2 text-xs text-blue-600">AR - AP Balance</div>
+            <div className="mt-2 text-xs text-foreground">AR - AP Balance</div>
           </CardContent>
         </Card>
       </div>
@@ -1022,7 +1022,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center justify-between">
                     <div className="flex items-center">
-                      <i className="fas fa-bell text-orange-600 mr-2"></i>
+                      <i className="fas fa-bell text-foreground mr-2"></i>
                       Alerts & Notifications
                       <Badge className="ml-2 bg-muted text-foreground">
                         {alertsSummary.total_alerts || 0}
@@ -1057,10 +1057,10 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <i className={`fas ${
-                              alert.type === 'overdue_ar' ? 'fa-file-invoice-dollar text-red-500' :
-                              alert.type === 'overdue_ap' ? 'fa-exclamation-triangle text-red-500' :
-                              alert.type === 'upcoming_ap' ? 'fa-clock text-yellow-500' :
-                              'fa-bell text-orange-500'
+                              alert.type === 'overdue_ar' ? 'fa-file-invoice-dollar text-foreground' :
+                              alert.type === 'overdue_ap' ? 'fa-exclamation-triangle text-foreground' :
+                              alert.type === 'upcoming_ap' ? 'fa-clock text-foreground' :
+                              'fa-bell text-foreground'
                             }`}></i>
                             <span className="font-medium text-sm">{alert.title}</span>
                           </div>
@@ -1068,7 +1068,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                             <span>Due: {new Date(alert.due_date).toLocaleDateString()}</span>
                             {alert.days_overdue > 0 && (
-                              <Badge variant="outline" className="text-xs bg-muted text-red-600 border-border">
+                              <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
                                 {alert.days_overdue} days overdue
                               </Badge>
                             )}
@@ -1093,11 +1093,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   {/* Alert Summary */}
                   <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t">
                     <div className="text-center p-3 bg-muted rounded-lg">
-                      <div className="text-xs text-green-600 font-medium">AR Overdue Total</div>
+                      <div className="text-xs text-foreground font-medium">AR Overdue Total</div>
                       <div className="text-xl font-bold text-foreground">${(alertsSummary.total_ar_overdue || 0).toLocaleString()}</div>
                     </div>
                     <div className="text-center p-3 bg-muted rounded-lg">
-                      <div className="text-xs text-red-600 font-medium">AP Due/Overdue Total</div>
+                      <div className="text-xs text-foreground font-medium">AP Due/Overdue Total</div>
                       <div className="text-xl font-bold text-foreground">${(alertsSummary.total_ap_upcoming || 0).toLocaleString()}</div>
                     </div>
                   </div>
@@ -1111,7 +1111,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center">
-                    <i className="fas fa-arrow-circle-down text-green-600 mr-2"></i>
+                    <i className="fas fa-arrow-circle-down text-foreground mr-2"></i>
                     Accounts Receivable Summary
                   </CardTitle>
                 </CardHeader>
@@ -1143,7 +1143,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center">
-                    <i className="fas fa-arrow-circle-up text-red-600 mr-2"></i>
+                    <i className="fas fa-arrow-circle-up text-foreground mr-2"></i>
                     Accounts Payable Summary
                   </CardTitle>
                 </CardHeader>
@@ -1178,7 +1178,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center">
-                    <i className="fas fa-chart-line text-blue-600 mr-2"></i>
+                    <i className="fas fa-chart-line text-foreground mr-2"></i>
                     Cash Flow Trend
                   </CardTitle>
                 </CardHeader>
@@ -1191,7 +1191,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center">
-                    <i className="fas fa-chart-pie text-purple-600 mr-2"></i>
+                    <i className="fas fa-chart-pie text-foreground mr-2"></i>
                     Collections Performance
                   </CardTitle>
                 </CardHeader>
@@ -1205,7 +1205,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center">
-                  <i className="fas fa-calendar-alt text-orange-600 mr-2"></i>
+                  <i className="fas fa-calendar-alt text-foreground mr-2"></i>
                   Aging Report Summary
                 </CardTitle>
               </CardHeader>
@@ -1218,7 +1218,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center">
-                  <i className="fas fa-piggy-bank text-teal-600 mr-2"></i>
+                  <i className="fas fa-piggy-bank text-foreground mr-2"></i>
                   Cash Flow Projection (Next 30 Days)
                 </CardTitle>
               </CardHeader>
@@ -1236,7 +1236,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center">
-                  <i className="fas fa-upload text-blue-600 mr-2"></i>
+                  <i className="fas fa-upload text-foreground mr-2"></i>
                   Upload Receipt
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">Upload a receipt image for AI processing</p>
@@ -1306,7 +1306,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center">
-                  <i className="fas fa-file-alt text-purple-600 mr-2"></i>
+                  <i className="fas fa-file-alt text-foreground mr-2"></i>
                   Extracted Data
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">Review and confirm before adding to Expenses Ledger</p>
@@ -1533,19 +1533,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               {/* Summary Cards */}
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="p-4 bg-muted rounded-lg border border-border">
-                  <div className="text-sm text-green-600 font-medium">Total Received</div>
+                  <div className="text-sm text-foreground font-medium">Total Received</div>
                   <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_received || 0).toLocaleString()}</div>
                 </div>
                 <div className="p-4 bg-muted rounded-lg border border-border">
-                  <div className="text-sm text-blue-600 font-medium">Total Invoiced</div>
+                  <div className="text-sm text-foreground font-medium">Total Invoiced</div>
                   <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_invoiced || 0).toLocaleString()}</div>
                 </div>
                 <div className="p-4 bg-muted rounded-lg border border-border">
-                  <div className="text-sm text-yellow-600 font-medium">Outstanding</div>
+                  <div className="text-sm text-foreground font-medium">Outstanding</div>
                   <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_outstanding || 0).toLocaleString()}</div>
                 </div>
                 <div className="p-4 bg-muted rounded-lg border border-border">
-                  <div className="text-sm text-purple-600 font-medium">Collection Rate</div>
+                  <div className="text-sm text-foreground font-medium">Collection Rate</div>
                   <div className="text-2xl font-bold text-foreground">
                     {incomeSummary.total_invoiced > 0 
                       ? ((incomeSummary.total_received / incomeSummary.total_invoiced) * 100).toFixed(1) 
@@ -1582,11 +1582,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         const paymentPercent = item.amount > 0 ? ((item.amount_paid || 0) / item.amount * 100) : 0;
                         return (
                           <tr key={item.id} className={`hover:bg-muted/50 ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
-                            <td className="px-4 py-3 font-medium text-blue-600">
+                            <td className="px-4 py-3 font-medium text-foreground">
                               <div className="flex items-center gap-1">
                                 {item.invoice_number}
                                 {item.auto_generated && (
-                                  <span className="text-xs text-green-600" title="Auto-generated from load">
+                                  <span className="text-xs text-foreground" title="Auto-generated from load">
                                     <i className="fas fa-link"></i>
                                   </span>
                                 )}
@@ -1608,9 +1608,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             </td>
                             <td className="px-4 py-3">
                               {outstanding > 0 ? (
-                                <span className="text-yellow-600">${outstanding.toLocaleString()}</span>
+                                <span className="text-foreground">${outstanding.toLocaleString()}</span>
                               ) : (
-                                <span className="text-green-600">$0</span>
+                                <span className="text-foreground">$0</span>
                               )}
                             </td>
                             <td className="px-4 py-3">
@@ -1679,17 +1679,17 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               {/* Summary Cards */}
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="p-4 bg-muted rounded-lg border border-border">
-                  <div className="text-sm text-yellow-600 font-medium">Pending Approval</div>
+                  <div className="text-sm text-foreground font-medium">Pending Approval</div>
                   <div className="text-2xl font-bold text-foreground">${(expensesSummary.pending_total || 0).toLocaleString()}</div>
-                  <div className="text-xs text-yellow-500">{expensesSummary.pending_count || 0} expenses</div>
+                  <div className="text-xs text-foreground">{expensesSummary.pending_count || 0} expenses</div>
                 </div>
                 <div className="p-4 bg-muted rounded-lg border border-border">
-                  <div className="text-sm text-green-600 font-medium">Approved (→ AP)</div>
+                  <div className="text-sm text-foreground font-medium">Approved (→ AP)</div>
                   <div className="text-2xl font-bold text-foreground">${(expensesSummary.approved_total || 0).toLocaleString()}</div>
-                  <div className="text-xs text-green-500">{expensesSummary.approved_count || 0} expenses</div>
+                  <div className="text-xs text-foreground">{expensesSummary.approved_count || 0} expenses</div>
                 </div>
                 <div className="p-4 bg-muted rounded-lg border border-border col-span-2">
-                  <div className="text-sm text-blue-600 font-medium">Workflow</div>
+                  <div className="text-sm text-foreground font-medium">Workflow</div>
                   <div className="flex items-center gap-2 mt-2 text-xs">
                     <Badge className="bg-muted">Upload Receipt</Badge>
                     <i className="fas fa-arrow-right text-muted-foreground"></i>
@@ -1784,7 +1784,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
-                                  className="h-7 text-xs text-red-600 border-red-300 hover:bg-muted"
+                                  className="h-7 text-xs text-foreground border-red-300 hover:bg-muted"
                                   onClick={() => handleRejectExpense(expense.id)}
                                 >
                                   <i className="fas fa-times"></i>
@@ -1799,7 +1799,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 </Button>
                               </div>
                             ) : expense.status === 'approved' ? (
-                              <div className="text-xs text-green-600">
+                              <div className="text-xs text-foreground">
                                 <i className="fas fa-check-circle mr-1"></i>
                                 {expense.ap_bill_number ? (
                                   <span>→ {expense.ap_bill_number}</span>
@@ -1932,7 +1932,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       invoiceNumber: 'all', customer: 'all', status: 'all',
                       amountMin: '', amountMax: '', dateFrom: '', dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:bg-muted rounded whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-foreground hover:bg-muted rounded whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>Clear
                   </button>
@@ -1968,11 +1968,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <tbody className="divide-y divide-gray-200">
                       {filteredReceivables.map((item, index) => (
                         <tr key={item.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
-                          <td className="px-4 py-3 font-medium text-blue-600">
+                          <td className="px-4 py-3 font-medium text-foreground">
                             <div className="flex items-center gap-1">
                               {item.invoice_number}
                               {item.auto_generated && (
-                                <span className="text-xs text-green-600" title="Auto-generated from load">
+                                <span className="text-xs text-foreground" title="Auto-generated from load">
                                   <i className="fas fa-link"></i>
                                 </span>
                               )}
@@ -1982,8 +1982,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           <td className="px-4 py-3 font-semibold text-foreground">${item.amount?.toLocaleString()}</td>
                           <td className="px-4 py-3">
                             <div className="text-xs">
-                              <div className="text-green-600">Paid: ${(item.amount_paid || 0).toLocaleString()}</div>
-                              <div className="text-red-600">Due: ${((item.amount || 0) - (item.amount_paid || 0)).toLocaleString()}</div>
+                              <div className="text-foreground">Paid: ${(item.amount_paid || 0).toLocaleString()}</div>
+                              <div className="text-foreground">Due: ${((item.amount || 0) - (item.amount_paid || 0)).toLocaleString()}</div>
                               {/* Mini progress bar */}
                               <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
                                 <div 
@@ -2011,7 +2011,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
-                                  className="h-7 text-xs text-green-600 border-green-300 hover:bg-muted"
+                                  className="h-7 text-xs text-foreground border-green-300 hover:bg-muted"
                                   onClick={() => openPaymentModal('ar', item)}
                                 >
                                   <i className="fas fa-dollar-sign mr-1"></i>
@@ -2152,7 +2152,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       billNumber: 'all', vendor: 'all', status: 'all',
                       amountMin: '', amountMax: '', dateFrom: '', dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:bg-muted rounded whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-foreground hover:bg-muted rounded whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>Clear
                   </button>
@@ -2189,11 +2189,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <tbody className="divide-y divide-gray-200">
                       {filteredPayables.map((item, index) => (
                         <tr key={item.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
-                          <td className="px-4 py-3 font-medium text-blue-600">
+                          <td className="px-4 py-3 font-medium text-foreground">
                             <div className="flex items-center gap-1">
                               {item.bill_number}
                               {item.auto_generated && (
-                                <span className="text-xs text-green-600" title="Auto-generated from load">
+                                <span className="text-xs text-foreground" title="Auto-generated from load">
                                   <i className="fas fa-link"></i>
                                 </span>
                               )}
@@ -2203,8 +2203,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           <td className="px-4 py-3 font-semibold text-foreground">${item.amount?.toLocaleString()}</td>
                           <td className="px-4 py-3">
                             <div className="text-xs">
-                              <div className="text-green-600">Paid: ${(item.amount_paid || 0).toLocaleString()}</div>
-                              <div className="text-red-600">Due: ${((item.amount || 0) - (item.amount_paid || 0)).toLocaleString()}</div>
+                              <div className="text-foreground">Paid: ${(item.amount_paid || 0).toLocaleString()}</div>
+                              <div className="text-foreground">Due: ${((item.amount || 0) - (item.amount_paid || 0)).toLocaleString()}</div>
                               {/* Mini progress bar */}
                               <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
                                 <div 
@@ -2233,7 +2233,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
-                                  className="h-7 text-xs text-blue-600 border-blue-300 hover:bg-muted"
+                                  className="h-7 text-xs text-foreground border-blue-300 hover:bg-muted"
                                   onClick={() => openPaymentModal('ap', item)}
                                 >
                                   <i className="fas fa-dollar-sign mr-1"></i>
@@ -2451,11 +2451,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Amount Paid:</span>
-                  <span className="font-medium text-green-600">${(paymentItem.amount_paid || 0).toLocaleString()}</span>
+                  <span className="font-medium text-foreground">${(paymentItem.amount_paid || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm border-t pt-2">
                   <span className="text-muted-foreground">Balance Due:</span>
-                  <span className="font-bold text-red-600">${((paymentItem.amount || 0) - (paymentItem.amount_paid || 0)).toLocaleString()}</span>
+                  <span className="font-bold text-foreground">${((paymentItem.amount || 0) - (paymentItem.amount_paid || 0)).toLocaleString()}</span>
                 </div>
                 
                 {/* Progress Bar */}
@@ -2482,7 +2482,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     {paymentHistory.map((payment, idx) => (
                       <div key={idx} className="p-2 border-b last:border-b-0 text-sm flex justify-between items-center">
                         <div>
-                          <span className="font-medium text-green-600">${payment.amount?.toLocaleString()}</span>
+                          <span className="font-medium text-foreground">${payment.amount?.toLocaleString()}</span>
                           <span className="text-muted-foreground ml-2">via {payment.payment_method}</span>
                           {payment.reference_number && (
                             <span className="text-muted-foreground ml-2">#{payment.reference_number}</span>
