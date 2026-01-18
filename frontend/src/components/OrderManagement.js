@@ -300,15 +300,15 @@ const OrderManagement = () => {
 
   const getStatusColor = (status) => {
     const statusColors = {
-      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      planned: 'bg-blue-100 text-blue-800 border-blue-300',
-      in_transit_pickup: 'bg-purple-100 text-purple-800 border-purple-300',
-      at_pickup: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-      in_transit_delivery: 'bg-purple-100 text-purple-800 border-purple-300',
-      at_delivery: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-      delivered: 'bg-green-100 text-green-800 border-green-300',
+      pending: 'bg-yellow-100 text-foreground border-yellow-300',
+      planned: 'bg-blue-100 text-foreground border-blue-300',
+      in_transit_pickup: 'bg-purple-100 text-foreground border-purple-300',
+      at_pickup: 'bg-indigo-100 text-foreground border-indigo-300',
+      in_transit_delivery: 'bg-purple-100 text-foreground border-purple-300',
+      at_delivery: 'bg-indigo-100 text-foreground border-indigo-300',
+      delivered: 'bg-green-100 text-foreground border-green-300',
       invoiced: 'bg-cyan-100 text-cyan-800 border-cyan-300',
-      payment_overdue: 'bg-red-100 text-red-800 border-red-300',
+      payment_overdue: 'bg-red-100 text-foreground border-red-300',
       paid: 'bg-emerald-100 text-emerald-800 border-emerald-300'
     };
     return statusColors[status] || statusColors.pending;
@@ -852,7 +852,7 @@ const OrderManagement = () => {
                     disabled={parsingDocument}
                   />
                   {uploadedFile && (
-                    <div className="text-sm text-green-600 flex items-center">
+                    <div className="text-sm text-foreground flex items-center">
                       <i className="fas fa-check-circle mr-2"></i>
                       {uploadedFile.name}
                     </div>
@@ -861,10 +861,10 @@ const OrderManagement = () => {
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
                   <div className="flex items-start">
-                    <i className="fas fa-info-circle text-blue-600 mt-0.5 mr-2"></i>
+                    <i className="fas fa-info-circle text-foreground mt-0.5 mr-2"></i>
                     <div>
                       <p className="font-semibold text-blue-900">AI-Powered Extraction</p>
-                      <p className="text-blue-700 mt-1">
+                      <p className="text-foreground mt-1">
                         Our AI will extract shipper details, pickup/delivery locations, commodity info, and more from your document.
                       </p>
                     </div>
@@ -1310,7 +1310,7 @@ const OrderManagement = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CardTitle>
-                    <i className="fas fa-truck-loading mr-2 text-blue-600"></i>
+                    <i className="fas fa-truck-loading mr-2 text-foreground"></i>
                     Loads ({filteredLoads.length})
                   </CardTitle>
                   <span className="text-xs text-muted-foreground">{orders.length} total</span>
@@ -1462,7 +1462,7 @@ const OrderManagement = () => {
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -1503,23 +1503,23 @@ const OrderManagement = () => {
                     <tbody className="divide-y divide-gray-200">
                       {filteredLoads.map((load, index) => (
                         <tr key={load.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
-                          <td className="px-3 py-2 whitespace-nowrap font-medium text-blue-600 text-xs">
+                          <td className="px-3 py-2 whitespace-nowrap font-medium text-foreground text-xs">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             <Select value={load.status || 'pending'} onValueChange={(value) => handleStatusChange(load.id, value)}>
                               <SelectTrigger className={`h-7 w-[120px] text-xs border-0 ${
-                                load.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                load.status === 'planned' ? 'bg-indigo-100 text-indigo-800' :
-                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-purple-800' :
-                                load.status === 'at_pickup' ? 'bg-blue-100 text-blue-800' :
-                                load.status === 'in_transit_delivery' ? 'bg-purple-100 text-purple-800' :
-                                load.status === 'at_delivery' ? 'bg-blue-100 text-blue-800' :
-                                load.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                                load.status === 'invoiced' ? 'bg-orange-100 text-orange-800' :
-                                load.status === 'payment_overdue' ? 'bg-red-100 text-red-800' :
+                                load.status === 'pending' ? 'bg-yellow-100 text-foreground' :
+                                load.status === 'planned' ? 'bg-indigo-100 text-foreground' :
+                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-foreground' :
+                                load.status === 'at_pickup' ? 'bg-blue-100 text-foreground' :
+                                load.status === 'in_transit_delivery' ? 'bg-purple-100 text-foreground' :
+                                load.status === 'at_delivery' ? 'bg-blue-100 text-foreground' :
+                                load.status === 'delivered' ? 'bg-green-100 text-foreground' :
+                                load.status === 'invoiced' ? 'bg-orange-100 text-foreground' :
+                                load.status === 'payment_overdue' ? 'bg-red-100 text-foreground' :
                                 load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
-                                'bg-muted text-gray-800'
+                                'bg-muted text-foreground'
                               }`}>
                                 <SelectValue placeholder="Status" />
                               </SelectTrigger>
@@ -1571,7 +1571,7 @@ const OrderManagement = () => {
                               </SelectContent>
                             </Select>
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap font-semibold text-green-700 text-xs">
+                          <td className="px-3 py-2 whitespace-nowrap font-semibold text-foreground text-xs">
                             ${load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
@@ -1632,10 +1632,10 @@ const OrderManagement = () => {
                           <td className="px-3 py-2 whitespace-nowrap">
                             <div className="flex gap-1">
                               <Button variant="outline" size="sm" className="h-7 px-2" onClick={() => openDispatchModal(load)} title="Edit Dispatch Info">
-                                <i className="fas fa-truck text-purple-600"></i>
+                                <i className="fas fa-truck text-foreground"></i>
                               </Button>
                               <Button variant="outline" size="sm" className="h-7 px-2" onClick={() => handleEditOrder(load)} title="Edit Order">
-                                <i className="fas fa-edit text-blue-600"></i>
+                                <i className="fas fa-edit text-foreground"></i>
                               </Button>
                             </div>
                           </td>
@@ -1670,11 +1670,11 @@ const OrderManagement = () => {
                           Export CSV
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
-                          <i className="fas fa-file-excel text-green-600"></i>
+                          <i className="fas fa-file-excel text-foreground"></i>
                           Export Excel
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => exportToJSON(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
-                          <i className="fas fa-code text-blue-600"></i>
+                          <i className="fas fa-code text-foreground"></i>
                           Export JSON
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -1724,7 +1724,7 @@ const OrderManagement = () => {
                     <tbody className="divide-y divide-gray-200">
                       {activeOrders.map((order) => (
                         <tr key={order.id} className="hover:bg-muted transition-colors">
-                          <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
+                          <td className="px-4 py-3 whitespace-nowrap font-medium text-foreground">
                             {order.order_number || order.id.substring(0, 8).toUpperCase()}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
@@ -1746,7 +1746,7 @@ const OrderManagement = () => {
                               </SelectContent>
                             </Select>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-green-700">
+                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-foreground">
                             {order.confirmed_rate ? `$${order.confirmed_rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'N/A'}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.shipper_name || 'N/A'}</td>
@@ -1828,11 +1828,11 @@ const OrderManagement = () => {
                           Export CSV
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => exportToExcel(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
-                          <i className="fas fa-file-excel text-green-600"></i>
+                          <i className="fas fa-file-excel text-foreground"></i>
                           Export Excel
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => exportToJSON(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
-                          <i className="fas fa-code text-blue-600"></i>
+                          <i className="fas fa-code text-foreground"></i>
                           Export JSON
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -1883,7 +1883,7 @@ const OrderManagement = () => {
                     <tbody className="divide-y divide-gray-200">
                       {paidOrders.map((order) => (
                         <tr key={order.id} className="hover:bg-muted transition-colors">
-                          <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
+                          <td className="px-4 py-3 whitespace-nowrap font-medium text-foreground">
                             {order.order_number || order.id.substring(0, 8).toUpperCase()}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
@@ -1892,7 +1892,7 @@ const OrderManagement = () => {
                               {getStatusLabel(order.status)}
                             </Badge>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-green-700">
+                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-foreground">
                             {order.confirmed_rate ? `$${order.confirmed_rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'N/A'}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.shipper_name || 'N/A'}</td>
@@ -1951,7 +1951,7 @@ const OrderManagement = () => {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <i className="fas fa-truck text-purple-600"></i>
+              <i className="fas fa-truck text-foreground"></i>
               Edit Dispatch Info - {dispatchingLoad?.order_number || 'Load'}
             </DialogTitle>
           </DialogHeader>

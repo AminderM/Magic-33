@@ -148,7 +148,7 @@ const FleetManagement = () => {
             <Card className="dashboard-card">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <i className="fas fa-bolt mr-2 text-yellow-600"></i>
+                  <i className="fas fa-bolt mr-2 text-foreground"></i>
                   Quick Actions
                 </CardTitle>
               </CardHeader>
@@ -156,7 +156,7 @@ const FleetManagement = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <Button 
                     onClick={() => setActiveTab('equipment')} 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-700 border-blue-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-foreground border-blue-200"
                     variant="outline"
                     data-testid="quick-add-equipment-btn"
                   >
@@ -166,7 +166,7 @@ const FleetManagement = () => {
                   
                   <Button 
                     onClick={() => setActiveTab('drivers')} 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-700 border-purple-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-foreground border-purple-200"
                     variant="outline"
                     data-testid="quick-add-driver-btn"
                   >
@@ -176,7 +176,7 @@ const FleetManagement = () => {
                   
                   <Button 
                     onClick={() => setActiveTab('tracking')} 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 text-green-700 border-green-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 text-foreground border-green-200"
                     variant="outline"
                     data-testid="quick-track-fleet-btn"
                   >
@@ -185,7 +185,7 @@ const FleetManagement = () => {
                   </Button>
                   
                   <Button 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 text-orange-700 border-orange-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 text-foreground border-orange-200"
                     variant="outline"
                     data-testid="view-analytics-btn"
                   >

@@ -216,7 +216,7 @@ const DriverPortalView = () => {
           <CardHeader>
             <CardTitle className="text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <i className="fas fa-truck text-blue-600 text-2xl"></i>
+                <i className="fas fa-truck text-foreground text-2xl"></i>
                 <span className="text-2xl">Driver Portal</span>
               </div>
               <p className="text-sm text-gray-600 font-normal">
@@ -298,7 +298,7 @@ const DriverPortalView = () => {
                 </Button>
 
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="text-xs text-blue-800">
+                  <p className="text-xs text-foreground">
                     <i className="fas fa-info-circle mr-1"></i>
                     <strong>Test Account:</strong> testdriver@example.com / Driver@123!
                   </p>
@@ -343,13 +343,13 @@ const DriverPortalView = () => {
           <CardContent className="space-y-6 mt-6">
             <div className="space-y-4">
               <h3 className="font-semibold text-lg flex items-center gap-2">
-                <i className="fas fa-map-marker-alt text-blue-600"></i>
+                <i className="fas fa-map-marker-alt text-foreground"></i>
                 Route Information
               </h3>
               <div className="grid gap-4">
                 <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                   <div className="flex items-start gap-3">
-                    <i className="fas fa-map-marker-alt text-green-600 mt-1"></i>
+                    <i className="fas fa-map-marker-alt text-foreground mt-1"></i>
                     <div>
                       <p className="text-sm font-medium text-green-900 uppercase">Pickup</p>
                       <p className="font-semibold">{selectedLoad.pickup_location}</p>
@@ -373,7 +373,7 @@ const DriverPortalView = () => {
             {(selectedLoad.commodity || selectedLoad.weight) && (
               <div className="space-y-4">
                 <h3 className="font-semibold text-lg flex items-center gap-2">
-                  <i className="fas fa-box text-blue-600"></i>
+                  <i className="fas fa-box text-foreground"></i>
                   Cargo Details
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
@@ -396,7 +396,7 @@ const DriverPortalView = () => {
             {selectedLoad.confirmed_rate && (
               <div className="space-y-2">
                 <h3 className="font-semibold text-lg">Rate Information</h3>
-                <p className="text-3xl font-bold text-green-600">${selectedLoad.confirmed_rate}</p>
+                <p className="text-3xl font-bold text-foreground">${selectedLoad.confirmed_rate}</p>
               </div>
             )}
 
@@ -484,7 +484,7 @@ const DriverPortalView = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="p-3 bg-blue-50 rounded-lg">
-                      <i className="fas fa-box text-blue-600 text-xl"></i>
+                      <i className="fas fa-box text-foreground text-xl"></i>
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">{load.order_number}</h3>
@@ -498,7 +498,7 @@ const DriverPortalView = () => {
 
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <i className="fas fa-map-marker-alt text-green-600 mt-1"></i>
+                    <i className="fas fa-map-marker-alt text-foreground mt-1"></i>
                     <div>
                       <p className="text-xs text-gray-500 uppercase font-medium">Pickup</p>
                       <p className="text-sm font-semibold">{load.pickup_city}, {load.pickup_state}</p>

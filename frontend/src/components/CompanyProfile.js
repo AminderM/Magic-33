@@ -672,7 +672,7 @@ const CompanyProfileInner = () => {
                   ) : (
                     <p className="text-sm mt-1">
                       {company.website ? (
-                        <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">
                           {company.website}
                         </a>
                       ) : 'N/A'}
@@ -839,7 +839,7 @@ const CompanyProfileInner = () => {
                             <td className="px-4 py-3">{user.email}</td>
                             <td className="px-4 py-3">{formatRole(user.role)}</td>
                             <td className="px-4 py-3">
-                              <Badge className="bg-green-100 text-green-800">Active</Badge>
+                              <Badge className="bg-green-100 text-foreground">Active</Badge>
                             </td>
                             {isAdmin && (
                               <td className="px-4 py-3">
@@ -958,7 +958,7 @@ const CompanyProfileInner = () => {
                             <td className="px-4 py-3">{driver.email || 'N/A'}</td>
                             <td className="px-4 py-3">{driver.phone || 'N/A'}</td>
                             <td className="px-4 py-3">
-                              <Badge className="bg-green-100 text-green-800">Active</Badge>
+                              <Badge className="bg-green-100 text-foreground">Active</Badge>
                             </td>
                             {isAdmin && (
                               <td className="px-4 py-3">
@@ -1049,7 +1049,7 @@ const CompanyProfileInner = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">MC/NSC Authority</h3>
                     {company.company_documents?.mc_authority?.length > 0 && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-green-100 text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.mc_authority.length} Version(s)
                       </Badge>
@@ -1098,7 +1098,7 @@ const CompanyProfileInner = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">Certificate of Insurance</h3>
                     {company.company_documents?.insurance_certificate?.length > 0 && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-green-100 text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.insurance_certificate.length} Version(s)
                       </Badge>
@@ -1147,7 +1147,7 @@ const CompanyProfileInner = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">W-9 Form</h3>
                     {company.company_documents?.w9?.length > 0 && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-green-100 text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.w9.length} Version(s)
                       </Badge>
@@ -1212,7 +1212,7 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-6 text-center text-red-700">
+        <div className="p-6 text-center text-foreground">
           <p className="font-semibold">Something went wrong in Company Profile.</p>
           <p className="text-sm mt-2">{String(this.state.error)}</p>
         </div>

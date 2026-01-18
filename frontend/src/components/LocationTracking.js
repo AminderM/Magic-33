@@ -369,7 +369,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
               <Card className="dashboard-card">
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <i className="fas fa-map-pin mr-2 text-purple-600"></i>
+                    <i className="fas fa-map-pin mr-2 text-foreground"></i>
                     Manual Location Update
                   </CardTitle>
                   <p className="text-sm text-gray-600 mt-2">
@@ -441,7 +441,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                                     {city.display_name}
                                   </div>
                                 </div>
-                                <i className="fas fa-map-marker-alt text-blue-500 ml-2 mt-1"></i>
+                                <i className="fas fa-map-marker-alt text-foreground ml-2 mt-1"></i>
                               </button>
                             ))}
                           </div>
@@ -459,8 +459,8 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                       
                       {selectedCity && (
                         <div className="flex items-center space-x-2 mt-2 p-2 bg-green-50 border border-green-200 rounded">
-                          <i className="fas fa-check-circle text-green-600"></i>
-                          <span className="text-sm text-green-800">
+                          <i className="fas fa-check-circle text-foreground"></i>
+                          <span className="text-sm text-foreground">
                             Selected: {formatCityName(selectedCity)}
                           </span>
                         </div>
@@ -488,7 +488,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>
-                    <i className="fas fa-history mr-2 text-green-600"></i>
+                    <i className="fas fa-history mr-2 text-foreground"></i>
                     Location History
                   </span>
                   {selectedEquipment && (
@@ -538,10 +538,10 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                       <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-testid={`location-entry-${index}`}>
                         <div className="flex items-center space-x-4">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i className="fas fa-map-marker-alt text-blue-600"></i>
+                            <i className="fas fa-map-marker-alt text-foreground"></i>
                           </div>
                           <div>
-                            <p className="font-mono text-sm text-gray-800">
+                            <p className="font-mono text-sm text-foreground">
                               {formatLocation(location.latitude, location.longitude)}
                             </p>
                             <p className="text-xs text-gray-600">

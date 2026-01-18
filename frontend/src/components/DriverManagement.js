@@ -11,11 +11,11 @@ import { toast } from 'sonner';
 import { useAuth } from '../contexts/AuthContext';
 
 const DRIVER_STATUSES = {
-  available: { label: 'Available', color: 'bg-green-100 text-green-800', icon: 'fa-check-circle' },
-  on_route: { label: 'On Route', color: 'bg-blue-100 text-blue-800', icon: 'fa-truck' },
-  off_duty: { label: 'Off Duty', color: 'bg-muted text-gray-800', icon: 'fa-moon' },
-  on_break: { label: 'On Break', color: 'bg-yellow-100 text-yellow-800', icon: 'fa-coffee' },
-  inactive: { label: 'Inactive', color: 'bg-red-100 text-red-800', icon: 'fa-ban' }
+  available: { label: 'Available', color: 'bg-green-100 text-foreground', icon: 'fa-check-circle' },
+  on_route: { label: 'On Route', color: 'bg-blue-100 text-foreground', icon: 'fa-truck' },
+  off_duty: { label: 'Off Duty', color: 'bg-muted text-foreground', icon: 'fa-moon' },
+  on_break: { label: 'On Break', color: 'bg-yellow-100 text-foreground', icon: 'fa-coffee' },
+  inactive: { label: 'Inactive', color: 'bg-red-100 text-foreground', icon: 'fa-ban' }
 };
 
 const LICENSE_TYPES = [
@@ -269,7 +269,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <i className="fas fa-users text-blue-600"></i>
+            <i className="fas fa-users text-foreground"></i>
             Driver Management
           </h2>
           <p className="text-muted-foreground text-sm mt-1">Manage your fleet drivers and their certifications</p>
@@ -289,7 +289,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-blue-600">Total Drivers</p>
+                <p className="text-xs font-medium text-foreground">Total Drivers</p>
                 <p className="text-2xl font-bold text-blue-900">{stats.total}</p>
               </div>
               <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
@@ -303,7 +303,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-green-600">Available</p>
+                <p className="text-xs font-medium text-foreground">Available</p>
                 <p className="text-2xl font-bold text-green-900">{stats.available}</p>
               </div>
               <div className="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center">
@@ -317,7 +317,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-indigo-600">On Route</p>
+                <p className="text-xs font-medium text-foreground">On Route</p>
                 <p className="text-2xl font-bold text-indigo-900">{stats.onRoute}</p>
               </div>
               <div className="h-10 w-10 rounded-full bg-indigo-500 flex items-center justify-center">
@@ -345,7 +345,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-xs font-medium ${stats.expiringSoon > 0 ? 'text-red-600' : 'text-emerald-600'}`}>Expiring Soon</p>
+                <p className={`text-xs font-medium ${stats.expiringSoon > 0 ? 'text-red-600' : 'text-foreground'}`}>Expiring Soon</p>
                 <p className={`text-2xl font-bold ${stats.expiringSoon > 0 ? 'text-red-900' : 'text-emerald-900'}`}>{stats.expiringSoon}</p>
               </div>
               <div className={`h-10 w-10 rounded-full ${stats.expiringSoon > 0 ? 'bg-red-500' : 'bg-emerald-500'} flex items-center justify-center`}>
@@ -394,11 +394,11 @@ const DriverManagement = ({ onStatsUpdate }) => {
                   All ({stats.total})
                 </TabsTrigger>
                 <TabsTrigger value="available" className="text-xs">
-                  <i className="fas fa-check-circle mr-1 text-green-500"></i>
+                  <i className="fas fa-check-circle mr-1 text-foreground"></i>
                   Available ({stats.available})
                 </TabsTrigger>
                 <TabsTrigger value="on_route" className="text-xs">
-                  <i className="fas fa-truck mr-1 text-blue-500"></i>
+                  <i className="fas fa-truck mr-1 text-foreground"></i>
                   On Route ({stats.onRoute})
                 </TabsTrigger>
                 <TabsTrigger value="expiring" className="text-xs">
@@ -496,7 +496,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                 {/* Current Load */}
                 {driver.current_load && (
                   <div className="bg-blue-50 rounded-lg p-2 mb-3 text-xs">
-                    <span className="text-blue-700 font-medium">
+                    <span className="text-foreground font-medium">
                       <i className="fas fa-truck-loading mr-1"></i>
                       Current: {driver.current_load}
                     </span>
@@ -532,7 +532,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    className="h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="h-8 text-red-600 hover:text-foreground hover:bg-red-50"
                     onClick={() => handleDeleteDriver(driver.id)}
                   >
                     <i className="fas fa-trash"></i>
@@ -549,7 +549,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <i className="fas fa-user-plus text-blue-600"></i>
+              <i className="fas fa-user-plus text-foreground"></i>
               Add New Driver
             </DialogTitle>
           </DialogHeader>
@@ -672,7 +672,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                         }}
                         className={`px-2 py-1 rounded text-xs border transition-colors ${
                           driverForm.endorsements?.includes(end.value)
-                            ? 'bg-blue-100 border-blue-300 text-blue-700'
+                            ? 'bg-blue-100 border-blue-300 text-foreground'
                             : 'bg-muted border-border text-muted-foreground hover:bg-muted'
                         }`}
                       >
@@ -766,7 +766,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <i className="fas fa-user text-blue-600"></i>
+              <i className="fas fa-user text-foreground"></i>
               Driver Profile
             </DialogTitle>
           </DialogHeader>
@@ -800,7 +800,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                   <p className="text-xs text-muted-foreground">Loads Completed</p>
                 </div>
                 <div className="text-center p-3 bg-muted rounded-lg">
-                  <p className="text-2xl font-bold text-green-600">{selectedDriver.on_time_rate}%</p>
+                  <p className="text-2xl font-bold text-foreground">{selectedDriver.on_time_rate}%</p>
                   <p className="text-xs text-muted-foreground">On-Time Rate</p>
                 </div>
                 <div className="text-center p-3 bg-muted rounded-lg">
