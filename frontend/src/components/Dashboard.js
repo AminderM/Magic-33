@@ -91,25 +91,28 @@ const Dashboard = () => {
   }, [user, BACKEND_URL, fetchWithAuth]);
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 flex-shrink-0 shadow-sm">
+      <div className="bg-card border-b border-border flex-shrink-0 shadow-sm">
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center gap-6">
               <img src="/company-logo.jpg" alt="Integrated Supply Chain Solutions" className="h-12 w-auto" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900" data-testid="dashboard-title">
+                <h1 className="text-xl font-bold text-foreground" data-testid="dashboard-title">
                   Welcome, {user?.full_name}
                 </h1>
-                <p className="mt-0.5 text-xs text-gray-500">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   {(user?.role || '').replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} Dashboard
                 </p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              {/* Theme Toggle */}
+              <ThemeToggle />
+              
               <div className="text-sm">
-                <div className="font-semibold text-gray-900">{company?.name || 'No Company'}</div>
+                <div className="font-semibold text-foreground">{company?.name || 'No Company'}</div>
                 {company && getStatusBadge(company.verification_status)}
               </div>
               
@@ -117,23 +120,23 @@ const Dashboard = () => {
               <div className="relative group">
                 <Button 
                   variant="outline"
-                  className="border-gray-300 hover:bg-gray-50 rounded-lg">
+                  className="border-border hover:bg-muted">
                   <i className="fas fa-building mr-2"></i>
                   Company
                   <i className="fas fa-chevron-down ml-2"></i>
                 </Button>
-                <div className="absolute right-0 mt-2 w-56 bg-white text-gray-900 rounded-xl shadow-lg border border-gray-200 py-1 z-50 hidden group-hover:block">
+                <div className="absolute right-0 mt-2 w-56 bg-card text-foreground rounded-xl shadow-lg border border-border py-1 z-50 hidden group-hover:block">
                   <button
                     onClick={() => navigate('/apps')}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-muted"
                   >
                     <i className="fas fa-th mr-2"></i>
                     Apps
                   </button>
-                  <div className="border-t border-gray-100"></div>
+                  <div className="border-t border-border"></div>
                   <button
                     onClick={() => setActiveTab('driver-portal')}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 bg-blue-50 text-blue-700 font-medium"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-muted bg-primary/10 text-primary font-medium"
                   >
                     <i className="fas fa-mobile-alt mr-2"></i>
                     🚀 Driver Portal Demo
