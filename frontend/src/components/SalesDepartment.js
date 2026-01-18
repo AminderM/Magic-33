@@ -275,7 +275,7 @@ const FilterBar = ({
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="px-3 py-2 text-sm text-red-600 hover:text-foreground hover:bg-muted rounded-lg transition-colors flex items-center gap-1"
+            className="px-3 py-2 text-sm text-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors flex items-center gap-1"
           >
             <i className="fas fa-times text-xs"></i>
             Clear
@@ -1257,7 +1257,7 @@ Body:
                     <p className="text-2xl font-bold text-foreground">{leads.length}</p>
                   </div>
                   <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
-                    <i className="fas fa-user-plus text-blue-600 text-xl"></i>
+                    <i className="fas fa-user-plus text-foreground text-xl"></i>
                   </div>
                 </div>
               </CardContent>
@@ -1472,7 +1472,7 @@ Body:
                       closeDateFrom: '',
                       closeDateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-foreground hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -1506,7 +1506,7 @@ Body:
                         <tr key={opp.id} className="border-b border-gray-300 hover:bg-muted">
                           <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{opp.title}</td>
                           <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{opp.company}</td>
-                          <td className="px-4 py-2.5 text-sm text-green-600 font-semibold border-r border-gray-300">${opp.value.toLocaleString()}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground font-semibold border-r border-gray-300">${opp.value.toLocaleString()}</td>
                           <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className={getStatusColor(opp.stage)}>{opp.stage.replace('_', ' ').toUpperCase()}</Badge>
                           </td>
@@ -1773,7 +1773,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-foreground hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -1820,7 +1820,7 @@ Body:
                               {customer.phone}
                             </div>
                           </td>
-                          <td className="px-4 py-2.5 text-sm text-green-600 font-semibold border-r border-gray-300">${customer.total_revenue.toLocaleString()}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground font-semibold border-r border-gray-300">${customer.total_revenue.toLocaleString()}</td>
                           <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{customer.loads_count} completed</td>
                           <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className="bg-muted0 text-white">ACTIVE</Badge>
@@ -1901,7 +1901,7 @@ Body:
                     }}
                     className={`
                       flex-shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-card/20 transition-colors
-                      ${tab.id === activeTabId ? 'text-white hover:bg-card/30' : 'text-muted-foreground hover:text-red-500 hover:bg-muted'}
+                      ${tab.id === activeTabId ? 'text-white hover:bg-card/30' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}
                     `}
                     title="Close quote"
                   >
@@ -2085,7 +2085,7 @@ Body:
                       <div className="pt-3 border-t border-border space-y-2">
                         <div>
                           <Label className="text-xs font-medium text-muted-foreground mb-1 block">
-                            Consignor <span className="text-red-500">*</span>
+                            Consignor <span className="text-foreground">*</span>
                           </Label>
                           <Input 
                             type="text" 
@@ -2097,7 +2097,7 @@ Body:
                         </div>
                         <div>
                           <Label className="text-xs font-medium text-muted-foreground mb-1 block">
-                            Consignee <span className="text-red-500">*</span>
+                            Consignee <span className="text-foreground">*</span>
                           </Label>
                           <Input 
                             type="text" 
@@ -2109,7 +2109,7 @@ Body:
                         </div>
                         <div>
                           <Label className="text-xs font-medium text-muted-foreground mb-1 block">
-                            Customer <span className="text-red-500">*</span>
+                            Customer <span className="text-foreground">*</span>
                           </Label>
                           <Input 
                             type="text" 
@@ -2226,14 +2226,14 @@ Body:
                     <div className="border border-border rounded-xl bg-card shadow-sm h-[280px] flex-1 flex flex-col overflow-hidden">
                       <div className="px-4 py-2.5 border-b border-border flex-shrink-0">
                         <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                          <i className="fas fa-route text-blue-500"></i>
+                          <i className="fas fa-route text-foreground"></i>
                           Route Calculator
                         </h4>
                       </div>
                       <div className="p-4 flex-1 flex flex-col justify-evenly">
                         <div className="relative">
                           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
-                            <i className="fas fa-map-marker-alt text-green-500"></i>
+                            <i className="fas fa-map-marker-alt text-foreground"></i>
                           </div>
                           <PlacesAutocomplete
                             placeholder="Pickup location"
@@ -2293,7 +2293,7 @@ Body:
                             <div className="space-y-1.5 max-h-24 overflow-y-auto pr-1">
                               {quoteData.stops.map((stop, index) => (
                                 <div key={index} className="flex items-center gap-2 bg-muted rounded-lg px-3 py-2 text-xs border border-blue-100 hover:border-border transition-all">
-                                  <i className="fas fa-map-pin text-blue-500 text-xs"></i>
+                                  <i className="fas fa-map-pin text-foreground text-xs"></i>
                                   <span className="flex-1 truncate text-foreground font-medium">Stop {index + 1}: {stop}</span>
                                   <button
                                     onClick={() => {
@@ -2301,7 +2301,7 @@ Body:
                                       setQuoteData({...quoteData, stops: newStops});
                                       toast.success(`Stop ${index + 1} removed from route`);
                                     }}
-                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-card hover:bg-muted text-muted-foreground hover:text-red-500 border border-border hover:border-red-300 transition-all shadow-sm hover:shadow"
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-card hover:bg-muted text-muted-foreground hover:text-foreground border border-border hover:border-red-300 transition-all shadow-sm hover:shadow"
                                     title="Remove this stop"
                                   >
                                     <i className="fas fa-times text-xs"></i>
@@ -2314,7 +2314,7 @@ Body:
 
                         <div className="relative">
                           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
-                            <i className="fas fa-map-marker-alt text-red-500"></i>
+                            <i className="fas fa-map-marker-alt text-foreground"></i>
                           </div>
                           <PlacesAutocomplete
                             placeholder="Destination"
@@ -2539,7 +2539,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-foreground hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -2568,11 +2568,11 @@ Body:
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                            <i className="fas fa-file-invoice text-blue-600 text-xl"></i>
+                            <i className="fas fa-file-invoice text-foreground text-xl"></i>
                           </div>
                           <div>
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-bold text-blue-600 text-lg">
+                              <h4 className="font-bold text-foreground text-lg">
                                 {quote.quoteNumber}
                               </h4>
                               <Badge className="bg-muted text-foreground text-xs">Rate Quote</Badge>
@@ -2597,19 +2597,19 @@ Body:
                       <div className="grid grid-cols-3 gap-3 text-sm mb-3 p-3 bg-muted rounded-lg">
                         <div>
                           <span className="text-muted-foreground block">Consignor:</span>
-                          <span className={`font-semibold ${quote.consignor ? 'text-foreground' : 'text-red-500'}`}>
+                          <span className={`font-semibold ${quote.consignor ? 'text-foreground' : 'text-foreground'}`}>
                             {quote.consignor || 'Not specified'}
                           </span>
                         </div>
                         <div>
                           <span className="text-muted-foreground block">Consignee:</span>
-                          <span className={`font-semibold ${quote.consignee ? 'text-foreground' : 'text-red-500'}`}>
+                          <span className={`font-semibold ${quote.consignee ? 'text-foreground' : 'text-foreground'}`}>
                             {quote.consignee || 'Not specified'}
                           </span>
                         </div>
                         <div>
                           <span className="text-muted-foreground block">Customer:</span>
-                          <span className={`font-semibold ${quote.customer ? 'text-foreground' : 'text-red-500'}`}>
+                          <span className={`font-semibold ${quote.customer ? 'text-foreground' : 'text-foreground'}`}>
                             {quote.customer || 'Not specified'}
                           </span>
                         </div>
@@ -2663,7 +2663,7 @@ Body:
                         </Button>
                       </div>
                       {!isQuoteComplete(quote) && (
-                        <p className="text-xs text-red-500 mt-2">
+                        <p className="text-xs text-foreground mt-2">
                           <i className="fas fa-exclamation-circle mr-1"></i>
                           Please add Consignor, Consignee, and Customer to generate email
                         </p>
@@ -2683,7 +2683,7 @@ Body:
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CardTitle>
-                    <i className="fas fa-truck-loading mr-2 text-blue-600"></i>
+                    <i className="fas fa-truck-loading mr-2 text-foreground"></i>
                     Loads ({filteredLoads.length})
                   </CardTitle>
                   <span className="text-xs text-muted-foreground">{loads.length} total</span>
@@ -2835,7 +2835,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-foreground hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -2884,7 +2884,7 @@ Body:
                     <tbody className="divide-y divide-gray-200">
                       {filteredLoads.map((load, index) => (
                         <tr key={load.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
-                          <td className="px-3 py-2 whitespace-nowrap font-medium text-blue-600 text-xs">
+                          <td className="px-3 py-2 whitespace-nowrap font-medium text-foreground text-xs">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
@@ -3062,7 +3062,7 @@ Body:
             <CardHeader className="border-b border-border flex-shrink-0">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-bold text-foreground">
-                  <i className="fas fa-envelope mr-2 text-blue-600"></i>
+                  <i className="fas fa-envelope mr-2 text-foreground"></i>
                   Generated Email - {generatedEmail.quote.quoteNumber}
                 </CardTitle>
                 <Button
@@ -3079,7 +3079,7 @@ Body:
               <div className="space-y-4">
                 <div className="bg-muted border border-border rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <i className="fas fa-info-circle text-blue-600"></i>
+                    <i className="fas fa-info-circle text-foreground"></i>
                     <span className="font-semibold text-foreground">AI-Generated Professional Email</span>
                   </div>
                   <p className="text-sm text-foreground">
