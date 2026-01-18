@@ -209,16 +209,16 @@ const BookingManagement = () => {
         )}
         
         <div className="flex justify-between items-center">
-          <div className="text-lg font-bold text-green-600">
+          <div className="text-lg font-bold text-foreground">
             ${booking.total_cost || 0}
           </div>
           <div className="flex space-x-2">
             {isRequest && booking.status === 'pending' && (
               <>
-                <Button size="sm" variant="outline" className="text-green-600 hover:bg-green-50">
+                <Button size="sm" variant="outline" className="text-foreground hover:bg-green-50">
                   Approve
                 </Button>
-                <Button size="sm" variant="outline" className="text-red-600 hover:bg-red-50">
+                <Button size="sm" variant="outline" className="text-foreground hover:bg-red-50">
                   Reject
                 </Button>
               </>
@@ -294,7 +294,7 @@ const BookingManagement = () => {
                     <p className="text-sm text-blue-800">
                       {selectedEquipment.name} - {selectedEquipment.description}
                     </p>
-                    <p className="text-sm text-blue-600 mt-1">
+                    <p className="text-sm text-foreground mt-1">
                       Daily Rate: ${selectedEquipment.daily_rate} | Location: {selectedEquipment.location_address}
                     </p>
                   </div>

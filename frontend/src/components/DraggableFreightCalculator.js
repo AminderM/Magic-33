@@ -197,7 +197,7 @@ const DraggableFreightCalculator = ({
       {isEditMode && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
           <div className="flex items-start gap-2">
-            <i className="fas fa-info-circle text-blue-500 mt-0.5"></i>
+            <i className="fas fa-info-circle text-foreground mt-0.5"></i>
             <div className="text-sm text-blue-700">
               <p className="font-medium mb-1">Edit Mode Instructions:</p>
               <ul className="list-disc list-inside space-y-1 text-xs">

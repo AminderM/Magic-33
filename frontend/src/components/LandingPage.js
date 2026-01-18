@@ -65,9 +65,9 @@ const LandingPage = () => {
                 Complete fleet operations with real-time tracking, order management, and comprehensive analytics.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time GPS tracking</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Order management</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>AI-powered tools</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Real-time GPS tracking</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Order management</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>AI-powered tools</li>
               </ul>
             </div>
 
@@ -81,9 +81,9 @@ const LandingPage = () => {
                 Specialized for oversized loads, heavy equipment hauling, and permit management.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Oversized load management</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Permit tracking</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Route planning</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Oversized load management</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Permit tracking</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Route planning</li>
               </ul>
             </div>
 
@@ -97,9 +97,9 @@ const LandingPage = () => {
                 Streamline freight brokerage with carrier management, load matching, and workflows.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Carrier network</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Load matching</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Rate management</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Carrier network</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Load matching</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Rate management</li>
               </ul>
             </div>
 
@@ -113,9 +113,9 @@ const LandingPage = () => {
                 Optimize dispatching with real-time load assignment and driver communication.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Real-time dispatch</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Load optimization</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>ETA tracking</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Real-time dispatch</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Load optimization</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>ETA tracking</li>
               </ul>
             </div>
 
@@ -129,9 +129,9 @@ const LandingPage = () => {
                 End-to-end freight operations covering shipment tracking and documentation.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Shipment tracking</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Multi-modal transport</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Freight audit</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Shipment tracking</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Multi-modal transport</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Freight audit</li>
               </ul>
             </div>
 
@@ -145,9 +145,9 @@ const LandingPage = () => {
                 Complete fleet maintenance including scheduling, inspections, and fuel management.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Preventive maintenance</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>DVIR inspections</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Fuel tracking</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Preventive maintenance</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>DVIR inspections</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Fuel tracking</li>
               </ul>
             </div>
 
@@ -161,9 +161,9 @@ const LandingPage = () => {
                 Ensure full regulatory compliance with DOT, FMCSA, and safety regulations.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
-                <li><i className="fas fa-check text-green-500 mr-2"></i>DOT/FMCSA compliance</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Driver qualification</li>
-                <li><i className="fas fa-check text-green-500 mr-2"></i>Safety programs</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>DOT/FMCSA compliance</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Driver qualification</li>
+                <li><i className="fas fa-check text-foreground mr-2"></i>Safety programs</li>
               </ul>
             </div>
           </div>

@@ -423,7 +423,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                   <p className="text-sm text-muted-foreground">Total Bundles</p>
                   <p className="text-2xl font-bold text-foreground">{stats.total_bundles}</p>
                 </div>
-                <Package className="w-8 h-8 text-blue-500" />
+                <Package className="w-8 h-8 text-foreground" />
               </div>
             </CardContent>
           </Card>
@@ -434,7 +434,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                   <p className="text-sm text-muted-foreground">Active Subscriptions</p>
                   <p className="text-2xl font-bold text-foreground">{stats.active_assignments}</p>
                 </div>
-                <Check className="w-8 h-8 text-green-500" />
+                <Check className="w-8 h-8 text-foreground" />
               </div>
             </CardContent>
           </Card>
@@ -456,7 +456,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                   <p className="text-sm text-muted-foreground">Company Subscriptions</p>
                   <p className="text-2xl font-bold text-foreground">{stats.company_subscriptions}</p>
                 </div>
-                <Building2 className="w-8 h-8 text-orange-500" />
+                <Building2 className="w-8 h-8 text-foreground" />
               </div>
             </CardContent>
           </Card>
@@ -641,7 +641,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                               {assignment.entity_type === 'user' ? (
                                 <Users className="w-4 h-4 text-purple-500" />
                               ) : (
-                                <Building2 className="w-4 h-4 text-orange-500" />
+                                <Building2 className="w-4 h-4 text-foreground" />
                               )}
                               <span className="font-medium">{assignment.entity_name}</span>
                             </div>
@@ -706,7 +706,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                     <div className="space-y-1">
                       {product.features?.slice(0, 4).map((feature, idx) => (
                         <div key={idx} className="flex items-center text-sm text-muted-foreground">
-                          <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                          <Check className="w-4 h-4 text-foreground mr-2 flex-shrink-0" />
                           {feature}
                         </div>
                       ))}

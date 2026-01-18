@@ -192,7 +192,7 @@ const MobileDriverInterface = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-red-600">Error</CardTitle>
+            <CardTitle className="text-foreground">Error</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 mb-4">No vehicle ID provided</p>
@@ -243,7 +243,7 @@ const MobileDriverInterface = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <i className="fas fa-sliders-h mr-2 text-blue-600"></i>
+              <i className="fas fa-sliders-h mr-2 text-foreground"></i>
               Controls
             </CardTitle>
           </CardHeader>
@@ -301,7 +301,7 @@ const MobileDriverInterface = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <i className="fas fa-map-marker-alt mr-2 text-green-600"></i>
+              <i className="fas fa-map-marker-alt mr-2 text-foreground"></i>
               Current Location
             </CardTitle>
           </CardHeader>
@@ -355,7 +355,7 @@ const MobileDriverInterface = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <i className="fas fa-history mr-2 text-purple-600"></i>
+              <i className="fas fa-history mr-2 text-foreground"></i>
               Recent Updates ({locationHistory.length})
             </CardTitle>
           </CardHeader>

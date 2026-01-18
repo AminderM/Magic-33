@@ -402,7 +402,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                   On Route ({stats.onRoute})
                 </TabsTrigger>
                 <TabsTrigger value="expiring" className="text-xs">
-                  <i className="fas fa-exclamation-triangle mr-1 text-orange-500"></i>
+                  <i className="fas fa-exclamation-triangle mr-1 text-foreground"></i>
                   Expiring ({stats.expiringSoon})
                 </TabsTrigger>
               </TabsList>

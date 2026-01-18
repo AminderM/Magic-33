@@ -1462,7 +1462,7 @@ const OrderManagement = () => {
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-foreground hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear

@@ -846,7 +846,7 @@ const CompanyProfileInner = () => {
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="text-red-600 hover:bg-muted"
+                                  className="text-foreground hover:bg-muted"
                                   onClick={() => handleDeleteUser(user.id)}
                                 >
                                   <i className="fas fa-trash"></i>
@@ -969,7 +969,7 @@ const CompanyProfileInner = () => {
                                   <Button 
                                     size="sm" 
                                     variant="outline" 
-                                    className="text-red-600 hover:bg-muted"
+                                    className="text-foreground hover:bg-muted"
                                     onClick={() => handleDeleteDriver(driver.id)}
                                   >
                                     <i className="fas fa-trash"></i>

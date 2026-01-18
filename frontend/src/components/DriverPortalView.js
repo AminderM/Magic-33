@@ -359,7 +359,7 @@ const DriverPortalView = () => {
                 </div>
                 <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="flex items-start gap-3">
-                    <i className="fas fa-map-marker-alt text-red-600 mt-1"></i>
+                    <i className="fas fa-map-marker-alt text-foreground mt-1"></i>
                     <div>
                       <p className="text-sm font-medium text-red-900 uppercase">Delivery</p>
                       <p className="font-semibold">{selectedLoad.delivery_location}</p>
@@ -505,7 +505,7 @@ const DriverPortalView = () => {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <i className="fas fa-map-marker-alt text-red-600 mt-1"></i>
+                    <i className="fas fa-map-marker-alt text-foreground mt-1"></i>
                     <div>
                       <p className="text-xs text-gray-500 uppercase font-medium">Delivery</p>
                       <p className="text-sm font-semibold">{load.delivery_city}, {load.delivery_state}</p>

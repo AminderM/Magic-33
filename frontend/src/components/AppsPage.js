@@ -276,7 +276,7 @@ const AppsPage = () => {
                   <ul className="space-y-1">
                     {app.features.slice(0, 4).map((feature, index) => (
                       <li key={index} className="text-sm text-gray-600 flex items-start">
-                        <i className="fas fa-check text-green-600 mr-2 mt-1"></i>
+                        <i className="fas fa-check text-foreground mr-2 mt-1"></i>
                         <span>{feature}</span>
                       </li>
                     ))}
