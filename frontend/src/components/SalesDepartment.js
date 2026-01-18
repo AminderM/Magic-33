@@ -2292,7 +2292,7 @@ Body:
                           {quoteData.stops.length > 0 && (
                             <div className="space-y-1.5 max-h-24 overflow-y-auto pr-1">
                               {quoteData.stops.map((stop, index) => (
-                                <div key={index} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-gray-50 rounded-lg px-3 py-2 text-xs border border-blue-100 hover:border-border transition-all">
+                                <div key={index} className="flex items-center gap-2 bg-muted rounded-lg px-3 py-2 text-xs border border-blue-100 hover:border-border transition-all">
                                   <i className="fas fa-map-pin text-blue-500 text-xs"></i>
                                   <span className="flex-1 truncate text-foreground font-medium">Stop {index + 1}: {stop}</span>
                                   <button

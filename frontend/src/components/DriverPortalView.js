@@ -211,7 +211,7 @@ const DriverPortalView = () => {
   // LOGIN VIEW
   if (!isDriverLoggedIn) {
     return (
-      <div className="min-h-[600px] bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-8 rounded-lg">
+      <div className="min-h-[600px] bg-card flex items-center justify-center p-8 rounded-lg">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-center">

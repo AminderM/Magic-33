@@ -285,7 +285,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -299,7 +299,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -313,7 +313,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -327,7 +327,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -774,7 +774,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           {selectedDriver && (
             <div className="space-y-6">
               {/* Profile Header */}
-              <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+              <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-3xl">
                   {selectedDriver.full_name?.charAt(0)?.toUpperCase() || 'D'}
                 </div>

@@ -42,7 +42,7 @@ const ThemeToggle = () => {
     >
       {isDark ? (
         <>
-          <i className="fas fa-sun text-yellow-400"></i>
+          <i className="fas fa-sun text-foreground"></i>
           <span className="hidden sm:inline text-xs">Light</span>
         </>
       ) : (
