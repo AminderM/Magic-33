@@ -915,7 +915,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -932,7 +932,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+        <Card className="bg-gradient-to-br from-red-50 to-red-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -949,7 +949,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+        <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -966,7 +966,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -1018,7 +1018,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           <div className="space-y-6">
             {/* Alerts & Notifications Section */}
             {alerts.length > 0 && (
-              <Card className="border-orange-200 bg-muted/30">
+              <Card className="border-border bg-muted/30">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center justify-between">
                     <div className="flex items-center">
@@ -1049,8 +1049,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       <div 
                         key={idx} 
                         className={`p-3 rounded-lg flex items-start justify-between ${
-                          alert.priority === 'high' ? 'bg-muted border border-red-200' :
-                          alert.priority === 'medium' ? 'bg-muted border border-yellow-200' :
+                          alert.priority === 'high' ? 'bg-muted border border-border' :
+                          alert.priority === 'medium' ? 'bg-muted border border-border' :
                           'bg-muted border border-border'
                         }`}
                       >
@@ -1068,7 +1068,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                             <span>Due: {new Date(alert.due_date).toLocaleDateString()}</span>
                             {alert.days_overdue > 0 && (
-                              <Badge variant="outline" className="text-xs bg-muted text-red-600 border-red-200">
+                              <Badge variant="outline" className="text-xs bg-muted text-red-600 border-border">
                                 {alert.days_overdue} days overdue
                               </Badge>
                             )}
@@ -1320,7 +1320,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 ) : (
                   <div className="space-y-4">
                     {/* Category Badge */}
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-border">
                       <span className="font-medium text-foreground">Detected Category:</span>
                       <Badge className="bg-muted text-foreground">
                         <i className={`fas ${getCategoryIcon(parsedReceiptData.category)} mr-1`}></i>
@@ -1459,7 +1459,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
                       {/* Fuel specific fields */}
                       {parsedReceiptData.category === 'fuel' && (parsedReceiptData.gallons || parsedReceiptData.price_per_gallon) && (
-                        <div className="bg-muted p-3 rounded-lg border border-yellow-200">
+                        <div className="bg-muted p-3 rounded-lg border border-border">
                           <Label className="text-xs text-foreground font-medium">Fuel Details</Label>
                           <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
                             {parsedReceiptData.gallons && (
@@ -1532,19 +1532,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent>
               {/* Summary Cards */}
               <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="p-4 bg-muted rounded-lg border border-green-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="text-sm text-green-600 font-medium">Total Received</div>
                   <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_received || 0).toLocaleString()}</div>
                 </div>
-                <div className="p-4 bg-muted rounded-lg border border-blue-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="text-sm text-blue-600 font-medium">Total Invoiced</div>
                   <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_invoiced || 0).toLocaleString()}</div>
                 </div>
-                <div className="p-4 bg-muted rounded-lg border border-yellow-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="text-sm text-yellow-600 font-medium">Outstanding</div>
                   <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_outstanding || 0).toLocaleString()}</div>
                 </div>
-                <div className="p-4 bg-muted rounded-lg border border-purple-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="text-sm text-purple-600 font-medium">Collection Rate</div>
                   <div className="text-2xl font-bold text-foreground">
                     {incomeSummary.total_invoiced > 0 
@@ -1564,7 +1564,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-muted border-b-2 border-green-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
                         <th className="px-4 py-3 text-left font-semibold text-foreground">Invoice #</th>
                         <th className="px-4 py-3 text-left font-semibold text-foreground">Customer</th>
@@ -1615,7 +1615,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             </td>
                             <td className="px-4 py-3">
                               {item.load_reference ? (
-                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-purple-200">
+                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
                                   <i className="fas fa-truck mr-1"></i>
                                   {item.load_reference}
                                 </Badge>
@@ -1678,17 +1678,17 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent>
               {/* Summary Cards */}
               <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="p-4 bg-muted rounded-lg border border-yellow-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="text-sm text-yellow-600 font-medium">Pending Approval</div>
                   <div className="text-2xl font-bold text-foreground">${(expensesSummary.pending_total || 0).toLocaleString()}</div>
                   <div className="text-xs text-yellow-500">{expensesSummary.pending_count || 0} expenses</div>
                 </div>
-                <div className="p-4 bg-muted rounded-lg border border-green-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="text-sm text-green-600 font-medium">Approved (→ AP)</div>
                   <div className="text-2xl font-bold text-foreground">${(expensesSummary.approved_total || 0).toLocaleString()}</div>
                   <div className="text-xs text-green-500">{expensesSummary.approved_count || 0} expenses</div>
                 </div>
-                <div className="p-4 bg-muted rounded-lg border border-blue-200 col-span-2">
+                <div className="p-4 bg-muted rounded-lg border border-border col-span-2">
                   <div className="text-sm text-blue-600 font-medium">Workflow</div>
                   <div className="flex items-center gap-2 mt-2 text-xs">
                     <Badge className="bg-muted">Upload Receipt</Badge>
@@ -1750,12 +1750,12 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           <td className="px-4 py-3">
                             <div className="flex flex-col gap-1 text-xs">
                               {expense.load_reference && (
-                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-purple-200">
+                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
                                   <i className="fas fa-truck mr-1"></i>{expense.load_reference}
                                 </Badge>
                               )}
                               {expense.driver_name && (
-                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-blue-200">
+                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
                                   <i className="fas fa-user mr-1"></i>{expense.driver_name}
                                 </Badge>
                               )}
@@ -1999,7 +1999,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           </td>
                           <td className="px-4 py-3">
                             {item.load_reference ? (
-                              <Badge variant="outline" className="text-xs bg-muted text-foreground border-purple-200">
+                              <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
                                 <i className="fas fa-truck mr-1"></i>
                                 {item.load_reference}
                               </Badge>
@@ -2218,7 +2218,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           <td className="px-4 py-3 capitalize">{item.category || '-'}</td>
                           <td className="px-4 py-3">
                             {item.load_reference ? (
-                              <Badge variant="outline" className="text-xs bg-muted text-foreground border-purple-200">
+                              <Badge variant="outline" className="text-xs bg-muted text-foreground border-border">
                                 <i className="fas fa-truck mr-1"></i>
                                 {item.load_reference}
                               </Badge>
