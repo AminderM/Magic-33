@@ -412,7 +412,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
           <div key={category} className="space-y-4">
             <div className="flex items-center space-x-2">
               <h3 className="text-xl font-semibold text-foreground">{categoryData.label}</h3>
-              <span className="px-2 py-1 bg-gray-200 text-foreground text-xs rounded-full">
+              <span className="px-2 py-1 bg-muted text-foreground text-xs rounded-full">
                 {categoryIntegrations.length} configured
               </span>
             </div>
