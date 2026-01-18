@@ -190,7 +190,7 @@ const Dashboard = () => {
         </div>
 
         {/* Middle Panel (66%) - Main Content */}
-        <div className="w-[66%] h-full overflow-y-auto bg-gray-50 p-6">
+        <div className="w-[66%] h-full overflow-y-auto bg-background p-6">
           {/* Department-Specific Views */}
           {activeDepartment === 'sales' ? (
             <SalesDepartment BACKEND_URL={BACKEND_URL} fetchWithAuth={fetchWithAuth} />
@@ -199,10 +199,10 @@ const Dashboard = () => {
           ) : (
             <div>
               {/* Main Content Tabs */}
-              <Card className="bg-white rounded-2xl shadow-sm border border-gray-100">
+              <Card className="bg-card rounded-2xl shadow-sm border border-border">
                 <CardContent className="p-6">
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-gray-100 p-1 rounded-xl`}>
+                  <TabsList className={`grid w-full ${showAdminTabs ? 'grid-cols-6' : 'grid-cols-4'} bg-muted p-1 rounded-xl`}>
                     {showAdminTabs && (
                       <TabsTrigger value="analytics" data-testid="analytics-tab">
                         <i className="fas fa-chart-bar mr-2"></i>
