@@ -361,17 +361,18 @@ const DispatchAnalytics = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex justify-center">
-            <Calendar
+            <DayPicker
               showWeekNumber
               showOutsideDays
               fixedWeeks
+              className="p-3"
               classNames={{
                 months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
                 month: "space-y-4",
                 caption: "flex justify-center pt-1 relative items-center",
                 caption_label: "text-sm font-medium text-foreground",
                 nav: "space-x-1 flex items-center",
-                nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 border border-border rounded-md inline-flex items-center justify-center",
+                nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 border border-border rounded-md inline-flex items-center justify-center text-foreground",
                 nav_button_previous: "absolute left-1",
                 nav_button_next: "absolute right-1",
                 table: "w-full border-collapse space-y-1",
@@ -391,11 +392,12 @@ const DispatchAnalytics = () => {
                 formatWeekNumber: (weekNumber) => `W${weekNumber}`
               }}
               components={{
-                WeekNumber: ({ weekNumber }) => (
-                  <span className="text-xs text-primary font-semibold w-9 h-9 flex items-center justify-center" title={`Week ${weekNumber}`}>
-                    W{weekNumber}
-                  </span>
-                )
+                IconLeft: ({ className, ...props }) => (
+                  <ChevronLeft className="h-4 w-4 text-foreground" {...props} />
+                ),
+                IconRight: ({ className, ...props }) => (
+                  <ChevronRight className="h-4 w-4 text-foreground" {...props} />
+                ),
               }}
             />
           </CardContent>
