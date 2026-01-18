@@ -16,6 +16,7 @@ import IntegrationsView from './IntegrationsView';
 import RouteMateApp from '../route-mate/RouteMateApp';
 import PlatformUserManagement from './PlatformUserManagement';
 import CarrierLookup from './CarrierLookup';
+import ThemeToggle from '../ThemeToggle';
 
 const AdminConsole = () => {
   const { fetchWithAuth, user, logout } = useAuth();
