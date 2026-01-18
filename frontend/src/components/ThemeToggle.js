@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Toggle } from '@/components/ui/toggle';
+import { Moon, Sun } from 'lucide-react';
 
 const ThemeToggle = () => {
   const [isDark, setIsDark] = useState(false);
@@ -33,25 +34,20 @@ const ThemeToggle = () => {
   };
 
   return (
-    <Button
+    <Toggle
       variant="outline"
       size="sm"
-      onClick={toggleTheme}
-      className="flex items-center gap-2 bg-card hover:bg-muted border-border"
-      title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+      pressed={isDark}
+      onPressedChange={toggleTheme}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className="border-border"
     >
       {isDark ? (
-        <>
-          <i className="fas fa-sun text-foreground"></i>
-          <span className="hidden sm:inline text-xs">Light</span>
-        </>
+        <Sun className="h-4 w-4 text-yellow-400" />
       ) : (
-        <>
-          <i className="fas fa-moon text-slate-600"></i>
-          <span className="hidden sm:inline text-xs">Dark</span>
-        </>
+        <Moon className="h-4 w-4 text-foreground" />
       )}
-    </Button>
+    </Toggle>
   );
 };
 
