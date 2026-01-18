@@ -275,7 +275,7 @@ const FilterBar = ({
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="px-3 py-2 text-sm text-red-600 hover:text-foreground hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1"
+            className="px-3 py-2 text-sm text-red-600 hover:text-foreground hover:bg-muted rounded-lg transition-colors flex items-center gap-1"
           >
             <i className="fas fa-times text-xs"></i>
             Clear
@@ -287,7 +287,7 @@ const FilterBar = ({
       {hasActiveFilters && (
         <div className="mt-2 flex flex-wrap gap-2">
           {filters.searchText && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-foreground rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               Search: "{filters.searchText}"
               <button onClick={() => setFilters({ ...filters, searchText: '' })} className="ml-1 hover:text-blue-900">
                 <i className="fas fa-times"></i>
@@ -295,7 +295,7 @@ const FilterBar = ({
             </span>
           )}
           {filters.dateFrom && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-foreground rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               From: {filters.dateFrom}
               <button onClick={() => setFilters({ ...filters, dateFrom: '' })} className="ml-1 hover:text-green-900">
                 <i className="fas fa-times"></i>
@@ -303,7 +303,7 @@ const FilterBar = ({
             </span>
           )}
           {filters.dateTo && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-foreground rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               To: {filters.dateTo}
               <button onClick={() => setFilters({ ...filters, dateTo: '' })} className="ml-1 hover:text-green-900">
                 <i className="fas fa-times"></i>
@@ -311,7 +311,7 @@ const FilterBar = ({
             </span>
           )}
           {filters.status !== 'all' && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-purple-100 text-foreground rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               Status: {filters.status}
               <button onClick={() => setFilters({ ...filters, status: 'all' })} className="ml-1 hover:text-purple-900">
                 <i className="fas fa-times"></i>
@@ -319,7 +319,7 @@ const FilterBar = ({
             </span>
           )}
           {showSource && filters.source !== 'all' && (
-            <span className="inline-flex items-center px-2 py-1 text-xs bg-orange-100 text-foreground rounded-full">
+            <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               Source: {filters.source}
               <button onClick={() => setFilters({ ...filters, source: 'all' })} className="ml-1 hover:text-orange-900">
                 <i className="fas fa-times"></i>
@@ -860,25 +860,25 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   const getStatusColor = (status) => {
     const colors = {
-      new: 'bg-blue-100 text-foreground',
-      contacted: 'bg-yellow-100 text-foreground',
-      qualified: 'bg-green-100 text-foreground',
-      proposal: 'bg-purple-100 text-foreground',
-      negotiation: 'bg-orange-100 text-foreground',
-      won: 'bg-green-500 text-white',
-      lost: 'bg-red-100 text-foreground'
+      new: 'bg-muted text-foreground',
+      contacted: 'bg-muted text-foreground',
+      qualified: 'bg-muted text-foreground',
+      proposal: 'bg-muted text-foreground',
+      negotiation: 'bg-muted text-foreground',
+      won: 'bg-muted0 text-white',
+      lost: 'bg-muted text-foreground'
     };
     return colors[status] || 'bg-muted text-foreground';
   };
 
   const getStageColor = (stage) => {
     const colors = {
-      prospecting: 'bg-blue-500',
-      qualification: 'bg-yellow-500',
-      proposal: 'bg-purple-500',
-      negotiation: 'bg-orange-500',
-      closed_won: 'bg-green-500',
-      closed_lost: 'bg-red-500'
+      prospecting: 'bg-muted0',
+      qualification: 'bg-muted0',
+      proposal: 'bg-muted0',
+      negotiation: 'bg-muted0',
+      closed_won: 'bg-muted0',
+      closed_lost: 'bg-muted0'
     };
     return colors[stage] || 'bg-muted0';
   };
@@ -1256,7 +1256,7 @@ Body:
                     <p className="text-sm text-muted-foreground">Total Leads</p>
                     <p className="text-2xl font-bold text-foreground">{leads.length}</p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
                     <i className="fas fa-user-plus text-blue-600 text-xl"></i>
                   </div>
                 </div>
@@ -1472,7 +1472,7 @@ Body:
                       closeDateFrom: '',
                       closeDateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -1773,7 +1773,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -1823,7 +1823,7 @@ Body:
                           <td className="px-4 py-2.5 text-sm text-green-600 font-semibold border-r border-gray-300">${customer.total_revenue.toLocaleString()}</td>
                           <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{customer.loads_count} completed</td>
                           <td className="px-4 py-2.5 text-sm border-r border-gray-300">
-                            <Badge className="bg-green-500 text-white">ACTIVE</Badge>
+                            <Badge className="bg-muted0 text-white">ACTIVE</Badge>
                           </td>
                           <td className="px-4 py-2.5 text-sm text-center">
                             <div className="flex gap-1.5 justify-center">
@@ -1901,7 +1901,7 @@ Body:
                     }}
                     className={`
                       flex-shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-card/20 transition-colors
-                      ${tab.id === activeTabId ? 'text-white hover:bg-card/30' : 'text-muted-foreground hover:text-red-500 hover:bg-red-50'}
+                      ${tab.id === activeTabId ? 'text-white hover:bg-card/30' : 'text-muted-foreground hover:text-red-500 hover:bg-muted'}
                     `}
                     title="Close quote"
                   >
@@ -2301,7 +2301,7 @@ Body:
                                       setQuoteData({...quoteData, stops: newStops});
                                       toast.success(`Stop ${index + 1} removed from route`);
                                     }}
-                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-card hover:bg-red-50 text-muted-foreground hover:text-red-500 border border-border hover:border-red-300 transition-all shadow-sm hover:shadow"
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-card hover:bg-muted text-muted-foreground hover:text-red-500 border border-border hover:border-red-300 transition-all shadow-sm hover:shadow"
                                     title="Remove this stop"
                                   >
                                     <i className="fas fa-times text-xs"></i>
@@ -2539,7 +2539,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -2567,7 +2567,7 @@ Body:
                     <div key={quote.id} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
                             <i className="fas fa-file-invoice text-blue-600 text-xl"></i>
                           </div>
                           <div>
@@ -2575,7 +2575,7 @@ Body:
                               <h4 className="font-bold text-blue-600 text-lg">
                                 {quote.quoteNumber}
                               </h4>
-                              <Badge className="bg-blue-100 text-foreground text-xs">Rate Quote</Badge>
+                              <Badge className="bg-muted text-foreground text-xs">Rate Quote</Badge>
                             </div>
                             <h4 className="font-semibold text-foreground">
                               {quote.pickupLocation} → {quote.destination}
@@ -2587,7 +2587,7 @@ Body:
                         </div>
                         <div className="text-right">
                           <div className="text-2xl font-bold text-foreground">${quote.totalAmount}</div>
-                          <Badge className={quote.status === 'incomplete' ? 'bg-yellow-100 text-foreground' : 'bg-green-100 text-foreground'}>
+                          <Badge className={quote.status === 'incomplete' ? 'bg-muted text-foreground' : 'bg-muted text-foreground'}>
                             {quote.status}
                           </Badge>
                         </div>
@@ -2644,7 +2644,7 @@ Body:
                           size="sm"
                           onClick={() => generateEmail(quote)}
                           disabled={!isQuoteComplete(quote)}
-                          className={!isQuoteComplete(quote) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-50'}
+                          className={!isQuoteComplete(quote) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted'}
                         >
                           <i className="fas fa-envelope mr-1"></i>
                           Generate Email
@@ -2835,7 +2835,7 @@ Body:
                       dateFrom: '',
                       dateTo: ''
                     })}
-                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-red-50 rounded transition-colors whitespace-nowrap"
+                    className="px-2 py-1.5 text-xs text-red-600 hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
                   >
                     <i className="fas fa-times mr-1"></i>
                     Clear
@@ -2896,16 +2896,16 @@ Body:
                           <td className="px-3 py-2 whitespace-nowrap">
                             <Select value={load.status || 'pending'} onValueChange={(value) => handleLoadStatusChange(load.id, value)}>
                               <SelectTrigger className={`h-7 w-[120px] text-xs border-0 ${
-                                load.status === 'pending' ? 'bg-yellow-100 text-foreground' :
-                                load.status === 'planned' ? 'bg-indigo-100 text-foreground' :
-                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-purple-100 text-foreground' :
-                                load.status === 'at_pickup' ? 'bg-blue-100 text-foreground' :
-                                load.status === 'in_transit_delivery' ? 'bg-purple-100 text-foreground' :
-                                load.status === 'at_delivery' ? 'bg-blue-100 text-foreground' :
-                                load.status === 'delivered' ? 'bg-green-100 text-foreground' :
-                                load.status === 'invoiced' ? 'bg-orange-100 text-foreground' :
-                                load.status === 'payment_overdue' ? 'bg-red-100 text-foreground' :
-                                load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
+                                load.status === 'pending' ? 'bg-muted text-foreground' :
+                                load.status === 'planned' ? 'bg-muted text-foreground' :
+                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-muted text-foreground' :
+                                load.status === 'at_pickup' ? 'bg-muted text-foreground' :
+                                load.status === 'in_transit_delivery' ? 'bg-muted text-foreground' :
+                                load.status === 'at_delivery' ? 'bg-muted text-foreground' :
+                                load.status === 'delivered' ? 'bg-muted text-foreground' :
+                                load.status === 'invoiced' ? 'bg-muted text-foreground' :
+                                load.status === 'payment_overdue' ? 'bg-muted text-foreground' :
+                                load.status === 'paid' ? 'bg-muted text-emerald-800' :
                                 'bg-muted text-foreground'
                               }`}>
                                 <SelectValue placeholder="Status" />
@@ -3077,7 +3077,7 @@ Body:
             </CardHeader>
             <CardContent className="p-6 overflow-y-auto flex-1">
               <div className="space-y-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="bg-muted border border-blue-200 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <i className="fas fa-info-circle text-blue-600"></i>
                     <span className="font-semibold text-blue-900">AI-Generated Professional Email</span>
