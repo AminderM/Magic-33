@@ -167,7 +167,7 @@ const AdminConsole = () => {
     return (
       <div className="p-8 text-center">
         <h2 className="text-xl font-semibold">Unauthorized</h2>
-        <p className="text-gray-600 mt-2">You do not have access to the Admin Console.</p>
+        <p className="text-muted-foreground mt-2">You do not have access to the Admin Console.</p>
       </div>
     );
   }
@@ -246,13 +246,13 @@ const AdminConsole = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-muted">
       {/* Left Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+      <div className="w-64 bg-card border-r border-border flex flex-col">
         {/* Logo/Header */}
-        <div className="p-6 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-800">Admin Console</h1>
-          <p className="text-sm text-gray-500 mt-1">Platform Management</p>
+        <div className="p-6 border-b border-border">
+          <h1 className="text-xl font-bold text-foreground">Admin Console</h1>
+          <p className="text-sm text-muted-foreground mt-1">Platform Management</p>
         </div>
 
         {/* Navigation */}
@@ -266,8 +266,8 @@ const AdminConsole = () => {
                 onClick={() => setActiveView(item.id)}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-blue-50 text-blue-600 font-medium'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-muted text-foreground font-medium'
+                    : 'text-foreground hover:bg-muted'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -278,10 +278,10 @@ const AdminConsole = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-border">
           <div className="px-4 py-2 mb-2">
-            <div className="text-sm font-medium text-gray-800">{user?.full_name}</div>
-            <div className="text-xs text-gray-500">{user?.email}</div>
+            <div className="text-sm font-medium text-foreground">{user?.full_name}</div>
+            <div className="text-xs text-muted-foreground">{user?.email}</div>
           </div>
           <Button 
             variant="outline" 
@@ -316,8 +316,8 @@ const HomeView = ({ tenants, plans, loading }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-800">Dashboard Overview</h2>
-        <p className="text-gray-600 mt-2">Welcome to the Platform Admin Console</p>
+        <h2 className="text-3xl font-bold text-foreground">Dashboard Overview</h2>
+        <p className="text-muted-foreground mt-2">Welcome to the Platform Admin Console</p>
       </div>
 
       {/* Stats Cards */}
@@ -326,25 +326,11 @@ const HomeView = ({ tenants, plans, loading }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Tenants</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{totalTenants}</p>
+                <p className="text-sm font-medium text-muted-foreground">Total Tenants</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{totalTenants}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Subscriptions</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{activeTenants}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -354,11 +340,11 @@ const HomeView = ({ tenants, plans, loading }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Monthly Revenue</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">${totalRevenue.toLocaleString()}</p>
+                <p className="text-sm font-medium text-muted-foreground">Active Subscriptions</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{activeTenants}</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Package className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -368,11 +354,25 @@ const HomeView = ({ tenants, plans, loading }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Available Plans</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{plans.length}</p>
+                <p className="text-sm font-medium text-muted-foreground">Monthly Revenue</p>
+                <p className="text-3xl font-bold text-foreground mt-2">${totalRevenue.toLocaleString()}</p>
               </div>
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <Package className="w-6 h-6 text-orange-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Package className="w-6 h-6 text-foreground" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Available Plans</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{plans.length}</p>
+              </div>
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Package className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -386,18 +386,18 @@ const HomeView = ({ tenants, plans, loading }) => {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="text-center py-8 text-gray-500">Loading...</div>
+            <div className="text-center py-8 text-muted-foreground">Loading...</div>
           ) : (
             <div className="space-y-3">
               {tenants.slice(0, 5).map((tenant) => (
-                <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted">
                   <div>
-                    <h3 className="font-medium text-gray-900">{tenant.name}</h3>
-                    <p className="text-sm text-gray-500">{tenant.company_email || 'No email'}</p>
+                    <h3 className="font-medium text-foreground">{tenant.name}</h3>
+                    <p className="text-sm text-muted-foreground">{tenant.company_email || 'No email'}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900">{tenant.plan}</div>
-                    <div className={`text-xs ${tenant.subscription_status === 'active' ? 'text-green-600' : 'text-gray-500'}`}>
+                    <div className="text-sm font-medium text-foreground">{tenant.plan}</div>
+                    <div className={`text-xs ${tenant.subscription_status === 'active' ? 'text-foreground' : 'text-muted-foreground'}`}>
                       {tenant.subscription_status || 'No subscription'}
                     </div>
                   </div>
@@ -420,8 +420,8 @@ const SubscriptionManagerView = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-800">Subscription Manager</h2>
-        <p className="text-gray-600 mt-2">Manage tenant subscriptions, plans, and features</p>
+        <h2 className="text-3xl font-bold text-foreground">Subscription Manager</h2>
+        <p className="text-muted-foreground mt-2">Manage tenant subscriptions, plans, and features</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -434,12 +434,12 @@ const SubscriptionManagerView = ({
               <Input placeholder="Search companies" value={query} onChange={(e) => setQuery(e.target.value)} className="mb-3" />
               <div className="max-h-[520px] overflow-auto divide-y">
                 {loading ? (
-                  <div className="py-10 text-center text-gray-500">Loading...</div>
+                  <div className="py-10 text-center text-muted-foreground">Loading...</div>
                 ) : (
                   filtered.map(t => (
-                    <button key={t.id} className={`w-full text-left p-3 hover:bg-gray-50 ${selected?.id===t.id?'bg-blue-50':''}`} onClick={() => onSelectTenant(t)}>
+                    <button key={t.id} className={`w-full text-left p-3 hover:bg-muted ${selected?.id===t.id?'bg-muted':''}`} onClick={() => onSelectTenant(t)}>
                       <div className="font-medium">{t.name}</div>
-                      <div className="text-xs text-gray-500">{planIdToLabel(t.plan)} • Seats: {t.seats} • {t.subscription_status || 'no sub'}</div>
+                      <div className="text-xs text-muted-foreground">{planIdToLabel(t.plan)} • Seats: {t.seats} • {t.subscription_status || 'no sub'}</div>
                     </button>
                   ))
                 )}
@@ -451,7 +451,7 @@ const SubscriptionManagerView = ({
         <div className="lg:col-span-2 space-y-6">
           {!selected ? (
             <Card>
-              <CardContent className="py-16 text-center text-gray-500">Select a tenant to manage</CardContent>
+              <CardContent className="py-16 text-center text-muted-foreground">Select a tenant to manage</CardContent>
             </Card>
           ) : (
             <>
@@ -506,18 +506,18 @@ const SubscriptionManagerView = ({
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <div className="text-sm text-gray-600">Existing</div>
+                    <div className="text-sm text-muted-foreground">Existing</div>
                     <div className="space-y-2">
                       {integrations?.eld?.length ? integrations.eld.map((i, idx) => (
                         <div key={idx} className="border rounded p-3 flex items-center justify-between">
                           <div>
                             <div className="font-medium text-sm">{i.provider} {i.name ? `• ${i.name}` : ''}</div>
-                            <div className="text-xs text-gray-500">Client ID: {i.client_id || '—'} • Secret: {i.client_secret_masked || '—'} • Scopes: {(i.scopes||[]).join(', ')}</div>
+                            <div className="text-xs text-muted-foreground">Client ID: {i.client_id || '—'} • Secret: {i.client_secret_masked || '—'} • Scopes: {(i.scopes||[]).join(', ')}</div>
                           </div>
-                          <div className="text-xs text-gray-400">{new Date(i.created_at).toLocaleString()}</div>
+                          <div className="text-xs text-muted-foreground">{new Date(i.created_at).toLocaleString()}</div>
                         </div>
                       )) : (
-                        <div className="text-sm text-gray-500">No integrations yet</div>
+                        <div className="text-sm text-muted-foreground">No integrations yet</div>
                       )}
                     </div>
                   </div>
@@ -599,14 +599,14 @@ const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading analytics...</p>
+          <p className="mt-4 text-muted-foreground">Loading analytics...</p>
         </div>
       </div>
     );
   }
 
   if (!analyticsData) {
-    return <div className="text-center text-gray-500 py-16">No analytics data available</div>;
+    return <div className="text-center text-muted-foreground py-16">No analytics data available</div>;
   }
 
   const activeSubscriptions = tenants.filter(t => t.subscription_status === 'active').length;
@@ -622,8 +622,8 @@ const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-800">Sales Analytics</h2>
-        <p className="text-gray-600 mt-2">Track revenue, subscriptions, and growth metrics</p>
+        <h2 className="text-3xl font-bold text-foreground">Sales Analytics</h2>
+        <p className="text-muted-foreground mt-2">Track revenue, subscriptions, and growth metrics</p>
       </div>
 
       {/* Subscription Status Cards */}
@@ -632,25 +632,11 @@ const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active</p>
-                <p className="text-3xl font-bold text-green-600 mt-2">{activeSubscriptions}</p>
+                <p className="text-sm font-medium text-muted-foreground">Active</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{activeSubscriptions}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Pending</p>
-                <p className="text-3xl font-bold text-yellow-600 mt-2">{pendingSubscriptions}</p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <Package className="w-6 h-6 text-yellow-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -660,11 +646,25 @@ const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Canceled</p>
-                <p className="text-3xl font-bold text-red-600 mt-2">{canceledSubscriptions}</p>
+                <p className="text-sm font-medium text-muted-foreground">Pending</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{pendingSubscriptions}</p>
               </div>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-red-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Package className="w-6 h-6 text-foreground" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Canceled</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{canceledSubscriptions}</p>
+              </div>
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -681,15 +681,15 @@ const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
             {Object.entries(planDistribution).map(([plan, count]) => (
               <div key={plan} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Package className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                    <Package className="w-6 h-6 text-foreground" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{plan.replace('_', ' ').toUpperCase()}</h3>
-                    <p className="text-sm text-gray-500">{count} tenant{count !== 1 ? 's' : ''}</p>
+                    <h3 className="font-medium text-foreground">{plan.replace('_', ' ').toUpperCase()}</h3>
+                    <p className="text-sm text-muted-foreground">{count} tenant{count !== 1 ? 's' : ''}</p>
                   </div>
                 </div>
-                <div className="text-2xl font-bold text-gray-900">{count}</div>
+                <div className="text-2xl font-bold text-foreground">{count}</div>
               </div>
             ))}
           </div>
@@ -709,17 +709,17 @@ const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
               .map((tenant, index) => (
                 <div key={tenant.id} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold">
+                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-foreground font-bold">
                       {index + 1}
                     </div>
                     <div>
-                      <h3 className="font-medium text-gray-900">{tenant.name}</h3>
-                      <p className="text-sm text-gray-500">{tenant.plan}</p>
+                      <h3 className="font-medium text-foreground">{tenant.name}</h3>
+                      <p className="text-sm text-muted-foreground">{tenant.plan}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-gray-900">{tenant.seats || 1}</div>
-                    <div className="text-xs text-gray-500">seats</div>
+                    <div className="text-lg font-bold text-foreground">{tenant.seats || 1}</div>
+                    <div className="text-xs text-muted-foreground">seats</div>
                   </div>
                 </div>
               ))}
@@ -771,8 +771,8 @@ const ProductsView = ({ plans, onProductClick }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-800">Products</h2>
-        <p className="text-gray-600 mt-2">Manage subscription plans and pricing</p>
+        <h2 className="text-3xl font-bold text-foreground">Products</h2>
+        <p className="text-muted-foreground mt-2">Manage subscription plans and pricing</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -784,14 +784,14 @@ const ProductsView = ({ plans, onProductClick }) => {
             <Card 
               key={product.label}
               className={`relative border-2 transition-all ${
-                isActive ? 'border-blue-500' : 'border-gray-200'
+                isActive ? 'border-blue-500' : 'border-border'
               }`}
             >
               {/* Status Badge */}
               <div className="absolute top-4 right-4">
                 <span className={`px-3 py-1 text-xs font-medium rounded-full ${
                   isActive 
-                    ? 'bg-blue-600 text-white' 
+                    ? 'bg-primary text-white' 
                     : 'bg-gray-700 text-white'
                 }`}>
                   {isActive ? 'ACTIVE' : 'Coming Soon'}
@@ -801,12 +801,12 @@ const ProductsView = ({ plans, onProductClick }) => {
               <CardHeader className="pb-4">
                 {/* Icon placeholder */}
                 <div className={`w-16 h-16 rounded-full mb-4 flex items-center justify-center ${
-                  isActive ? 'bg-blue-100' : 'bg-gray-100'
+                  isActive ? 'bg-muted' : 'bg-muted'
                 }`}>
-                  <Package className={`w-8 h-8 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <Package className={`w-8 h-8 ${isActive ? 'text-foreground' : 'text-muted-foreground'}`} />
                 </div>
                 <CardTitle className="text-xl">{currentPlan.label}</CardTitle>
-                <p className="text-sm text-gray-600">{currentPlan.subtitle}</p>
+                <p className="text-sm text-muted-foreground">{currentPlan.subtitle}</p>
               </CardHeader>
 
               <CardContent className="space-y-4">
@@ -832,16 +832,16 @@ const ProductsView = ({ plans, onProductClick }) => {
                 )}
 
                 {/* Description */}
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {currentPlan.description}
                 </p>
 
                 {/* Key Features */}
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Key Features:</h3>
+                  <h3 className="font-semibold text-foreground mb-2">Key Features:</h3>
                   <ul className="space-y-1">
                     {currentPlan.features?.map((feature, idx) => (
-                      <li key={idx} className="text-sm text-gray-700">
+                      <li key={idx} className="text-sm text-foreground">
                         {feature}
                       </li>
                     ))}
@@ -850,11 +850,11 @@ const ProductsView = ({ plans, onProductClick }) => {
 
                 {/* Pricing */}
                 <div className="pt-4 border-t">
-                  <div className="text-3xl font-bold text-gray-900">
+                  <div className="text-3xl font-bold text-foreground">
                     ${currentPlan.price}
-                    <span className="text-base font-normal text-gray-500">/month</span>
+                    <span className="text-base font-normal text-muted-foreground">/month</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">per month</p>
+                  <p className="text-xs text-muted-foreground mt-1">per month</p>
                 </div>
 
                 {/* Action Buttons */}
@@ -870,8 +870,8 @@ const ProductsView = ({ plans, onProductClick }) => {
                   <Button 
                     className={`w-full ${
                       isActive 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                        : 'bg-gray-300 text-gray-600 cursor-default'
+                        ? 'bg-primary hover:bg-primary/90 text-white' 
+                        : 'bg-gray-300 text-muted-foreground cursor-default'
                     }`}
                     disabled={!isActive}
                     onClick={() => isActive && onProductClick(currentPlan)}
@@ -893,8 +893,8 @@ const ProductsView = ({ plans, onProductClick }) => {
 
       {uniqueProducts.length === 0 && (
         <Card>
-          <CardContent className="py-16 text-center text-gray-500">
-            <Package className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+          <CardContent className="py-16 text-center text-muted-foreground">
+            <Package className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <p>No products available</p>
           </CardContent>
         </Card>
@@ -915,11 +915,11 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
           ← Back to Products
         </Button>
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-            <i className="fas fa-mobile-alt text-purple-600"></i>
+          <h2 className="text-3xl font-bold text-foreground flex items-center gap-3">
+            <i className="fas fa-mobile-alt text-foreground"></i>
             {product.label} - Interface Preview
           </h2>
-          <p className="text-gray-600 mt-1">{product.subtitle}</p>
+          <p className="text-muted-foreground mt-1">{product.subtitle}</p>
         </div>
       </div>
 
@@ -936,57 +936,57 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
             <p className="text-xs opacity-90">TMS-style Layout</p>
           </div>
           <CardContent className="p-0">
-            <div className="bg-white">
+            <div className="bg-card">
               {/* Header with Menu */}
-              <div className="bg-blue-600 text-white p-2 flex items-center justify-between">
+              <div className="bg-primary text-white p-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <i className="fas fa-truck text-xs"></i>
                   <span className="text-xs font-semibold">Driver TMS</span>
                 </div>
-                <button className="p-1.5 hover:bg-blue-700 rounded">
+                <button className="p-1.5 hover:bg-primary/90 rounded">
                   <i className="fas fa-bars text-sm"></i>
                 </button>
               </div>
               
               {/* Load Cards */}
-              <div className="p-2 space-y-2 bg-gray-50">
-                <div className="bg-white rounded border p-2">
+              <div className="p-2 space-y-2 bg-muted">
+                <div className="bg-card rounded border p-2">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-xs font-bold">ORD-001</span>
-                    <span className="text-[9px] bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded">Pending</span>
+                    <span className="text-[9px] bg-muted text-yellow-800 px-1.5 py-0.5 rounded">Pending</span>
                   </div>
-                  <div className="space-y-1 text-[9px] text-gray-600">
+                  <div className="space-y-1 text-[9px] text-muted-foreground">
                     <div className="flex items-center gap-1">
-                      <i className="fas fa-map-marker-alt text-green-600"></i>
+                      <i className="fas fa-map-marker-alt text-foreground"></i>
                       <span>LA, CA → Phoenix, AZ</span>
                     </div>
                   </div>
                   <div className="flex gap-1 mt-1.5">
-                    <button className="flex-1 bg-blue-50 text-blue-600 px-2 py-1 rounded text-[8px] font-medium">
+                    <button className="flex-1 bg-muted text-foreground px-2 py-1 rounded text-[8px] font-medium">
                       <i className="fas fa-route mr-0.5"></i>Route
                     </button>
-                    <button className="flex-1 bg-green-50 text-green-600 px-2 py-1 rounded text-[8px] font-medium">
+                    <button className="flex-1 bg-muted text-foreground px-2 py-1 rounded text-[8px] font-medium">
                       <i className="fas fa-camera mr-0.5"></i>Docs
                     </button>
                   </div>
                 </div>
                 
-                <div className="bg-white rounded border p-2">
+                <div className="bg-card rounded border p-2">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-xs font-bold">ORD-002</span>
-                    <span className="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">In Transit</span>
+                    <span className="text-[9px] bg-muted text-foreground px-1.5 py-0.5 rounded">In Transit</span>
                   </div>
-                  <div className="space-y-1 text-[9px] text-gray-600">
+                  <div className="space-y-1 text-[9px] text-muted-foreground">
                     <div className="flex items-center gap-1">
-                      <i className="fas fa-map-marker-alt text-green-600"></i>
+                      <i className="fas fa-map-marker-alt text-foreground"></i>
                       <span>SD, CA → Vegas, NV</span>
                     </div>
                   </div>
                   <div className="flex gap-1 mt-1.5">
-                    <button className="flex-1 bg-blue-50 text-blue-600 px-2 py-1 rounded text-[8px] font-medium">
+                    <button className="flex-1 bg-muted text-foreground px-2 py-1 rounded text-[8px] font-medium">
                       <i className="fas fa-route mr-0.5"></i>Route
                     </button>
-                    <button className="flex-1 bg-green-50 text-green-600 px-2 py-1 rounded text-[8px] font-medium">
+                    <button className="flex-1 bg-muted text-foreground px-2 py-1 rounded text-[8px] font-medium">
                       <i className="fas fa-camera mr-0.5"></i>Docs
                     </button>
                   </div>
@@ -1003,9 +1003,9 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
             <p className="text-xs opacity-90">Top-right hamburger</p>
           </div>
           <CardContent className="p-0">
-            <div className="bg-white">
+            <div className="bg-card">
               {/* Header */}
-              <div className="bg-blue-600 text-white p-2 flex items-center justify-between">
+              <div className="bg-primary text-white p-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <i className="fas fa-truck text-xs"></i>
                   <span className="text-xs font-semibold">Driver TMS</span>
@@ -1016,27 +1016,27 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
               </div>
               
               {/* Dropdown Menu */}
-              <div className="bg-white border-l-4 border-blue-600">
-                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b flex items-center gap-2 bg-purple-50">
-                  <i className="fas fa-robot text-purple-600 text-sm"></i>
+              <div className="bg-card border-l-4 border-blue-600">
+                <button className="w-full text-left px-3 py-2 hover:bg-muted border-b flex items-center gap-2 bg-muted">
+                  <i className="fas fa-robot text-foreground text-sm"></i>
                   <div>
                     <p className="text-xs font-semibold text-purple-700">AI Assistant</p>
-                    <p className="text-[9px] text-gray-500">Ask me anything</p>
+                    <p className="text-[9px] text-muted-foreground">Ask me anything</p>
                   </div>
                 </button>
-                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b text-xs flex items-center gap-2">
-                  <i className="fas fa-truck-loading text-gray-600"></i>
+                <button className="w-full text-left px-3 py-2 hover:bg-muted border-b text-xs flex items-center gap-2">
+                  <i className="fas fa-truck-loading text-muted-foreground"></i>
                   <span>My Loads</span>
                 </button>
-                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b text-xs flex items-center gap-2">
-                  <i className="fas fa-user text-gray-600"></i>
+                <button className="w-full text-left px-3 py-2 hover:bg-muted border-b text-xs flex items-center gap-2">
+                  <i className="fas fa-user text-muted-foreground"></i>
                   <span>Profile</span>
                 </button>
-                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 border-b text-xs flex items-center gap-2">
-                  <i className="fas fa-cog text-gray-600"></i>
+                <button className="w-full text-left px-3 py-2 hover:bg-muted border-b text-xs flex items-center gap-2">
+                  <i className="fas fa-cog text-muted-foreground"></i>
                   <span>Settings</span>
                 </button>
-                <button className="w-full text-left px-3 py-2 hover:bg-gray-50 text-xs flex items-center gap-2 text-red-600">
+                <button className="w-full text-left px-3 py-2 hover:bg-muted text-xs flex items-center gap-2 text-foreground">
                   <i className="fas fa-sign-out-alt"></i>
                   <span>Logout</span>
                 </button>
@@ -1052,7 +1052,7 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
             <p className="text-xs opacity-90">Driver-specific Q&A</p>
           </div>
           <CardContent className="p-0">
-            <div className="bg-white h-full">
+            <div className="bg-card h-full">
               {/* Header */}
               <div className="bg-purple-600 text-white p-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -1065,37 +1065,37 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
               </div>
               
               {/* Chat Messages */}
-              <div className="p-2 space-y-2 bg-gray-50 h-32 overflow-y-auto">
+              <div className="p-2 space-y-2 bg-muted h-32 overflow-y-auto">
                 <div className="flex gap-1.5">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i className="fas fa-robot text-purple-600 text-[8px]"></i>
+                  <div className="w-5 h-5 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-robot text-foreground text-[8px]"></i>
                   </div>
-                  <div className="bg-white rounded-lg p-1.5 text-[9px] max-w-[80%]">
+                  <div className="bg-card rounded-lg p-1.5 text-[9px] max-w-[80%]">
                     <p>Hi! I'm your AI assistant. Ask me about your routes, loads, or delivery requirements.</p>
                   </div>
                 </div>
                 
                 <div className="flex gap-1.5 justify-end">
-                  <div className="bg-blue-600 text-white rounded-lg p-1.5 text-[9px] max-w-[80%]">
+                  <div className="bg-primary text-white rounded-lg p-1.5 text-[9px] max-w-[80%]">
                     <p>What's the status of ORD-001?</p>
                   </div>
-                  <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i className="fas fa-user text-blue-600 text-[8px]"></i>
+                  <div className="w-5 h-5 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-user text-foreground text-[8px]"></i>
                   </div>
                 </div>
                 
                 <div className="flex gap-1.5">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i className="fas fa-robot text-purple-600 text-[8px]"></i>
+                  <div className="w-5 h-5 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                    <i className="fas fa-robot text-foreground text-[8px]"></i>
                   </div>
-                  <div className="bg-white rounded-lg p-1.5 text-[9px] max-w-[80%]">
+                  <div className="bg-card rounded-lg p-1.5 text-[9px] max-w-[80%]">
                     <p>ORD-001 is pending acceptance. Pickup: LA, CA. Delivery: Phoenix, AZ. Distance: 372 miles.</p>
                   </div>
                 </div>
               </div>
               
               {/* Input */}
-              <div className="p-2 bg-white border-t flex gap-1">
+              <div className="p-2 bg-card border-t flex gap-1">
                 <input 
                   className="flex-1 text-[9px] border rounded px-2 py-1" 
                   placeholder="Ask a question..."
@@ -1116,9 +1116,9 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
             <p className="text-xs opacity-90">Camera & Browse</p>
           </div>
           <CardContent className="p-0">
-            <div className="bg-white">
+            <div className="bg-card">
               {/* Header */}
-              <div className="bg-blue-600 text-white p-2 flex items-center justify-between">
+              <div className="bg-primary text-white p-2 flex items-center justify-between">
                 <div className="flex items-center gap-1">
                   <button className="text-white">
                     <i className="fas fa-arrow-left text-xs"></i>
@@ -1129,50 +1129,50 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
               
               {/* Upload Options */}
               <div className="p-3 space-y-2">
-                <div className="bg-blue-50 rounded-lg p-3 border-2 border-dashed border-blue-300">
+                <div className="bg-muted rounded-lg p-3 border-2 border-dashed border-blue-300">
                   <div className="text-center">
-                    <i className="fas fa-camera text-blue-600 text-2xl mb-1"></i>
-                    <p className="text-xs font-semibold text-blue-700">Take Photo</p>
-                    <p className="text-[9px] text-gray-600 mt-0.5">Capture POD, BOL, etc.</p>
+                    <i className="fas fa-camera text-foreground text-2xl mb-1"></i>
+                    <p className="text-xs font-semibold text-foreground">Take Photo</p>
+                    <p className="text-[9px] text-muted-foreground mt-0.5">Capture POD, BOL, etc.</p>
                   </div>
                 </div>
                 
-                <div className="bg-green-50 rounded-lg p-3 border-2 border-dashed border-green-300">
+                <div className="bg-muted rounded-lg p-3 border-2 border-dashed border-green-300">
                   <div className="text-center">
-                    <i className="fas fa-folder-open text-green-600 text-2xl mb-1"></i>
-                    <p className="text-xs font-semibold text-green-700">Browse Files</p>
-                    <p className="text-[9px] text-gray-600 mt-0.5">Upload from device</p>
+                    <i className="fas fa-folder-open text-foreground text-2xl mb-1"></i>
+                    <p className="text-xs font-semibold text-foreground">Browse Files</p>
+                    <p className="text-[9px] text-muted-foreground mt-0.5">Upload from device</p>
                   </div>
                 </div>
               </div>
               
               {/* Uploaded Files */}
               <div className="px-3 pb-3">
-                <p className="text-[9px] text-gray-500 uppercase font-medium mb-1.5">Uploaded (2)</p>
+                <p className="text-[9px] text-muted-foreground uppercase font-medium mb-1.5">Uploaded (2)</p>
                 <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 bg-gray-50 p-1.5 rounded">
-                    <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                      <i className="fas fa-file-pdf text-blue-600 text-xs"></i>
+                  <div className="flex items-center gap-2 bg-muted p-1.5 rounded">
+                    <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">
+                      <i className="fas fa-file-pdf text-foreground text-xs"></i>
                     </div>
                     <div className="flex-1">
                       <p className="text-[9px] font-semibold">POD.pdf</p>
-                      <p className="text-[8px] text-gray-500">24.5 KB</p>
+                      <p className="text-[8px] text-muted-foreground">24.5 KB</p>
                     </div>
-                    <i className="fas fa-check-circle text-green-600 text-xs"></i>
+                    <i className="fas fa-check-circle text-foreground text-xs"></i>
                   </div>
-                  <div className="flex items-center gap-2 bg-gray-50 p-1.5 rounded">
-                    <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
-                      <i className="fas fa-image text-green-600 text-xs"></i>
+                  <div className="flex items-center gap-2 bg-muted p-1.5 rounded">
+                    <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">
+                      <i className="fas fa-image text-foreground text-xs"></i>
                     </div>
                     <div className="flex-1">
                       <p className="text-[9px] font-semibold">BOL.jpg</p>
-                      <p className="text-[8px] text-gray-500">156 KB</p>
+                      <p className="text-[8px] text-muted-foreground">156 KB</p>
                     </div>
-                    <i className="fas fa-sync text-blue-600 text-xs animate-spin"></i>
+                    <i className="fas fa-sync text-foreground text-xs animate-spin"></i>
                   </div>
                 </div>
                 
-                <p className="text-[8px] text-gray-500 mt-2 flex items-center gap-1">
+                <p className="text-[8px] text-muted-foreground mt-2 flex items-center gap-1">
                   <i className="fas fa-cloud-upload-alt"></i>
                   Syncing with Company TMS...
                 </p>
@@ -1187,26 +1187,26 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <i className="fas fa-truck-loading text-blue-600"></i>
+              <i className="fas fa-truck-loading text-foreground"></i>
               Load Management
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>View assigned loads/orders</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Accept/reject assignments</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Real-time status updates</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>TMS-style mobile layout</span>
               </li>
             </ul>
@@ -1216,26 +1216,26 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <i className="fas fa-route text-purple-600"></i>
+              <i className="fas fa-route text-foreground"></i>
               Navigation & Routes
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Google Maps integration</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Multi-stop route display</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Pickup → Stops → Delivery</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Turn-by-turn directions</span>
               </li>
             </ul>
@@ -1245,26 +1245,26 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <i className="fas fa-camera text-green-600"></i>
+              <i className="fas fa-camera text-foreground"></i>
               Documents & AI
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Camera capture (POD, BOL)</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>File browse & upload</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>Auto-sync with Company TMS</span>
               </li>
               <li className="flex items-start gap-2">
-                <i className="fas fa-check-circle text-green-600 mt-0.5"></i>
+                <i className="fas fa-check-circle text-foreground mt-0.5"></i>
                 <span>AI Assistant for driver Q&A</span>
               </li>
             </ul>
@@ -1278,25 +1278,25 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-medium text-gray-600">Platforms</p>
+                <p className="text-sm font-medium text-muted-foreground">Platforms</p>
                 <p className="text-base font-semibold">Android & iOS</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Pricing</p>
-                <p className="text-base font-semibold text-green-600">FREE</p>
+                <p className="text-sm font-medium text-muted-foreground">Pricing</p>
+                <p className="text-base font-semibold text-foreground">FREE</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Requirements</p>
+                <p className="text-sm font-medium text-muted-foreground">Requirements</p>
                 <p className="text-sm">Active TMS Subscription</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Backend APIs</p>
+                <p className="text-sm font-medium text-muted-foreground">Backend APIs</p>
                 <p className="text-sm">9 Endpoints Ready</p>
               </div>
             </div>
             <div className="pt-4 border-t">
-              <p className="text-sm font-medium text-gray-600 mb-2">React Native App Location</p>
-              <code className="text-xs bg-gray-100 p-2 rounded block">/app/mobile/</code>
+              <p className="text-sm font-medium text-muted-foreground mb-2">React Native App Location</p>
+              <code className="text-xs bg-muted p-2 rounded block">/app/mobile/</code>
             </div>
           </CardContent>
         </Card>
@@ -1324,8 +1324,8 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
           ← Back to Products
         </Button>
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">{product.label}</h2>
-          <p className="text-gray-600 mt-1">{product.description}</p>
+          <h2 className="text-3xl font-bold text-foreground">{product.label}</h2>
+          <p className="text-muted-foreground mt-1">{product.description}</p>
         </div>
       </div>
 
@@ -1334,25 +1334,11 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Monthly Price</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">${product.price}</p>
+                <p className="text-sm font-medium text-muted-foreground">Monthly Price</p>
+                <p className="text-3xl font-bold text-foreground mt-2">${product.price}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Package className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Tenants</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{tenantsWithThisPlan.length}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Package className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -1362,11 +1348,25 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Monthly Revenue</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">${totalRevenue.toLocaleString()}</p>
+                <p className="text-sm font-medium text-muted-foreground">Active Tenants</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{tenantsWithThisPlan.length}</p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-foreground" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Monthly Revenue</p>
+                <p className="text-3xl font-bold text-foreground mt-2">${totalRevenue.toLocaleString()}</p>
+              </div>
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -1381,19 +1381,19 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-gray-600">Plan ID</Label>
+                <Label className="text-muted-foreground">Plan ID</Label>
                 <p className="text-lg font-medium mt-1">{product.id}</p>
               </div>
               <div>
-                <Label className="text-gray-600">Default Seats</Label>
+                <Label className="text-muted-foreground">Default Seats</Label>
                 <p className="text-lg font-medium mt-1">{product.default_seats} users</p>
               </div>
               <div>
-                <Label className="text-gray-600">Price per Seat</Label>
+                <Label className="text-muted-foreground">Price per Seat</Label>
                 <p className="text-lg font-medium mt-1">${(product.price / product.default_seats).toFixed(2)}</p>
               </div>
               <div>
-                <Label className="text-gray-600">Total Features</Label>
+                <Label className="text-muted-foreground">Total Features</Label>
                 <p className="text-lg font-medium mt-1">{product.features?.length || 0}</p>
               </div>
             </div>
@@ -1408,7 +1408,7 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(product.feature_flags || {}).map(([key, value]) => (
                 <div key={key} className="flex items-center space-x-2 p-2 border rounded">
-                  <div className={`w-3 h-3 rounded-full ${value ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                  <div className={`w-3 h-3 rounded-full ${value ? 'bg-muted0' : 'bg-gray-300'}`}></div>
                   <span className="text-sm">{key.replace(/_/g, ' ')}</span>
                 </div>
               ))}
@@ -1424,11 +1424,11 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {product.features?.map((feature, idx) => (
-              <div key={idx} className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-50">
-                <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                  <span className="text-green-600 text-sm font-bold">✓</span>
+              <div key={idx} className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-muted">
+                <div className="flex-shrink-0 w-6 h-6 bg-muted rounded-full flex items-center justify-center mt-0.5">
+                  <span className="text-foreground text-sm font-bold">✓</span>
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">{feature}</p>
+                <p className="text-sm text-foreground leading-relaxed">{feature}</p>
               </div>
             ))}
           </div>
@@ -1443,14 +1443,14 @@ const ProductDetailView = ({ product, onBack, tenants }) => {
           <CardContent>
             <div className="space-y-3">
               {tenantsWithThisPlan.map((tenant) => (
-                <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div key={tenant.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted">
                   <div>
-                    <h3 className="font-medium text-gray-900">{tenant.name}</h3>
-                    <p className="text-sm text-gray-500">{tenant.company_email || 'No email'}</p>
+                    <h3 className="font-medium text-foreground">{tenant.name}</h3>
+                    <p className="text-sm text-muted-foreground">{tenant.company_email || 'No email'}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900">{tenant.seats} seats</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-sm font-medium text-foreground">{tenant.seats} seats</div>
+                    <div className="text-xs text-muted-foreground">
                       ${(product.price * (tenant.seats || 1)).toLocaleString()}/mo
                     </div>
                   </div>

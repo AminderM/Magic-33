@@ -105,20 +105,20 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
 
   const getStatusBadge = (allowToOperate, outOfService) => {
     if (outOfService) {
-      return <Badge className="bg-red-100 text-red-800"><XCircle className="w-3 h-3 mr-1" />Out of Service</Badge>;
+      return <Badge className="bg-muted text-red-800"><XCircle className="w-3 h-3 mr-1" />Out of Service</Badge>;
     }
     if (allowToOperate === 'Y') {
-      return <Badge className="bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1" />Authorized</Badge>;
+      return <Badge className="bg-muted text-foreground"><CheckCircle className="w-3 h-3 mr-1" />Authorized</Badge>;
     }
-    return <Badge className="bg-yellow-100 text-yellow-800"><AlertTriangle className="w-3 h-3 mr-1" />Not Authorized</Badge>;
+    return <Badge className="bg-muted text-yellow-800"><AlertTriangle className="w-3 h-3 mr-1" />Not Authorized</Badge>;
   };
 
   const getBasicScoreColor = (score) => {
-    if (!score || score === 'Inconclusive') return 'bg-gray-100 text-gray-600';
+    if (!score || score === 'Inconclusive') return 'bg-muted text-muted-foreground';
     const numScore = parseFloat(score);
-    if (numScore >= 75) return 'bg-red-100 text-red-800';
-    if (numScore >= 50) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-green-100 text-green-800';
+    if (numScore >= 75) return 'bg-muted text-red-800';
+    if (numScore >= 50) return 'bg-muted text-yellow-800';
+    return 'bg-muted text-foreground';
   };
 
   const formatBasicScore = (score) => {
@@ -139,12 +139,12 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
     <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-          <Truck className="w-6 h-6 text-blue-600" />
+        <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center">
+          <Truck className="w-6 h-6 text-foreground" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">FMCSA Carrier Lookup</h1>
-          <p className="text-gray-600">Search carrier data by DOT# or company name</p>
+          <h1 className="text-2xl font-bold text-foreground">FMCSA Carrier Lookup</h1>
+          <p className="text-muted-foreground">Search carrier data by DOT# or company name</p>
         </div>
       </div>
 
@@ -179,7 +179,7 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
               <Button 
                 onClick={handleSearch} 
                 disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 h-10 px-6 flex-1"
+                className="bg-primary hover:bg-primary/90 h-10 px-6 flex-1"
               >
                 {loading ? (
                   <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
@@ -207,7 +207,7 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
               </CardHeader>
               <CardContent className="p-0 max-h-[600px] overflow-y-auto">
                 {searchResults.carriers.length === 0 ? (
-                  <div className="p-6 text-center text-gray-500">
+                  <div className="p-6 text-center text-muted-foreground">
                     No carriers found
                   </div>
                 ) : (
@@ -215,38 +215,38 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                     <div
                       key={carrier.dot_number || idx}
                       onClick={() => loadCarrierDetails(carrier.dot_number)}
-                      className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
-                        selectedCarrier === carrier.dot_number ? 'bg-blue-50 border-l-4 border-l-blue-600' : ''
+                      className={`p-4 border-b cursor-pointer hover:bg-muted transition-colors ${
+                        selectedCarrier === carrier.dot_number ? 'bg-muted border-l-4 border-l-blue-600' : ''
                       }`}
                     >
                       <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-semibold text-gray-900">{carrier.legal_name}</h4>
+                        <h4 className="font-semibold text-foreground">{carrier.legal_name}</h4>
                         {getStatusBadge(carrier.allow_to_operate, carrier.out_of_service)}
                       </div>
                       {carrier.dba_name && (
-                        <p className="text-sm text-gray-600 mb-1">DBA: {carrier.dba_name}</p>
+                        <p className="text-sm text-muted-foreground mb-1">DBA: {carrier.dba_name}</p>
                       )}
-                      <div className="flex flex-wrap gap-3 text-sm text-gray-500 mb-1">
+                      <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mb-1">
                         <span className="font-medium">DOT# {carrier.dot_number}</span>
                         {carrier.mc_number && <span>MC# {carrier.mc_number}</span>}
                       </div>
                       {/* Phone and Email */}
                       <div className="flex flex-wrap gap-3 text-sm">
                         {carrier.phone && (
-                          <span className="flex items-center gap-1 text-gray-600">
+                          <span className="flex items-center gap-1 text-muted-foreground">
                             <Phone className="w-3 h-3" />
                             {carrier.phone}
                           </span>
                         )}
                         {carrier.email && (
-                          <span className="flex items-center gap-1 text-gray-600">
+                          <span className="flex items-center gap-1 text-muted-foreground">
                             <Mail className="w-3 h-3" />
                             {carrier.email}
                           </span>
                         )}
                       </div>
                       {carrier.physical_address && (
-                        <p className="text-xs text-gray-400 mt-1 truncate">{carrier.physical_address}</p>
+                        <p className="text-xs text-muted-foreground mt-1 truncate">{carrier.physical_address}</p>
                       )}
                     </div>
                   ))
@@ -278,14 +278,14 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                   <div className="space-y-6">
                     {/* Company Info */}
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-1">{carrierDetails.legal_name}</h3>
+                      <h3 className="text-xl font-bold text-foreground mb-1">{carrierDetails.legal_name}</h3>
                       {carrierDetails.dba_name && (
-                        <p className="text-gray-600">DBA: {carrierDetails.dba_name}</p>
+                        <p className="text-muted-foreground">DBA: {carrierDetails.dba_name}</p>
                       )}
                       <div className="flex gap-4 mt-2">
-                        <Badge variant="outline" className="text-blue-600">DOT# {carrierDetails.dot_number}</Badge>
+                        <Badge variant="outline" className="text-foreground">DOT# {carrierDetails.dot_number}</Badge>
                         {carrierDetails.mc_number && (
-                          <Badge variant="outline" className="text-purple-600">MC# {carrierDetails.mc_number}</Badge>
+                          <Badge variant="outline" className="text-foreground">MC# {carrierDetails.mc_number}</Badge>
                         )}
                       </div>
                     </div>
@@ -295,28 +295,28 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                       <div className="space-y-3">
                         {carrierDetails.physical_address && (
                           <div className="flex items-start gap-2">
-                            <MapPin className="w-4 h-4 text-gray-400 mt-1" />
+                            <MapPin className="w-4 h-4 text-muted-foreground mt-1" />
                             <div>
-                              <p className="text-sm font-medium text-gray-500">Physical Address</p>
-                              <p className="text-gray-900">{carrierDetails.physical_address}</p>
+                              <p className="text-sm font-medium text-muted-foreground">Physical Address</p>
+                              <p className="text-foreground">{carrierDetails.physical_address}</p>
                             </div>
                           </div>
                         )}
                         {carrierDetails.phone && (
                           <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-gray-400" />
+                            <Phone className="w-4 h-4 text-muted-foreground" />
                             <div>
-                              <p className="text-sm font-medium text-gray-500">Phone</p>
-                              <p className="text-gray-900">{carrierDetails.phone}</p>
+                              <p className="text-sm font-medium text-muted-foreground">Phone</p>
+                              <p className="text-foreground">{carrierDetails.phone}</p>
                             </div>
                           </div>
                         )}
                         {carrierDetails.email && (
                           <div className="flex items-center gap-2">
-                            <Mail className="w-4 h-4 text-gray-400" />
+                            <Mail className="w-4 h-4 text-muted-foreground" />
                             <div>
-                              <p className="text-sm font-medium text-gray-500">Email</p>
-                              <p className="text-gray-900">{carrierDetails.email}</p>
+                              <p className="text-sm font-medium text-muted-foreground">Email</p>
+                              <p className="text-foreground">{carrierDetails.email}</p>
                             </div>
                           </div>
                         )}
@@ -324,20 +324,20 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                       <div className="space-y-3">
                         {carrierDetails.entity_type && (
                           <div>
-                            <p className="text-sm font-medium text-gray-500">Operation Type</p>
-                            <p className="text-gray-900">{carrierDetails.entity_type}</p>
+                            <p className="text-sm font-medium text-muted-foreground">Operation Type</p>
+                            <p className="text-foreground">{carrierDetails.entity_type}</p>
                           </div>
                         )}
                         {carrierDetails.total_power_units !== undefined && (
                           <div>
-                            <p className="text-sm font-medium text-gray-500">Fleet Size</p>
-                            <p className="text-gray-900">{carrierDetails.total_power_units} Power Units</p>
+                            <p className="text-sm font-medium text-muted-foreground">Fleet Size</p>
+                            <p className="text-foreground">{carrierDetails.total_power_units} Power Units</p>
                           </div>
                         )}
                         {carrierDetails.total_drivers !== undefined && (
                           <div>
-                            <p className="text-sm font-medium text-gray-500">Drivers</p>
-                            <p className="text-gray-900">{carrierDetails.total_drivers} Drivers</p>
+                            <p className="text-sm font-medium text-muted-foreground">Drivers</p>
+                            <p className="text-foreground">{carrierDetails.total_drivers} Drivers</p>
                           </div>
                         )}
                       </div>
@@ -345,43 +345,43 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
 
                     {/* Authority Status */}
                     <div className="border-t pt-4">
-                      <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                         <Shield className="w-4 h-4" /> Authority & Insurance
                       </h4>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500 mb-1">Common Authority</p>
-                          <Badge className={carrierDetails.common_authority === 'A' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
+                        <div className="p-3 bg-muted rounded-lg">
+                          <p className="text-xs text-muted-foreground mb-1">Common Authority</p>
+                          <Badge className={carrierDetails.common_authority === 'A' ? 'bg-muted text-foreground' : 'bg-muted text-muted-foreground'}>
                             {carrierDetails.common_authority === 'A' ? 'Active' : carrierDetails.common_authority || 'N/A'}
                           </Badge>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500 mb-1">Contract Authority</p>
-                          <Badge className={carrierDetails.contract_authority === 'A' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
+                        <div className="p-3 bg-muted rounded-lg">
+                          <p className="text-xs text-muted-foreground mb-1">Contract Authority</p>
+                          <Badge className={carrierDetails.contract_authority === 'A' ? 'bg-muted text-foreground' : 'bg-muted text-muted-foreground'}>
                             {carrierDetails.contract_authority === 'A' ? 'Active' : carrierDetails.contract_authority || 'N/A'}
                           </Badge>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500 mb-1">Broker Authority</p>
-                          <Badge className={carrierDetails.broker_authority === 'A' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
+                        <div className="p-3 bg-muted rounded-lg">
+                          <p className="text-xs text-muted-foreground mb-1">Broker Authority</p>
+                          <Badge className={carrierDetails.broker_authority === 'A' ? 'bg-muted text-foreground' : 'bg-muted text-muted-foreground'}>
                             {carrierDetails.broker_authority === 'A' ? 'Active' : carrierDetails.broker_authority || 'N/A'}
                           </Badge>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500 mb-1">BIPD Insurance</p>
-                          <Badge className={carrierDetails.insurance_bipd === 'Y' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                        <div className="p-3 bg-muted rounded-lg">
+                          <p className="text-xs text-muted-foreground mb-1">BIPD Insurance</p>
+                          <Badge className={carrierDetails.insurance_bipd === 'Y' ? 'bg-muted text-foreground' : 'bg-muted text-red-800'}>
                             {carrierDetails.insurance_bipd === 'Y' ? 'On File' : 'Not On File'}
                           </Badge>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500 mb-1">Cargo Insurance</p>
-                          <Badge className={carrierDetails.insurance_cargo === 'Y' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                        <div className="p-3 bg-muted rounded-lg">
+                          <p className="text-xs text-muted-foreground mb-1">Cargo Insurance</p>
+                          <Badge className={carrierDetails.insurance_cargo === 'Y' ? 'bg-muted text-foreground' : 'bg-muted text-red-800'}>
                             {carrierDetails.insurance_cargo === 'Y' ? 'On File' : 'Not On File'}
                           </Badge>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500 mb-1">Bond/Trust</p>
-                          <Badge className={carrierDetails.insurance_bond === 'Y' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
+                        <div className="p-3 bg-muted rounded-lg">
+                          <p className="text-xs text-muted-foreground mb-1">Bond/Trust</p>
+                          <Badge className={carrierDetails.insurance_bond === 'Y' ? 'bg-muted text-foreground' : 'bg-muted text-muted-foreground'}>
                             {carrierDetails.insurance_bond === 'Y' ? 'On File' : 'Not On File'}
                           </Badge>
                         </div>
@@ -390,9 +390,9 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
 
                     {/* BASIC Scores */}
                     <div className="border-t pt-4">
-                      <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                         <AlertTriangle className="w-4 h-4" /> Safety BASIC Scores
-                        <span className="text-xs font-normal text-gray-500">(Higher = Worse)</span>
+                        <span className="text-xs font-normal text-muted-foreground">(Higher = Worse)</span>
                       </h4>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {[
@@ -404,8 +404,8 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                           { label: 'Hazmat Compliance', value: carrierDetails.hazmat_basic },
                           { label: 'Crash Indicator', value: carrierDetails.crash_indicator_basic },
                         ].map((basic, idx) => (
-                          <div key={idx} className="p-3 bg-gray-50 rounded-lg">
-                            <p className="text-xs text-gray-500 mb-1">{basic.label}</p>
+                          <div key={idx} className="p-3 bg-muted rounded-lg">
+                            <p className="text-xs text-muted-foreground mb-1">{basic.label}</p>
                             <Badge className={getBasicScoreColor(basic.value)}>
                               {formatBasicScore(basic.value)}
                             </Badge>
@@ -416,43 +416,43 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
 
                     {/* Crash & Inspection Data */}
                     <div className="border-t pt-4">
-                      <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                         <Users className="w-4 h-4" /> Crash & Inspection History
                       </h4>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-red-600">{carrierDetails.fatal_crashes || 0}</p>
-                          <p className="text-xs text-gray-500">Fatal Crashes</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.fatal_crashes || 0}</p>
+                          <p className="text-xs text-muted-foreground">Fatal Crashes</p>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-orange-600">{carrierDetails.injury_crashes || 0}</p>
-                          <p className="text-xs text-gray-500">Injury Crashes</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.injury_crashes || 0}</p>
+                          <p className="text-xs text-muted-foreground">Injury Crashes</p>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-yellow-600">{carrierDetails.tow_crashes || 0}</p>
-                          <p className="text-xs text-gray-500">Tow-Away Crashes</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.tow_crashes || 0}</p>
+                          <p className="text-xs text-muted-foreground">Tow-Away Crashes</p>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-gray-900">{carrierDetails.total_crashes || 0}</p>
-                          <p className="text-xs text-gray-500">Total Crashes</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.total_crashes || 0}</p>
+                          <p className="text-xs text-muted-foreground">Total Crashes</p>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-blue-600">{carrierDetails.vehicle_inspections || 0}</p>
-                          <p className="text-xs text-gray-500">Vehicle Inspections</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.vehicle_inspections || 0}</p>
+                          <p className="text-xs text-muted-foreground">Vehicle Inspections</p>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-blue-600">{carrierDetails.driver_inspections || 0}</p>
-                          <p className="text-xs text-gray-500">Driver Inspections</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.driver_inspections || 0}</p>
+                          <p className="text-xs text-muted-foreground">Driver Inspections</p>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-gray-900">{carrierDetails.vehicle_oos_rate || 0}%</p>
-                          <p className="text-xs text-gray-500">Vehicle OOS Rate</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.vehicle_oos_rate || 0}%</p>
+                          <p className="text-xs text-muted-foreground">Vehicle OOS Rate</p>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-lg text-center">
-                          <p className="text-2xl font-bold text-gray-900">{carrierDetails.driver_oos_rate || 0}%</p>
-                          <p className="text-xs text-gray-500">Driver OOS Rate</p>
+                        <div className="p-3 bg-muted rounded-lg text-center">
+                          <p className="text-2xl font-bold text-foreground">{carrierDetails.driver_oos_rate || 0}%</p>
+                          <p className="text-xs text-muted-foreground">Driver OOS Rate</p>
                         </div>
                       </div>
                     </div>
@@ -460,7 +460,7 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                     {/* Cargo Types */}
                     {carrierDetails.cargo_carried && carrierDetails.cargo_carried.length > 0 && (
                       <div className="border-t pt-4">
-                        <h4 className="font-semibold text-gray-900 mb-3">Cargo Types</h4>
+                        <h4 className="font-semibold text-foreground mb-3">Cargo Types</h4>
                         <div className="flex flex-wrap gap-2">
                           {carrierDetails.cargo_carried.map((cargo, idx) => (
                             <Badge key={idx} variant="outline">{cargo}</Badge>
@@ -480,11 +480,11 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
       {!searchResults && !carrierDetails && (
         <Card>
           <CardContent className="py-16 text-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Truck className="w-8 h-8 text-blue-600" />
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <Truck className="w-8 h-8 text-foreground" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Search for a Carrier</h3>
-            <p className="text-gray-600 max-w-md mx-auto">
+            <h3 className="text-xl font-semibold text-foreground mb-2">Search for a Carrier</h3>
+            <p className="text-muted-foreground max-w-md mx-auto">
               Enter a DOT number or company name to lookup carrier information including safety scores, authority status, and crash history.
             </p>
           </CardContent>

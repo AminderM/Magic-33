@@ -248,10 +248,10 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">Integrations</h2>
-          <p className="text-gray-600 mt-2">Manage API services and third-party integrations</p>
+          <h2 className="text-3xl font-bold text-foreground">Integrations</h2>
+          <p className="text-muted-foreground mt-2">Manage API services and third-party integrations</p>
         </div>
-        <Button onClick={() => setShowAddModal(true)} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={() => setShowAddModal(true)} className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" />
           Add Integration
         </Button>
@@ -263,11 +263,11 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Integrations</p>
-                <p className="text-2xl font-bold text-gray-900">{ACTIVE_INTEGRATIONS.length + integrations.length}</p>
+                <p className="text-sm text-muted-foreground">Total Integrations</p>
+                <p className="text-2xl font-bold text-foreground">{ACTIVE_INTEGRATIONS.length + integrations.length}</p>
               </div>
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-blue-600" />
+              <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                <Zap className="w-5 h-5 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -277,13 +277,13 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Active</p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-sm text-muted-foreground">Active</p>
+                <p className="text-2xl font-bold text-foreground">
                   {ACTIVE_INTEGRATIONS.length + integrations.filter(i => i.enabled).length}
                 </p>
               </div>
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <Check className="w-5 h-5 text-green-600" />
+              <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                <Check className="w-5 h-5 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -293,13 +293,13 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Inactive</p>
-                <p className="text-2xl font-bold text-gray-600">
+                <p className="text-sm text-muted-foreground">Inactive</p>
+                <p className="text-2xl font-bold text-muted-foreground">
                   {integrations.filter(i => !i.enabled).length}
                 </p>
               </div>
-              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                <X className="w-5 h-5 text-gray-600" />
+              <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                <X className="w-5 h-5 text-muted-foreground" />
               </div>
             </div>
           </CardContent>
@@ -309,13 +309,13 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Categories</p>
-                <p className="text-2xl font-bold text-purple-600">
+                <p className="text-sm text-muted-foreground">Categories</p>
+                <p className="text-2xl font-bold text-foreground">
                   {Object.keys(INTEGRATION_TYPES).length}
                 </p>
               </div>
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Settings className="w-5 h-5 text-purple-600" />
+              <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                <Settings className="w-5 h-5 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -325,42 +325,42 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
       {/* Active/Built-in Integrations Section */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <h3 className="text-xl font-semibold text-gray-800">Active Integrations</h3>
-          <Badge className="bg-green-100 text-green-800">
+          <h3 className="text-xl font-semibold text-foreground">Active Integrations</h3>
+          <Badge className="bg-muted text-foreground">
             <CheckCircle className="w-3 h-3 mr-1" />
             {ACTIVE_INTEGRATIONS.length} Live
           </Badge>
         </div>
-        <p className="text-sm text-gray-600">These integrations are currently active and in use across the application.</p>
+        <p className="text-sm text-muted-foreground">These integrations are currently active and in use across the application.</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {ACTIVE_INTEGRATIONS.map(integration => {
             const IconComponent = integration.icon;
             
             return (
-              <Card key={integration.id} className="border-2 border-green-200 bg-gradient-to-br from-white to-green-50">
+              <Card key={integration.id} className="border-2 border-border bg-gradient-to-br from-white to-green-50">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                        <IconComponent className="w-6 h-6 text-green-600" />
+                      <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center">
+                        <IconComponent className="w-6 h-6 text-foreground" />
                       </div>
                       <div>
                         <CardTitle className="text-lg flex items-center gap-2">
                           {integration.name}
-                          <Badge className="bg-green-100 text-green-700 text-xs">Active</Badge>
+                          <Badge className="bg-muted text-foreground text-xs">Active</Badge>
                         </CardTitle>
-                        <p className="text-sm text-gray-500 mt-1">{integration.category}</p>
+                        <p className="text-sm text-muted-foreground mt-1">{integration.category}</p>
                       </div>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm text-gray-600">{integration.description}</p>
+                  <p className="text-sm text-muted-foreground">{integration.description}</p>
                   
                   {/* Features */}
                   <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Features</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Features</p>
                     <div className="flex flex-wrap gap-1">
                       {integration.features.map((feature, idx) => (
                         <Badge key={idx} variant="outline" className="text-xs">
@@ -372,10 +372,10 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                   
                   {/* Used In */}
                   <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Used In</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Used In</p>
                     <div className="flex flex-wrap gap-1">
                       {integration.usedIn.map((location, idx) => (
-                        <Badge key={idx} className="bg-blue-100 text-blue-800 text-xs">
+                        <Badge key={idx} className="bg-muted text-foreground text-xs">
                           {location}
                         </Badge>
                       ))}
@@ -384,15 +384,15 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                   
                   {/* API Endpoints */}
                   <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase mb-2">API Endpoints</p>
-                    <div className="bg-gray-50 rounded p-2 text-xs font-mono text-gray-600 space-y-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">API Endpoints</p>
+                    <div className="bg-muted rounded p-2 text-xs font-mono text-muted-foreground space-y-1">
                       {integration.apiEndpoints.map((endpoint, idx) => (
                         <div key={idx}>{endpoint}</div>
                       ))}
                     </div>
                   </div>
                   
-                  <div className="text-xs text-gray-400 pt-2 border-t">
+                  <div className="text-xs text-muted-foreground pt-2 border-t">
                     Configured: {new Date(integration.configuredDate).toLocaleDateString()}
                   </div>
                 </CardContent>
@@ -411,8 +411,8 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
         return (
           <div key={category} className="space-y-4">
             <div className="flex items-center space-x-2">
-              <h3 className="text-xl font-semibold text-gray-800">{categoryData.label}</h3>
-              <span className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded-full">
+              <h3 className="text-xl font-semibold text-foreground">{categoryData.label}</h3>
+              <span className="px-2 py-1 bg-gray-200 text-foreground text-xs rounded-full">
                 {categoryIntegrations.length} configured
               </span>
             </div>
@@ -422,14 +422,14 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                 const serviceConfig = categoryData.services.find(s => s.id === integration.service_id);
                 
                 return (
-                  <Card key={integration.id} className={`border-2 ${integration.enabled ? 'border-green-200' : 'border-gray-200'}`}>
+                  <Card key={integration.id} className={`border-2 ${integration.enabled ? 'border-border' : 'border-border'}`}>
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
                           <CardTitle className="text-lg flex items-center space-x-2">
                             <span>{serviceConfig?.name || integration.name}</span>
                             {integration.enabled && (
-                              <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">
+                              <span className="px-2 py-0.5 bg-muted text-foreground text-xs rounded-full">
                                 Active
                               </span>
                             )}
@@ -446,7 +446,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       {/* Integration Details */}
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-muted-foreground">
                         <div className="flex items-center space-x-2">
                           <Key className="w-4 h-4" />
                           <span>Configured: {new Date(integration.created_at).toLocaleDateString()}</span>
@@ -480,7 +480,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                           size="sm"
                           variant="outline"
                           onClick={() => handleDeleteIntegration(integration.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="text-foreground hover:text-red-700 hover:bg-muted"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -497,9 +497,9 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
       {integrations.length === 0 && (
         <Card>
           <CardContent className="py-16 text-center">
-            <Zap className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-600 mb-4">No integrations configured yet</p>
-            <Button onClick={() => setShowAddModal(true)} className="bg-blue-600 hover:bg-blue-700">
+            <Zap className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+            <p className="text-muted-foreground mb-4">No integrations configured yet</p>
+            <Button onClick={() => setShowAddModal(true)} className="bg-primary hover:bg-primary/90">
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Integration
             </Button>
@@ -683,7 +683,7 @@ const IntegrationModal = ({ integration, integrationTypes, onClose, onSave }) =>
               </Button>
               <Button 
                 type="submit" 
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-primary hover:bg-primary/90"
                 disabled={!selectedService}
               >
                 {integration ? 'Update' : 'Add'} Integration

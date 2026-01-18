@@ -398,15 +398,15 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Subscription Manager</h1>
-          <p className="text-gray-600">Create product bundles and assign subscriptions to users and companies</p>
+          <h1 className="text-2xl font-bold text-foreground">Subscription Manager</h1>
+          <p className="text-muted-foreground">Create product bundles and assign subscriptions to users and companies</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={() => openAssignModal()} variant="outline">
             <UserPlus className="w-4 h-4 mr-2" />
             Assign Subscription
           </Button>
-          <Button onClick={() => { resetBundleForm(); setShowBundleModal(true); }} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={() => { resetBundleForm(); setShowBundleModal(true); }} className="bg-primary hover:bg-primary/90">
             <Plus className="w-4 h-4 mr-2" />
             Create Bundle
           </Button>
@@ -420,8 +420,8 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Bundles</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.total_bundles}</p>
+                  <p className="text-sm text-muted-foreground">Total Bundles</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.total_bundles}</p>
                 </div>
                 <Package className="w-8 h-8 text-blue-500" />
               </div>
@@ -431,8 +431,8 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Active Subscriptions</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.active_assignments}</p>
+                  <p className="text-sm text-muted-foreground">Active Subscriptions</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.active_assignments}</p>
                 </div>
                 <Check className="w-8 h-8 text-green-500" />
               </div>
@@ -442,8 +442,8 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">User Subscriptions</p>
-                  <p className="text-2xl font-bold text-purple-600">{stats.user_subscriptions}</p>
+                  <p className="text-sm text-muted-foreground">User Subscriptions</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.user_subscriptions}</p>
                 </div>
                 <Users className="w-8 h-8 text-purple-500" />
               </div>
@@ -453,8 +453,8 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Company Subscriptions</p>
-                  <p className="text-2xl font-bold text-orange-600">{stats.company_subscriptions}</p>
+                  <p className="text-sm text-muted-foreground">Company Subscriptions</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.company_subscriptions}</p>
                 </div>
                 <Building2 className="w-8 h-8 text-orange-500" />
               </div>
@@ -496,15 +496,15 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4" />
-              <p className="text-gray-600">Loading bundles...</p>
+              <p className="text-muted-foreground">Loading bundles...</p>
             </div>
           ) : bundles.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Bundles Yet</h3>
-                <p className="text-gray-600 mb-4">Create your first product bundle to get started</p>
-                <Button onClick={() => { resetBundleForm(); setShowBundleModal(true); }} className="bg-blue-600">
+                <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">No Bundles Yet</h3>
+                <p className="text-muted-foreground mb-4">Create your first product bundle to get started</p>
+                <Button onClick={() => { resetBundleForm(); setShowBundleModal(true); }} className="bg-primary">
                   <Plus className="w-4 h-4 mr-2" />
                   Create Bundle
                 </Button>
@@ -515,25 +515,25 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b">
+                    <thead className="bg-muted border-b">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Bundle Name</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Products</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Discount</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Subscriptions</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                        <th className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Bundle Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Products</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Price</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Discount</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Subscriptions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Status</th>
+                        <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground uppercase">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
                       {bundles.map(bundle => (
-                        <tr key={bundle.id} className={`hover:bg-gray-50 ${!bundle.is_active ? 'opacity-60' : ''}`}>
+                        <tr key={bundle.id} className={`hover:bg-muted ${!bundle.is_active ? 'opacity-60' : ''}`}>
                           <td className="px-4 py-3">
                             <div>
-                              <p className="font-medium text-gray-900">{bundle.name}</p>
+                              <p className="font-medium text-foreground">{bundle.name}</p>
                               {bundle.description && (
-                                <p className="text-sm text-gray-500 truncate max-w-xs">{bundle.description}</p>
+                                <p className="text-sm text-muted-foreground truncate max-w-xs">{bundle.description}</p>
                               )}
                             </div>
                           </td>
@@ -545,7 +545,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                                 </Badge>
                               ))}
                               {bundle.products?.length > 3 && (
-                                <Badge variant="outline" className="text-xs bg-gray-100">
+                                <Badge variant="outline" className="text-xs bg-muted">
                                   +{bundle.products.length - 3} more
                                 </Badge>
                               )}
@@ -553,42 +553,42 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex flex-col">
-                              <span className="font-bold text-gray-900">${bundle.monthly_price}/mo</span>
+                              <span className="font-bold text-foreground">${bundle.monthly_price}/mo</span>
                               {bundle.original_price > bundle.monthly_price && (
-                                <span className="text-xs text-gray-500 line-through">${bundle.original_price}/mo</span>
+                                <span className="text-xs text-muted-foreground line-through">${bundle.original_price}/mo</span>
                               )}
                             </div>
                           </td>
                           <td className="px-4 py-3">
                             {bundle.discount_percentage > 0 ? (
-                              <Badge className="bg-red-100 text-red-800">
+                              <Badge className="bg-muted text-red-800">
                                 {bundle.discount_percentage}% OFF
                               </Badge>
                             ) : (
-                              <span className="text-gray-400">-</span>
+                              <span className="text-muted-foreground">-</span>
                             )}
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1">
-                              <Users className="w-4 h-4 text-gray-400" />
+                              <Users className="w-4 h-4 text-muted-foreground" />
                               <span className="font-medium">{bundle.assignments_count || 0}</span>
                             </div>
                           </td>
                           <td className="px-4 py-3">
-                            <Badge className={bundle.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}>
+                            <Badge className={bundle.is_active ? 'bg-muted text-foreground' : 'bg-muted text-muted-foreground'}>
                               {bundle.is_active ? 'Active' : 'Inactive'}
                             </Badge>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center justify-center gap-1">
                               <Button size="sm" variant="ghost" onClick={() => openEditBundle(bundle)} title="Edit">
-                                <Edit className="w-4 h-4 text-gray-600" />
+                                <Edit className="w-4 h-4 text-muted-foreground" />
                               </Button>
                               <Button size="sm" variant="ghost" onClick={() => duplicateBundle(bundle)} title="Duplicate">
-                                <Copy className="w-4 h-4 text-blue-600" />
+                                <Copy className="w-4 h-4 text-foreground" />
                               </Button>
                               <Button size="sm" variant="ghost" onClick={() => openAssignModal(bundle)} title="Assign">
-                                <UserPlus className="w-4 h-4 text-green-600" />
+                                <UserPlus className="w-4 h-4 text-foreground" />
                               </Button>
                               <Button 
                                 size="sm" 
@@ -596,7 +596,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                                 onClick={() => handleDeleteBundle(bundle.id)}
                                 title="Delete"
                               >
-                                <Trash2 className="w-4 h-4 text-red-600" />
+                                <Trash2 className="w-4 h-4 text-foreground" />
                               </Button>
                             </div>
                           </td>
@@ -616,26 +616,26 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-0">
               {assignments.length === 0 ? (
                 <div className="py-12 text-center">
-                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600">No subscriptions assigned yet</p>
+                  <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No subscriptions assigned yet</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b">
+                    <thead className="bg-muted border-b">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Entity</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Bundle</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Start Date</th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Entity</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Type</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Bundle</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Price</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Status</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Start Date</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
                       {assignments.map(assignment => (
-                        <tr key={assignment.id} className="hover:bg-gray-50">
+                        <tr key={assignment.id} className="hover:bg-muted">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               {assignment.entity_type === 'user' ? (
@@ -655,14 +655,14 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                           <td className="px-4 py-3 font-medium">${assignment.monthly_price}/mo</td>
                           <td className="px-4 py-3">
                             <Badge className={
-                              assignment.status === 'active' ? 'bg-green-100 text-green-800' :
-                              assignment.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                              'bg-gray-100 text-gray-600'
+                              assignment.status === 'active' ? 'bg-muted text-foreground' :
+                              assignment.status === 'cancelled' ? 'bg-muted text-red-800' :
+                              'bg-muted text-muted-foreground'
                             }>
                               {assignment.status}
                             </Badge>
                           </td>
-                          <td className="px-4 py-3 text-sm text-gray-600">
+                          <td className="px-4 py-3 text-sm text-muted-foreground">
                             {new Date(assignment.start_date).toLocaleDateString()}
                           </td>
                           <td className="px-4 py-3">
@@ -670,7 +670,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                               <Button 
                                 size="sm" 
                                 variant="outline" 
-                                className="text-red-600"
+                                className="text-foreground"
                                 onClick={() => handleCancelAssignment(assignment.id)}
                               >
                                 Cancel
@@ -700,18 +700,18 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                   <div className="space-y-3">
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-bold">${product.price}</span>
-                      <span className="text-gray-500">/month</span>
+                      <span className="text-muted-foreground">/month</span>
                     </div>
-                    <p className="text-sm text-gray-600">{product.default_seats} seats included</p>
+                    <p className="text-sm text-muted-foreground">{product.default_seats} seats included</p>
                     <div className="space-y-1">
                       {product.features?.slice(0, 4).map((feature, idx) => (
-                        <div key={idx} className="flex items-center text-sm text-gray-600">
+                        <div key={idx} className="flex items-center text-sm text-muted-foreground">
                           <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
                           {feature}
                         </div>
                       ))}
                     </div>
-                    <Badge className={product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100'}>
+                    <Badge className={product.status === 'active' ? 'bg-muted text-foreground' : 'bg-muted'}>
                       {product.status}
                     </Badge>
                   </div>
@@ -763,14 +763,14 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                       key={product.id}
                       onClick={() => toggleProductInBundle(product)}
                       className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                        isSelected ? 'border-blue-500 bg-blue-50' : 'hover:border-gray-400'
+                        isSelected ? 'border-blue-500 bg-muted' : 'hover:border-gray-400'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium">{product.name}</span>
-                        {isSelected && <Check className="w-5 h-5 text-blue-600" />}
+                        {isSelected && <Check className="w-5 h-5 text-foreground" />}
                       </div>
-                      <p className="text-sm text-gray-600">${product.price}/mo</p>
+                      <p className="text-sm text-muted-foreground">${product.price}/mo</p>
                     </div>
                   );
                 })}
@@ -779,13 +779,13 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
 
             {/* Selected Products Summary */}
             {bundleForm.products.length > 0 && (
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-muted rounded-lg p-4">
                 <h4 className="font-medium mb-2">Selected Products ({bundleForm.products.length})</h4>
                 <div className="space-y-2">
                   {bundleForm.products.map(prod => (
                     <div key={prod.id} className="flex items-center justify-between text-sm">
                       <span>{prod.name}</span>
-                      <span className="text-gray-600">${prod.price}/mo</span>
+                      <span className="text-muted-foreground">${prod.price}/mo</span>
                     </div>
                   ))}
                   <div className="border-t pt-2 flex justify-between font-medium">
@@ -801,7 +801,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
               <div>
                 <Label>Monthly Bundle Price *</Label>
                 <div className="relative mt-1">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     type="number"
                     value={bundleForm.monthly_price}
@@ -811,7 +811,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                   />
                 </div>
                 {calculateDiscount() > 0 && (
-                  <p className="text-sm text-green-600 mt-1">
+                  <p className="text-sm text-foreground mt-1">
                     {calculateDiscount()}% discount from original price
                   </p>
                 )}
@@ -831,7 +831,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
             </Button>
             <Button 
               onClick={editingBundle ? handleUpdateBundle : handleCreateBundle}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-primary hover:bg-primary/90"
             >
               {editingBundle ? 'Update Bundle' : 'Create Bundle'}
             </Button>
@@ -892,7 +892,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
               <div className="mt-1 space-y-2">
                 {/* Search Input */}
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     value={entitySearchQuery}
                     onChange={(e) => setEntitySearchQuery(e.target.value)}
@@ -903,12 +903,12 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                 
                 {/* Selected Entity Display */}
                 {assignForm.entity_id && (
-                  <div className="flex items-center justify-between p-2 bg-blue-50 border border-blue-200 rounded-md">
+                  <div className="flex items-center justify-between p-2 bg-muted border border-border rounded-md">
                     <div className="flex items-center gap-2">
                       {assignForm.entity_type === 'user' ? (
-                        <Users className="w-4 h-4 text-blue-600" />
+                        <Users className="w-4 h-4 text-foreground" />
                       ) : (
-                        <Building2 className="w-4 h-4 text-blue-600" />
+                        <Building2 className="w-4 h-4 text-foreground" />
                       )}
                       <span className="text-sm font-medium text-blue-900">
                         {assignForm.entity_type === 'user' 
@@ -917,7 +917,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                         }
                       </span>
                       {assignForm.entity_type === 'user' && (
-                        <span className="text-xs text-blue-600">
+                        <span className="text-xs text-foreground">
                           ({users.find(u => u.id === assignForm.entity_id)?.email})
                         </span>
                       )}
@@ -925,7 +925,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                     <Button 
                       size="sm" 
                       variant="ghost" 
-                      className="h-6 w-6 p-0 text-blue-600 hover:text-blue-800"
+                      className="h-6 w-6 p-0 text-foreground hover:text-foreground"
                       onClick={() => setAssignForm({ ...assignForm, entity_id: '' })}
                     >
                       <X className="w-4 h-4" />
@@ -957,14 +957,14 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                               setAssignForm({ ...assignForm, entity_id: user.id });
                               setEntitySearchQuery('');
                             }}
-                            className="flex items-center justify-between p-2 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                            className="flex items-center justify-between p-2 hover:bg-muted cursor-pointer border-b last:border-b-0"
                           >
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900 truncate">{user.full_name}</p>
-                              <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                              <p className="text-sm font-medium text-foreground truncate">{user.full_name}</p>
+                              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                             </div>
                             {user.company_name && (
-                              <span className="ml-2 text-xs text-gray-400 truncate max-w-[120px]">
+                              <span className="ml-2 text-xs text-muted-foreground truncate max-w-[120px]">
                                 {user.company_name}
                               </span>
                             )}
@@ -985,10 +985,10 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                               setAssignForm({ ...assignForm, entity_id: company.id });
                               setEntitySearchQuery('');
                             }}
-                            className="flex items-center p-2 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                            className="flex items-center p-2 hover:bg-muted cursor-pointer border-b last:border-b-0"
                           >
-                            <Building2 className="w-4 h-4 text-gray-400 mr-2" />
-                            <span className="text-sm font-medium text-gray-900">{company.name}</span>
+                            <Building2 className="w-4 h-4 text-muted-foreground mr-2" />
+                            <span className="text-sm font-medium text-foreground">{company.name}</span>
                           </div>
                         ))
                     )}
@@ -1004,7 +1004,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                             c.name?.toLowerCase().includes(entitySearchQuery.toLowerCase())
                           ).length === 0
                       ) && (
-                        <div className="p-4 text-center text-sm text-gray-500">
+                        <div className="p-4 text-center text-sm text-muted-foreground">
                           No {assignForm.entity_type === 'user' ? 'users' : 'companies'} found matching "{entitySearchQuery}"
                         </div>
                       )
@@ -1030,7 +1030,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
             <Button variant="outline" onClick={() => setShowAssignModal(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAssignBundle} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleAssignBundle} className="bg-primary hover:bg-primary/90">
               Assign Subscription
             </Button>
           </DialogFooter>

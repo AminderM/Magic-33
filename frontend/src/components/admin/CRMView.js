@@ -474,28 +474,28 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
 
   const getStatusBadge = (status) => {
     const variants = {
-      cold_lead: 'bg-blue-100 text-blue-800',
-      hot_lead: 'bg-orange-100 text-orange-800',
-      customer: 'bg-green-100 text-green-800'
+      cold_lead: 'bg-muted text-foreground',
+      hot_lead: 'bg-muted text-orange-800',
+      customer: 'bg-muted text-foreground'
     };
     const labels = {
       cold_lead: 'Cold Lead',
       hot_lead: 'Hot Lead',
       customer: 'Customer'
     };
-    return <Badge className={variants[status] || 'bg-gray-100'}>{labels[status] || status}</Badge>;
+    return <Badge className={variants[status] || 'bg-muted'}>{labels[status] || status}</Badge>;
   };
 
   const getStageBadge = (stage) => {
     const variants = {
-      prospecting: 'bg-purple-100 text-purple-800',
-      qualification: 'bg-blue-100 text-blue-800',
-      proposal: 'bg-indigo-100 text-indigo-800',
-      negotiation: 'bg-orange-100 text-orange-800',
-      closed_won: 'bg-green-100 text-green-800',
-      closed_lost: 'bg-red-100 text-red-800'
+      prospecting: 'bg-muted text-purple-800',
+      qualification: 'bg-muted text-foreground',
+      proposal: 'bg-muted text-indigo-800',
+      negotiation: 'bg-muted text-orange-800',
+      closed_won: 'bg-muted text-foreground',
+      closed_lost: 'bg-muted text-red-800'
     };
-    return <Badge className={variants[stage] || 'bg-gray-100'}>{stage.replace('_', ' ')}</Badge>;
+    return <Badge className={variants[stage] || 'bg-muted'}>{stage.replace('_', ' ')}</Badge>;
   };
 
   if (loading) {
@@ -503,7 +503,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading CRM...</p>
+          <p className="mt-4 text-muted-foreground">Loading CRM...</p>
         </div>
       </div>
     );
@@ -513,8 +513,8 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">CRM</h2>
-          <p className="text-gray-600 mt-2">Customer Relationship Management</p>
+          <h2 className="text-3xl font-bold text-foreground">CRM</h2>
+          <p className="text-muted-foreground mt-2">Customer Relationship Management</p>
         </div>
       </div>
 
@@ -527,8 +527,8 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 font-medium capitalize ${
                 activeTab === tab
-                  ? 'border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'border-b-2 border-blue-600 text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {tab === 'company' ? 'Company' : 
@@ -548,27 +548,12 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Contacts</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{dashboard.total_contacts}</p>
-                    <p className="text-xs text-gray-500 mt-1">{dashboard.leads} leads</p>
+                    <p className="text-sm font-medium text-muted-foreground">Total Contacts</p>
+                    <p className="text-3xl font-bold text-foreground mt-2">{dashboard.total_contacts}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{dashboard.leads} leads</p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Users className="w-6 h-6 text-blue-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Deal Value</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">${dashboard.total_deal_value.toLocaleString()}</p>
-                    <p className="text-xs text-green-600 mt-1">{dashboard.won_deals_count} won</p>
-                  </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-green-600" />
+                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                    <Users className="w-6 h-6 text-foreground" />
                   </div>
                 </div>
               </CardContent>
@@ -578,12 +563,12 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{dashboard.conversion_rate.toFixed(1)}%</p>
-                    <p className="text-xs text-gray-500 mt-1">{dashboard.customers} customers</p>
+                    <p className="text-sm font-medium text-muted-foreground">Total Deal Value</p>
+                    <p className="text-3xl font-bold text-foreground mt-2">${dashboard.total_deal_value.toLocaleString()}</p>
+                    <p className="text-xs text-foreground mt-1">{dashboard.won_deals_count} won</p>
                   </div>
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-purple-600" />
+                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-foreground" />
                   </div>
                 </div>
               </CardContent>
@@ -593,12 +578,27 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Pending Activities</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-2">{dashboard.pending_activities}</p>
-                    <p className="text-xs text-gray-500 mt-1">to complete</p>
+                    <p className="text-sm font-medium text-muted-foreground">Conversion Rate</p>
+                    <p className="text-3xl font-bold text-foreground mt-2">{dashboard.conversion_rate.toFixed(1)}%</p>
+                    <p className="text-xs text-muted-foreground mt-1">{dashboard.customers} customers</p>
                   </div>
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-foreground" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Pending Activities</p>
+                    <p className="text-3xl font-bold text-foreground mt-2">{dashboard.pending_activities}</p>
+                    <p className="text-xs text-muted-foreground mt-1">to complete</p>
+                  </div>
+                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-foreground" />
                   </div>
                 </div>
               </CardContent>
@@ -614,8 +614,8 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {Object.entries(dashboard.deals_by_stage).map(([stage, count]) => (
                   <div key={stage} className="border rounded-lg p-4">
-                    <div className="text-2xl font-bold text-gray-900">{count}</div>
-                    <div className="text-sm text-gray-600 capitalize mt-1">{stage.replace('_', ' ')}</div>
+                    <div className="text-2xl font-bold text-foreground">{count}</div>
+                    <div className="text-sm text-muted-foreground capitalize mt-1">{stage.replace('_', ' ')}</div>
                   </div>
                 ))}
               </div>
@@ -654,39 +654,39 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b bg-gray-50">
-                      <th className="text-left p-3 font-semibold text-gray-700">Name</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Company</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Position</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Email</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Phone#</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Ext</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Address</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">City</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">State</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Status</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Notes</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Actions</th>
+                    <tr className="border-b bg-muted">
+                      <th className="text-left p-3 font-semibold text-foreground">Name</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Company</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Position</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Email</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Phone#</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Ext</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Address</th>
+                      <th className="text-left p-3 font-semibold text-foreground">City</th>
+                      <th className="text-left p-3 font-semibold text-foreground">State</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Status</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Notes</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {contacts.map(contact => (
-                      <tr key={contact.id} className="border-b hover:bg-gray-50">
+                      <tr key={contact.id} className="border-b hover:bg-muted">
                         <td className="p-3">
-                          <div className="font-medium text-gray-900">
+                          <div className="font-medium text-foreground">
                             {contact.first_name} {contact.last_name}
                           </div>
                         </td>
-                        <td className="p-3 text-sm text-gray-700">{contact.company || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{contact.position || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{contact.email}</td>
-                        <td className="p-3 text-sm text-gray-700">{contact.phone || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{contact.ext || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{contact.address || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{contact.city || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{contact.state || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.company || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.position || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.email}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.phone || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.ext || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.address || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.city || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{contact.state || '—'}</td>
                         <td className="p-3">{getStatusBadge(contact.status)}</td>
-                        <td className="p-3 text-sm text-gray-700 max-w-xs truncate">
+                        <td className="p-3 text-sm text-foreground max-w-xs truncate">
                           {contact.notes || '—'}
                         </td>
                         <td className="p-3">
@@ -695,7 +695,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                               <Edit className="w-3 h-3" />
                             </Button>
                             <Button size="sm" variant="outline" onClick={() => handleDeleteContact(contact.id)}>
-                              <Trash2 className="w-3 h-3 text-red-600" />
+                              <Trash2 className="w-3 h-3 text-foreground" />
                             </Button>
                           </div>
                         </td>
@@ -705,7 +705,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                 </table>
               </div>
               {contacts.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted-foreground">
                   No contacts yet. Add your first contact or upload a CSV file.
                 </div>
               )}
@@ -744,80 +744,80 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b bg-gray-50">
-                      <th className="text-left p-3 font-semibold text-gray-700">Company Name</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Industry</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Website</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Phone</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Email</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">City</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">State</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Country</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Employee Count</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Annual Revenue</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Type</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Status</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Account Owner</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Notes</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Actions</th>
+                    <tr className="border-b bg-muted">
+                      <th className="text-left p-3 font-semibold text-foreground">Company Name</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Industry</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Website</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Phone</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Email</th>
+                      <th className="text-left p-3 font-semibold text-foreground">City</th>
+                      <th className="text-left p-3 font-semibold text-foreground">State</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Country</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Employee Count</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Annual Revenue</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Type</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Status</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Account Owner</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Notes</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {companies.map(company => (
-                      <tr key={company.id} className="border-b hover:bg-gray-50">
+                      <tr key={company.id} className="border-b hover:bg-muted">
                         <td className="p-3">
-                          <div className="font-medium text-gray-900">{company.company_name}</div>
+                          <div className="font-medium text-foreground">{company.company_name}</div>
                           {company.parent_company && (
-                            <div className="text-xs text-gray-500">Parent: {company.parent_company}</div>
+                            <div className="text-xs text-muted-foreground">Parent: {company.parent_company}</div>
                           )}
                         </td>
-                        <td className="p-3 text-sm text-gray-700">{company.industry || '—'}</td>
-                        <td className="p-3 text-sm text-blue-600">
+                        <td className="p-3 text-sm text-foreground">{company.industry || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">
                           {company.website ? (
                             <a href={company.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
                               {company.website.replace(/^https?:\/\//, '').substring(0, 20)}
                             </a>
                           ) : '—'}
                         </td>
-                        <td className="p-3 text-sm text-gray-700">{company.phone || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{company.email || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{company.city || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{company.state || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">{company.country || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700">
+                        <td className="p-3 text-sm text-foreground">{company.phone || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{company.email || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{company.city || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{company.state || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{company.country || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">
                           {company.employee_count ? company.employee_count.toLocaleString() : '—'}
                         </td>
-                        <td className="p-3 text-sm text-gray-700">
+                        <td className="p-3 text-sm text-foreground">
                           {company.annual_revenue ? `$${(company.annual_revenue / 1000000).toFixed(1)}M` : '—'}
                         </td>
                         <td className="p-3">
                           <Badge className={
-                            company.company_type === 'customer' ? 'bg-green-100 text-green-800' :
-                            company.company_type === 'partner' ? 'bg-purple-100 text-purple-800' :
-                            company.company_type === 'vendor' ? 'bg-orange-100 text-orange-800' :
-                            'bg-blue-100 text-blue-800'
+                            company.company_type === 'customer' ? 'bg-muted text-foreground' :
+                            company.company_type === 'partner' ? 'bg-muted text-purple-800' :
+                            company.company_type === 'vendor' ? 'bg-muted text-orange-800' :
+                            'bg-muted text-foreground'
                           }>
                             {company.company_type}
                           </Badge>
                         </td>
                         <td className="p-3">
                           <Badge className={
-                            company.status === 'active' ? 'bg-green-100 text-green-800' :
-                            company.status === 'churned' ? 'bg-red-100 text-red-800' :
-                            'bg-gray-100 text-gray-800'
+                            company.status === 'active' ? 'bg-muted text-foreground' :
+                            company.status === 'churned' ? 'bg-muted text-red-800' :
+                            'bg-muted text-foreground'
                           }>
                             {company.status}
                           </Badge>
                         </td>
-                        <td className="p-3 text-sm text-gray-700">{company.account_owner || '—'}</td>
-                        <td className="p-3 text-sm text-gray-700 max-w-xs truncate">{company.notes || '—'}</td>
+                        <td className="p-3 text-sm text-foreground">{company.account_owner || '—'}</td>
+                        <td className="p-3 text-sm text-foreground max-w-xs truncate">{company.notes || '—'}</td>
                         <td className="p-3">
                           <div className="flex gap-2">
                             <Button size="sm" variant="outline" onClick={() => openEditCompany(company)}>
                               <Edit className="w-3 h-3" />
                             </Button>
                             <Button size="sm" variant="outline" onClick={() => handleDeleteCompany(company.id)}>
-                              <Trash2 className="w-3 h-3 text-red-600" />
+                              <Trash2 className="w-3 h-3 text-foreground" />
                             </Button>
                           </div>
                         </td>
@@ -827,7 +827,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                 </table>
               </div>
               {companies.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted-foreground">
                   No companies yet. Add your first company or upload a CSV file.
                 </div>
               )}
@@ -860,17 +860,17 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                           {getStageBadge(deal.stage)}
                         </div>
                         {contact && (
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-sm text-muted-foreground mt-1">
                             Contact: {contact.first_name} {contact.last_name}
                           </p>
                         )}
                         {deal.description && (
-                          <p className="text-sm text-gray-600 mt-2">{deal.description}</p>
+                          <p className="text-sm text-muted-foreground mt-2">{deal.description}</p>
                         )}
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-green-600">${deal.value.toLocaleString()}</div>
-                        <div className="text-xs text-gray-500 mt-1">{deal.probability}% probability</div>
+                        <div className="text-2xl font-bold text-foreground">${deal.value.toLocaleString()}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{deal.probability}% probability</div>
                       </div>
                     </div>
                   </CardContent>
@@ -901,12 +901,12 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3 flex-1">
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          activity.completed ? 'bg-green-100' : 'bg-gray-100'
+                          activity.completed ? 'bg-muted' : 'bg-muted'
                         }`}>
                           {activity.completed ? (
-                            <CheckCircle className="w-5 h-5 text-green-600" />
+                            <CheckCircle className="w-5 h-5 text-foreground" />
                           ) : (
-                            <Clock className="w-5 h-5 text-gray-600" />
+                            <Clock className="w-5 h-5 text-muted-foreground" />
                           )}
                         </div>
                         <div className="flex-1">
@@ -915,10 +915,10 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                             <h4 className="font-semibold">{activity.subject}</h4>
                           </div>
                           {activity.description && (
-                            <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
+                            <p className="text-sm text-muted-foreground mt-1">{activity.description}</p>
                           )}
                           {contact && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-muted-foreground mt-1">
                               Contact: {contact.first_name} {contact.last_name}
                             </p>
                           )}
@@ -938,7 +938,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-xl font-semibold">Activity Log</h3>
-            <p className="text-sm text-gray-600">Team activity across all CRM entities</p>
+            <p className="text-sm text-muted-foreground">Team activity across all CRM entities</p>
           </div>
 
           <Card>
@@ -946,13 +946,13 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b bg-gray-50">
-                      <th className="text-left p-3 font-semibold text-gray-700">Timestamp</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">User</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Action</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Entity Type</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Entity Name</th>
-                      <th className="text-left p-3 font-semibold text-gray-700">Details</th>
+                    <tr className="border-b bg-muted">
+                      <th className="text-left p-3 font-semibold text-foreground">Timestamp</th>
+                      <th className="text-left p-3 font-semibold text-foreground">User</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Action</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Entity Type</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Entity Name</th>
+                      <th className="text-left p-3 font-semibold text-foreground">Details</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -970,9 +970,9 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                       })();
 
                       return (
-                        <tr key={log.id} className="border-b hover:bg-gray-50">
+                        <tr key={log.id} className="border-b hover:bg-muted">
                           <td className="p-3">
-                            <div className="text-sm text-gray-900">
+                            <div className="text-sm text-foreground">
                               {timestamp.toLocaleString('en-US', {
                                 month: 'short',
                                 day: 'numeric',
@@ -981,18 +981,18 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                                 minute: '2-digit'
                               })}
                             </div>
-                            <div className="text-xs text-gray-500">{timeAgo}</div>
+                            <div className="text-xs text-muted-foreground">{timeAgo}</div>
                           </td>
                           <td className="p-3">
-                            <div className="text-sm font-medium text-gray-900">{log.user_name}</div>
-                            <div className="text-xs text-gray-500">{log.user_email}</div>
+                            <div className="text-sm font-medium text-foreground">{log.user_name}</div>
+                            <div className="text-xs text-muted-foreground">{log.user_email}</div>
                           </td>
                           <td className="p-3">
                             <Badge className={
-                              log.action === 'created' ? 'bg-green-100 text-green-800' :
-                              log.action === 'updated' ? 'bg-blue-100 text-blue-800' :
-                              log.action === 'deleted' ? 'bg-red-100 text-red-800' :
-                              'bg-gray-100 text-gray-800'
+                              log.action === 'created' ? 'bg-muted text-foreground' :
+                              log.action === 'updated' ? 'bg-muted text-foreground' :
+                              log.action === 'deleted' ? 'bg-muted text-red-800' :
+                              'bg-muted text-foreground'
                             }>
                               {log.action}
                             </Badge>
@@ -1002,10 +1002,10 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                               {log.entity_type}
                             </Badge>
                           </td>
-                          <td className="p-3 text-sm font-medium text-gray-900">
+                          <td className="p-3 text-sm font-medium text-foreground">
                             {log.entity_name}
                           </td>
-                          <td className="p-3 text-sm text-gray-600">
+                          <td className="p-3 text-sm text-muted-foreground">
                             {log.details && (
                               <div className="space-y-1">
                                 {Object.entries(log.details).map(([key, value]) => (
@@ -1025,7 +1025,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
                 </table>
               </div>
               {activityLogs.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted-foreground">
                   No activity logs yet. Actions performed on contacts, companies, and deals will appear here.
                 </div>
               )}

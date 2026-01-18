@@ -33,14 +33,14 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading analytics...</p>
+          <p className="mt-4 text-muted-foreground">Loading analytics...</p>
         </div>
       </div>
     );
   }
 
   if (!analyticsData) {
-    return <div className="text-center text-gray-500 py-16">No analytics data available</div>;
+    return <div className="text-center text-muted-foreground py-16">No analytics data available</div>;
   }
 
   const formatCurrency = (value) => `$${value.toLocaleString()}`;
@@ -57,8 +57,8 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-800">Sales Analytics</h2>
-        <p className="text-gray-600 mt-2">Comprehensive revenue tracking and customer insights</p>
+        <h2 className="text-3xl font-bold text-foreground">Sales Analytics</h2>
+        <p className="text-muted-foreground mt-2">Comprehensive revenue tracking and customer insights</p>
       </div>
 
       {/* Key Metrics Cards */}
@@ -67,13 +67,13 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Lifetime Revenue</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">
+                <p className="text-sm font-medium text-muted-foreground">Total Lifetime Revenue</p>
+                <p className="text-3xl font-bold text-foreground mt-2">
                   {formatCurrency(analyticsData.total_lifetime_revenue)}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -83,12 +83,12 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Customers</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{analyticsData.total_customers}</p>
-                <p className="text-xs text-green-600 mt-1">{analyticsData.active_customers} active</p>
+                <p className="text-sm font-medium text-muted-foreground">Total Customers</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{analyticsData.total_customers}</p>
+                <p className="text-xs text-foreground mt-1">{analyticsData.active_customers} active</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -98,13 +98,13 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Avg Monthly Revenue</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">
+                <p className="text-sm font-medium text-muted-foreground">Avg Monthly Revenue</p>
+                <p className="text-3xl font-bold text-foreground mt-2">
                   {formatCurrency(avgMonthlyRevenue)}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -114,11 +114,11 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Subscriptions</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{analyticsData.active_customers}</p>
+                <p className="text-sm font-medium text-muted-foreground">Active Subscriptions</p>
+                <p className="text-3xl font-bold text-foreground mt-2">{analyticsData.active_customers}</p>
               </div>
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <Package className="w-6 h-6 text-orange-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <Package className="w-6 h-6 text-foreground" />
               </div>
             </div>
           </CardContent>
@@ -252,17 +252,17 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
         <CardContent>
           <div className="space-y-4">
             {analyticsData.top_customers.map((customer, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
                     {index + 1}
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{customer.name}</h3>
-                    <p className="text-sm text-gray-500">
+                    <h3 className="font-medium text-foreground">{customer.name}</h3>
+                    <p className="text-sm text-muted-foreground">
                       {customer.subscriptions} subscription{customer.subscriptions !== 1 ? 's' : ''} • 
                       <span className={`ml-1 ${
-                        customer.status === 'active' ? 'text-green-600' : 'text-gray-500'
+                        customer.status === 'active' ? 'text-foreground' : 'text-muted-foreground'
                       }`}>
                         {customer.status}
                       </span>
@@ -270,8 +270,8 @@ const SalesAnalyticsNew = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-gray-900">{formatCurrency(customer.revenue)}</div>
-                  <div className="text-xs text-gray-500">monthly revenue</div>
+                  <div className="text-2xl font-bold text-foreground">{formatCurrency(customer.revenue)}</div>
+                  <div className="text-xs text-muted-foreground">monthly revenue</div>
                 </div>
               </div>
             ))}

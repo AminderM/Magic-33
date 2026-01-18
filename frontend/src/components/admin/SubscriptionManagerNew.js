@@ -169,12 +169,12 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
 
   const getStatusBadge = (status) => {
     const variants = {
-      active: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      canceled: 'bg-red-100 text-red-800',
-      trial: 'bg-blue-100 text-blue-800'
+      active: 'bg-muted text-foreground',
+      pending: 'bg-muted text-yellow-800',
+      canceled: 'bg-muted text-red-800',
+      trial: 'bg-muted text-foreground'
     };
-    return <Badge className={variants[status] || 'bg-gray-100 text-gray-800'}>{status}</Badge>;
+    return <Badge className={variants[status] || 'bg-muted text-foreground'}>{status}</Badge>;
   };
 
   const SortIcon = ({ columnKey }) => {
@@ -205,11 +205,11 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">Subscription Manager</h2>
-          <p className="text-gray-600 mt-2">Manage tenants, products, and subscriptions</p>
+          <h2 className="text-3xl font-bold text-foreground">Subscription Manager</h2>
+          <p className="text-muted-foreground mt-2">Manage tenants, products, and subscriptions</p>
         </div>
         <Button 
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-primary hover:bg-primary/90"
           onClick={() => setIsAddTenantModalOpen(true)}
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -229,7 +229,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                 className="max-w-md"
               />
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-muted-foreground">
               {filteredAndSortedTenants.length} tenant{filteredAndSortedTenants.length !== 1 ? 's' : ''}
             </div>
           </div>
@@ -244,44 +244,44 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
               <thead>
                 <tr className="border-b">
                   <th 
-                    className="text-left p-3 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50"
+                    className="text-left p-3 font-semibold text-foreground cursor-pointer hover:bg-muted"
                     onClick={() => handleSort('name')}
                   >
                     Tenant Name <SortIcon columnKey="name" />
                   </th>
-                  <th className="text-left p-3 font-semibold text-gray-700">Contact</th>
+                  <th className="text-left p-3 font-semibold text-foreground">Contact</th>
                   <th 
-                    className="text-left p-3 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50"
+                    className="text-left p-3 font-semibold text-foreground cursor-pointer hover:bg-muted"
                     onClick={() => handleSort('active_products')}
                   >
                     Active Products <SortIcon columnKey="active_products" />
                   </th>
                   <th 
-                    className="text-left p-3 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50"
+                    className="text-left p-3 font-semibold text-foreground cursor-pointer hover:bg-muted"
                     onClick={() => handleSort('subscription_status')}
                   >
                     Status <SortIcon columnKey="subscription_status" />
                   </th>
                   <th 
-                    className="text-left p-3 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50"
+                    className="text-left p-3 font-semibold text-foreground cursor-pointer hover:bg-muted"
                     onClick={() => handleSort('total_seats_used')}
                   >
                     Seats <SortIcon columnKey="total_seats_used" />
                   </th>
-                  <th className="text-left p-3 font-semibold text-gray-700">Storage</th>
-                  <th className="text-left p-3 font-semibold text-gray-700">Actions</th>
+                  <th className="text-left p-3 font-semibold text-foreground">Storage</th>
+                  <th className="text-left p-3 font-semibold text-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredAndSortedTenants.map((tenant) => (
-                  <tr key={tenant.id} className="border-b hover:bg-gray-50">
+                  <tr key={tenant.id} className="border-b hover:bg-muted">
                     <td className="p-3">
-                      <div className="font-medium text-gray-900">{tenant.name}</div>
-                      <div className="text-xs text-gray-500">ID: {tenant.id.substring(0, 8)}...</div>
+                      <div className="font-medium text-foreground">{tenant.name}</div>
+                      <div className="text-xs text-muted-foreground">ID: {tenant.id.substring(0, 8)}...</div>
                     </td>
                     <td className="p-3">
-                      <div className="text-sm text-gray-700">{tenant.company_email || '—'}</div>
-                      <div className="text-xs text-gray-500">{tenant.phone_number || '—'}</div>
+                      <div className="text-sm text-foreground">{tenant.company_email || '—'}</div>
+                      <div className="text-xs text-muted-foreground">{tenant.phone_number || '—'}</div>
                     </td>
                     <td className="p-3">
                       {tenant.active_products?.length > 0 ? (
@@ -292,7 +292,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                                 {product.tier || product.label}
                               </Badge>
                               {product.discount_percentage > 0 && (
-                                <Badge className="bg-green-100 text-green-700 text-xs">
+                                <Badge className="bg-muted text-foreground text-xs">
                                   -{product.discount_percentage}%
                                 </Badge>
                               )}
@@ -300,7 +300,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                           ))}
                         </div>
                       ) : (
-                        <span className="text-sm text-gray-400">No products</span>
+                        <span className="text-sm text-muted-foreground">No products</span>
                       )}
                     </td>
                     <td className="p-3">
@@ -309,13 +309,13 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                     <td className="p-3">
                       <div className="text-sm">
                         <span className="font-medium">{tenant.total_seats_used || 0}</span>
-                        <span className="text-gray-500"> / {tenant.total_seats_allocated || 0}</span>
+                        <span className="text-muted-foreground"> / {tenant.total_seats_allocated || 0}</span>
                       </div>
                     </td>
                     <td className="p-3">
                       <div className="text-sm">
                         <span className="font-medium">{(tenant.total_storage_used || 0).toFixed(1)}</span>
-                        <span className="text-gray-500"> / {tenant.total_storage_allocated || 0} GB</span>
+                        <span className="text-muted-foreground"> / {tenant.total_storage_allocated || 0} GB</span>
                       </div>
                     </td>
                     <td className="p-3">
@@ -339,7 +339,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                         <Button
                           size="sm"
                           variant="outline"
-                          className="bg-blue-50 hover:bg-blue-100"
+                          className="bg-muted hover:bg-muted"
                           onClick={() => {
                             setSelectedTenantForUsers(tenant);
                             setShowUserManagement(true);
@@ -424,7 +424,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                   value={newTenantData.total_seats_allocated}
                   onChange={(e) => setNewTenantData({ ...newTenantData, total_seats_allocated: parseInt(e.target.value) || 10 })}
                 />
-                <p className="text-xs text-gray-500">Number of user accounts allowed</p>
+                <p className="text-xs text-muted-foreground">Number of user accounts allowed</p>
               </div>
 
               <div className="space-y-2">
@@ -436,7 +436,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                   value={newTenantData.storage_limit_gb}
                   onChange={(e) => setNewTenantData({ ...newTenantData, storage_limit_gb: parseInt(e.target.value) || 50 })}
                 />
-                <p className="text-xs text-gray-500">Total storage space in gigabytes</p>
+                <p className="text-xs text-muted-foreground">Total storage space in gigabytes</p>
               </div>
             </div>
           </div>
@@ -488,7 +488,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                   toast.error('Error creating tenant');
                 }
               }}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-primary hover:bg-primary/90"
             >
               Create Tenant
             </Button>
@@ -601,29 +601,29 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                             <div className="flex items-center gap-2">
                               <div className="font-medium">{product?.label || sub.product_id}</div>
                               {discount > 0 && (
-                                <Badge className="bg-green-100 text-green-800 text-xs">
+                                <Badge className="bg-muted text-foreground text-xs">
                                   {discount}% OFF
                                 </Badge>
                               )}
                             </div>
-                            <div className="text-xs text-gray-500 mt-1">
+                            <div className="text-xs text-muted-foreground mt-1">
                               Seats: {sub.seats_used}/{sub.seats_allocated} • 
                               Storage: {sub.storage_used_gb?.toFixed(1) || 0}/{sub.storage_allocated_gb} GB
                             </div>
                             {discount > 0 && (
-                              <div className="text-xs text-gray-700 mt-1 flex items-center gap-2">
-                                <span className="line-through text-gray-400">${basePrice}/mo</span>
-                                <span className="font-semibold text-green-600">${discountedPrice.toFixed(2)}/mo</span>
+                              <div className="text-xs text-foreground mt-1 flex items-center gap-2">
+                                <span className="line-through text-muted-foreground">${basePrice}/mo</span>
+                                <span className="font-semibold text-foreground">${discountedPrice.toFixed(2)}/mo</span>
                                 {sub.discount_reason && (
-                                  <span className="text-gray-500">• {sub.discount_reason}</span>
+                                  <span className="text-muted-foreground">• {sub.discount_reason}</span>
                                 )}
                               </div>
                             )}
                             {sub.status === 'pending_cancellation' && (
-                              <div className="text-xs text-red-600 mt-1">Scheduled for cancellation</div>
+                              <div className="text-xs text-foreground mt-1">Scheduled for cancellation</div>
                             )}
                             {sub.pending_changes && (
-                              <div className="text-xs text-yellow-600 mt-1">
+                              <div className="text-xs text-foreground mt-1">
                                 Pending changes at next billing cycle
                               </div>
                             )}
@@ -635,14 +635,14 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                               variant="ghost"
                               onClick={() => handleRemoveSubscription(editingTenant.id, sub.id)}
                             >
-                              <Trash2 className="w-4 h-4 text-red-600" />
+                              <Trash2 className="w-4 h-4 text-foreground" />
                             </Button>
                           </div>
                         </div>
                       );
                     })
                   ) : (
-                    <div className="text-sm text-gray-500 p-3 border rounded">No active subscriptions</div>
+                    <div className="text-sm text-muted-foreground p-3 border rounded">No active subscriptions</div>
                   )}
                 </div>
               </div>
@@ -711,7 +711,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
             <div className="border-t pt-4 space-y-4">
               <div className="flex items-center justify-between">
                 <Label className="text-base font-semibold">Discount Override</Label>
-                <span className="text-xs text-gray-500">For clients with special pricing</span>
+                <span className="text-xs text-muted-foreground">For clients with special pricing</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -727,7 +727,7 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                     className="mt-1"
                     placeholder="0.0"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Enter 0-100</p>
+                  <p className="text-xs text-muted-foreground mt-1">Enter 0-100</p>
                 </div>
                 <div>
                   <Label>Discount Reason</Label>
@@ -742,8 +742,8 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
 
               {/* Price Calculation Display */}
               {newProductData.product_id && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="text-sm font-medium text-gray-700 mb-2">Pricing Summary</div>
+                <div className="bg-muted border border-border rounded-lg p-4">
+                  <div className="text-sm font-medium text-foreground mb-2">Pricing Summary</div>
                   {(() => {
                     const selectedPlan = plans.find(p => p.id === newProductData.product_id);
                     const basePrice = selectedPlan?.price || 0;
@@ -754,18 +754,18 @@ const SubscriptionManagerNew = ({ tenants, plans, fetchWithAuth, BACKEND_URL, re
                     return (
                       <div className="space-y-1">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Base Price:</span>
+                          <span className="text-muted-foreground">Base Price:</span>
                           <span className="font-medium">${basePrice.toFixed(2)}/month</span>
                         </div>
                         {discount > 0 && (
                           <>
                             <div className="flex justify-between text-sm">
-                              <span className="text-gray-600">Discount ({discount}%):</span>
-                              <span className="text-red-600 font-medium">-${savings.toFixed(2)}</span>
+                              <span className="text-muted-foreground">Discount ({discount}%):</span>
+                              <span className="text-foreground font-medium">-${savings.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-base font-bold border-t pt-2">
-                              <span className="text-gray-900">Final Price:</span>
-                              <span className="text-green-600">${discountedPrice.toFixed(2)}/month</span>
+                              <span className="text-foreground">Final Price:</span>
+                              <span className="text-foreground">${discountedPrice.toFixed(2)}/month</span>
                             </div>
                           </>
                         )}

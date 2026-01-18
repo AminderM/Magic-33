@@ -211,11 +211,11 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
 
   const getRoleBadgeColor = (role) => {
     const colors = {
-      company_admin: 'bg-purple-100 text-purple-800 border-purple-300',
-      dispatcher: 'bg-blue-100 text-blue-800 border-blue-300',
-      driver: 'bg-green-100 text-green-800 border-green-300'
+      company_admin: 'bg-muted text-purple-800 border-purple-300',
+      dispatcher: 'bg-muted text-foreground border-blue-300',
+      driver: 'bg-muted text-foreground border-green-300'
     };
-    return colors[role] || 'bg-gray-100 text-gray-800 border-gray-300';
+    return colors[role] || 'bg-muted text-foreground border-gray-300';
   };
 
   const getRoleIcon = (role) => {
@@ -247,8 +247,8 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
-          <p className="text-sm text-gray-600">Manage users for {tenant?.name}</p>
+          <h2 className="text-2xl font-bold text-foreground">User Management</h2>
+          <p className="text-sm text-muted-foreground">Manage users for {tenant?.name}</p>
         </div>
         <Button variant="outline" onClick={onClose}>
           <i className="fas fa-arrow-left mr-2"></i>
@@ -263,10 +263,10 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Users</p>
-                  <p className="text-2xl font-bold text-blue-600">{stats.total_users}</p>
+                  <p className="text-sm text-muted-foreground">Total Users</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.total_users}</p>
                 </div>
-                <UsersIcon className="w-8 h-8 text-blue-600" />
+                <UsersIcon className="w-8 h-8 text-foreground" />
               </div>
             </CardContent>
           </Card>
@@ -275,8 +275,8 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Company Admins</p>
-                  <p className="text-2xl font-bold text-purple-600">{stats.by_role.company_admin}</p>
+                  <p className="text-sm text-muted-foreground">Company Admins</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.by_role.company_admin}</p>
                 </div>
                 <span className="text-3xl">👤</span>
               </div>
@@ -287,8 +287,8 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Dispatchers</p>
-                  <p className="text-2xl font-bold text-blue-600">{stats.by_role.dispatcher}</p>
+                  <p className="text-sm text-muted-foreground">Dispatchers</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.by_role.dispatcher}</p>
                 </div>
                 <span className="text-3xl">📋</span>
               </div>
@@ -299,8 +299,8 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Drivers</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.by_role.driver}</p>
+                  <p className="text-sm text-muted-foreground">Drivers</p>
+                  <p className="text-2xl font-bold text-foreground">{stats.by_role.driver}</p>
                 </div>
                 <span className="text-3xl">🚛</span>
               </div>
@@ -316,7 +316,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
           <AlertDescription>
             Seat Usage: <strong>{tenant.total_seats_used || 0} / {tenant.total_seats_allocated || 0}</strong> seats allocated
             {tenant.total_seats_used >= tenant.total_seats_allocated && (
-              <span className="text-red-600 ml-2 font-semibold">⚠️ No seats available</span>
+              <span className="text-foreground ml-2 font-semibold">⚠️ No seats available</span>
             )}
           </AlertDescription>
         </Alert>
@@ -335,7 +335,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
 
         <Dialog open={isAddUserModalOpen} onOpenChange={setIsAddUserModalOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-primary hover:bg-primary/90">
               <UserPlus className="w-4 h-4 mr-2" />
               Add User
             </Button>
@@ -399,7 +399,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
                             <span className="mr-2">{role.icon}</span>
                             <div>
                               <div className="font-medium">{role.label}</div>
-                              <div className="text-xs text-gray-500">{role.description}</div>
+                              <div className="text-xs text-muted-foreground">{role.description}</div>
                             </div>
                           </div>
                         </SelectItem>
@@ -427,7 +427,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
                     Generate
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500">Password must be at least 8 characters</p>
+                <p className="text-xs text-muted-foreground">Password must be at least 8 characters</p>
               </div>
 
               <div className="space-y-2">
@@ -460,7 +460,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
                     </div>
                   ))}
                   {(!tenant?.active_products || tenant.active_products.length === 0) && (
-                    <p className="text-sm text-gray-500 col-span-2">No active products for this company</p>
+                    <p className="text-sm text-muted-foreground col-span-2">No active products for this company</p>
                   )}
                 </div>
               </div>
@@ -470,7 +470,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
               <Button variant="outline" onClick={() => setIsAddUserModalOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleAddUser} className="bg-blue-600 hover:bg-blue-700">
+              <Button onClick={handleAddUser} className="bg-primary hover:bg-primary/90">
                 Create User
               </Button>
             </DialogFooter>
@@ -487,48 +487,48 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
             </div>
           ) : filteredUsers.length === 0 ? (
             <div className="text-center py-12">
-              <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
-              <p className="text-gray-600 mb-4">
+              <UsersIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2">No users found</h3>
+              <p className="text-muted-foreground mb-4">
                 {searchQuery ? 'Try a different search query' : 'Get started by adding your first user'}
               </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b">
+                <thead className="bg-muted border-b">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       User
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Role
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Contact
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Products
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-card divide-y divide-gray-200">
                   {filteredUsers.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
+                    <tr key={user.id} className="hover:bg-muted">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <div className="flex-shrink-0 h-10 w-10 bg-muted rounded-full flex items-center justify-center">
                             <span className="text-xl">{getRoleIcon(user.role)}</span>
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{user.full_name}</div>
-                            <div className="text-sm text-gray-500">{user.email}</div>
+                            <div className="text-sm font-medium text-foreground">{user.full_name}</div>
+                            <div className="text-sm text-muted-foreground">{user.email}</div>
                           </div>
                         </div>
                       </td>
@@ -537,7 +537,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
                           {userRoles.find(r => r.value === user.role)?.label || user.role}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                         {user.phone}
                       </td>
                       <td className="px-6 py-4">
@@ -552,12 +552,12 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
                               ) : null;
                             })
                           ) : (
-                            <span className="text-sm text-gray-400">No products assigned</span>
+                            <span className="text-sm text-muted-foreground">No products assigned</span>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Badge className={user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                        <Badge className={user.is_active ? 'bg-muted text-foreground' : 'bg-muted text-red-800'}>
                           {user.is_active ? 'Active' : 'Inactive'}
                         </Badge>
                       </td>
@@ -586,7 +586,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteUser(user.id)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-foreground hover:text-red-700"
                             title="Delete User"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -699,7 +699,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
             <Button variant="outline" onClick={() => setIsEditUserModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleUpdateUser} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleUpdateUser} className="bg-primary hover:bg-primary/90">
               Update User
             </Button>
           </DialogFooter>
@@ -745,7 +745,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
             }}>
               Cancel
             </Button>
-            <Button onClick={handleResetPassword} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleResetPassword} className="bg-primary hover:bg-primary/90">
               Reset Password
             </Button>
           </DialogFooter>

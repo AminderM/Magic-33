@@ -29,10 +29,10 @@ import { toast } from 'sonner';
 import { Edit, MessageSquare, ChevronDown, Plus, Trash2, X, Search, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const USER_STATUSES = [
-  { value: 'active', label: 'Active', color: 'bg-green-100 text-green-800' },
-  { value: 'inactive', label: 'Inactive', color: 'bg-gray-100 text-gray-800' },
-  { value: 'declined', label: 'Declined', color: 'bg-red-100 text-red-800' },
-  { value: 'cancelled', label: 'Cancelled', color: 'bg-orange-100 text-orange-800' }
+  { value: 'active', label: 'Active', color: 'bg-muted text-foreground' },
+  { value: 'inactive', label: 'Inactive', color: 'bg-muted text-foreground' },
+  { value: 'declined', label: 'Declined', color: 'bg-muted text-red-800' },
+  { value: 'cancelled', label: 'Cancelled', color: 'bg-muted text-orange-800' }
 ];
 
 const USER_TYPES = [
@@ -409,26 +409,26 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-gray-900">{stats.total_users}</div>
-              <div className="text-sm text-gray-600">Total Users</div>
+              <div className="text-2xl font-bold text-foreground">{stats.total_users}</div>
+              <div className="text-sm text-muted-foreground">Total Users</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-green-600">{stats.active_users}</div>
-              <div className="text-sm text-gray-600">Active Users</div>
+              <div className="text-2xl font-bold text-foreground">{stats.active_users}</div>
+              <div className="text-sm text-muted-foreground">Active Users</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-red-600">{stats.inactive_users}</div>
-              <div className="text-sm text-gray-600">Inactive Users</div>
+              <div className="text-2xl font-bold text-foreground">{stats.inactive_users}</div>
+              <div className="text-sm text-muted-foreground">Inactive Users</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-600">{stats.total_companies_with_users}</div>
-              <div className="text-sm text-gray-600">Companies</div>
+              <div className="text-2xl font-bold text-foreground">{stats.total_companies_with_users}</div>
+              <div className="text-sm text-muted-foreground">Companies</div>
             </CardContent>
           </Card>
         </div>
@@ -436,10 +436,10 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
 
       {/* Main Card */}
       <Card>
-        <CardHeader className="border-b border-gray-200">
+        <CardHeader className="border-b border-border">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl font-bold">User Management</CardTitle>
-            <Button onClick={() => setShowCreateModal(true)} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={() => setShowCreateModal(true)} className="bg-primary hover:bg-primary/90">
               <Plus className="w-4 h-4 mr-2" />
               Create User
             </Button>
@@ -475,57 +475,57 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading users...</p>
+              <p className="text-muted-foreground">Loading users...</p>
             </div>
           ) : users.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-gray-400 text-5xl mb-4">👥</div>
-              <p className="text-gray-600">No users found</p>
+              <div className="text-muted-foreground text-5xl mb-4">👥</div>
+              <p className="text-muted-foreground">No users found</p>
             </div>
           ) : (
             <div className="overflow-x-auto border border-gray-300 rounded-lg">
               <table className="w-full border-collapse min-w-[1400px]">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Name</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Email</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">User Type</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Phone#</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Subscription</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">MC#</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">DOT#</th>
-                    <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-r border-gray-300">Company Name</th>
-                    <th className="px-3 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider border-b-2 border-gray-300">Actions</th>
+                  <tr className="bg-muted">
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">Name</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">Email</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">User Type</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">Phone#</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">Subscription</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">MC#</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">DOT#</th>
+                    <th className="px-3 py-3 text-left text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-r border-gray-300">Company Name</th>
+                    <th className="px-3 py-3 text-center text-xs font-bold text-foreground uppercase tracking-wider border-b-2 border-gray-300">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-card divide-y divide-gray-200">
                   {users.map((user, index) => (
-                    <tr key={user.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.full_name}</td>
-                      <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.email}</td>
-                      <td className="px-3 py-3 text-sm border-r border-gray-200 whitespace-nowrap">
+                    <tr key={user.id} className={index % 2 === 0 ? 'bg-card' : 'bg-muted'}>
+                      <td className="px-3 py-3 text-sm text-foreground border-r border-border whitespace-nowrap">{user.full_name}</td>
+                      <td className="px-3 py-3 text-sm text-foreground border-r border-border whitespace-nowrap">{user.email}</td>
+                      <td className="px-3 py-3 text-sm border-r border-border whitespace-nowrap">
                         <Badge variant="outline" className="capitalize">
                           {USER_TYPES.find(t => t.value === user.user_type)?.label || user.user_type || 'Other'}
                         </Badge>
                       </td>
-                      <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.phone || '-'}</td>
-                      <td className="px-3 py-3 text-sm border-r border-gray-200 whitespace-nowrap">
+                      <td className="px-3 py-3 text-sm text-foreground border-r border-border whitespace-nowrap">{user.phone || '-'}</td>
+                      <td className="px-3 py-3 text-sm border-r border-border whitespace-nowrap">
                         {user.subscriptions?.length > 0 ? (
                           <div className="flex flex-col gap-1">
                             {user.subscriptions.filter(s => s.status === 'active').map((sub, idx) => (
-                              <Badge key={idx} className="bg-purple-100 text-purple-800 text-xs">
+                              <Badge key={idx} className="bg-muted text-purple-800 text-xs">
                                 {sub.bundle_name}
                               </Badge>
                             ))}
                           </div>
                         ) : (
-                          <span className="text-gray-400 text-xs">No subscription</span>
+                          <span className="text-muted-foreground text-xs">No subscription</span>
                         )}
                       </td>
-                      <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.mc_number || '-'}</td>
-                      <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.dot_number || '-'}</td>
-                      <td className="px-3 py-3 text-sm text-gray-900 border-r border-gray-200 whitespace-nowrap">{user.company_name || '-'}</td>
-                      <td className="px-3 py-3 text-sm border-gray-200">
+                      <td className="px-3 py-3 text-sm text-foreground border-r border-border whitespace-nowrap">{user.mc_number || '-'}</td>
+                      <td className="px-3 py-3 text-sm text-foreground border-r border-border whitespace-nowrap">{user.dot_number || '-'}</td>
+                      <td className="px-3 py-3 text-sm text-foreground border-r border-border whitespace-nowrap">{user.company_name || '-'}</td>
+                      <td className="px-3 py-3 text-sm border-border">
                         <div className="flex items-center justify-center gap-2">
                           {/* Edit Button */}
                           <Button
@@ -551,7 +551,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                                 <DropdownMenuItem 
                                   key={status.value}
                                   onClick={() => handleUpdateStatus(user.id, status.value)}
-                                  className={user.status === status.value ? 'bg-gray-100' : ''}
+                                  className={user.status === status.value ? 'bg-muted' : ''}
                                 >
                                   <Badge className={`${status.color} mr-2`}>{status.label}</Badge>
                                 </DropdownMenuItem>
@@ -569,7 +569,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                           >
                             <MessageSquare className="w-4 h-4" />
                             {user.comments?.length > 0 && (
-                              <span className="ml-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+                              <span className="ml-1 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">
                                 {user.comments.length}
                               </span>
                             )}
@@ -599,8 +599,8 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
           </DialogHeader>
           
           {/* FMCSA Carrier Lookup Section */}
-          <div className="border rounded-lg p-4 bg-blue-50 mb-4">
-            <Label className="text-sm font-medium text-blue-800 mb-2 block">
+          <div className="border rounded-lg p-4 bg-muted mb-4">
+            <Label className="text-sm font-medium text-foreground mb-2 block">
               <Search className="w-4 h-4 inline mr-1" />
               FMCSA Carrier Lookup (Auto-fill from DOT#, MC#, or company name)
             </Label>
@@ -610,13 +610,13 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                 onChange={(e) => setCarrierSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && lookupCarrier()}
                 placeholder="Enter DOT#, MC#, or company name..."
-                className="flex-1 bg-white"
+                className="flex-1 bg-card"
               />
               <Button 
                 type="button" 
                 onClick={lookupCarrier}
                 disabled={carrierSearchLoading}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-primary hover:bg-primary/90"
               >
                 {carrierSearchLoading ? (
                   <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
@@ -626,25 +626,25 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
               </Button>
             </div>
             {carrierInfo && (
-              <div className="mt-3 p-3 bg-white rounded border text-sm">
+              <div className="mt-3 p-3 bg-card rounded border text-sm">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold text-gray-900">{carrierInfo.legal_name}</span>
+                  <span className="font-semibold text-foreground">{carrierInfo.legal_name}</span>
                   {carrierInfo.allow_to_operate === 'Y' && !carrierInfo.out_of_service ? (
-                    <Badge className="bg-green-100 text-green-800 text-xs">
+                    <Badge className="bg-muted text-foreground text-xs">
                       <CheckCircle className="w-3 h-3 mr-1" />Authorized
                     </Badge>
                   ) : (
-                    <Badge className="bg-red-100 text-red-800 text-xs">
+                    <Badge className="bg-muted text-red-800 text-xs">
                       <AlertTriangle className="w-3 h-3 mr-1" />Not Authorized
                     </Badge>
                   )}
                 </div>
-                <div className="text-gray-600 text-xs">
+                <div className="text-muted-foreground text-xs">
                   {carrierInfo.dot_number && <span className="mr-3">DOT# {carrierInfo.dot_number}</span>}
                   {carrierInfo.mc_number && <span className="mr-3">MC# {carrierInfo.mc_number}</span>}
                 </div>
                 {carrierInfo.physical_address && (
-                  <div className="text-gray-500 text-xs mt-1">{carrierInfo.physical_address}</div>
+                  <div className="text-muted-foreground text-xs mt-1">{carrierInfo.physical_address}</div>
                 )}
               </div>
             )}
@@ -769,7 +769,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreateModal(false)}>Cancel</Button>
-            <Button onClick={handleCreateUser} className="bg-blue-600 hover:bg-blue-700">Create User</Button>
+            <Button onClick={handleCreateUser} className="bg-primary hover:bg-primary/90">Create User</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -874,7 +874,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowEditModal(false)}>Cancel</Button>
-            <Button onClick={handleEditUser} className="bg-blue-600 hover:bg-blue-700">Update User</Button>
+            <Button onClick={handleEditUser} className="bg-primary hover:bg-primary/90">Update User</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -895,7 +895,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                 rows={2}
                 className="flex-1"
               />
-              <Button onClick={handleAddComment} className="bg-blue-600 hover:bg-blue-700">
+              <Button onClick={handleAddComment} className="bg-primary hover:bg-primary/90">
                 <Plus className="w-4 h-4" />
               </Button>
             </div>
@@ -903,16 +903,16 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
             {/* Comments List */}
             <div className="border rounded-lg divide-y max-h-[400px] overflow-y-auto">
               {loadingComments ? (
-                <div className="p-4 text-center text-gray-500">Loading comments...</div>
+                <div className="p-4 text-center text-muted-foreground">Loading comments...</div>
               ) : comments.length === 0 ? (
-                <div className="p-4 text-center text-gray-500">No comments yet</div>
+                <div className="p-4 text-center text-muted-foreground">No comments yet</div>
               ) : (
                 comments.map((comment) => (
-                  <div key={comment.id} className="p-3 hover:bg-gray-50">
+                  <div key={comment.id} className="p-3 hover:bg-muted">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <p className="text-sm text-gray-900">{comment.content}</p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-foreground">{comment.content}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
                           {comment.created_by_name} • {new Date(comment.created_at).toLocaleString()}
                         </p>
                       </div>
@@ -920,7 +920,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleDeleteComment(comment.id)}
-                        className="h-6 w-6 p-0 text-gray-400 hover:text-red-600"
+                        className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
                       >
                         <Trash2 className="w-3 h-3" />
                       </Button>
