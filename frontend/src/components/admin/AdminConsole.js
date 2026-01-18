@@ -252,8 +252,13 @@ const AdminConsole = () => {
       <div className="w-64 bg-card border-r border-border flex flex-col">
         {/* Logo/Header */}
         <div className="p-6 border-b border-border">
-          <h1 className="text-xl font-bold text-foreground">Admin Console</h1>
-          <p className="text-sm text-muted-foreground mt-1">Platform Management</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-foreground">Admin Console</h1>
+              <p className="text-sm text-muted-foreground mt-1">Platform Management</p>
+            </div>
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Navigation */}
