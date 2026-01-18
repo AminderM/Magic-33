@@ -254,11 +254,11 @@ const DriverManagement = ({ onStatsUpdate }) => {
     if (days === null) return null;
     
     if (days < 0) {
-      return <Badge className="bg-muted0 text-white text-xs"><i className="fas fa-exclamation-triangle mr-1"></i>{label} Expired</Badge>;
+      return <Badge className="bg-primary text-white text-xs"><i className="fas fa-exclamation-triangle mr-1"></i>{label} Expired</Badge>;
     } else if (days <= 30) {
-      return <Badge className="bg-muted0 text-white text-xs"><i className="fas fa-clock mr-1"></i>{label} in {days}d</Badge>;
+      return <Badge className="bg-primary text-white text-xs"><i className="fas fa-clock mr-1"></i>{label} in {days}d</Badge>;
     } else if (days <= 60) {
-      return <Badge className="bg-muted0 text-white text-xs">{label} in {days}d</Badge>;
+      return <Badge className="bg-primary text-white text-xs">{label} in {days}d</Badge>;
     }
     return null;
   };
@@ -290,9 +290,9 @@ const DriverManagement = ({ onStatsUpdate }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-foreground">Total Drivers</p>
-                <p className="text-2xl font-bold text-blue-900">{stats.total}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.total}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
                 <i className="fas fa-users text-white"></i>
               </div>
             </div>
@@ -304,9 +304,9 @@ const DriverManagement = ({ onStatsUpdate }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-foreground">Available</p>
-                <p className="text-2xl font-bold text-green-900">{stats.available}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.available}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
                 <i className="fas fa-check-circle text-white"></i>
               </div>
             </div>
@@ -318,9 +318,9 @@ const DriverManagement = ({ onStatsUpdate }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-foreground">On Route</p>
-                <p className="text-2xl font-bold text-indigo-900">{stats.onRoute}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.onRoute}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
                 <i className="fas fa-truck text-white"></i>
               </div>
             </div>
@@ -334,7 +334,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                 <p className="text-xs font-medium text-muted-foreground">Off Duty</p>
                 <p className="text-2xl font-bold text-foreground">{stats.offDuty}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
                 <i className="fas fa-moon text-white"></i>
               </div>
             </div>
@@ -345,10 +345,10 @@ const DriverManagement = ({ onStatsUpdate }) => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-xs font-medium ${stats.expiringSoon > 0 ? 'text-red-600' : 'text-foreground'}`}>Expiring Soon</p>
-                <p className={`text-2xl font-bold ${stats.expiringSoon > 0 ? 'text-red-900' : 'text-emerald-900'}`}>{stats.expiringSoon}</p>
+                <p className={`text-xs font-medium ${stats.expiringSoon > 0 ? 'text-foreground' : 'text-foreground'}`}>Expiring Soon</p>
+                <p className={`text-2xl font-bold ${stats.expiringSoon > 0 ? 'text-foreground' : 'text-foreground'}`}>{stats.expiringSoon}</p>
               </div>
-              <div className={`h-10 w-10 rounded-full ${stats.expiringSoon > 0 ? 'bg-muted0' : 'bg-muted0'} flex items-center justify-center`}>
+              <div className={`h-10 w-10 rounded-full ${stats.expiringSoon > 0 ? 'bg-primary' : 'bg-primary'} flex items-center justify-center`}>
                 <i className={`fas ${stats.expiringSoon > 0 ? 'fa-exclamation-triangle' : 'fa-shield-alt'} text-white`}></i>
               </div>
             </div>
@@ -453,7 +453,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                 {/* Driver Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
+                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg">
                       {driver.full_name?.charAt(0)?.toUpperCase() || 'D'}
                     </div>
                     <div>
@@ -532,7 +532,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    className="h-8 text-red-600 hover:text-foreground hover:bg-muted"
+                    className="h-8 text-foreground hover:text-foreground hover:bg-muted"
                     onClick={() => handleDeleteDriver(driver.id)}
                   >
                     <i className="fas fa-trash"></i>
@@ -775,7 +775,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
             <div className="space-y-6">
               {/* Profile Header */}
               <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-3xl">
+                <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-white font-bold text-3xl">
                   {selectedDriver.full_name?.charAt(0)?.toUpperCase() || 'D'}
                 </div>
                 <div className="flex-1">
