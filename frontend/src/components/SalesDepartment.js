@@ -289,7 +289,7 @@ const FilterBar = ({
           {filters.searchText && (
             <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               Search: "{filters.searchText}"
-              <button onClick={() => setFilters({ ...filters, searchText: '' })} className="ml-1 hover:text-blue-900">
+              <button onClick={() => setFilters({ ...filters, searchText: '' })} className="ml-1 hover:text-foreground">
                 <i className="fas fa-times"></i>
               </button>
             </span>
@@ -297,7 +297,7 @@ const FilterBar = ({
           {filters.dateFrom && (
             <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               From: {filters.dateFrom}
-              <button onClick={() => setFilters({ ...filters, dateFrom: '' })} className="ml-1 hover:text-green-900">
+              <button onClick={() => setFilters({ ...filters, dateFrom: '' })} className="ml-1 hover:text-foreground">
                 <i className="fas fa-times"></i>
               </button>
             </span>
@@ -305,7 +305,7 @@ const FilterBar = ({
           {filters.dateTo && (
             <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               To: {filters.dateTo}
-              <button onClick={() => setFilters({ ...filters, dateTo: '' })} className="ml-1 hover:text-green-900">
+              <button onClick={() => setFilters({ ...filters, dateTo: '' })} className="ml-1 hover:text-foreground">
                 <i className="fas fa-times"></i>
               </button>
             </span>
@@ -313,7 +313,7 @@ const FilterBar = ({
           {filters.status !== 'all' && (
             <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               Status: {filters.status}
-              <button onClick={() => setFilters({ ...filters, status: 'all' })} className="ml-1 hover:text-purple-900">
+              <button onClick={() => setFilters({ ...filters, status: 'all' })} className="ml-1 hover:text-foreground">
                 <i className="fas fa-times"></i>
               </button>
             </span>
@@ -321,7 +321,7 @@ const FilterBar = ({
           {showSource && filters.source !== 'all' && (
             <span className="inline-flex items-center px-2 py-1 text-xs bg-muted text-foreground rounded-full">
               Source: {filters.source}
-              <button onClick={() => setFilters({ ...filters, source: 'all' })} className="ml-1 hover:text-orange-900">
+              <button onClick={() => setFilters({ ...filters, source: 'all' })} className="ml-1 hover:text-foreground">
                 <i className="fas fa-times"></i>
               </button>
             </span>
@@ -3080,7 +3080,7 @@ Body:
                 <div className="bg-muted border border-border rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <i className="fas fa-info-circle text-blue-600"></i>
-                    <span className="font-semibold text-blue-900">AI-Generated Professional Email</span>
+                    <span className="font-semibold text-foreground">AI-Generated Professional Email</span>
                   </div>
                   <p className="text-sm text-foreground">
                     Review the generated email below. You can copy it to your clipboard and paste it into your email client.
