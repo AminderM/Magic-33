@@ -465,7 +465,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                     <tr key={item.id} className="hover:bg-gray-50" data-testid={`equipment-row-${item.id}`}>
                       <td className="px-4 py-3">
                         <div className="flex items-center">
-                          <i className={`fas ${getEquipmentIcon(item.equipment_type)} text-blue-600 mr-3 text-lg`}></i>
+                          <i className={`fas ${getEquipmentIcon(item.equipment_type)} text-foreground mr-3 text-lg`}></i>
                           <div>
                             <p className="font-semibold">{item.name}</p>
                             <p className="text-xs text-gray-500 line-clamp-1">{item.description}</p>
