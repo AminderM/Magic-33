@@ -32,6 +32,7 @@ from routes import sales_routes
 from routes import fmcsa_routes
 from routes import bundle_routes
 from routes import accounting_routes
+from routes import analytics_routes
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
