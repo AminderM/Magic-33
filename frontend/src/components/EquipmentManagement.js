@@ -157,7 +157,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
 
   const renderSpecifications = (specs) => {
     if (!specs || Object.keys(specs).length === 0) {
-      return <span className="text-gray-500">No specifications</span>;
+      return <span className="text-muted-foreground">No specifications</span>;
     }
     
     return (
@@ -184,8 +184,8 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
       {/* Header and Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Equipment Management</h2>
-          <p className="text-gray-600">
+          <h2 className="text-2xl font-bold text-foreground">Equipment Management</h2>
+          <p className="text-muted-foreground">
             {user?.role === 'fleet_owner' ? 'Manage your equipment fleet' : 'Browse available equipment'}
           </p>
         </div>
@@ -420,13 +420,13 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
       {filteredEquipment.length === 0 ? (
         <Card className="dashboard-card">
           <CardContent className="p-8 text-center">
-            <div className="text-gray-400 text-5xl mb-4">
+            <div className="text-muted-foreground text-5xl mb-4">
               <i className="fas fa-truck"></i>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               {user?.role === 'fleet_owner' ? 'No Equipment Added Yet' : 'No Equipment Available'}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               {user?.role === 'fleet_owner' 
                 ? 'Start by adding your first piece of equipment to the marketplace.'
                 : 'Check back later for available equipment.'}
@@ -449,26 +449,26 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b-2 border-gray-200">
+                <thead className="bg-muted border-b-2 border-border">
                   <tr>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Name</th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Type</th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Location</th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Hourly Rate</th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Daily Rate</th>
-                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Name</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Type</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Location</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Hourly Rate</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Daily Rate</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredEquipment.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50" data-testid={`equipment-row-${item.id}`}>
+                    <tr key={item.id} className="hover:bg-muted" data-testid={`equipment-row-${item.id}`}>
                       <td className="px-4 py-3">
                         <div className="flex items-center">
                           <i className={`fas ${getEquipmentIcon(item.equipment_type)} text-foreground mr-3 text-lg`}></i>
                           <div>
                             <p className="font-semibold">{item.name}</p>
-                            <p className="text-xs text-gray-500 line-clamp-1">{item.description}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>
                           </div>
                         </div>
                       </td>
@@ -555,7 +555,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                   {item.name}
                 </h3>
                 
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
                   {item.description}
                 </p>
                 
