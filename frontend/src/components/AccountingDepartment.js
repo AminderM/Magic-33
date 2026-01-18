@@ -915,7 +915,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -932,7 +932,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-red-50 to-red-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -949,7 +949,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -966,7 +966,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-border">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -1320,7 +1320,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 ) : (
                   <div className="space-y-4">
                     {/* Category Badge */}
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-border">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-muted border border-border">
                       <span className="font-medium text-foreground">Detected Category:</span>
                       <Badge className="bg-muted text-foreground">
                         <i className={`fas ${getCategoryIcon(parsedReceiptData.category)} mr-1`}></i>
