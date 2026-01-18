@@ -74,102 +74,26 @@ const DispatchAnalytics = () => {
     }
   };
 
-    bookings.forEach(booking => {
-      // Count by status
-      const status = booking.status || 'pending';
-      statusCounts[status] = (statusCounts[status] || 0) + 1;
-
-      // Revenue
-      totalRevenue += booking.confirmed_rate || booking.total_cost || 0;
-
-      // Time-based counts
-      const createdDate = new Date(booking.created_at);
-      if (createdDate >= startOfMonth) loadsThisMonth++;
-      if (createdDate >= startOfWeek) loadsThisWeek++;
-
-      // Delivered count
-      if (status === 'delivered' || status === 'paid' || status === 'invoiced') {
-        deliveredCount++;
-      }
-
-      // Overdue (payment_overdue status)
-      if (status === 'payment_overdue') {
-        overdueCount++;
-      }
-    });
-
-    // Format status for display
-    const statusLabels = {
-      'pending': 'Pending',
-      'planned': 'Planned',
-      'in_transit_pickup': 'In Transit (Pickup)',
-      'at_pickup': 'At Pickup',
-      'in_transit_delivery': 'In Transit (Delivery)',
-      'at_delivery': 'At Delivery',
-      'delivered': 'Delivered',
-      'invoiced': 'Invoiced',
-      'payment_overdue': 'Overdue',
-      'paid': 'Paid'
-    };
-
-    const distribution = Object.entries(statusCounts).map(([status, count]) => ({
-      status: statusLabels[status] || status,
-      count,
-      percentage: ((count / bookings.length) * 100).toFixed(1)
-    })).sort((a, b) => b.count - a.count);
-
-    // Active loads (not delivered/paid/invoiced)
-    const activeStatuses = ['pending', 'planned', 'in_transit_pickup', 'at_pickup', 'in_transit_delivery', 'at_delivery'];
-    const activeLoads = bookings.filter(b => activeStatuses.includes(b.status)).length;
-
-    // Calculate monthly trend (last 6 months)
-    const months = [];
-    for (let i = 5; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-      const count = bookings.filter(b => {
-        const created = new Date(b.created_at);
-        return created >= date && created <= monthEnd;
-      }).length;
-      months.push({
-        month: date.toLocaleString('default', { month: 'short' }),
-        count
-      });
-    }
-
-    // Recent activity (last 5 loads)
-    const recent = bookings
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-      .slice(0, 5)
-      .map(b => ({
-        id: b.order_number,
-        status: b.status,
-        created: new Date(b.created_at).toLocaleDateString(),
-        rate: b.confirmed_rate || b.total_cost || 0
-      }));
-
-    setKpis({
-      totalLoads: bookings.length,
-      activeLoads,
-      deliveredLoads: deliveredCount,
-      pendingLoads: statusCounts.pending || 0,
-      onTimeDeliveryRate: bookings.length > 0 ? ((deliveredCount / bookings.length) * 100).toFixed(1) : 0,
-      avgDeliveryTime: 0,
-      totalRevenue,
-      loadsThisMonth,
-      loadsThisWeek,
-      overdueLoads: overdueCount
-    });
-
-    setStatusDistribution(distribution);
-    setRecentActivity(recent);
-    setMonthlyTrend(months);
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <i className="fas fa-spinner fa-spin text-4xl text-foreground"></i>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 space-y-4">
+        <i className="fas fa-exclamation-triangle text-4xl text-primary"></i>
+        <p className="text-foreground">{error}</p>
+        <button 
+          onClick={loadAnalytics}
+          className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          <i className="fas fa-sync-alt mr-2"></i>
+          Retry
+        </button>
       </div>
     );
   }
