@@ -115,8 +115,8 @@ const CollectionsChart = ({ receivables }) => {
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-        <div className="text-2xl font-bold text-gray-900">{collectionRate}%</div>
-        <div className="text-xs text-gray-500">Collection Rate</div>
+        <div className="text-2xl font-bold text-foreground">{collectionRate}%</div>
+        <div className="text-xs text-muted-foreground">Collection Rate</div>
       </div>
     </div>
   );
@@ -161,7 +161,7 @@ const AgingReport = ({ receivables, payables }) => {
 
   return (
     <div className="space-y-2">
-      <div className="grid grid-cols-3 gap-4 px-3 py-2 bg-gray-100 rounded-lg font-semibold text-sm">
+      <div className="grid grid-cols-3 gap-4 px-3 py-2 bg-muted rounded-lg font-semibold text-sm">
         <span>Aging Bucket</span>
         <span className="text-right text-green-700">AR Outstanding</span>
         <span className="text-right text-red-700">AP Outstanding</span>
@@ -766,11 +766,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       overdue: 'bg-red-100 text-red-800',
       paid: 'bg-green-100 text-green-800',
       partial: 'bg-orange-100 text-orange-800',
-      cancelled: 'bg-gray-100 text-gray-800',
+      cancelled: 'bg-muted text-gray-800',
       approved: 'bg-green-100 text-green-800',
       rejected: 'bg-red-100 text-red-800'
     };
-    return styles[status] || 'bg-gray-100 text-gray-800';
+    return styles[status] || 'bg-muted text-gray-800';
   };
 
   // Get display text for AR status
@@ -898,8 +898,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">💰 Accounting</h1>
-          <p className="text-sm text-gray-500">Manage invoices, bills, and financial transactions</p>
+          <h1 className="text-2xl font-bold text-foreground">💰 Accounting</h1>
+          <p className="text-sm text-muted-foreground">Manage invoices, bills, and financial transactions</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={() => setShowInvoiceModal(true)} className="bg-green-600 hover:bg-green-700">
@@ -986,7 +986,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6 bg-white rounded-xl p-1 border border-gray-200 shadow-sm max-w-4xl">
+        <TabsList className="grid w-full grid-cols-6 bg-card rounded-xl p-1 border border-border shadow-sm max-w-4xl">
           <TabsTrigger value="analytics" className="text-sm">
             <i className="fas fa-chart-line mr-2"></i>
             Analytics
@@ -1051,7 +1051,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         className={`p-3 rounded-lg flex items-start justify-between ${
                           alert.priority === 'high' ? 'bg-red-50 border border-red-200' :
                           alert.priority === 'medium' ? 'bg-yellow-50 border border-yellow-200' :
-                          'bg-gray-50 border border-gray-200'
+                          'bg-muted border border-border'
                         }`}
                       >
                         <div className="flex-1">
@@ -1064,8 +1064,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             }`}></i>
                             <span className="font-medium text-sm">{alert.title}</span>
                           </div>
-                          <p className="text-xs text-gray-600 mt-1">{alert.message}</p>
-                          <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                          <p className="text-xs text-muted-foreground mt-1">{alert.message}</p>
+                          <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                             <span>Due: {new Date(alert.due_date).toLocaleDateString()}</span>
                             {alert.days_overdue > 0 && (
                               <Badge variant="outline" className="text-xs bg-red-50 text-red-600 border-red-200">
@@ -1084,7 +1084,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       </div>
                     ))}
                     {alerts.length > 5 && (
-                      <div className="text-center pt-2 text-sm text-gray-500">
+                      <div className="text-center pt-2 text-sm text-muted-foreground">
                         <i className="fas fa-ellipsis-h mr-1"></i>
                         {alerts.length - 5} more alerts
                       </div>
@@ -1131,8 +1131,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     </div>
                     <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between items-center">
-                        <span className="font-semibold text-gray-700">Total</span>
-                        <span className="text-xl font-bold text-gray-900">${totalAR.toLocaleString()}</span>
+                        <span className="font-semibold text-foreground">Total</span>
+                        <span className="text-xl font-bold text-foreground">${totalAR.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -1163,8 +1163,8 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     </div>
                     <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between items-center">
-                        <span className="font-semibold text-gray-700">Total</span>
-                        <span className="text-xl font-bold text-gray-900">${totalAP.toLocaleString()}</span>
+                        <span className="font-semibold text-foreground">Total</span>
+                        <span className="text-xl font-bold text-foreground">${totalAP.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -1239,7 +1239,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   <i className="fas fa-upload text-blue-600 mr-2"></i>
                   Upload Receipt
                 </CardTitle>
-                <p className="text-sm text-gray-600">Upload a receipt image for AI processing</p>
+                <p className="text-sm text-muted-foreground">Upload a receipt image for AI processing</p>
               </CardHeader>
               <CardContent>
                 {!receiptPreview ? (
@@ -1252,9 +1252,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       id="receipt-upload"
                     />
                     <label htmlFor="receipt-upload" className="cursor-pointer">
-                      <i className="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-4"></i>
-                      <p className="text-gray-600 mb-2">Click to upload or drag and drop</p>
-                      <p className="text-sm text-gray-400">PNG, JPG, JPEG up to 10MB</p>
+                      <i className="fas fa-cloud-upload-alt text-muted-foreground text-4xl mb-4"></i>
+                      <p className="text-muted-foreground mb-2">Click to upload or drag and drop</p>
+                      <p className="text-sm text-muted-foreground">PNG, JPG, JPEG up to 10MB</p>
                     </label>
                   </div>
                 ) : (
@@ -1309,19 +1309,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   <i className="fas fa-file-alt text-purple-600 mr-2"></i>
                   Extracted Data
                 </CardTitle>
-                <p className="text-sm text-gray-600">Review and confirm before adding to Expenses Ledger</p>
+                <p className="text-sm text-muted-foreground">Review and confirm before adding to Expenses Ledger</p>
               </CardHeader>
               <CardContent>
                 {!parsedReceiptData ? (
                   <div className="text-center py-12">
                     <i className="fas fa-file-invoice text-gray-300 text-5xl mb-4"></i>
-                    <p className="text-gray-500">Upload and process a receipt to see extracted data</p>
+                    <p className="text-muted-foreground">Upload and process a receipt to see extracted data</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {/* Category Badge */}
                     <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
-                      <span className="font-medium text-gray-700">Detected Category:</span>
+                      <span className="font-medium text-foreground">Detected Category:</span>
                       <Badge className="bg-blue-100 text-blue-800">
                         <i className={`fas ${getCategoryIcon(parsedReceiptData.category)} mr-1`}></i>
                         {getCategoryName(parsedReceiptData.category || 'other')}
@@ -1329,7 +1329,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     </div>
 
                     {/* Workflow Note */}
-                    <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded flex items-center gap-2">
+                    <div className="text-xs text-muted-foreground bg-muted p-2 rounded flex items-center gap-2">
                       <i className="fas fa-info-circle"></i>
                       This expense will be added to the Expenses Ledger for approval before going to Accounts Payable.
                     </div>
@@ -1338,14 +1338,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <div className="space-y-3 border-t pt-4">
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <Label className="text-xs text-gray-500">Vendor Name</Label>
+                          <Label className="text-xs text-muted-foreground">Vendor Name</Label>
                           <Input 
                             value={parsedReceiptData.vendor_name || ''} 
                             onChange={(e) => setParsedReceiptData({...parsedReceiptData, vendor_name: e.target.value})}
                           />
                         </div>
                         <div>
-                          <Label className="text-xs text-gray-500">Amount ($)</Label>
+                          <Label className="text-xs text-muted-foreground">Amount ($)</Label>
                           <Input 
                             type="number"
                             value={parsedReceiptData.amount || ''} 
@@ -1355,7 +1355,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <Label className="text-xs text-gray-500">Date</Label>
+                          <Label className="text-xs text-muted-foreground">Date</Label>
                           <Input 
                             type="date"
                             value={parsedReceiptData.expense_date || ''} 
@@ -1363,7 +1363,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           />
                         </div>
                         <div>
-                          <Label className="text-xs text-gray-500">Receipt #</Label>
+                          <Label className="text-xs text-muted-foreground">Receipt #</Label>
                           <Input 
                             value={parsedReceiptData.receipt_number || ''} 
                             onChange={(e) => setParsedReceiptData({...parsedReceiptData, receipt_number: e.target.value})}
@@ -1372,7 +1372,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <Label className="text-xs text-gray-500">Category</Label>
+                          <Label className="text-xs text-muted-foreground">Category</Label>
                           <Select 
                             value={parsedReceiptData.category || 'other'} 
                             onValueChange={(v) => setParsedReceiptData({...parsedReceiptData, category: v})}
@@ -1399,7 +1399,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           </Select>
                         </div>
                         <div>
-                          <Label className="text-xs text-gray-500">Payment Method</Label>
+                          <Label className="text-xs text-muted-foreground">Payment Method</Label>
                           <Select 
                             value={parsedReceiptData.payment_method || 'card'} 
                             onValueChange={(v) => setParsedReceiptData({...parsedReceiptData, payment_method: v})}
@@ -1419,7 +1419,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs text-gray-500">Description</Label>
+                        <Label className="text-xs text-muted-foreground">Description</Label>
                         <Input 
                           value={parsedReceiptData.description || ''} 
                           onChange={(e) => setParsedReceiptData({...parsedReceiptData, description: e.target.value})}
@@ -1428,10 +1428,10 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
                       {/* Optional linking fields */}
                       <div className="border-t pt-3 mt-3">
-                        <Label className="text-xs text-gray-500 mb-2 block">Link to (Optional)</Label>
+                        <Label className="text-xs text-muted-foreground mb-2 block">Link to (Optional)</Label>
                         <div className="grid grid-cols-3 gap-3">
                           <div>
-                            <Label className="text-xs text-gray-400">Driver</Label>
+                            <Label className="text-xs text-muted-foreground">Driver</Label>
                             <Input 
                               placeholder="Driver name"
                               value={parsedReceiptData.driver_name || ''} 
@@ -1439,7 +1439,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             />
                           </div>
                           <div>
-                            <Label className="text-xs text-gray-400">Vehicle/Truck</Label>
+                            <Label className="text-xs text-muted-foreground">Vehicle/Truck</Label>
                             <Input 
                               placeholder="Vehicle #"
                               value={parsedReceiptData.vehicle_number || ''} 
@@ -1447,7 +1447,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             />
                           </div>
                           <div>
-                            <Label className="text-xs text-gray-400">Load Reference</Label>
+                            <Label className="text-xs text-muted-foreground">Load Reference</Label>
                             <Input 
                               placeholder="Load #"
                               value={parsedReceiptData.load_reference || ''} 
@@ -1556,7 +1556,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
               {/* Income Table */}
               {filteredIncome.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-muted-foreground">
                   <i className="fas fa-hand-holding-usd text-4xl mb-3 text-gray-300"></i>
                   <p>No income received yet.</p>
                   <p className="text-sm mt-1">Record payments in Accounts Receivable to see income here.</p>
@@ -1566,14 +1566,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   <table className="w-full text-sm">
                     <thead className="bg-green-50 border-b-2 border-green-200">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Invoice #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Customer</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Invoiced</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Received</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Outstanding</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Load Ref</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Last Payment</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Invoice #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Customer</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Invoiced</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Received</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Outstanding</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Load Ref</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Last Payment</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -1581,7 +1581,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         const outstanding = (item.amount || 0) - (item.amount_paid || 0);
                         const paymentPercent = item.amount > 0 ? ((item.amount_paid || 0) / item.amount * 100) : 0;
                         return (
-                          <tr key={item.id} className={`hover:bg-green-50/50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                          <tr key={item.id} className={`hover:bg-green-50/50 ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
                             <td className="px-4 py-3 font-medium text-blue-600">
                               <div className="flex items-center gap-1">
                                 {item.invoice_number}
@@ -1593,7 +1593,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                               </div>
                             </td>
                             <td className="px-4 py-3">{item.customer_name}</td>
-                            <td className="px-4 py-3 font-medium text-gray-700">${item.amount?.toLocaleString()}</td>
+                            <td className="px-4 py-3 font-medium text-foreground">${item.amount?.toLocaleString()}</td>
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-green-700">${(item.amount_paid || 0).toLocaleString()}</span>
@@ -1630,7 +1630,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 )}
                               </Badge>
                             </td>
-                            <td className="px-4 py-3 text-xs text-gray-500">
+                            <td className="px-4 py-3 text-xs text-muted-foreground">
                               {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}
                             </td>
                           </tr>
@@ -1691,12 +1691,12 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200 col-span-2">
                   <div className="text-sm text-blue-600 font-medium">Workflow</div>
                   <div className="flex items-center gap-2 mt-2 text-xs">
-                    <Badge className="bg-gray-100">Upload Receipt</Badge>
-                    <i className="fas fa-arrow-right text-gray-400"></i>
+                    <Badge className="bg-muted">Upload Receipt</Badge>
+                    <i className="fas fa-arrow-right text-muted-foreground"></i>
                     <Badge className="bg-yellow-100 text-yellow-800">Pending Review</Badge>
-                    <i className="fas fa-arrow-right text-gray-400"></i>
+                    <i className="fas fa-arrow-right text-muted-foreground"></i>
                     <Badge className="bg-green-100 text-green-800">Approved</Badge>
-                    <i className="fas fa-arrow-right text-gray-400"></i>
+                    <i className="fas fa-arrow-right text-muted-foreground"></i>
                     <Badge className="bg-blue-100 text-blue-800">Accounts Payable</Badge>
                   </div>
                 </div>
@@ -1704,7 +1704,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
               {/* Expenses Table */}
               {filteredExpenses.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-muted-foreground">
                   <i className="fas fa-receipt text-4xl mb-3 text-gray-300"></i>
                   <p>No expenses found.</p>
                   <p className="text-sm mt-1">Upload a receipt to create an expense entry.</p>
@@ -1720,33 +1720,33 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Date</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Vendor</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Category</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Amount</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Receipt #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Links</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Vendor</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Category</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Amount</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Receipt #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Links</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredExpenses.map((expense, index) => (
-                        <tr key={expense.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                        <tr key={expense.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
                           <td className="px-4 py-3">
                             {expense.expense_date ? new Date(expense.expense_date).toLocaleDateString() : '-'}
                           </td>
                           <td className="px-4 py-3 font-medium">{expense.vendor_name}</td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <i className={`fas ${getCategoryIcon(expense.category)} text-gray-500`}></i>
+                              <i className={`fas ${getCategoryIcon(expense.category)} text-muted-foreground`}></i>
                               <span className="capitalize">{getCategoryName(expense.category)}</span>
                             </div>
                           </td>
                           <td className="px-4 py-3 font-semibold text-red-700">${expense.amount?.toLocaleString()}</td>
-                          <td className="px-4 py-3 text-gray-600">{expense.receipt_number || '-'}</td>
+                          <td className="px-4 py-3 text-muted-foreground">{expense.receipt_number || '-'}</td>
                           <td className="px-4 py-3">
                             <div className="flex flex-col gap-1 text-xs">
                               {expense.load_reference && (
@@ -1760,7 +1760,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 </Badge>
                               )}
                               {expense.vehicle_name && (
-                                <Badge variant="outline" className="text-xs bg-gray-100 text-gray-700 border-gray-300">
+                                <Badge variant="outline" className="text-xs bg-muted text-foreground border-gray-300">
                                   <i className="fas fa-truck-pickup mr-1"></i>{expense.vehicle_name}
                                 </Badge>
                               )}
@@ -1792,7 +1792,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 <Button 
                                   size="sm" 
                                   variant="ghost"
-                                  className="h-7 text-xs text-gray-500"
+                                  className="h-7 text-xs text-muted-foreground"
                                   onClick={() => handleDeleteExpense(expense.id)}
                                 >
                                   <i className="fas fa-trash"></i>
@@ -1806,7 +1806,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                                 ) : 'Approved'}
                               </div>
                             ) : (
-                              <div className="text-xs text-gray-400">
+                              <div className="text-xs text-muted-foreground">
                                 {expense.status === 'rejected' ? 'Rejected' : '-'}
                               </div>
                             )}
@@ -1828,7 +1828,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CardTitle>Accounts Receivable ({filteredReceivables.length})</CardTitle>
-                  <span className="text-xs text-gray-500">{receivables.length} total</span>
+                  <span className="text-xs text-muted-foreground">{receivables.length} total</span>
                 </div>
                 <Button onClick={() => setShowInvoiceModal(true)} size="sm" className="bg-green-600 hover:bg-green-700">
                   <i className="fas fa-plus mr-2"></i>
@@ -1838,14 +1838,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             </CardHeader>
 
             {/* AR Filter Bar */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Invoice #</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Invoice #</label>
                   <select
                     value={arFilters.invoiceNumber}
                     onChange={(e) => setArFilters({ ...arFilters, invoiceNumber: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueInvoiceNumbers.map(num => (
@@ -1855,11 +1855,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Customer</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Customer</label>
                   <select
                     value={arFilters.customer}
                     onChange={(e) => setArFilters({ ...arFilters, customer: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueCustomers.map(c => (
@@ -1869,7 +1869,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Amount ($)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Amount ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -1878,7 +1878,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       placeholder="Min"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={arFilters.amountMax}
@@ -1890,11 +1890,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="w-[90px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
                   <select
                     value={arFilters.status}
                     onChange={(e) => setArFilters({ ...arFilters, status: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
@@ -1906,7 +1906,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="w-[170px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Date Range</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Date Range</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
@@ -1914,7 +1914,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       onChange={(e) => setArFilters({ ...arFilters, dateFrom: e.target.value })}
                       className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="date"
                       value={arFilters.dateTo}
@@ -1943,9 +1943,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-0">
               {filteredReceivables.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-file-invoice-dollar text-gray-400 text-5xl mb-4"></i>
+                  <i className="fas fa-file-invoice-dollar text-muted-foreground text-5xl mb-4"></i>
                   <h3 className="text-xl font-semibold mb-2">No Invoices</h3>
-                  <p className="text-gray-600 mb-4">Create your first invoice to track receivables</p>
+                  <p className="text-muted-foreground mb-4">Create your first invoice to track receivables</p>
                   <Button onClick={() => setShowInvoiceModal(true)} className="bg-green-600 hover:bg-green-700">
                     <i className="fas fa-plus mr-2"></i>Create Invoice
                   </Button>
@@ -1953,21 +1953,21 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Invoice #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Customer</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Amount</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Paid/Balance</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Due Date</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Load Ref</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Invoice #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Customer</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Amount</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Paid/Balance</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Due Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Load Ref</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredReceivables.map((item, index) => (
-                        <tr key={item.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                        <tr key={item.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
                           <td className="px-4 py-3 font-medium text-blue-600">
                             <div className="flex items-center gap-1">
                               {item.invoice_number}
@@ -2049,7 +2049,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CardTitle>Accounts Payable ({filteredPayables.length})</CardTitle>
-                  <span className="text-xs text-gray-500">{payables.length} total</span>
+                  <span className="text-xs text-muted-foreground">{payables.length} total</span>
                 </div>
                 <Button onClick={() => setShowBillModal(true)} size="sm" variant="outline">
                   <i className="fas fa-plus mr-2"></i>
@@ -2059,14 +2059,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             </CardHeader>
 
             {/* AP Filter Bar */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Bill #</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Bill #</label>
                   <select
                     value={apFilters.billNumber}
                     onChange={(e) => setApFilters({ ...apFilters, billNumber: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueBillNumbers.map(num => (
@@ -2076,11 +2076,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Vendor</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Vendor</label>
                   <select
                     value={apFilters.vendor}
                     onChange={(e) => setApFilters({ ...apFilters, vendor: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueVendors.map(v => (
@@ -2090,7 +2090,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Amount ($)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Amount ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -2099,7 +2099,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       placeholder="Min"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={apFilters.amountMax}
@@ -2111,11 +2111,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="w-[90px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
                   <select
                     value={apFilters.status}
                     onChange={(e) => setApFilters({ ...apFilters, status: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
@@ -2126,7 +2126,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 </div>
 
                 <div className="w-[170px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Date Range</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Date Range</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
@@ -2134,7 +2134,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       onChange={(e) => setApFilters({ ...apFilters, dateFrom: e.target.value })}
                       className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="date"
                       value={apFilters.dateTo}
@@ -2163,9 +2163,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardContent className="p-0">
               {filteredPayables.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-file-invoice text-gray-400 text-5xl mb-4"></i>
+                  <i className="fas fa-file-invoice text-muted-foreground text-5xl mb-4"></i>
                   <h3 className="text-xl font-semibold mb-2">No Bills</h3>
-                  <p className="text-gray-600 mb-4">Create your first bill to track payables</p>
+                  <p className="text-muted-foreground mb-4">Create your first bill to track payables</p>
                   <Button onClick={() => setShowBillModal(true)} variant="outline">
                     <i className="fas fa-plus mr-2"></i>Create Bill
                   </Button>
@@ -2173,22 +2173,22 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Bill #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Vendor</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Amount</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Paid/Balance</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Due Date</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Category</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Load Ref</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Bill #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Vendor</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Amount</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Paid/Balance</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Due Date</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Category</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Load Ref</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredPayables.map((item, index) => (
-                        <tr key={item.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                        <tr key={item.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
                           <td className="px-4 py-3 font-medium text-blue-600">
                             <div className="flex items-center gap-1">
                               {item.bill_number}
@@ -2436,25 +2436,25 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
           {paymentItem && (
             <div className="space-y-4">
               {/* Invoice/Bill Summary */}
-              <div className="p-4 bg-gray-50 rounded-lg space-y-2">
+              <div className="p-4 bg-muted rounded-lg space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">{paymentType === 'ar' ? 'Invoice #' : 'Bill #'}:</span>
+                  <span className="text-muted-foreground">{paymentType === 'ar' ? 'Invoice #' : 'Bill #'}:</span>
                   <span className="font-medium">{paymentType === 'ar' ? paymentItem.invoice_number : paymentItem.bill_number}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">{paymentType === 'ar' ? 'Customer' : 'Vendor'}:</span>
+                  <span className="text-muted-foreground">{paymentType === 'ar' ? 'Customer' : 'Vendor'}:</span>
                   <span className="font-medium">{paymentType === 'ar' ? paymentItem.customer_name : paymentItem.vendor_name}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Total Amount:</span>
-                  <span className="font-bold text-gray-900">${paymentItem.amount?.toLocaleString()}</span>
+                  <span className="text-muted-foreground">Total Amount:</span>
+                  <span className="font-bold text-foreground">${paymentItem.amount?.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Amount Paid:</span>
+                  <span className="text-muted-foreground">Amount Paid:</span>
                   <span className="font-medium text-green-600">${(paymentItem.amount_paid || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm border-t pt-2">
-                  <span className="text-gray-600">Balance Due:</span>
+                  <span className="text-muted-foreground">Balance Due:</span>
                   <span className="font-bold text-red-600">${((paymentItem.amount || 0) - (paymentItem.amount_paid || 0)).toLocaleString()}</span>
                 </div>
                 
@@ -2466,7 +2466,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       style={{ width: `${Math.min(100, ((paymentItem.amount_paid || 0) / (paymentItem.amount || 1)) * 100)}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1 text-right">
+                  <p className="text-xs text-muted-foreground mt-1 text-right">
                     {((paymentItem.amount_paid || 0) / (paymentItem.amount || 1) * 100).toFixed(0)}% paid
                   </p>
                 </div>
@@ -2475,7 +2475,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               {/* Payment History */}
               {paymentHistory.length > 0 && (
                 <div className="border rounded-lg">
-                  <div className="p-3 bg-gray-50 border-b">
+                  <div className="p-3 bg-muted border-b">
                     <h4 className="font-medium text-sm">Payment History</h4>
                   </div>
                   <div className="max-h-32 overflow-y-auto">
@@ -2483,12 +2483,12 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       <div key={idx} className="p-2 border-b last:border-b-0 text-sm flex justify-between items-center">
                         <div>
                           <span className="font-medium text-green-600">${payment.amount?.toLocaleString()}</span>
-                          <span className="text-gray-500 ml-2">via {payment.payment_method}</span>
+                          <span className="text-muted-foreground ml-2">via {payment.payment_method}</span>
                           {payment.reference_number && (
-                            <span className="text-gray-400 ml-2">#{payment.reference_number}</span>
+                            <span className="text-muted-foreground ml-2">#{payment.reference_number}</span>
                           )}
                         </div>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-muted-foreground">
                           {new Date(payment.recorded_at).toLocaleDateString()}
                         </span>
                       </div>
