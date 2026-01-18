@@ -598,7 +598,7 @@ const SalesAnalyticsView = ({ tenants, fetchWithAuth, BACKEND_URL }) => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-muted-foreground">Loading analytics...</p>
         </div>
       </div>
@@ -784,7 +784,7 @@ const ProductsView = ({ plans, onProductClick }) => {
             <Card 
               key={product.label}
               className={`relative border-2 transition-all ${
-                isActive ? 'border-blue-500' : 'border-border'
+                isActive ? 'border-primary' : 'border-border'
               }`}
             >
               {/* Status Badge */}
@@ -1010,13 +1010,13 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
                   <i className="fas fa-truck text-xs"></i>
                   <span className="text-xs font-semibold">Driver TMS</span>
                 </div>
-                <div className="p-1.5 bg-blue-700 rounded">
+                <div className="p-1.5 bg-primary rounded">
                   <i className="fas fa-bars text-sm"></i>
                 </div>
               </div>
               
               {/* Dropdown Menu */}
-              <div className="bg-card border-l-4 border-blue-600">
+              <div className="bg-card border-l-4 border-primary">
                 <button className="w-full text-left px-3 py-2 hover:bg-muted border-b flex items-center gap-2 bg-muted">
                   <i className="fas fa-robot text-foreground text-sm"></i>
                   <div>
@@ -1129,7 +1129,7 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
               
               {/* Upload Options */}
               <div className="p-3 space-y-2">
-                <div className="bg-muted rounded-lg p-3 border-2 border-dashed border-blue-300">
+                <div className="bg-muted rounded-lg p-3 border-2 border-dashed border-primary">
                   <div className="text-center">
                     <i className="fas fa-camera text-foreground text-2xl mb-1"></i>
                     <p className="text-xs font-semibold text-foreground">Take Photo</p>
