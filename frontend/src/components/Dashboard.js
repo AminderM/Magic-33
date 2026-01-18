@@ -141,33 +141,33 @@ const Dashboard = () => {
                     <i className="fas fa-mobile-alt mr-2"></i>
                     🚀 Driver Portal Demo
                   </button>
-                  <div className="border-t border-gray-100"></div>
+                  <div className="border-t border-border"></div>
                   <button
                     onClick={() => setActiveTab('profile')}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-muted"
                   >
                     <i className="fas fa-id-card mr-2"></i>
                     Company Profile
                   </button>
                   {isPlatformAdmin && (
                     <>
-                      <div className="border-t border-gray-100"></div>
+                      <div className="border-t border-border"></div>
                       <button
                         onClick={() => navigate('/admin')}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-muted"
                       >
                         <i className="fas fa-tools mr-2"></i>
                         Admin Console
                       </button>
                     </>
                   )}
-                  <div className="border-t border-gray-100"></div>
+                  <div className="border-t border-border"></div>
                   <button
                     onClick={() => {
                       logout();
                       navigate('/');
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm text-destructive hover:bg-muted"
                   >
                     <i className="fas fa-sign-out-alt mr-2"></i>
                     Logout
