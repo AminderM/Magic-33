@@ -483,15 +483,15 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                         </Badge>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center text-sm text-gray-600">
+                        <div className="flex items-center text-sm text-muted-foreground">
                           <i className="fas fa-map-marker-alt mr-2"></i>
                           {item.location_address}
                         </div>
                       </td>
-                      <td className="px-4 py-3 font-semibold text-green-600">
+                      <td className="px-4 py-3 font-semibold text-foreground">
                         ${item.hourly_rate}/hr
                       </td>
-                      <td className="px-4 py-3 font-semibold text-green-600">
+                      <td className="px-4 py-3 font-semibold text-foreground">
                         ${item.daily_rate}/day
                       </td>
                       <td className="px-4 py-3">
