@@ -495,7 +495,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
         <TabsContent value="bundles" className="mt-6">
           {loading ? (
             <div className="text-center py-12">
-              <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4" />
+              <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
               <p className="text-muted-foreground">Loading bundles...</p>
             </div>
           ) : bundles.length === 0 ? (
@@ -763,7 +763,7 @@ const SubscriptionManager = ({ BACKEND_URL, fetchWithAuth }) => {
                       key={product.id}
                       onClick={() => toggleProductInBundle(product)}
                       className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                        isSelected ? 'border-blue-500 bg-muted' : 'hover:border-gray-400'
+                        isSelected ? 'border-primary bg-muted' : 'hover:border-gray-400'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">

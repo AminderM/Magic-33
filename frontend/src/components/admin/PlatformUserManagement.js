@@ -474,7 +474,7 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
           {/* Users Table - Spreadsheet Style */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
               <p className="text-muted-foreground">Loading users...</p>
             </div>
           ) : users.length === 0 ? (

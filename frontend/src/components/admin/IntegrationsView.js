@@ -238,7 +238,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -471,7 +471,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                           disabled={testingIntegration === integration.id}
                         >
                           {testingIntegration === integration.id ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600" />
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
                           ) : (
                             <ExternalLink className="w-4 h-4" />
                           )}

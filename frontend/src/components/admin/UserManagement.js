@@ -212,7 +212,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
   const getRoleBadgeColor = (role) => {
     const colors = {
       company_admin: 'bg-muted text-purple-800 border-purple-300',
-      dispatcher: 'bg-muted text-foreground border-blue-300',
+      dispatcher: 'bg-muted text-foreground border-primary',
       driver: 'bg-muted text-foreground border-green-300'
     };
     return colors[role] || 'bg-muted text-foreground border-gray-300';
@@ -483,7 +483,7 @@ const UserManagement = ({ tenant, plans, fetchWithAuth, BACKEND_URL, onClose }) 
         <CardContent className="p-0">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
           ) : filteredUsers.length === 0 ? (
             <div className="text-center py-12">

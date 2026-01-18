@@ -502,7 +502,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-muted-foreground">Loading CRM...</p>
         </div>
       </div>
@@ -527,7 +527,7 @@ const CRMView = ({ fetchWithAuth, BACKEND_URL }) => {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 font-medium capitalize ${
                 activeTab === tab
-                  ? 'border-b-2 border-blue-600 text-foreground'
+                  ? 'border-b-2 border-primary text-foreground'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
