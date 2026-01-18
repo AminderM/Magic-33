@@ -4,7 +4,7 @@ from typing import Optional
 from bson import ObjectId
 import os
 
-router = APIRouter(prefix="/api/analytics", tags=["analytics"])
+router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 # Get MongoDB connection
 def get_db():
