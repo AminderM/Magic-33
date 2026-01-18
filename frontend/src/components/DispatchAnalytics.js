@@ -242,7 +242,7 @@ const DispatchAnalytics = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-foreground text-xs uppercase tracking-wide">Completion Rate</p>
-                <p className="text-2xl font-bold text-foreground mt-1">{kpis.onTimeDeliveryRate}%</p>
+                <p className="text-2xl font-bold text-foreground mt-1">{kpis.completionRate}%</p>
                 <p className="text-xs text-foreground">delivered/total</p>
               </div>
               <div className="bg-muted p-3 rounded-full">
