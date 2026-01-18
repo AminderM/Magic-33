@@ -174,13 +174,13 @@ const DriverPortalView = () => {
 
   const getStatusColor = (status) => {
     const colors = {
-      pending: 'bg-yellow-500',
-      planned: 'bg-blue-500',
-      in_transit_pickup: 'bg-purple-500',
+      pending: 'bg-muted0',
+      planned: 'bg-muted0',
+      in_transit_pickup: 'bg-muted0',
       at_pickup: 'bg-cyan-500',
-      in_transit_delivery: 'bg-purple-500',
+      in_transit_delivery: 'bg-muted0',
       at_delivery: 'bg-cyan-500',
-      delivered: 'bg-green-500'
+      delivered: 'bg-muted0'
     };
     return colors[status] || 'bg-gray-500';
   };
@@ -297,7 +297,7 @@ const DriverPortalView = () => {
                   Don't have an account? Sign Up
                 </Button>
 
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="mt-4 p-3 bg-muted rounded-lg border border-border">
                   <p className="text-xs text-foreground">
                     <i className="fas fa-info-circle mr-1"></i>
                     <strong>Test Account:</strong> testdriver@example.com / Driver@123!
@@ -347,7 +347,7 @@ const DriverPortalView = () => {
                 Route Information
               </h3>
               <div className="grid gap-4">
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="flex items-start gap-3">
                     <i className="fas fa-map-marker-alt text-foreground mt-1"></i>
                     <div>
@@ -357,7 +357,7 @@ const DriverPortalView = () => {
                     </div>
                   </div>
                 </div>
-                <div className="p-4 bg-red-50 rounded-lg border border-red-200">
+                <div className="p-4 bg-muted rounded-lg border border-border">
                   <div className="flex items-start gap-3">
                     <i className="fas fa-map-marker-alt text-red-600 mt-1"></i>
                     <div>
@@ -483,7 +483,7 @@ const DriverPortalView = () => {
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-blue-50 rounded-lg">
+                    <div className="p-3 bg-muted rounded-lg">
                       <i className="fas fa-box text-foreground text-xl"></i>
                     </div>
                     <div>

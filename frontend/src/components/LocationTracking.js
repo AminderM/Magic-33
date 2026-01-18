@@ -431,7 +431,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                                 key={index}
                                 type="button"
                                 onClick={() => handleCitySelect(city)}
-                                className="w-full text-left px-4 py-2 hover:bg-blue-50 flex items-start justify-between border-b last:border-b-0"
+                                className="w-full text-left px-4 py-2 hover:bg-muted flex items-start justify-between border-b last:border-b-0"
                               >
                                 <div className="flex-1">
                                   <div className="font-medium text-sm text-gray-900">
@@ -458,7 +458,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                       </div>
                       
                       {selectedCity && (
-                        <div className="flex items-center space-x-2 mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                        <div className="flex items-center space-x-2 mt-2 p-2 bg-muted border border-border rounded">
                           <i className="fas fa-check-circle text-foreground"></i>
                           <span className="text-sm text-foreground">
                             Selected: {formatCityName(selectedCity)}
@@ -537,7 +537,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                     {locations.map((location, index) => (
                       <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-testid={`location-entry-${index}`}>
                         <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
                             <i className="fas fa-map-marker-alt text-foreground"></i>
                           </div>
                           <div>

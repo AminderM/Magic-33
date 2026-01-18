@@ -839,14 +839,14 @@ const CompanyProfileInner = () => {
                             <td className="px-4 py-3">{user.email}</td>
                             <td className="px-4 py-3">{formatRole(user.role)}</td>
                             <td className="px-4 py-3">
-                              <Badge className="bg-green-100 text-foreground">Active</Badge>
+                              <Badge className="bg-muted text-foreground">Active</Badge>
                             </td>
                             {isAdmin && (
                               <td className="px-4 py-3">
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="text-red-600 hover:bg-red-50"
+                                  className="text-red-600 hover:bg-muted"
                                   onClick={() => handleDeleteUser(user.id)}
                                 >
                                   <i className="fas fa-trash"></i>
@@ -958,7 +958,7 @@ const CompanyProfileInner = () => {
                             <td className="px-4 py-3">{driver.email || 'N/A'}</td>
                             <td className="px-4 py-3">{driver.phone || 'N/A'}</td>
                             <td className="px-4 py-3">
-                              <Badge className="bg-green-100 text-foreground">Active</Badge>
+                              <Badge className="bg-muted text-foreground">Active</Badge>
                             </td>
                             {isAdmin && (
                               <td className="px-4 py-3">
@@ -969,7 +969,7 @@ const CompanyProfileInner = () => {
                                   <Button 
                                     size="sm" 
                                     variant="outline" 
-                                    className="text-red-600 hover:bg-red-50"
+                                    className="text-red-600 hover:bg-muted"
                                     onClick={() => handleDeleteDriver(driver.id)}
                                   >
                                     <i className="fas fa-trash"></i>
@@ -1049,7 +1049,7 @@ const CompanyProfileInner = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">MC/NSC Authority</h3>
                     {company.company_documents?.mc_authority?.length > 0 && (
-                      <Badge className="bg-green-100 text-foreground">
+                      <Badge className="bg-muted text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.mc_authority.length} Version(s)
                       </Badge>
@@ -1098,7 +1098,7 @@ const CompanyProfileInner = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">Certificate of Insurance</h3>
                     {company.company_documents?.insurance_certificate?.length > 0 && (
-                      <Badge className="bg-green-100 text-foreground">
+                      <Badge className="bg-muted text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.insurance_certificate.length} Version(s)
                       </Badge>
@@ -1147,7 +1147,7 @@ const CompanyProfileInner = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">W-9 Form</h3>
                     {company.company_documents?.w9?.length > 0 && (
-                      <Badge className="bg-green-100 text-foreground">
+                      <Badge className="bg-muted text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.w9.length} Version(s)
                       </Badge>

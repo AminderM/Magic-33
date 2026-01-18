@@ -11,11 +11,11 @@ import { toast } from 'sonner';
 import { useAuth } from '../contexts/AuthContext';
 
 const DRIVER_STATUSES = {
-  available: { label: 'Available', color: 'bg-green-100 text-foreground', icon: 'fa-check-circle' },
-  on_route: { label: 'On Route', color: 'bg-blue-100 text-foreground', icon: 'fa-truck' },
+  available: { label: 'Available', color: 'bg-muted text-foreground', icon: 'fa-check-circle' },
+  on_route: { label: 'On Route', color: 'bg-muted text-foreground', icon: 'fa-truck' },
   off_duty: { label: 'Off Duty', color: 'bg-muted text-foreground', icon: 'fa-moon' },
-  on_break: { label: 'On Break', color: 'bg-yellow-100 text-foreground', icon: 'fa-coffee' },
-  inactive: { label: 'Inactive', color: 'bg-red-100 text-foreground', icon: 'fa-ban' }
+  on_break: { label: 'On Break', color: 'bg-muted text-foreground', icon: 'fa-coffee' },
+  inactive: { label: 'Inactive', color: 'bg-muted text-foreground', icon: 'fa-ban' }
 };
 
 const LICENSE_TYPES = [
@@ -254,11 +254,11 @@ const DriverManagement = ({ onStatsUpdate }) => {
     if (days === null) return null;
     
     if (days < 0) {
-      return <Badge className="bg-red-500 text-white text-xs"><i className="fas fa-exclamation-triangle mr-1"></i>{label} Expired</Badge>;
+      return <Badge className="bg-muted0 text-white text-xs"><i className="fas fa-exclamation-triangle mr-1"></i>{label} Expired</Badge>;
     } else if (days <= 30) {
-      return <Badge className="bg-orange-500 text-white text-xs"><i className="fas fa-clock mr-1"></i>{label} in {days}d</Badge>;
+      return <Badge className="bg-muted0 text-white text-xs"><i className="fas fa-clock mr-1"></i>{label} in {days}d</Badge>;
     } else if (days <= 60) {
-      return <Badge className="bg-yellow-500 text-white text-xs">{label} in {days}d</Badge>;
+      return <Badge className="bg-muted0 text-white text-xs">{label} in {days}d</Badge>;
     }
     return null;
   };
@@ -285,42 +285,42 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-foreground">Total Drivers</p>
                 <p className="text-2xl font-bold text-blue-900">{stats.total}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
                 <i className="fas fa-users text-white"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-foreground">Available</p>
                 <p className="text-2xl font-bold text-green-900">{stats.available}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
                 <i className="fas fa-check-circle text-white"></i>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
+        <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-foreground">On Route</p>
                 <p className="text-2xl font-bold text-indigo-900">{stats.onRoute}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-indigo-500 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
                 <i className="fas fa-truck text-white"></i>
               </div>
             </div>
@@ -341,14 +341,14 @@ const DriverManagement = ({ onStatsUpdate }) => {
           </CardContent>
         </Card>
 
-        <Card className={`bg-gradient-to-br ${stats.expiringSoon > 0 ? 'from-red-50 to-red-100 border-red-200' : 'from-emerald-50 to-emerald-100 border-emerald-200'}`}>
+        <Card className={`bg-gradient-to-br ${stats.expiringSoon > 0 ? 'from-red-50 to-red-100 border-border' : 'from-emerald-50 to-emerald-100 border-border'}`}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className={`text-xs font-medium ${stats.expiringSoon > 0 ? 'text-red-600' : 'text-foreground'}`}>Expiring Soon</p>
                 <p className={`text-2xl font-bold ${stats.expiringSoon > 0 ? 'text-red-900' : 'text-emerald-900'}`}>{stats.expiringSoon}</p>
               </div>
-              <div className={`h-10 w-10 rounded-full ${stats.expiringSoon > 0 ? 'bg-red-500' : 'bg-emerald-500'} flex items-center justify-center`}>
+              <div className={`h-10 w-10 rounded-full ${stats.expiringSoon > 0 ? 'bg-muted0' : 'bg-muted0'} flex items-center justify-center`}>
                 <i className={`fas ${stats.expiringSoon > 0 ? 'fa-exclamation-triangle' : 'fa-shield-alt'} text-white`}></i>
               </div>
             </div>
@@ -495,7 +495,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
                 {/* Current Load */}
                 {driver.current_load && (
-                  <div className="bg-blue-50 rounded-lg p-2 mb-3 text-xs">
+                  <div className="bg-muted rounded-lg p-2 mb-3 text-xs">
                     <span className="text-foreground font-medium">
                       <i className="fas fa-truck-loading mr-1"></i>
                       Current: {driver.current_load}
@@ -532,7 +532,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    className="h-8 text-red-600 hover:text-foreground hover:bg-red-50"
+                    className="h-8 text-red-600 hover:text-foreground hover:bg-muted"
                     onClick={() => handleDeleteDriver(driver.id)}
                   >
                     <i className="fas fa-trash"></i>
@@ -672,7 +672,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                         }}
                         className={`px-2 py-1 rounded text-xs border transition-colors ${
                           driverForm.endorsements?.includes(end.value)
-                            ? 'bg-blue-100 border-blue-300 text-foreground'
+                            ? 'bg-muted border-blue-300 text-foreground'
                             : 'bg-muted border-border text-muted-foreground hover:bg-muted'
                         }`}
                       >
@@ -863,7 +863,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                     {selectedDriver.endorsements.map(end => {
                       const endorsement = ENDORSEMENTS.find(e => e.value === end);
                       return (
-                        <Badge key={end} variant="outline" className="bg-blue-50">
+                        <Badge key={end} variant="outline" className="bg-muted">
                           {endorsement?.label || end}
                         </Badge>
                       );
