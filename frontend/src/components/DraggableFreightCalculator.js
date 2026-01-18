@@ -83,7 +83,7 @@ const DraggableFreightCalculator = ({
             onClick={() => setIsEditMode(!isEditMode)}
             variant={isEditMode ? "default" : "outline"}
             size="sm"
-            className={isEditMode ? "bg-[#F7B501] hover:bg-[#e5a701] text-white" : ""}
+            className={isEditMode ? "bg-primary hover:bg-primary/90 text-white" : ""}
           >
             <i className={`fas ${isEditMode ? 'fa-lock' : 'fa-edit'} mr-2`}></i>
             {isEditMode ? 'Lock Layout' : 'Edit Layout'}
@@ -108,7 +108,7 @@ const DraggableFreightCalculator = ({
       </div>
 
       {/* Grid Layout */}
-      <div className={`bg-gray-50 rounded-lg p-4 ${isEditMode ? 'border-2 border-dashed border-[#F7B501]' : 'border border-gray-200'}`}>
+      <div className={`bg-gray-50 rounded-lg p-4 ${isEditMode ? 'border-2 border-dashed border-primary' : 'border border-gray-200'}`}>
         <ResponsiveGridLayout
           className="layout"
           layouts={layouts}
@@ -129,7 +129,7 @@ const DraggableFreightCalculator = ({
                 {QuoteCalculatorComponent}
               </div>
               {isEditMode && (
-                <div className="absolute top-2 right-2 bg-[#F7B501] text-white text-xs px-2 py-1 rounded-full">
+                <div className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
                   <i className="fas fa-arrows-alt mr-1"></i>
                   Drag
                 </div>
@@ -142,7 +142,7 @@ const DraggableFreightCalculator = ({
             <div className="h-full">
               {TotalQuoteComponent}
               {isEditMode && (
-                <div className="absolute top-2 right-2 bg-[#F7B501] text-white text-xs px-2 py-1 rounded-full">
+                <div className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
                   <i className="fas fa-arrows-alt mr-1"></i>
                   Drag
                 </div>
@@ -155,7 +155,7 @@ const DraggableFreightCalculator = ({
             <div className="h-full">
               {MapComponent}
               {isEditMode && (
-                <div className="absolute top-2 right-2 bg-[#F7B501] text-white text-xs px-2 py-1 rounded-full z-50">
+                <div className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full z-50">
                   <i className="fas fa-arrows-alt mr-1"></i>
                   Drag
                 </div>
@@ -168,7 +168,7 @@ const DraggableFreightCalculator = ({
             <div className="h-full">
               {UnitConverterComponent}
               {isEditMode && (
-                <div className="absolute top-2 right-2 bg-[#F7B501] text-white text-xs px-2 py-1 rounded-full">
+                <div className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
                   <i className="fas fa-arrows-alt mr-1"></i>
                   Drag
                 </div>
@@ -183,7 +183,7 @@ const DraggableFreightCalculator = ({
                 {RouteCalculatorComponent}
               </div>
               {isEditMode && (
-                <div className="absolute top-2 right-2 bg-[#F7B501] text-white text-xs px-2 py-1 rounded-full">
+                <div className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
                   <i className="fas fa-arrows-alt mr-1"></i>
                   Drag
                 </div>
