@@ -338,7 +338,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
             const IconComponent = integration.icon;
             
             return (
-              <Card key={integration.id} className="border-2 border-border bg-gradient-to-br from-white to-green-50">
+              <Card key={integration.id} className="border-2 border-border bg-card">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
@@ -346,9 +346,9 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                         <IconComponent className="w-6 h-6 text-foreground" />
                       </div>
                       <div>
-                        <CardTitle className="text-lg flex items-center gap-2">
+                        <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                           {integration.name}
-                          <Badge className="bg-muted text-foreground text-xs">Active</Badge>
+                          <Badge className="bg-primary text-primary-foreground text-xs">Active</Badge>
                         </CardTitle>
                         <p className="text-sm text-muted-foreground mt-1">{integration.category}</p>
                       </div>
@@ -363,7 +363,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Features</p>
                     <div className="flex flex-wrap gap-1">
                       {integration.features.map((feature, idx) => (
-                        <Badge key={idx} variant="outline" className="text-xs">
+                        <Badge key={idx} variant="outline" className="text-xs border-border text-foreground">
                           {feature}
                         </Badge>
                       ))}
@@ -375,7 +375,7 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Used In</p>
                     <div className="flex flex-wrap gap-1">
                       {integration.usedIn.map((location, idx) => (
-                        <Badge key={idx} className="bg-muted text-foreground text-xs">
+                        <Badge key={idx} className="bg-secondary text-secondary-foreground text-xs">
                           {location}
                         </Badge>
                       ))}
@@ -385,14 +385,14 @@ const IntegrationsView = ({ fetchWithAuth, BACKEND_URL }) => {
                   {/* API Endpoints */}
                   <div>
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">API Endpoints</p>
-                    <div className="bg-muted rounded p-2 text-xs font-mono text-muted-foreground space-y-1">
+                    <div className="bg-muted rounded p-2 text-xs font-mono text-foreground space-y-1">
                       {integration.apiEndpoints.map((endpoint, idx) => (
                         <div key={idx}>{endpoint}</div>
                       ))}
                     </div>
                   </div>
                   
-                  <div className="text-xs text-muted-foreground pt-2 border-t">
+                  <div className="text-xs text-muted-foreground pt-2 border-t border-border">
                     Configured: {new Date(integration.configuredDate).toLocaleDateString()}
                   </div>
                 </CardContent>
