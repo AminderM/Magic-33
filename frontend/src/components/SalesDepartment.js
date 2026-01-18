@@ -98,10 +98,10 @@ const UnifiedConverter = () => {
 
   return (
     <Card className="h-[280px] flex flex-col">
-      <CardHeader className="flex-shrink-0 px-4 py-2.5 border-b border-gray-100">
+      <CardHeader className="flex-shrink-0 px-4 py-2.5 border-b border-border">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-            <i className={`fas ${config.icon} text-gray-500`}></i>
+            <i className={`fas ${config.icon} text-muted-foreground`}></i>
             Unit Converter
           </CardTitle>
           <Select value={conversionType} onValueChange={handleTypeChange}>
@@ -118,33 +118,33 @@ const UnifiedConverter = () => {
       </CardHeader>
       <CardContent className="space-y-2 p-4 flex-1 overflow-y-auto">
         <div>
-          <Label className="text-xs font-medium text-gray-600 mb-1 block">{config.fromUnit}</Label>
+          <Label className="text-xs font-medium text-muted-foreground mb-1 block">{config.fromUnit}</Label>
           <Input 
             type="number"
             placeholder={`Enter ${config.fromUnit.toLowerCase()}`}
             value={inputValue}
             onChange={(e) => handleInputChange(e.target.value, true)}
-            className="h-9 border-gray-200 rounded-lg"
+            className="h-9 border-border rounded-lg"
           />
         </div>
 
         <div className="text-center py-1">
-          <i className="fas fa-exchange-alt text-gray-400 text-sm"></i>
+          <i className="fas fa-exchange-alt text-muted-foreground text-sm"></i>
         </div>
 
         <div>
-          <Label className="text-xs font-medium text-gray-600 mb-1 block">{config.toUnit}</Label>
+          <Label className="text-xs font-medium text-muted-foreground mb-1 block">{config.toUnit}</Label>
           <Input 
             type="number"
             placeholder={`Enter ${config.toUnit.toLowerCase()}`}
             value={outputValue}
             onChange={(e) => handleInputChange(e.target.value, false)}
-            className="h-9 border-gray-200 rounded-lg"
+            className="h-9 border-border rounded-lg"
           />
         </div>
 
-        <div className="p-2 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-xs text-gray-600 mb-1">Quick Reference:</p>
+        <div className="p-2 bg-muted rounded-lg border border-border">
+          <p className="text-xs text-muted-foreground mb-1">Quick Reference:</p>
           <div className="grid grid-cols-2 gap-1 text-xs">
             {config.quickRef.slice(0, 2).map((ref, idx) => (
               <div key={idx}>
@@ -183,13 +183,13 @@ const FilterBar = ({
     filters.status !== 'all' || (showSource && filters.source !== 'all');
 
   return (
-    <div className="p-4 bg-gray-50 border-b border-gray-200">
+    <div className="p-4 bg-muted border-b border-border">
       <div className="flex flex-wrap gap-3 items-end">
         {/* Search Input */}
         <div className="flex-1 min-w-[200px]">
-          <label className="block text-xs font-medium text-gray-600 mb-1">Search</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">Search</label>
           <div className="relative">
-            <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+            <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground text-xs"></i>
             <input
               type="text"
               value={filters.searchText}
@@ -202,11 +202,11 @@ const FilterBar = ({
 
         {/* Column Filter */}
         <div className="w-[150px]">
-          <label className="block text-xs font-medium text-gray-600 mb-1">Filter By Column</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">Filter By Column</label>
           <select
             value={filters.filterColumn}
             onChange={(e) => setFilters({ ...filters, filterColumn: e.target.value })}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-card"
           >
             <option value="all">All Columns</option>
             {columns.map(col => (
@@ -217,7 +217,7 @@ const FilterBar = ({
 
         {/* Date From */}
         <div className="w-[140px]">
-          <label className="block text-xs font-medium text-gray-600 mb-1">Date From</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">Date From</label>
           <input
             type="date"
             value={filters.dateFrom}
@@ -228,7 +228,7 @@ const FilterBar = ({
 
         {/* Date To */}
         <div className="w-[140px]">
-          <label className="block text-xs font-medium text-gray-600 mb-1">Date To</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">Date To</label>
           <input
             type="date"
             value={filters.dateTo}
@@ -240,11 +240,11 @@ const FilterBar = ({
         {/* Status Filter */}
         {statusOptions.length > 0 && (
           <div className="w-[130px]">
-            <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
             <select
               value={filters.status}
               onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-card"
             >
               <option value="all">All Status</option>
               {statusOptions.map(opt => (
@@ -257,11 +257,11 @@ const FilterBar = ({
         {/* Source Filter (for Leads) */}
         {showSource && sourceOptions.length > 0 && (
           <div className="w-[130px]">
-            <label className="block text-xs font-medium text-gray-600 mb-1">Source</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Source</label>
             <select
               value={filters.source}
               onChange={(e) => setFilters({ ...filters, source: e.target.value })}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-card"
             >
               <option value="all">All Sources</option>
               {sourceOptions.map(opt => (
@@ -868,7 +868,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       won: 'bg-green-500 text-white',
       lost: 'bg-red-100 text-red-800'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-muted text-gray-800';
   };
 
   const getStageColor = (stage) => {
@@ -880,7 +880,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
       closed_won: 'bg-green-500',
       closed_lost: 'bg-red-500'
     };
-    return colors[stage] || 'bg-gray-500';
+    return colors[stage] || 'bg-muted0';
   };
 
   const calculateTotalQuote = () => {
@@ -1193,14 +1193,14 @@ Body:
   return (
     <div className="h-full overflow-auto">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-5">
+      <div className="bg-card border-b border-border px-6 py-5">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
               <span className="text-2xl">📈</span>
               Sales & Business Development
             </h1>
-            <p className="text-sm text-gray-500 mt-1">Lead generation, CRM, rate quotes & customer management</p>
+            <p className="text-sm text-muted-foreground mt-1">Lead generation, CRM, rate quotes & customer management</p>
           </div>
           {activeTab === 'leads' && (
             <Button onClick={() => setShowAddLeadModal(true)} className="bg-[#F7B501] hover:bg-[#e5a701] rounded-lg">
@@ -1212,9 +1212,9 @@ Body:
       </div>
 
       {/* Main Content Tabs */}
-      <div className="px-6 pt-4 bg-gray-50">
+      <div className="px-6 pt-4 bg-muted">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-7 bg-white rounded-xl p-1 border border-gray-200 shadow-sm">
+          <TabsList className="grid w-full grid-cols-7 bg-card rounded-xl p-1 border border-border shadow-sm">
           <TabsTrigger value="analytics" className="text-sm px-2">
             <i className="fas fa-chart-line mr-1.5 text-xs"></i>
             Analytics
@@ -1249,12 +1249,12 @@ Body:
         <TabsContent value="analytics" className="mt-6 pb-6">
           {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <Card className="bg-card rounded-xl shadow-sm border border-border">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Total Leads</p>
-                    <p className="text-2xl font-bold text-gray-900">{leads.length}</p>
+                    <p className="text-sm text-muted-foreground">Total Leads</p>
+                    <p className="text-2xl font-bold text-foreground">{leads.length}</p>
                   </div>
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                     <i className="fas fa-user-plus text-blue-600 text-xl"></i>
@@ -1263,45 +1263,45 @@ Body:
               </CardContent>
             </Card>
 
-            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <Card className="bg-card rounded-xl shadow-sm border border-border">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-medium text-gray-500">Active Opportunities</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{opportunities.length}</p>
+                    <p className="text-xs font-medium text-muted-foreground">Active Opportunities</p>
+                    <p className="text-2xl font-bold text-foreground mt-1">{opportunities.length}</p>
                   </div>
-                  <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
-                    <i className="fas fa-handshake text-gray-600 text-lg"></i>
+                  <div className="w-11 h-11 bg-muted rounded-xl flex items-center justify-center">
+                    <i className="fas fa-handshake text-muted-foreground text-lg"></i>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <Card className="bg-card rounded-xl shadow-sm border border-border">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-medium text-gray-500">Pipeline Value</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">
+                    <p className="text-xs font-medium text-muted-foreground">Pipeline Value</p>
+                    <p className="text-2xl font-bold text-foreground mt-1">
                       ${opportunities.reduce((sum, opp) => sum + opp.value, 0).toLocaleString()}
                     </p>
                   </div>
-                  <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
-                    <i className="fas fa-dollar-sign text-gray-600 text-lg"></i>
+                  <div className="w-11 h-11 bg-muted rounded-xl flex items-center justify-center">
+                    <i className="fas fa-dollar-sign text-muted-foreground text-lg"></i>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <Card className="bg-card rounded-xl shadow-sm border border-border">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-medium text-gray-500">Active Customers</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{customers.length}</p>
+                    <p className="text-xs font-medium text-muted-foreground">Active Customers</p>
+                    <p className="text-2xl font-bold text-foreground mt-1">{customers.length}</p>
                   </div>
-                  <div className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center">
-                    <i className="fas fa-building text-gray-600 text-lg"></i>
+                  <div className="w-11 h-11 bg-muted rounded-xl flex items-center justify-center">
+                    <i className="fas fa-building text-muted-foreground text-lg"></i>
                   </div>
                 </div>
               </CardContent>
@@ -1310,15 +1310,15 @@ Body:
 
           {/* Analytics Content */}
           <div className="grid gap-6">
-            <Card className="bg-white rounded-2xl shadow-sm border border-gray-100">
-              <CardHeader className="border-b border-gray-100 px-6 py-4">
-                <CardTitle className="text-base font-semibold text-gray-900">Sales & Business Analytics</CardTitle>
+            <Card className="bg-card rounded-2xl shadow-sm border border-border">
+              <CardHeader className="border-b border-border px-6 py-4">
+                <CardTitle className="text-base font-semibold text-foreground">Sales & Business Analytics</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <div className="text-center py-20">
                   <i className="fas fa-chart-pie text-gray-300 text-6xl mb-4"></i>
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Analytics Dashboard Coming Soon</h3>
-                  <p className="text-gray-500 max-w-md mx-auto">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">Analytics Dashboard Coming Soon</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto">
                     Comprehensive sales analytics, performance metrics, and business insights will be displayed here.
                   </p>
                 </div>
@@ -1329,24 +1329,24 @@ Body:
 
         {/* Sales Pipeline Tab */}
         <TabsContent value="pipeline" className="mt-6 pb-6">
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
+          <Card className="bg-card rounded-lg shadow-sm border border-gray-300">
             <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-bold text-gray-900">Active Opportunities ({filteredOpportunities.length})</CardTitle>
-                <span className="text-xs text-gray-500">{opportunities.length} total</span>
+                <CardTitle className="text-base font-bold text-foreground">Active Opportunities ({filteredOpportunities.length})</CardTitle>
+                <span className="text-xs text-muted-foreground">{opportunities.length} total</span>
               </div>
             </CardHeader>
             
             {/* Custom Pipeline Filter Bar - Single Line */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 {/* Opportunity Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Opportunity</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Opportunity</label>
                   <select
                     value={pipelineFilters.opportunity}
                     onChange={(e) => setPipelineFilters({ ...pipelineFilters, opportunity: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueOpportunities.map(opp => (
@@ -1357,11 +1357,11 @@ Body:
 
                 {/* Company Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Company</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Company</label>
                   <select
                     value={pipelineFilters.company}
                     onChange={(e) => setPipelineFilters({ ...pipelineFilters, company: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueCompanies.map(company => (
@@ -1372,7 +1372,7 @@ Body:
 
                 {/* Value Range Filter */}
                 <div className="w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Value ($)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Value ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -1381,7 +1381,7 @@ Body:
                       placeholder="Min"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={pipelineFilters.valueMax}
@@ -1394,11 +1394,11 @@ Body:
 
                 {/* Stage Filter */}
                 <div className="w-[95px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Stage</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Stage</label>
                   <select
                     value={pipelineFilters.stage}
                     onChange={(e) => setPipelineFilters({ ...pipelineFilters, stage: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     <option value="qualification">Qualification</option>
@@ -1411,7 +1411,7 @@ Body:
 
                 {/* Probability Range Filter */}
                 <div className="w-[100px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Prob. (%)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Prob. (%)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -1422,7 +1422,7 @@ Body:
                       max="100"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={pipelineFilters.probabilityMax}
@@ -1437,7 +1437,7 @@ Body:
 
                 {/* Creation Date Range Filter */}
                 <div className="w-[170px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Creation Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
@@ -1445,7 +1445,7 @@ Body:
                       onChange={(e) => setPipelineFilters({ ...pipelineFilters, closeDateFrom: e.target.value })}
                       className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="date"
                       value={pipelineFilters.closeDateTo}
@@ -1484,28 +1484,28 @@ Body:
             <CardContent className="p-0">
               {filteredOpportunities.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-handshake text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">{opportunities.length === 0 ? 'No opportunities yet' : 'No opportunities match your filters'}</p>
+                  <i className="fas fa-handshake text-muted-foreground text-5xl mb-4"></i>
+                  <p className="text-muted-foreground">{opportunities.length === 0 ? 'No opportunities yet' : 'No opportunities match your filters'}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100 border-b-2 border-gray-300">
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Opportunity</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Company</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Value</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Stage</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Probability</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Close Date</th>
-                        <th className="px-4 py-2.5 text-center text-sm font-bold text-gray-900">Actions</th>
+                      <tr className="bg-muted border-b-2 border-gray-300">
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Opportunity</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Company</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Value</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Stage</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Probability</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Close Date</th>
+                        <th className="px-4 py-2.5 text-center text-sm font-bold text-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredOpportunities.map((opp) => (
-                        <tr key={opp.id} className="border-b border-gray-300 hover:bg-gray-50">
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{opp.title}</td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{opp.company}</td>
+                        <tr key={opp.id} className="border-b border-gray-300 hover:bg-muted">
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{opp.title}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{opp.company}</td>
                           <td className="px-4 py-2.5 text-sm text-green-600 font-semibold border-r border-gray-300">${opp.value.toLocaleString()}</td>
                           <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className={getStatusColor(opp.stage)}>{opp.stage.replace('_', ' ').toUpperCase()}</Badge>
@@ -1518,10 +1518,10 @@ Body:
                                   style={{ width: `${opp.probability}%` }}
                                 ></div>
                               </div>
-                              <span className="text-sm text-gray-700">{opp.probability}%</span>
+                              <span className="text-sm text-foreground">{opp.probability}%</span>
                             </div>
                           </td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{new Date(opp.close_date).toLocaleDateString()}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{new Date(opp.close_date).toLocaleDateString()}</td>
                           <td className="px-4 py-2.5 text-sm text-center">
                             <div className="flex gap-1.5 justify-center">
                               <Button size="sm" variant="outline" className="h-7 px-2 text-xs">
@@ -1546,12 +1546,12 @@ Body:
 
         {/* Leads Tab */}
         <TabsContent value="leads" className="mt-6">
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
+          <Card className="bg-card rounded-lg shadow-sm border border-gray-300">
             <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-bold text-gray-900">Lead Management ({filteredLeads.length})</CardTitle>
+                <CardTitle className="text-base font-bold text-foreground">Lead Management ({filteredLeads.length})</CardTitle>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">{leads.length} total</span>
+                  <span className="text-xs text-muted-foreground">{leads.length} total</span>
                   <Button onClick={() => setShowAddLeadModal(true)} size="sm">
                     <i className="fas fa-plus mr-1"></i>
                     Add Lead
@@ -1593,8 +1593,8 @@ Body:
             <CardContent className="p-0">
               {filteredLeads.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-user-plus text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">{leads.length === 0 ? 'No leads yet' : 'No leads match your filters'}</p>
+                  <i className="fas fa-user-plus text-muted-foreground text-5xl mb-4"></i>
+                  <p className="text-muted-foreground">{leads.length === 0 ? 'No leads yet' : 'No leads match your filters'}</p>
                   {leads.length === 0 && (
                     <Button onClick={() => setShowAddLeadModal(true)} className="mt-4">
                       Add Your First Lead
@@ -1605,34 +1605,34 @@ Body:
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100 border-b-2 border-gray-300">
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Company</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Contact Person</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Email</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Phone</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Source</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Status</th>
-                        <th className="px-4 py-2.5 text-center text-sm font-bold text-gray-900">Actions</th>
+                      <tr className="bg-muted border-b-2 border-gray-300">
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Company</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Contact Person</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Email</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Phone</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Source</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Status</th>
+                        <th className="px-4 py-2.5 text-center text-sm font-bold text-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredLeads.map((lead) => (
-                        <tr key={lead.id} className="border-b border-gray-300 hover:bg-gray-50">
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{lead.company_name}</td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{lead.contact_person}</td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                        <tr key={lead.id} className="border-b border-gray-300 hover:bg-muted">
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{lead.company_name}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{lead.contact_person}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">
                             <div className="flex items-center gap-1">
-                              <i className="fas fa-envelope text-gray-400 text-xs"></i>
+                              <i className="fas fa-envelope text-muted-foreground text-xs"></i>
                               {lead.email}
                             </div>
                           </td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">
                             <div className="flex items-center gap-1">
-                              <i className="fas fa-phone text-gray-400 text-xs"></i>
+                              <i className="fas fa-phone text-muted-foreground text-xs"></i>
                               {lead.phone}
                             </div>
                           </td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300 capitalize">{lead.source.replace('_', ' ')}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300 capitalize">{lead.source.replace('_', ' ')}</td>
                           <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className={getStatusColor(lead.status)}>{lead.status.toUpperCase()}</Badge>
                           </td>
@@ -1660,24 +1660,24 @@ Body:
 
         {/* Customers Tab */}
         <TabsContent value="customers" className="mt-6">
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-300">
+          <Card className="bg-card rounded-lg shadow-sm border border-gray-300">
             <CardHeader className="border-b-2 border-gray-300 px-4 py-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-bold text-gray-900">Customer Database ({filteredCustomers.length})</CardTitle>
-                <span className="text-xs text-gray-500">{customers.length} total</span>
+                <CardTitle className="text-base font-bold text-foreground">Customer Database ({filteredCustomers.length})</CardTitle>
+                <span className="text-xs text-muted-foreground">{customers.length} total</span>
               </div>
             </CardHeader>
             
             {/* Custom Customers Filter Bar - Single Line */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 {/* Company Filter */}
                 <div className="min-w-[130px] max-w-[150px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Company</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Company</label>
                   <select
                     value={customersFilters.company}
                     onChange={(e) => setCustomersFilters({ ...customersFilters, company: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueCustomerCompanies.map(company => (
@@ -1688,11 +1688,11 @@ Body:
 
                 {/* Contact Person Filter */}
                 <div className="min-w-[130px] max-w-[150px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Contact</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Contact</label>
                   <select
                     value={customersFilters.contactPerson}
                     onChange={(e) => setCustomersFilters({ ...customersFilters, contactPerson: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueCustomerContacts.map(contact => (
@@ -1703,7 +1703,7 @@ Body:
 
                 {/* Revenue Range Filter */}
                 <div className="w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Revenue ($)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Revenue ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -1712,7 +1712,7 @@ Body:
                       placeholder="Min"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={customersFilters.revenueMax}
@@ -1725,11 +1725,11 @@ Body:
 
                 {/* Status Filter */}
                 <div className="w-[90px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
                   <select
                     value={customersFilters.status}
                     onChange={(e) => setCustomersFilters({ ...customersFilters, status: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     <option value="active">Active</option>
@@ -1739,7 +1739,7 @@ Body:
 
                 {/* Creation Date Range Filter */}
                 <div className="w-[170px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Creation Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
@@ -1747,7 +1747,7 @@ Body:
                       onChange={(e) => setCustomersFilters({ ...customersFilters, dateFrom: e.target.value })}
                       className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="date"
                       value={customersFilters.dateTo}
@@ -1785,43 +1785,43 @@ Body:
             <CardContent className="p-0">
               {filteredCustomers.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-building text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">{customers.length === 0 ? 'No customers yet' : 'No customers match your filters'}</p>
+                  <i className="fas fa-building text-muted-foreground text-5xl mb-4"></i>
+                  <p className="text-muted-foreground">{customers.length === 0 ? 'No customers yet' : 'No customers match your filters'}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="bg-gray-100 border-b-2 border-gray-300">
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Company</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Contact Person</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Email</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Phone</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Total Revenue</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Loads</th>
-                        <th className="px-4 py-2.5 text-left text-sm font-bold text-gray-900 border-r border-gray-300">Status</th>
-                        <th className="px-4 py-2.5 text-center text-sm font-bold text-gray-900">Actions</th>
+                      <tr className="bg-muted border-b-2 border-gray-300">
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Company</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Contact Person</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Email</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Phone</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Total Revenue</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Loads</th>
+                        <th className="px-4 py-2.5 text-left text-sm font-bold text-foreground border-r border-gray-300">Status</th>
+                        <th className="px-4 py-2.5 text-center text-sm font-bold text-foreground">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredCustomers.map((customer) => (
-                        <tr key={customer.id} className="border-b border-gray-300 hover:bg-gray-50">
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.company_name}</td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.contact_person}</td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                        <tr key={customer.id} className="border-b border-gray-300 hover:bg-muted">
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{customer.company_name}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{customer.contact_person}</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">
                             <div className="flex items-center gap-1">
-                              <i className="fas fa-envelope text-gray-400 text-xs"></i>
+                              <i className="fas fa-envelope text-muted-foreground text-xs"></i>
                               {customer.email}
                             </div>
                           </td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">
                             <div className="flex items-center gap-1">
-                              <i className="fas fa-phone text-gray-400 text-xs"></i>
+                              <i className="fas fa-phone text-muted-foreground text-xs"></i>
                               {customer.phone}
                             </div>
                           </td>
                           <td className="px-4 py-2.5 text-sm text-green-600 font-semibold border-r border-gray-300">${customer.total_revenue.toLocaleString()}</td>
-                          <td className="px-4 py-2.5 text-sm text-gray-900 border-r border-gray-300">{customer.loads_count} completed</td>
+                          <td className="px-4 py-2.5 text-sm text-foreground border-r border-gray-300">{customer.loads_count} completed</td>
                           <td className="px-4 py-2.5 text-sm border-r border-gray-300">
                             <Badge className="bg-green-500 text-white">ACTIVE</Badge>
                           </td>
@@ -1854,7 +1854,7 @@ Body:
         {/* Freight Calculator Tab */}
         <TabsContent value="calculator" className="mt-6">
           {/* Multi-Quote Tabs Bar */}
-          <div className="mb-4 flex items-center gap-2 bg-white rounded-lg border border-gray-200 p-2 overflow-x-auto">
+          <div className="mb-4 flex items-center gap-2 bg-card rounded-lg border border-border p-2 overflow-x-auto">
             <div className="flex gap-1 flex-1 overflow-x-auto">
               {quoteTabs.map((tab) => (
                 <div
@@ -1863,7 +1863,7 @@ Body:
                     flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-all
                     ${tab.id === activeTabId 
                       ? 'bg-[#F7B501] text-white shadow-sm' 
-                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                      : 'bg-muted text-foreground hover:bg-muted'
                     }
                   `}
                   onClick={() => setActiveTabId(tab.id)}
@@ -1881,7 +1881,7 @@ Body:
                     onClick={(e) => e.stopPropagation()}
                     className={`
                       text-sm font-medium bg-transparent border-none outline-none w-20
-                      ${tab.id === activeTabId ? 'text-white placeholder-white/70' : 'text-gray-700'}
+                      ${tab.id === activeTabId ? 'text-white placeholder-white/70' : 'text-foreground'}
                     `}
                     placeholder="Quote"
                   />
@@ -1900,8 +1900,8 @@ Body:
                       toast.success(`${tab.name} closed - all data cleared`);
                     }}
                     className={`
-                      flex-shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-white/20 transition-colors
-                      ${tab.id === activeTabId ? 'text-white hover:bg-white/30' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}
+                      flex-shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-card/20 transition-colors
+                      ${tab.id === activeTabId ? 'text-white hover:bg-card/30' : 'text-muted-foreground hover:text-red-500 hover:bg-red-50'}
                     `}
                     title="Close quote"
                   >
@@ -1954,74 +1954,74 @@ Body:
                 {/* Left Column - Quote Calculator + Total Quote */}
                 <div className="space-y-4 w-full lg:w-[280px] flex-shrink-0">
                   {/* Quote Calculator */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-[480px] flex flex-col">
-                    <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
+                  <div className="bg-card rounded-2xl shadow-sm border border-border h-[480px] flex flex-col">
+                    <div className="px-4 py-2.5 border-b border-border flex-shrink-0">
                       <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                        <i className="fas fa-dollar-sign text-gray-500"></i>
+                        <i className="fas fa-dollar-sign text-muted-foreground"></i>
                         Quote Calculator
                       </h4>
                     </div>
                     <div className="p-4 space-y-2 flex-1 overflow-y-auto">
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Rate per Mile</Label>
+                        <Label className="text-xs font-medium text-muted-foreground mb-1 block">Rate per Mile</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">$</span>
                           <Input 
                             type="number" 
                             placeholder="0.00"
                             step="0.01"
                             value={quoteData.ratePerMile || ''}
                             onChange={(e) => setQuoteData({...quoteData, ratePerMile: parseFloat(e.target.value) || 0})}
-                            className="pl-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Fuel Surcharge</Label>
+                        <Label className="text-xs font-medium text-muted-foreground mb-1 block">Fuel Surcharge</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">$</span>
                           <Input 
                             type="number" 
                             placeholder="0.00"
                             step="0.01"
                             value={quoteData.fuelSurcharge || ''}
                             onChange={(e) => setQuoteData({...quoteData, fuelSurcharge: parseFloat(e.target.value) || 0})}
-                            className="pl-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Rate per Stop</Label>
+                        <Label className="text-xs font-medium text-muted-foreground mb-1 block">Rate per Stop</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">$</span>
                           <Input 
                             type="number" 
                             placeholder="0.00"
                             step="0.01"
                             value={quoteData.ratePerStop || ''}
                             onChange={(e) => setQuoteData({...quoteData, ratePerStop: parseFloat(e.target.value) || 0})}
-                            className="pl-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Rate per Lbs</Label>
+                        <Label className="text-xs font-medium text-muted-foreground mb-1 block">Rate per Lbs</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">$</span>
                           <Input 
                             type="number" 
                             placeholder="0.00"
                             step="0.01"
                             value={quoteData.ratePerLbs || ''}
                             onChange={(e) => setQuoteData({...quoteData, ratePerLbs: parseFloat(e.target.value) || 0})}
-                            className="pl-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pl-7 h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">FTL/LTL (%)</Label>
+                        <Label className="text-xs font-medium text-muted-foreground mb-1 block">FTL/LTL (%)</Label>
                         <div className="relative">
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">%</span>
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">%</span>
                           <Input 
                             type="number" 
                             placeholder="0"
@@ -2034,25 +2034,25 @@ Body:
                               const clampedValue = Math.min(Math.max(value, 0), 100);
                               setQuoteData({...quoteData, ftlLtlPercentage: clampedValue});
                             }}
-                            className="pr-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pr-7 h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           <span className="font-medium">0% = LTL</span> (Less Than Truck Load) | <span className="font-medium">100% = FTL</span> (Full Truck Load)
                         </p>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Accessorial Charges</Label>
+                        <Label className="text-xs font-medium text-muted-foreground mb-1 block">Accessorial Charges</Label>
                         <div className="flex gap-2">
                           <div className="relative flex-1">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">$</span>
                             <Input 
                               type="number" 
                               placeholder="0.00"
                               step="0.01"
                               value={quoteData.accessorialCharges || ''}
                               onChange={(e) => setQuoteData({...quoteData, accessorialCharges: parseFloat(e.target.value) || 0})}
-                              className="pl-7 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                              className="pl-7 h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                             />
                           </div>
                           <div className="relative flex-1">
@@ -2061,30 +2061,30 @@ Body:
                               placeholder="Name"
                               value={quoteData.accessoryName || ''}
                               onChange={(e) => setQuoteData({...quoteData, accessoryName: e.target.value})}
-                              className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                              className="h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                             />
                           </div>
                         </div>
                       </div>
                       <div>
-                        <Label className="text-xs font-medium text-gray-600 mb-1 block">Margin (%)</Label>
+                        <Label className="text-xs font-medium text-muted-foreground mb-1 block">Margin (%)</Label>
                         <div className="relative">
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">%</span>
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">%</span>
                           <Input 
                             type="number" 
                             placeholder="0"
                             step="1"
                             value={quoteData.margin || ''}
                             onChange={(e) => setQuoteData({...quoteData, margin: parseFloat(e.target.value) || 0})}
-                            className="pr-8 h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="pr-8 h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
 
                       {/* Required Fields for Email Generation */}
-                      <div className="pt-3 border-t border-gray-200 space-y-2">
+                      <div className="pt-3 border-t border-border space-y-2">
                         <div>
-                          <Label className="text-xs font-medium text-gray-600 mb-1 block">
+                          <Label className="text-xs font-medium text-muted-foreground mb-1 block">
                             Consignor <span className="text-red-500">*</span>
                           </Label>
                           <Input 
@@ -2092,11 +2092,11 @@ Body:
                             placeholder="Enter consignor name"
                             value={quoteData.consignor || ''}
                             onChange={(e) => setQuoteData({...quoteData, consignor: e.target.value})}
-                            className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-600 mb-1 block">
+                          <Label className="text-xs font-medium text-muted-foreground mb-1 block">
                             Consignee <span className="text-red-500">*</span>
                           </Label>
                           <Input 
@@ -2104,11 +2104,11 @@ Body:
                             placeholder="Enter consignee name"
                             value={quoteData.consignee || ''}
                             onChange={(e) => setQuoteData({...quoteData, consignee: e.target.value})}
-                            className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                         <div>
-                          <Label className="text-xs font-medium text-gray-600 mb-1 block">
+                          <Label className="text-xs font-medium text-muted-foreground mb-1 block">
                             Customer <span className="text-red-500">*</span>
                           </Label>
                           <Input 
@@ -2116,33 +2116,33 @@ Body:
                             placeholder="Enter customer name"
                             value={quoteData.customer || ''}
                             onChange={(e) => setQuoteData({...quoteData, customer: e.target.value})}
-                            className="h-8 text-sm border-gray-200 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                            className="h-8 text-sm border-border rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
                           />
                         </div>
                       </div>
 
                       {/* Route Distance Display */}
-                      <div className="mt-3 pt-3 border-t border-gray-200">
+                      <div className="mt-3 pt-3 border-t border-border">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <i className="fas fa-route text-[#F7B501]"></i>
-                            <Label className="text-xs font-medium text-gray-700">Route Distance</Label>
+                            <Label className="text-xs font-medium text-foreground">Route Distance</Label>
                           </div>
                           <div className="flex items-center gap-1">
-                            <span className="text-lg font-bold text-gray-900">
+                            <span className="text-lg font-bold text-foreground">
                               {routeData ? routeData.distanceValue.toFixed(2) : quoteData.distance || '0.00'}
                             </span>
-                            <span className="text-xs font-medium text-gray-500">miles</span>
+                            <span className="text-xs font-medium text-muted-foreground">miles</span>
                           </div>
                         </div>
                         {routeData && (
-                          <div className="mt-1 text-xs text-gray-500 flex items-center gap-1">
+                          <div className="mt-1 text-xs text-muted-foreground flex items-center gap-1">
                             <i className="fas fa-clock text-xs"></i>
                             <span>Est. {routeData.durationValue.toFixed(1)} hours</span>
                           </div>
                         )}
                         {!routeData && !quoteData.distance && (
-                          <p className="mt-1 text-xs text-gray-400 italic">
+                          <p className="mt-1 text-xs text-muted-foreground italic">
                             Enter pickup & destination to calculate
                           </p>
                         )}
@@ -2159,7 +2159,7 @@ Body:
                     <div className="flex-1 flex flex-col justify-center py-3">
                       <div className="text-4xl font-bold text-white mb-1">${calculateTotalQuote()}</div>
                       {/* FTL/LTL Breakdown */}
-                      <div className="bg-white/20 rounded-lg p-2 mt-2 space-y-1">
+                      <div className="bg-card/20 rounded-lg p-2 mt-2 space-y-1">
                         <div className="flex justify-between text-xs text-white/90">
                           <span>Base Rate ({quoteData.distance || 0} mi × ${quoteData.ratePerMile || 0}/mi)</span>
                           <span>${((quoteData.distance || 0) * (quoteData.ratePerMile || 0)).toFixed(2)}</span>
@@ -2192,7 +2192,7 @@ Body:
                     </div>
                     <Button 
                       onClick={pushToRateQuotes}
-                      className="w-full bg-white hover:bg-gray-50 text-[#F7B501] font-semibold rounded-lg shadow-sm h-11"
+                      className="w-full bg-card hover:bg-muted text-[#F7B501] font-semibold rounded-lg shadow-sm h-11"
                     >
                       <i className="fas fa-arrow-right mr-2"></i>
                       Push to Rate Quotes
@@ -2223,8 +2223,8 @@ Body:
                     </div>
 
                     {/* Route Calculator - 404px width */}
-                    <div className="border border-gray-200 rounded-xl bg-white shadow-sm h-[280px] flex-1 flex flex-col overflow-hidden">
-                      <div className="px-4 py-2.5 border-b border-gray-100 flex-shrink-0">
+                    <div className="border border-border rounded-xl bg-card shadow-sm h-[280px] flex-1 flex flex-col overflow-hidden">
+                      <div className="px-4 py-2.5 border-b border-border flex-shrink-0">
                         <h4 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
                           <i className="fas fa-route text-blue-500"></i>
                           Route Calculator
@@ -2232,7 +2232,7 @@ Body:
                       </div>
                       <div className="p-4 flex-1 flex flex-col justify-evenly">
                         <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
                             <i className="fas fa-map-marker-alt text-green-500"></i>
                           </div>
                           <PlacesAutocomplete
@@ -2240,7 +2240,7 @@ Body:
                             value={quoteData.pickupLocation}
                             onChange={(value) => setQuoteData({...quoteData, pickupLocation: value})}
                             apiKey={googleMapsApiKey}
-                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                            className="pl-10 h-9 border-border focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                           />
                         </div>
                         
@@ -2248,8 +2248,8 @@ Body:
                         <div className="space-y-2">
                           <div className="relative flex gap-2">
                             <div className="flex-1 relative">
-                              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
-                                <i className="fas fa-map-pin text-gray-400"></i>
+                              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
+                                <i className="fas fa-map-pin text-muted-foreground"></i>
                               </div>
                               <PlacesAutocomplete
                                 placeholder="Add stop (optional)"
@@ -2267,7 +2267,7 @@ Body:
                                   }
                                 }}
                                 apiKey={googleMapsApiKey}
-                                className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
+                                className="pl-10 h-9 border-border focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
                               />
                             </div>
                             <Button
@@ -2294,14 +2294,14 @@ Body:
                               {quoteData.stops.map((stop, index) => (
                                 <div key={index} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-gray-50 rounded-lg px-3 py-2 text-xs border border-blue-100 hover:border-blue-200 transition-all">
                                   <i className="fas fa-map-pin text-blue-500 text-xs"></i>
-                                  <span className="flex-1 truncate text-gray-700 font-medium">Stop {index + 1}: {stop}</span>
+                                  <span className="flex-1 truncate text-foreground font-medium">Stop {index + 1}: {stop}</span>
                                   <button
                                     onClick={() => {
                                       const newStops = quoteData.stops.filter((_, i) => i !== index);
                                       setQuoteData({...quoteData, stops: newStops});
                                       toast.success(`Stop ${index + 1} removed from route`);
                                     }}
-                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-white hover:bg-red-50 text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-300 transition-all shadow-sm hover:shadow"
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-card hover:bg-red-50 text-muted-foreground hover:text-red-500 border border-border hover:border-red-300 transition-all shadow-sm hover:shadow"
                                     title="Remove this stop"
                                   >
                                     <i className="fas fa-times text-xs"></i>
@@ -2313,7 +2313,7 @@ Body:
                         </div>
 
                         <div className="relative">
-                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10 pointer-events-none">
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
                             <i className="fas fa-map-marker-alt text-red-500"></i>
                           </div>
                           <PlacesAutocomplete
@@ -2321,7 +2321,7 @@ Body:
                             value={quoteData.destination}
                             onChange={(value) => setQuoteData({...quoteData, destination: value})}
                             apiKey={googleMapsApiKey}
-                            className="pl-10 h-9 border-gray-200 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                            className="pl-10 h-9 border-border focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                           />
                         </div>
 
@@ -2358,7 +2358,7 @@ Body:
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <CardTitle>Rate Quotes ({filteredQuotes.length})</CardTitle>
-                  <span className="text-xs text-gray-500">{quotes.length} total</span>
+                  <span className="text-xs text-muted-foreground">{quotes.length} total</span>
                 </div>
                 <Button onClick={() => setActiveTab('calculator')}>
                   <i className="fas fa-plus mr-2"></i>
@@ -2368,15 +2368,15 @@ Body:
             </CardHeader>
             
             {/* Custom Quotes Filter Bar - Single Line */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 {/* Quote Number Filter */}
                 <div className="min-w-[90px] max-w-[100px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Quote #</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Quote #</label>
                   <select
                     value={quotesFilters.quoteNumber}
                     onChange={(e) => setQuotesFilters({ ...quotesFilters, quoteNumber: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueQuoteNumbers.map(num => (
@@ -2387,11 +2387,11 @@ Body:
 
                 {/* Pickup Location Filter */}
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Pickup</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Pickup</label>
                   <select
                     value={quotesFilters.pickupLocation}
                     onChange={(e) => setQuotesFilters({ ...quotesFilters, pickupLocation: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniquePickupLocations.map(loc => (
@@ -2402,11 +2402,11 @@ Body:
 
                 {/* Destination Filter */}
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Destination</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Destination</label>
                   <select
                     value={quotesFilters.destination}
                     onChange={(e) => setQuotesFilters({ ...quotesFilters, destination: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueDestinations.map(dest => (
@@ -2417,11 +2417,11 @@ Body:
 
                 {/* Consignor Filter */}
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Consignor</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Consignor</label>
                   <select
                     value={quotesFilters.consignor}
                     onChange={(e) => setQuotesFilters({ ...quotesFilters, consignor: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueConsignors.map(c => (
@@ -2432,11 +2432,11 @@ Body:
 
                 {/* Consignee Filter */}
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Consignee</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Consignee</label>
                   <select
                     value={quotesFilters.consignee}
                     onChange={(e) => setQuotesFilters({ ...quotesFilters, consignee: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueConsignees.map(c => (
@@ -2447,11 +2447,11 @@ Body:
 
                 {/* Customer Filter */}
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Customer</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Customer</label>
                   <select
                     value={quotesFilters.customer}
                     onChange={(e) => setQuotesFilters({ ...quotesFilters, customer: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueQuoteCustomers.map(c => (
@@ -2462,7 +2462,7 @@ Body:
 
                 {/* Amount Range Filter */}
                 <div className="w-[110px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Amount ($)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Amount ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -2471,7 +2471,7 @@ Body:
                       placeholder="Min"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={quotesFilters.amountMax}
@@ -2484,11 +2484,11 @@ Body:
 
                 {/* Status Filter */}
                 <div className="w-[80px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
                   <select
                     value={quotesFilters.status}
                     onChange={(e) => setQuotesFilters({ ...quotesFilters, status: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     <option value="draft">Draft</option>
@@ -2501,7 +2501,7 @@ Body:
 
                 {/* Creation Date Range Filter */}
                 <div className="w-[160px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Creation Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
@@ -2509,7 +2509,7 @@ Body:
                       onChange={(e) => setQuotesFilters({ ...quotesFilters, dateFrom: e.target.value })}
                       className="w-[70px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="date"
                       value={quotesFilters.dateTo}
@@ -2551,9 +2551,9 @@ Body:
             <CardContent>
               {filteredQuotes.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-file-invoice-dollar text-gray-400 text-5xl mb-4"></i>
+                  <i className="fas fa-file-invoice-dollar text-muted-foreground text-5xl mb-4"></i>
                   <h3 className="text-xl font-semibold mb-2">{quotes.length === 0 ? 'No Quotes Yet' : 'No Quotes Match Your Filters'}</h3>
-                  <p className="text-gray-600 mb-4">{quotes.length === 0 ? 'Create professional rate quotes using the Freight Calculator' : 'Try adjusting your filters'}</p>
+                  <p className="text-muted-foreground mb-4">{quotes.length === 0 ? 'Create professional rate quotes using the Freight Calculator' : 'Try adjusting your filters'}</p>
                   {quotes.length === 0 && (
                     <Button onClick={() => setActiveTab('calculator')} className="bg-blue-600 hover:bg-blue-700">
                       <i className="fas fa-calculator mr-2"></i>
@@ -2577,10 +2577,10 @@ Body:
                               </h4>
                               <Badge className="bg-blue-100 text-blue-800 text-xs">Rate Quote</Badge>
                             </div>
-                            <h4 className="font-semibold text-gray-900">
+                            <h4 className="font-semibold text-foreground">
                               {quote.pickupLocation} → {quote.destination}
                             </h4>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted-foreground">
                               Created {new Date(quote.createdAt).toLocaleDateString()}
                             </p>
                           </div>
@@ -2594,22 +2594,22 @@ Body:
                       </div>
                       
                       {/* Required Info Section */}
-                      <div className="grid grid-cols-3 gap-3 text-sm mb-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="grid grid-cols-3 gap-3 text-sm mb-3 p-3 bg-muted rounded-lg">
                         <div>
-                          <span className="text-gray-600 block">Consignor:</span>
-                          <span className={`font-semibold ${quote.consignor ? 'text-gray-900' : 'text-red-500'}`}>
+                          <span className="text-muted-foreground block">Consignor:</span>
+                          <span className={`font-semibold ${quote.consignor ? 'text-foreground' : 'text-red-500'}`}>
                             {quote.consignor || 'Not specified'}
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-600 block">Consignee:</span>
-                          <span className={`font-semibold ${quote.consignee ? 'text-gray-900' : 'text-red-500'}`}>
+                          <span className="text-muted-foreground block">Consignee:</span>
+                          <span className={`font-semibold ${quote.consignee ? 'text-foreground' : 'text-red-500'}`}>
                             {quote.consignee || 'Not specified'}
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-600 block">Customer:</span>
-                          <span className={`font-semibold ${quote.customer ? 'text-gray-900' : 'text-red-500'}`}>
+                          <span className="text-muted-foreground block">Customer:</span>
+                          <span className={`font-semibold ${quote.customer ? 'text-foreground' : 'text-red-500'}`}>
                             {quote.customer || 'Not specified'}
                           </span>
                         </div>
@@ -2617,19 +2617,19 @@ Body:
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                         <div>
-                          <span className="text-gray-600">Rate/Mile:</span>
+                          <span className="text-muted-foreground">Rate/Mile:</span>
                           <span className="font-semibold ml-1">${quote.ratePerMile}</span>
                         </div>
                         <div>
-                          <span className="text-gray-600">Fuel Surcharge:</span>
+                          <span className="text-muted-foreground">Fuel Surcharge:</span>
                           <span className="font-semibold ml-1">${quote.fuelSurcharge}</span>
                         </div>
                         <div>
-                          <span className="text-gray-600">Rate/Stop:</span>
+                          <span className="text-muted-foreground">Rate/Stop:</span>
                           <span className="font-semibold ml-1">${quote.ratePerStop}</span>
                         </div>
                         <div>
-                          <span className="text-gray-600">Margin:</span>
+                          <span className="text-muted-foreground">Margin:</span>
                           <span className="font-semibold ml-1">{quote.margin}%</span>
                         </div>
                       </div>
@@ -2686,7 +2686,7 @@ Body:
                     <i className="fas fa-truck-loading mr-2 text-blue-600"></i>
                     Loads ({filteredLoads.length})
                   </CardTitle>
-                  <span className="text-xs text-gray-500">{loads.length} total</span>
+                  <span className="text-xs text-muted-foreground">{loads.length} total</span>
                 </div>
                 <Button onClick={() => setActiveTab('quotes')} variant="outline">
                   <i className="fas fa-file-invoice-dollar mr-2"></i>
@@ -2696,15 +2696,15 @@ Body:
             </CardHeader>
             
             {/* Custom Loads Filter Bar - Single Line */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 {/* Load Number Filter */}
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Load #</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Load #</label>
                   <select
                     value={loadsFilters.loadNumber}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, loadNumber: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueLoadNumbers.map(num => (
@@ -2715,11 +2715,11 @@ Body:
 
                 {/* Shipper Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Shipper</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Shipper</label>
                   <select
                     value={loadsFilters.shipper}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, shipper: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueShippers.map(shipper => (
@@ -2730,11 +2730,11 @@ Body:
 
                 {/* Pickup Location Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Pickup</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Pickup</label>
                   <select
                     value={loadsFilters.pickupLocation}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, pickupLocation: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueLoadPickups.map(loc => (
@@ -2745,11 +2745,11 @@ Body:
 
                 {/* Delivery Location Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Delivery</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Delivery</label>
                   <select
                     value={loadsFilters.deliveryLocation}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, deliveryLocation: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueLoadDeliveries.map(loc => (
@@ -2760,7 +2760,7 @@ Body:
 
                 {/* Rate Range Filter */}
                 <div className="w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Rate ($)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Rate ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -2769,7 +2769,7 @@ Body:
                       placeholder="Min"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={loadsFilters.rateMax}
@@ -2782,11 +2782,11 @@ Body:
 
                 {/* Status Filter */}
                 <div className="w-[90px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
                   <select
                     value={loadsFilters.status}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, status: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
@@ -2800,7 +2800,7 @@ Body:
 
                 {/* Creation Date Range Filter */}
                 <div className="w-[170px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Creation Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
@@ -2808,7 +2808,7 @@ Body:
                       onChange={(e) => setLoadsFilters({ ...loadsFilters, dateFrom: e.target.value })}
                       className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="date"
                       value={loadsFilters.dateTo}
@@ -2847,9 +2847,9 @@ Body:
             <CardContent className="p-0">
               {filteredLoads.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-truck-loading text-gray-400 text-5xl mb-4"></i>
+                  <i className="fas fa-truck-loading text-muted-foreground text-5xl mb-4"></i>
                   <h3 className="text-xl font-semibold mb-2">{loads.length === 0 ? 'No Loads Yet' : 'No Loads Match Your Filters'}</h3>
-                  <p className="text-gray-600 mb-4">{loads.length === 0 ? 'Create loads from your rate quotes to manage shipments' : 'Try adjusting your filters'}</p>
+                  <p className="text-muted-foreground mb-4">{loads.length === 0 ? 'Create loads from your rate quotes to manage shipments' : 'Try adjusting your filters'}</p>
                   {loads.length === 0 && (
                     <Button onClick={() => setActiveTab('quotes')} className="bg-blue-600 hover:bg-blue-700">
                       <i className="fas fa-file-invoice-dollar mr-2"></i>
@@ -2860,37 +2860,37 @@ Body:
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Load #</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Creation Date</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Creation Time</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Status</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Driver</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Carrier</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Customer Rate</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Location</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Planned</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual In</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual Out</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Location</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Planned</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual In</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual Out</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Source Quote</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Actions</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Load #</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Creation Date</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Creation Time</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Status</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Driver</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Carrier</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Customer Rate</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Source Quote</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredLoads.map((load, index) => (
-                        <tr key={load.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                        <tr key={load.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
                           <td className="px-3 py-2 whitespace-nowrap font-medium text-blue-600 text-xs">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatCreationDate(load.created_at)}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatCreationTime(load.created_at)}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
@@ -2906,7 +2906,7 @@ Body:
                                 load.status === 'invoiced' ? 'bg-orange-100 text-orange-800' :
                                 load.status === 'payment_overdue' ? 'bg-red-100 text-red-800' :
                                 load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
-                                'bg-gray-100 text-gray-800'
+                                'bg-muted text-gray-800'
                               }`}>
                                 <SelectValue placeholder="Status" />
                               </SelectTrigger>
@@ -2924,10 +2924,10 @@ Body:
                               </SelectContent>
                             </Select>
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-700">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-foreground">
                             {load.assigned_driver || '-'}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {load.assigned_carrier || '-'}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap font-semibold text-green-700 text-xs">
@@ -2938,13 +2938,13 @@ Body:
                               {load.pickup_location || `${load.pickup_city || ''}, ${load.pickup_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.pickup_time_planned)}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.pickup_time_actual_in)}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.pickup_time_actual_out)}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
@@ -2952,13 +2952,13 @@ Body:
                               {load.delivery_location || `${load.delivery_city || ''}, ${load.delivery_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.delivery_time_planned)}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.delivery_time_actual_in)}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.delivery_time_actual_out)}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
@@ -2970,7 +2970,7 @@ Body:
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             <Button variant="outline" size="sm" className="h-7 px-2" title="View Only">
-                              <i className="fas fa-eye text-gray-600"></i>
+                              <i className="fas fa-eye text-muted-foreground"></i>
                             </Button>
                           </td>
                         </tr>
@@ -3059,9 +3059,9 @@ Body:
       {showEmailModal && generatedEmail && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <Card className="max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-            <CardHeader className="border-b border-gray-200 flex-shrink-0">
+            <CardHeader className="border-b border-border flex-shrink-0">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-bold text-gray-900">
+                <CardTitle className="text-lg font-bold text-foreground">
                   <i className="fas fa-envelope mr-2 text-blue-600"></i>
                   Generated Email - {generatedEmail.quote.quoteNumber}
                 </CardTitle>
@@ -3069,7 +3069,7 @@ Body:
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowEmailModal(false)}
-                  className="hover:bg-gray-100"
+                  className="hover:bg-muted"
                 >
                   <i className="fas fa-times"></i>
                 </Button>
@@ -3087,14 +3087,14 @@ Body:
                   </p>
                 </div>
 
-                <div className="bg-gray-50 border border-gray-300 rounded-lg p-4">
-                  <pre className="whitespace-pre-wrap font-sans text-sm text-gray-900">
+                <div className="bg-muted border border-gray-300 rounded-lg p-4">
+                  <pre className="whitespace-pre-wrap font-sans text-sm text-foreground">
 {generatedEmail.content}
                   </pre>
                 </div>
               </div>
             </CardContent>
-            <div className="border-t border-gray-200 p-4 flex gap-2 flex-shrink-0">
+            <div className="border-t border-border p-4 flex gap-2 flex-shrink-0">
               <Button
                 onClick={copyEmailToClipboard}
                 className="flex-1 bg-green-600 hover:bg-green-700"
