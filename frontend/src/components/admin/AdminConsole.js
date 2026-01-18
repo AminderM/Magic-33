@@ -923,7 +923,7 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-lg">
+      <div className="bg-gradient-to-r from-primary to-primary/80 text-white p-6 rounded-lg">
         <h3 className="text-xl font-bold mb-2">📱 Mobile App Interface Wireframes</h3>
         <p>View how drivers will interact with your TMS through the mobile app on Android and iOS devices.</p>
       </div>
@@ -931,7 +931,7 @@ const DriverAppInterfacePreview = ({ product, onBack }) => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Main Dashboard */}
         <Card className="overflow-hidden">
-          <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-3 text-white">
+          <div className="bg-gradient-to-br from-primary to-primary/90 p-3 text-white">
             <h4 className="font-semibold text-sm">Main Dashboard</h4>
             <p className="text-xs opacity-90">TMS-style Layout</p>
           </div>
