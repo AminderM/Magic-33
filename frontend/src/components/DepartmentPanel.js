@@ -56,17 +56,15 @@ const DepartmentPanel = ({ activeDepartment, onDepartmentChange }) => {
             onClick={() => onDepartmentChange(dept.id)}
             className={`w-full text-center p-4 transition-all ${
               activeDepartment === dept.id
-                ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
-                : 'bg-muted border border-border text-foreground hover:bg-accent hover:text-accent-foreground'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-secondary text-secondary-foreground hover:bg-accent'
             }`}
           >
-            <div className={`font-bold text-lg ${
-              activeDepartment === dept.id ? 'text-sidebar-primary-foreground' : 'text-foreground'
-            }`}>
+            <div className="font-bold text-lg">
               {dept.label}
             </div>
             <div className={`text-xs mt-1 ${
-              activeDepartment === dept.id ? 'text-sidebar-primary-foreground/80' : 'text-muted-foreground'
+              activeDepartment === dept.id ? 'text-primary-foreground/80' : 'text-muted-foreground'
             }`}>
               {dept.description}
             </div>
