@@ -264,9 +264,9 @@ const AdminConsole = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveView(item.id)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 transition-colors ${
                   isActive
-                    ? 'bg-muted text-foreground font-medium'
+                    ? 'bg-primary text-primary-foreground font-medium'
                     : 'text-foreground hover:bg-muted'
                 }`}
               >
