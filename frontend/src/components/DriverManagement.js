@@ -13,7 +13,7 @@ import { useAuth } from '../contexts/AuthContext';
 const DRIVER_STATUSES = {
   available: { label: 'Available', color: 'bg-green-100 text-green-800', icon: 'fa-check-circle' },
   on_route: { label: 'On Route', color: 'bg-blue-100 text-blue-800', icon: 'fa-truck' },
-  off_duty: { label: 'Off Duty', color: 'bg-gray-100 text-gray-800', icon: 'fa-moon' },
+  off_duty: { label: 'Off Duty', color: 'bg-muted text-gray-800', icon: 'fa-moon' },
   on_break: { label: 'On Break', color: 'bg-yellow-100 text-yellow-800', icon: 'fa-coffee' },
   inactive: { label: 'Inactive', color: 'bg-red-100 text-red-800', icon: 'fa-ban' }
 };
@@ -268,11 +268,11 @@ const DriverManagement = ({ onStatsUpdate }) => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <i className="fas fa-users text-blue-600"></i>
             Driver Management
           </h2>
-          <p className="text-gray-500 text-sm mt-1">Manage your fleet drivers and their certifications</p>
+          <p className="text-muted-foreground text-sm mt-1">Manage your fleet drivers and their certifications</p>
         </div>
         <Button 
           onClick={() => setShowAddModal(true)}
@@ -327,14 +327,14 @@ const DriverManagement = ({ onStatsUpdate }) => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+        <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-600">Off Duty</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.offDuty}</p>
+                <p className="text-xs font-medium text-muted-foreground">Off Duty</p>
+                <p className="text-2xl font-bold text-foreground">{stats.offDuty}</p>
               </div>
-              <div className="h-10 w-10 rounded-full bg-gray-500 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-muted0 flex items-center justify-center">
                 <i className="fas fa-moon text-white"></i>
               </div>
             </div>
@@ -362,7 +362,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"></i>
                 <Input
                   placeholder="Search by name, email, phone, or license..."
                   value={searchTerm}
@@ -389,7 +389,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
           {/* Quick Filter Tabs */}
           <div className="mt-4">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="bg-gray-100">
+              <TabsList className="bg-muted">
                 <TabsTrigger value="all" className="text-xs">
                   All ({stats.total})
                 </TabsTrigger>
@@ -419,13 +419,13 @@ const DriverManagement = ({ onStatsUpdate }) => {
       ) : filteredDrivers.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <i className="fas fa-user-plus text-2xl text-gray-400"></i>
+            <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
+              <i className="fas fa-user-plus text-2xl text-muted-foreground"></i>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               {drivers.length === 0 ? 'No drivers yet' : 'No drivers match your filters'}
             </h3>
-            <p className="text-gray-500 mb-4">
+            <p className="text-muted-foreground mb-4">
               {drivers.length === 0 
                 ? 'Add your first driver to get started with dispatch operations'
                 : 'Try adjusting your search or filter criteria'}
@@ -457,11 +457,11 @@ const DriverManagement = ({ onStatsUpdate }) => {
                       {driver.full_name?.charAt(0)?.toUpperCase() || 'D'}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{driver.full_name}</h3>
-                      <p className="text-xs text-gray-500">{driver.email}</p>
+                      <h3 className="font-semibold text-foreground">{driver.full_name}</h3>
+                      <p className="text-xs text-muted-foreground">{driver.email}</p>
                     </div>
                   </div>
-                  <Badge className={DRIVER_STATUSES[driver.status]?.color || 'bg-gray-100'}>
+                  <Badge className={DRIVER_STATUSES[driver.status]?.color || 'bg-muted'}>
                     <i className={`fas ${DRIVER_STATUSES[driver.status]?.icon} mr-1`}></i>
                     {DRIVER_STATUSES[driver.status]?.label || driver.status}
                   </Badge>
@@ -469,19 +469,19 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
                 {/* Quick Info */}
                 <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
-                  <div className="flex items-center gap-1 text-gray-600">
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     <i className="fas fa-phone w-4"></i>
                     <span>{driver.phone || 'No phone'}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-gray-600">
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     <i className="fas fa-id-card w-4"></i>
                     <span>{driver.license_type || 'CDL-A'}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-gray-600">
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     <i className="fas fa-route w-4"></i>
                     <span>{driver.loads_completed} loads</span>
                   </div>
-                  <div className="flex items-center gap-1 text-gray-600">
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     <i className="fas fa-clock w-4"></i>
                     <span>{driver.on_time_rate}% on-time</span>
                   </div>
@@ -557,8 +557,8 @@ const DriverManagement = ({ onStatsUpdate }) => {
           <div className="space-y-6">
             {/* Basic Info */}
             <div>
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
-                <i className="fas fa-user text-gray-400"></i>
+              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                <i className="fas fa-user text-muted-foreground"></i>
                 Basic Information
               </h4>
               <div className="grid grid-cols-2 gap-4">
@@ -601,8 +601,8 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
             {/* License Info */}
             <div>
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
-                <i className="fas fa-id-card text-gray-400"></i>
+              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                <i className="fas fa-id-card text-muted-foreground"></i>
                 License & Certifications
               </h4>
               <div className="grid grid-cols-2 gap-4">
@@ -673,7 +673,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
                         className={`px-2 py-1 rounded text-xs border transition-colors ${
                           driverForm.endorsements?.includes(end.value)
                             ? 'bg-blue-100 border-blue-300 text-blue-700'
-                            : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                            : 'bg-muted border-border text-muted-foreground hover:bg-muted'
                         }`}
                       >
                         {end.label}
@@ -686,8 +686,8 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
             {/* Employment Info */}
             <div>
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
-                <i className="fas fa-briefcase text-gray-400"></i>
+              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                <i className="fas fa-briefcase text-muted-foreground"></i>
                 Employment Details
               </h4>
               <div className="grid grid-cols-2 gap-4">
@@ -712,8 +712,8 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
             {/* Emergency Contact */}
             <div>
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
-                <i className="fas fa-phone-alt text-gray-400"></i>
+              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                <i className="fas fa-phone-alt text-muted-foreground"></i>
                 Emergency Contact
               </h4>
               <div className="grid grid-cols-2 gap-4">
@@ -779,8 +779,8 @@ const DriverManagement = ({ onStatsUpdate }) => {
                   {selectedDriver.full_name?.charAt(0)?.toUpperCase() || 'D'}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900">{selectedDriver.full_name}</h3>
-                  <p className="text-gray-500">{selectedDriver.email}</p>
+                  <h3 className="text-xl font-bold text-foreground">{selectedDriver.full_name}</h3>
+                  <p className="text-muted-foreground">{selectedDriver.email}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge className={DRIVER_STATUSES[selectedDriver.status]?.color}>
                       <i className={`fas ${DRIVER_STATUSES[selectedDriver.status]?.icon} mr-1`}></i>
@@ -795,59 +795,59 @@ const DriverManagement = ({ onStatsUpdate }) => {
 
               {/* Stats */}
               <div className="grid grid-cols-4 gap-4">
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <p className="text-2xl font-bold text-gray-900">{selectedDriver.loads_completed}</p>
-                  <p className="text-xs text-gray-500">Loads Completed</p>
+                <div className="text-center p-3 bg-muted rounded-lg">
+                  <p className="text-2xl font-bold text-foreground">{selectedDriver.loads_completed}</p>
+                  <p className="text-xs text-muted-foreground">Loads Completed</p>
                 </div>
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-center p-3 bg-muted rounded-lg">
                   <p className="text-2xl font-bold text-green-600">{selectedDriver.on_time_rate}%</p>
-                  <p className="text-xs text-gray-500">On-Time Rate</p>
+                  <p className="text-xs text-muted-foreground">On-Time Rate</p>
                 </div>
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <p className="text-2xl font-bold text-gray-900">{(selectedDriver.miles_driven || 0).toLocaleString()}</p>
-                  <p className="text-xs text-gray-500">Miles Driven</p>
+                <div className="text-center p-3 bg-muted rounded-lg">
+                  <p className="text-2xl font-bold text-foreground">{(selectedDriver.miles_driven || 0).toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground">Miles Driven</p>
                 </div>
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <p className="text-2xl font-bold text-gray-900">
+                <div className="text-center p-3 bg-muted rounded-lg">
+                  <p className="text-2xl font-bold text-foreground">
                     {selectedDriver.hire_date ? Math.floor((new Date() - new Date(selectedDriver.hire_date)) / (1000 * 60 * 60 * 24 * 30)) : 0}
                   </p>
-                  <p className="text-xs text-gray-500">Months Active</p>
+                  <p className="text-xs text-muted-foreground">Months Active</p>
                 </div>
               </div>
 
               {/* Details Grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Contact Information</h4>
+                  <h4 className="font-medium text-foreground mb-2">Contact Information</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2">
-                      <i className="fas fa-phone text-gray-400 w-4"></i>
+                      <i className="fas fa-phone text-muted-foreground w-4"></i>
                       <span>{selectedDriver.phone || 'Not provided'}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <i className="fas fa-envelope text-gray-400 w-4"></i>
+                      <i className="fas fa-envelope text-muted-foreground w-4"></i>
                       <span>{selectedDriver.email}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <i className="fas fa-map-marker-alt text-gray-400 w-4"></i>
+                      <i className="fas fa-map-marker-alt text-muted-foreground w-4"></i>
                       <span>{selectedDriver.home_terminal || 'Not assigned'}</span>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">License & Compliance</h4>
+                  <h4 className="font-medium text-foreground mb-2">License & Compliance</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2">
-                      <i className="fas fa-id-card text-gray-400 w-4"></i>
+                      <i className="fas fa-id-card text-muted-foreground w-4"></i>
                       <span>{selectedDriver.license_number || 'Not provided'} ({selectedDriver.license_state || 'N/A'})</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <i className="fas fa-calendar text-gray-400 w-4"></i>
+                      <i className="fas fa-calendar text-muted-foreground w-4"></i>
                       <span>License Exp: {selectedDriver.license_expiry ? new Date(selectedDriver.license_expiry).toLocaleDateString() : 'Not set'}</span>
                       {getExpiryBadge(selectedDriver.license_expiry, '')}
                     </div>
                     <div className="flex items-center gap-2">
-                      <i className="fas fa-heartbeat text-gray-400 w-4"></i>
+                      <i className="fas fa-heartbeat text-muted-foreground w-4"></i>
                       <span>Medical Exp: {selectedDriver.medical_card_expiry ? new Date(selectedDriver.medical_card_expiry).toLocaleDateString() : 'Not set'}</span>
                       {getExpiryBadge(selectedDriver.medical_card_expiry, '')}
                     </div>
@@ -858,7 +858,7 @@ const DriverManagement = ({ onStatsUpdate }) => {
               {/* Endorsements */}
               {selectedDriver.endorsements?.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Endorsements</h4>
+                  <h4 className="font-medium text-foreground mb-2">Endorsements</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedDriver.endorsements.map(end => {
                       const endorsement = ENDORSEMENTS.find(e => e.value === end);
