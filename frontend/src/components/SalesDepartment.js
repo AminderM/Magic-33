@@ -2292,7 +2292,7 @@ Body:
                           {quoteData.stops.length > 0 && (
                             <div className="space-y-1.5 max-h-24 overflow-y-auto pr-1">
                               {quoteData.stops.map((stop, index) => (
-                                <div key={index} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-gray-50 rounded-lg px-3 py-2 text-xs border border-blue-100 hover:border-blue-200 transition-all">
+                                <div key={index} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-gray-50 rounded-lg px-3 py-2 text-xs border border-blue-100 hover:border-border transition-all">
                                   <i className="fas fa-map-pin text-blue-500 text-xs"></i>
                                   <span className="flex-1 truncate text-foreground font-medium">Stop {index + 1}: {stop}</span>
                                   <button
@@ -3077,7 +3077,7 @@ Body:
             </CardHeader>
             <CardContent className="p-6 overflow-y-auto flex-1">
               <div className="space-y-4">
-                <div className="bg-muted border border-blue-200 rounded-lg p-4">
+                <div className="bg-muted border border-border rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <i className="fas fa-info-circle text-blue-600"></i>
                     <span className="font-semibold text-blue-900">AI-Generated Professional Email</span>
