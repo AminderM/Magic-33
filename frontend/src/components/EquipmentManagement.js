@@ -566,17 +566,17 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Hourly:</span>
-                    <span className="font-semibold text-green-600">${item.hourly_rate}/hr</span>
+                    <span className="text-muted-foreground">Hourly:</span>
+                    <span className="font-semibold text-foreground">${item.hourly_rate}/hr</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Daily:</span>
-                    <span className="font-semibold text-green-600">${item.daily_rate}/day</span>
+                    <span className="text-muted-foreground">Daily:</span>
+                    <span className="font-semibold text-foreground">${item.daily_rate}/day</span>
                   </div>
                 </div>
                 
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Specifications:</h4>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">Specifications:</h4>
                   {renderSpecifications(item.specifications)}
                 </div>
                 
