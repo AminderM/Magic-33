@@ -126,8 +126,8 @@ const CollectionsChart = ({ receivables }) => {
 const AgingRow = ({ label, ar, ap, colorClass }) => (
   <div className={`grid grid-cols-3 gap-4 p-3 ${colorClass} rounded-lg`}>
     <span className="font-medium">{label}</span>
-    <span className="text-right text-green-700">${ar.toLocaleString()}</span>
-    <span className="text-right text-red-700">${ap.toLocaleString()}</span>
+    <span className="text-right text-foreground">${ar.toLocaleString()}</span>
+    <span className="text-right text-foreground">${ap.toLocaleString()}</span>
   </div>
 );
 
@@ -163,8 +163,8 @@ const AgingReport = ({ receivables, payables }) => {
     <div className="space-y-2">
       <div className="grid grid-cols-3 gap-4 px-3 py-2 bg-muted rounded-lg font-semibold text-sm">
         <span>Aging Bucket</span>
-        <span className="text-right text-green-700">AR Outstanding</span>
-        <span className="text-right text-red-700">AP Outstanding</span>
+        <span className="text-right text-foreground">AR Outstanding</span>
+        <span className="text-right text-foreground">AP Outstanding</span>
       </div>
       <AgingRow label="Current" ar={agingData.ar.current} ap={agingData.ap.current} colorClass="bg-green-50" />
       <AgingRow label="1-30 Days" ar={agingData.ar.days30} ap={agingData.ap.days30} colorClass="bg-yellow-50" />
@@ -761,16 +761,16 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   const getStatusBadge = (status) => {
     const styles = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      sent: 'bg-blue-100 text-blue-800',
-      overdue: 'bg-red-100 text-red-800',
-      paid: 'bg-green-100 text-green-800',
-      partial: 'bg-orange-100 text-orange-800',
-      cancelled: 'bg-muted text-gray-800',
-      approved: 'bg-green-100 text-green-800',
-      rejected: 'bg-red-100 text-red-800'
+      pending: 'bg-yellow-100 text-foreground',
+      sent: 'bg-blue-100 text-foreground',
+      overdue: 'bg-red-100 text-foreground',
+      paid: 'bg-green-100 text-foreground',
+      partial: 'bg-orange-100 text-foreground',
+      cancelled: 'bg-muted text-foreground',
+      approved: 'bg-green-100 text-foreground',
+      rejected: 'bg-red-100 text-foreground'
     };
-    return styles[status] || 'bg-muted text-gray-800';
+    return styles[status] || 'bg-muted text-foreground';
   };
 
   // Get display text for AR status
@@ -920,7 +920,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-green-600">Total Receivable</p>
-                <p className="text-2xl font-bold text-green-700">${totalAR.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground">${totalAR.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center">
                 <i className="fas fa-arrow-down text-green-600"></i>
@@ -937,7 +937,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-red-600">Total Payable</p>
-                <p className="text-2xl font-bold text-red-700">${totalAP.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground">${totalAP.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 bg-red-200 rounded-full flex items-center justify-center">
                 <i className="fas fa-arrow-up text-red-600"></i>
@@ -954,7 +954,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-yellow-600">Overdue AR</p>
-                <p className="text-2xl font-bold text-yellow-700">${totalAROverdue.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-foreground">${totalAROverdue.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center">
                 <i className="fas fa-exclamation-triangle text-yellow-600"></i>
@@ -971,7 +971,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-blue-600">Net Position</p>
-                <p className={`text-2xl font-bold ${totalAR - totalAP >= 0 ? 'text-blue-700' : 'text-red-700'}`}>
+                <p className={`text-2xl font-bold ${totalAR - totalAP >= 0 ? 'text-foreground' : 'text-foreground'}`}>
                   ${(totalAR - totalAP).toLocaleString()}
                 </p>
               </div>
@@ -1024,19 +1024,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <div className="flex items-center">
                       <i className="fas fa-bell text-orange-600 mr-2"></i>
                       Alerts & Notifications
-                      <Badge className="ml-2 bg-orange-100 text-orange-800">
+                      <Badge className="ml-2 bg-orange-100 text-foreground">
                         {alertsSummary.total_alerts || 0}
                       </Badge>
                     </div>
                     <div className="flex gap-2 text-sm">
                       {alertsSummary.high_priority > 0 && (
-                        <Badge className="bg-red-100 text-red-800">
+                        <Badge className="bg-red-100 text-foreground">
                           <i className="fas fa-exclamation-circle mr-1"></i>
                           {alertsSummary.high_priority} High
                         </Badge>
                       )}
                       {alertsSummary.medium_priority > 0 && (
-                        <Badge className="bg-yellow-100 text-yellow-800">
+                        <Badge className="bg-yellow-100 text-foreground">
                           {alertsSummary.medium_priority} Medium
                         </Badge>
                       )}
@@ -1076,7 +1076,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                         </div>
                         <div className="text-right ml-4">
                           <span className={`text-lg font-bold ${
-                            alert.related_type === 'ar' ? 'text-green-700' : 'text-red-700'
+                            alert.related_type === 'ar' ? 'text-foreground' : 'text-foreground'
                           }`}>
                             ${alert.amount?.toLocaleString()}
                           </span>
@@ -1094,11 +1094,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t">
                     <div className="text-center p-3 bg-green-50 rounded-lg">
                       <div className="text-xs text-green-600 font-medium">AR Overdue Total</div>
-                      <div className="text-xl font-bold text-green-700">${(alertsSummary.total_ar_overdue || 0).toLocaleString()}</div>
+                      <div className="text-xl font-bold text-foreground">${(alertsSummary.total_ar_overdue || 0).toLocaleString()}</div>
                     </div>
                     <div className="text-center p-3 bg-red-50 rounded-lg">
                       <div className="text-xs text-red-600 font-medium">AP Due/Overdue Total</div>
-                      <div className="text-xl font-bold text-red-700">${(alertsSummary.total_ap_upcoming || 0).toLocaleString()}</div>
+                      <div className="text-xl font-bold text-foreground">${(alertsSummary.total_ap_upcoming || 0).toLocaleString()}</div>
                     </div>
                   </div>
                 </CardContent>
@@ -1118,16 +1118,16 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-                      <span className="text-sm font-medium text-yellow-800">Pending</span>
-                      <span className="text-lg font-bold text-yellow-700">${totalARPending.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-foreground">Pending</span>
+                      <span className="text-lg font-bold text-foreground">${totalARPending.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                      <span className="text-sm font-medium text-red-800">Overdue</span>
-                      <span className="text-lg font-bold text-red-700">${totalAROverdue.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-foreground">Overdue</span>
+                      <span className="text-lg font-bold text-foreground">${totalAROverdue.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                      <span className="text-sm font-medium text-green-800">Paid</span>
-                      <span className="text-lg font-bold text-green-700">${totalARPaid.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-foreground">Paid</span>
+                      <span className="text-lg font-bold text-foreground">${totalARPaid.toLocaleString()}</span>
                     </div>
                     <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between items-center">
@@ -1150,16 +1150,16 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-                      <span className="text-sm font-medium text-yellow-800">Pending</span>
-                      <span className="text-lg font-bold text-yellow-700">${totalAPPending.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-foreground">Pending</span>
+                      <span className="text-lg font-bold text-foreground">${totalAPPending.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                      <span className="text-sm font-medium text-red-800">Overdue</span>
-                      <span className="text-lg font-bold text-red-700">${totalAPOverdue.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-foreground">Overdue</span>
+                      <span className="text-lg font-bold text-foreground">${totalAPOverdue.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                      <span className="text-sm font-medium text-green-800">Paid</span>
-                      <span className="text-lg font-bold text-green-700">${totalAPPaid.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-foreground">Paid</span>
+                      <span className="text-lg font-bold text-foreground">${totalAPPaid.toLocaleString()}</span>
                     </div>
                     <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between items-center">
@@ -1314,7 +1314,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <CardContent>
                 {!parsedReceiptData ? (
                   <div className="text-center py-12">
-                    <i className="fas fa-file-invoice text-gray-300 text-5xl mb-4"></i>
+                    <i className="fas fa-file-invoice text-foreground text-5xl mb-4"></i>
                     <p className="text-muted-foreground">Upload and process a receipt to see extracted data</p>
                   </div>
                 ) : (
@@ -1322,7 +1322,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     {/* Category Badge */}
                     <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
                       <span className="font-medium text-foreground">Detected Category:</span>
-                      <Badge className="bg-blue-100 text-blue-800">
+                      <Badge className="bg-blue-100 text-foreground">
                         <i className={`fas ${getCategoryIcon(parsedReceiptData.category)} mr-1`}></i>
                         {getCategoryName(parsedReceiptData.category || 'other')}
                       </Badge>
@@ -1460,7 +1460,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       {/* Fuel specific fields */}
                       {parsedReceiptData.category === 'fuel' && (parsedReceiptData.gallons || parsedReceiptData.price_per_gallon) && (
                         <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                          <Label className="text-xs text-yellow-700 font-medium">Fuel Details</Label>
+                          <Label className="text-xs text-foreground font-medium">Fuel Details</Label>
                           <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
                             {parsedReceiptData.gallons && (
                               <div>Gallons: <span className="font-medium">{parsedReceiptData.gallons}</span></div>
@@ -1502,15 +1502,15 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <CardTitle className="text-green-700">
+                  <CardTitle className="text-foreground">
                     <i className="fas fa-hand-holding-usd mr-2"></i>
                     Income ({filteredIncome.length})
                   </CardTitle>
                   <div className="flex gap-2">
-                    <Badge className="bg-green-100 text-green-800">
+                    <Badge className="bg-green-100 text-foreground">
                       {incomeSummary.fully_paid_count || 0} Fully Paid
                     </Badge>
-                    <Badge className="bg-yellow-100 text-yellow-800">
+                    <Badge className="bg-yellow-100 text-foreground">
                       {incomeSummary.partial_count || 0} Partial
                     </Badge>
                   </div>
@@ -1534,19 +1534,19 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                   <div className="text-sm text-green-600 font-medium">Total Received</div>
-                  <div className="text-2xl font-bold text-green-700">${(incomeSummary.total_received || 0).toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_received || 0).toLocaleString()}</div>
                 </div>
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <div className="text-sm text-blue-600 font-medium">Total Invoiced</div>
-                  <div className="text-2xl font-bold text-blue-700">${(incomeSummary.total_invoiced || 0).toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_invoiced || 0).toLocaleString()}</div>
                 </div>
                 <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
                   <div className="text-sm text-yellow-600 font-medium">Outstanding</div>
-                  <div className="text-2xl font-bold text-yellow-700">${(incomeSummary.total_outstanding || 0).toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-foreground">${(incomeSummary.total_outstanding || 0).toLocaleString()}</div>
                 </div>
                 <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
                   <div className="text-sm text-purple-600 font-medium">Collection Rate</div>
-                  <div className="text-2xl font-bold text-purple-700">
+                  <div className="text-2xl font-bold text-foreground">
                     {incomeSummary.total_invoiced > 0 
                       ? ((incomeSummary.total_received / incomeSummary.total_invoiced) * 100).toFixed(1) 
                       : 0}%
@@ -1557,7 +1557,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               {/* Income Table */}
               {filteredIncome.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
-                  <i className="fas fa-hand-holding-usd text-4xl mb-3 text-gray-300"></i>
+                  <i className="fas fa-hand-holding-usd text-4xl mb-3 text-foreground"></i>
                   <p>No income received yet.</p>
                   <p className="text-sm mt-1">Record payments in Accounts Receivable to see income here.</p>
                 </div>
@@ -1596,7 +1596,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             <td className="px-4 py-3 font-medium text-foreground">${item.amount?.toLocaleString()}</td>
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-green-700">${(item.amount_paid || 0).toLocaleString()}</span>
+                                <span className="font-bold text-foreground">${(item.amount_paid || 0).toLocaleString()}</span>
                                 {/* Mini progress bar */}
                                 <div className="w-16 bg-gray-200 rounded-full h-1.5">
                                   <div 
@@ -1615,14 +1615,14 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             </td>
                             <td className="px-4 py-3">
                               {item.load_reference ? (
-                                <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                                <Badge variant="outline" className="text-xs bg-purple-50 text-foreground border-purple-200">
                                   <i className="fas fa-truck mr-1"></i>
                                   {item.load_reference}
                                 </Badge>
                               ) : '-'}
                             </td>
                             <td className="px-4 py-3">
-                              <Badge className={item.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+                              <Badge className={item.status === 'paid' ? 'bg-green-100 text-foreground' : 'bg-yellow-100 text-foreground'}>
                                 {item.status === 'paid' ? (
                                   <><i className="fas fa-check-circle mr-1"></i>Paid</>
                                 ) : (
@@ -1652,10 +1652,10 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                 <div className="flex items-center gap-3">
                   <CardTitle>Expenses Ledger ({filteredExpenses.length})</CardTitle>
                   <div className="flex gap-2">
-                    <Badge className="bg-yellow-100 text-yellow-800">
+                    <Badge className="bg-yellow-100 text-foreground">
                       {expensesSummary.pending_count || 0} Pending
                     </Badge>
-                    <Badge className="bg-green-100 text-green-800">
+                    <Badge className="bg-green-100 text-foreground">
                       {expensesSummary.approved_count || 0} Approved
                     </Badge>
                   </div>
@@ -1680,12 +1680,12 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
                   <div className="text-sm text-yellow-600 font-medium">Pending Approval</div>
-                  <div className="text-2xl font-bold text-yellow-700">${(expensesSummary.pending_total || 0).toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-foreground">${(expensesSummary.pending_total || 0).toLocaleString()}</div>
                   <div className="text-xs text-yellow-500">{expensesSummary.pending_count || 0} expenses</div>
                 </div>
                 <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                   <div className="text-sm text-green-600 font-medium">Approved (→ AP)</div>
-                  <div className="text-2xl font-bold text-green-700">${(expensesSummary.approved_total || 0).toLocaleString()}</div>
+                  <div className="text-2xl font-bold text-foreground">${(expensesSummary.approved_total || 0).toLocaleString()}</div>
                   <div className="text-xs text-green-500">{expensesSummary.approved_count || 0} expenses</div>
                 </div>
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200 col-span-2">
@@ -1693,11 +1693,11 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   <div className="flex items-center gap-2 mt-2 text-xs">
                     <Badge className="bg-muted">Upload Receipt</Badge>
                     <i className="fas fa-arrow-right text-muted-foreground"></i>
-                    <Badge className="bg-yellow-100 text-yellow-800">Pending Review</Badge>
+                    <Badge className="bg-yellow-100 text-foreground">Pending Review</Badge>
                     <i className="fas fa-arrow-right text-muted-foreground"></i>
-                    <Badge className="bg-green-100 text-green-800">Approved</Badge>
+                    <Badge className="bg-green-100 text-foreground">Approved</Badge>
                     <i className="fas fa-arrow-right text-muted-foreground"></i>
-                    <Badge className="bg-blue-100 text-blue-800">Accounts Payable</Badge>
+                    <Badge className="bg-blue-100 text-foreground">Accounts Payable</Badge>
                   </div>
                 </div>
               </div>
@@ -1705,7 +1705,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
               {/* Expenses Table */}
               {filteredExpenses.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
-                  <i className="fas fa-receipt text-4xl mb-3 text-gray-300"></i>
+                  <i className="fas fa-receipt text-4xl mb-3 text-foreground"></i>
                   <p>No expenses found.</p>
                   <p className="text-sm mt-1">Upload a receipt to create an expense entry.</p>
                   <Button 
@@ -1745,17 +1745,17 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                               <span className="capitalize">{getCategoryName(expense.category)}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 font-semibold text-red-700">${expense.amount?.toLocaleString()}</td>
+                          <td className="px-4 py-3 font-semibold text-foreground">${expense.amount?.toLocaleString()}</td>
                           <td className="px-4 py-3 text-muted-foreground">{expense.receipt_number || '-'}</td>
                           <td className="px-4 py-3">
                             <div className="flex flex-col gap-1 text-xs">
                               {expense.load_reference && (
-                                <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                                <Badge variant="outline" className="text-xs bg-purple-50 text-foreground border-purple-200">
                                   <i className="fas fa-truck mr-1"></i>{expense.load_reference}
                                 </Badge>
                               )}
                               {expense.driver_name && (
-                                <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
+                                <Badge variant="outline" className="text-xs bg-blue-50 text-foreground border-blue-200">
                                   <i className="fas fa-user mr-1"></i>{expense.driver_name}
                                 </Badge>
                               )}
@@ -1979,7 +1979,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             </div>
                           </td>
                           <td className="px-4 py-3">{item.customer_name}</td>
-                          <td className="px-4 py-3 font-semibold text-green-700">${item.amount?.toLocaleString()}</td>
+                          <td className="px-4 py-3 font-semibold text-foreground">${item.amount?.toLocaleString()}</td>
                           <td className="px-4 py-3">
                             <div className="text-xs">
                               <div className="text-green-600">Paid: ${(item.amount_paid || 0).toLocaleString()}</div>
@@ -1999,7 +1999,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           </td>
                           <td className="px-4 py-3">
                             {item.load_reference ? (
-                              <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                              <Badge variant="outline" className="text-xs bg-purple-50 text-foreground border-purple-200">
                                 <i className="fas fa-truck mr-1"></i>
                                 {item.load_reference}
                               </Badge>
@@ -2200,7 +2200,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                             </div>
                           </td>
                           <td className="px-4 py-3">{item.vendor_name}</td>
-                          <td className="px-4 py-3 font-semibold text-red-700">${item.amount?.toLocaleString()}</td>
+                          <td className="px-4 py-3 font-semibold text-foreground">${item.amount?.toLocaleString()}</td>
                           <td className="px-4 py-3">
                             <div className="text-xs">
                               <div className="text-green-600">Paid: ${(item.amount_paid || 0).toLocaleString()}</div>
@@ -2218,7 +2218,7 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           <td className="px-4 py-3 capitalize">{item.category || '-'}</td>
                           <td className="px-4 py-3">
                             {item.load_reference ? (
-                              <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 border-purple-200">
+                              <Badge variant="outline" className="text-xs bg-purple-50 text-foreground border-purple-200">
                                 <i className="fas fa-truck mr-1"></i>
                                 {item.load_reference}
                               </Badge>
