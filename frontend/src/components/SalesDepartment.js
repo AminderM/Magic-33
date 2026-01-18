@@ -1203,7 +1203,7 @@ Body:
             <p className="text-sm text-muted-foreground mt-1">Lead generation, CRM, rate quotes & customer management</p>
           </div>
           {activeTab === 'leads' && (
-            <Button onClick={() => setShowAddLeadModal(true)} className="bg-[#F7B501] hover:bg-[#e5a701] rounded-lg">
+            <Button onClick={() => setShowAddLeadModal(true)} className="bg-primary hover:bg-primary/90 rounded-lg">
               <i className="fas fa-plus mr-2"></i>
               Add New Lead
             </Button>
@@ -1862,7 +1862,7 @@ Body:
                   className={`
                     flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-all
                     ${tab.id === activeTabId 
-                      ? 'bg-[#F7B501] text-white shadow-sm' 
+                      ? 'bg-primary text-white shadow-sm' 
                       : 'bg-muted text-foreground hover:bg-muted'
                     }
                   `}
@@ -1942,7 +1942,7 @@ Body:
                 setNextTabId(nextTabId + 1);
                 toast.success('New quote created');
               }}
-              className="flex items-center gap-2 px-3 py-2 bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-md transition-colors flex-shrink-0"
+              className="flex items-center gap-2 px-3 py-2 bg-primary hover:bg-primary/90 text-white rounded-md transition-colors flex-shrink-0"
             >
               <i className="fas fa-plus text-xs"></i>
               <span className="text-sm font-medium">New Quote</span>
@@ -2125,7 +2125,7 @@ Body:
                       <div className="mt-3 pt-3 border-t border-border">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <i className="fas fa-route text-[#F7B501]"></i>
+                            <i className="fas fa-route text-primary"></i>
                             <Label className="text-xs font-medium text-foreground">Route Distance</Label>
                           </div>
                           <div className="flex items-center gap-1">
@@ -2151,7 +2151,7 @@ Body:
                   </div>
 
                   {/* Total Rate Card - Below Quote Calculator */}
-                  <div className="bg-gradient-to-br from-[#F7B501] to-[#e5a701] rounded-2xl shadow-md border border-[#e5a701] p-5 h-auto flex flex-col justify-between">
+                  <div className="bg-gradient-to-br from-primary to-primary/90 rounded-2xl shadow-md border border-primary p-5 h-auto flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <h4 className="text-sm font-semibold text-white/90">Total Quote</h4>
                       <i className="fas fa-file-invoice-dollar text-white/60 text-lg"></i>
@@ -2192,7 +2192,7 @@ Body:
                     </div>
                     <Button 
                       onClick={pushToRateQuotes}
-                      className="w-full bg-card hover:bg-muted text-[#F7B501] font-semibold rounded-lg shadow-sm h-11"
+                      className="w-full bg-card hover:bg-muted text-primary font-semibold rounded-lg shadow-sm h-11"
                     >
                       <i className="fas fa-arrow-right mr-2"></i>
                       Push to Rate Quotes
@@ -2282,7 +2282,7 @@ Body:
                                 }
                               }}
                               size="sm"
-                              className="h-9 w-9 p-0 bg-[#F7B501] hover:bg-[#e5a701] text-white"
+                              className="h-9 w-9 p-0 bg-primary hover:bg-primary/90 text-white"
                             >
                               <i className="fas fa-plus"></i>
                             </Button>
@@ -2337,7 +2337,7 @@ Body:
                             }
                             toast.info('Calculating route...');
                           }}
-                          className="w-full bg-[#F7B501] hover:bg-[#e5a701] text-white rounded-lg shadow-sm h-10"
+                          className="w-full bg-primary hover:bg-primary/90 text-white rounded-lg shadow-sm h-10"
                         >
                           <i className="fas fa-calculator mr-2"></i>
                           Calculate
