@@ -312,7 +312,7 @@ const DispatchAnalytics = () => {
         </Card>
       </div>
 
-      {/* Charts Row */}
+      {/* Charts Row - Status Distribution and Calendar */}
       <div className="grid grid-cols-2 gap-6">
         {/* Status Distribution */}
         <Card className="bg-card border border-border">
@@ -351,7 +351,58 @@ const DispatchAnalytics = () => {
           </CardContent>
         </Card>
 
-        {/* Monthly Trend */}
+        {/* Dispatch Calendar with Week Numbers */}
+        <Card className="bg-card border border-border">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center text-foreground">
+              <i className="fas fa-calendar-alt text-foreground mr-2"></i>
+              Dispatch Calendar
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Calendar
+              showWeekNumber
+              showOutsideDays
+              fixedWeeks
+              classNames={{
+                months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                month: "space-y-4",
+                caption: "flex justify-center pt-1 relative items-center",
+                caption_label: "text-sm font-medium text-foreground",
+                nav: "space-x-1 flex items-center",
+                nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 border border-border rounded-md inline-flex items-center justify-center",
+                nav_button_previous: "absolute left-1",
+                nav_button_next: "absolute right-1",
+                table: "w-full border-collapse space-y-1",
+                head_row: "flex",
+                head_cell: "text-foreground rounded-md w-9 font-normal text-[0.8rem]",
+                row: "flex w-full mt-2",
+                cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-primary [&:has([aria-selected])]:rounded-md",
+                day: "h-9 w-9 p-0 font-normal text-foreground hover:bg-muted rounded-md inline-flex items-center justify-center",
+                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                day_today: "bg-muted text-foreground font-bold",
+                day_outside: "text-muted-foreground opacity-50",
+                day_disabled: "text-muted-foreground opacity-50",
+                day_hidden: "invisible",
+                weeknumber: "text-xs text-primary font-semibold w-9 h-9 flex items-center justify-center",
+              }}
+              formatters={{
+                formatWeekNumber: (weekNumber) => `W${weekNumber}`
+              }}
+              components={{
+                WeekNumber: ({ weekNumber }) => (
+                  <span className="text-xs text-primary font-semibold w-9 h-9 flex items-center justify-center" title={`Week ${weekNumber}`}>
+                    W{weekNumber}
+                  </span>
+                )
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Monthly Load Trend - Full Width Row */}
+      <div className="grid grid-cols-1 gap-6">
         <Card className="bg-card border border-border">
           <CardHeader>
             <CardTitle className="text-lg flex items-center text-foreground">
