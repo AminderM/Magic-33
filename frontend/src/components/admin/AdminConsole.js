@@ -276,25 +276,46 @@ const AdminConsole = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
-          {navigationItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeView === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveView(item.id)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 transition-colors whitespace-nowrap ${
-                  isActive
-                    ? 'bg-primary text-primary-foreground font-medium'
-                    : 'text-foreground hover:bg-muted'
-                }`}
-              >
-                <Icon className="w-5 h-5 flex-shrink-0" />
-                <span className="truncate">{item.label}</span>
-              </button>
-            );
-          })}
+        <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
+          {/* Home Button */}
+          <button
+            onClick={() => setActiveView('home')}
+            className={`w-full flex items-center space-x-3 px-4 py-3 transition-colors whitespace-nowrap ${
+              activeView === 'home'
+                ? 'bg-primary text-primary-foreground font-medium'
+                : 'text-foreground hover:bg-muted'
+            }`}
+          >
+            <Home className="w-5 h-5 flex-shrink-0" />
+            <span>Home</span>
+          </button>
+
+          {/* Workspaces */}
+          {workspaces.map((workspace) => (
+            <div key={workspace.name} className="space-y-1">
+              <h3 className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {workspace.name}
+              </h3>
+              {workspace.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeView === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveView(item.id)}
+                    className={`w-full flex items-center space-x-3 px-4 py-2.5 transition-colors whitespace-nowrap ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground font-medium'
+                        : 'text-foreground hover:bg-muted'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {/* User Info & Logout */}
