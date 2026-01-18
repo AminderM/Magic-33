@@ -178,16 +178,30 @@ const AdminConsole = () => {
     navigate('/auth');
   };
 
-  // Sidebar Navigation Items
-  const navigationItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'users', label: 'User Management', icon: Users },
-    { id: 'carrier-lookup', label: 'Carrier Lookup', icon: Truck },
-    { id: 'subscription', label: 'Subscription Manager', icon: Users },
-    { id: 'analytics', label: 'Sales Analytics', icon: TrendingUp },
-    { id: 'products', label: 'Products', icon: Package },
-    { id: 'integrations', label: 'Integrations', icon: Zap },
-    { id: 'crm', label: 'CRM', icon: Users }
+  // Sidebar Navigation Items grouped by Workspaces
+  const workspaces = [
+    {
+      name: 'Customer Accounts',
+      items: [
+        { id: 'users', label: 'User Management', icon: Users },
+        { id: 'subscription', label: 'Subscription Manager', icon: Users },
+      ]
+    },
+    {
+      name: 'Sales',
+      items: [
+        { id: 'carrier-lookup', label: 'Carrier Lookup', icon: Truck },
+        { id: 'analytics', label: 'Sales Analytics', icon: TrendingUp },
+        { id: 'crm', label: 'CRM', icon: Users },
+      ]
+    },
+    {
+      name: 'Developers',
+      items: [
+        { id: 'products', label: 'Products', icon: Package },
+        { id: 'integrations', label: 'Integrations', icon: Zap },
+      ]
+    }
   ];
 
   const handleProductClick = (product) => {
