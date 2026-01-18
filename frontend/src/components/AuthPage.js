@@ -189,7 +189,7 @@ const AuthPage = () => {
       <div className="w-full max-w-md">
         <Card className="form-container">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-gray-900">
+            <CardTitle className="text-2xl font-bold text-foreground">
               {isLogin ? (
                 'Welcome Back'
               ) : step === 1 ? (
@@ -198,7 +198,7 @@ const AuthPage = () => {
                 'Company Information'
               )}
             </CardTitle>
-            <p className="text-gray-600 mt-2">
+            <p className="text-muted-foreground mt-2">
               {isLogin ? (
                 'Sign in to your Fleet Marketplace account'
               ) : step === 1 ? (
@@ -262,7 +262,7 @@ const AuthPage = () => {
                       setIsLogin(false);
                       resetForm();
                     }}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    className="text-primary hover:text-blue-800 text-sm"
                     data-testid="switch-to-register"
                   >
                     Don't have an account? Register here
@@ -362,7 +362,7 @@ const AuthPage = () => {
                       setIsLogin(true);
                       resetForm();
                     }}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    className="text-primary hover:text-blue-800 text-sm"
                     data-testid="switch-to-login"
                   >
                     Already have an account? Sign in here
@@ -487,7 +487,7 @@ const AuthPage = () => {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    className="text-primary hover:text-blue-800 text-sm"
                     data-testid="back-to-user-registration"
                   >
                     Back to User Information
