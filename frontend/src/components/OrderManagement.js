@@ -816,8 +816,8 @@ const OrderManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Order Management</h2>
-          <p className="text-gray-600">Track and manage all shipment orders</p>
+          <h2 className="text-2xl font-bold text-foreground">Order Management</h2>
+          <p className="text-muted-foreground">Track and manage all shipment orders</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" onClick={loadOrders}>
@@ -838,7 +838,7 @@ const OrderManagement = () => {
                 <DialogTitle>Upload Rate Confirmation</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted-foreground">
                   Upload a rate confirmation document (PDF or image) and our AI will automatically extract order details.
                 </div>
                 
@@ -1166,7 +1166,7 @@ const OrderManagement = () => {
                     <div className="space-y-2">
                       <Label htmlFor="confirmed_rate">Confirmed Rate ($)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                         <Input
                           id="confirmed_rate"
                           type="text"
@@ -1191,7 +1191,7 @@ const OrderManagement = () => {
                           className="pl-8"
                         />
                       </div>
-                      <p className="text-xs text-gray-500">Enter numeric value only (e.g., 1250.50)</p>
+                      <p className="text-xs text-muted-foreground">Enter numeric value only (e.g., 1250.50)</p>
                     </div>
                     <div className="space-y-2 col-span-2">
                       <Label htmlFor="notes">Notes</Label>
@@ -1313,7 +1313,7 @@ const OrderManagement = () => {
                     <i className="fas fa-truck-loading mr-2 text-blue-600"></i>
                     Loads ({filteredLoads.length})
                   </CardTitle>
-                  <span className="text-xs text-gray-500">{orders.length} total</span>
+                  <span className="text-xs text-muted-foreground">{orders.length} total</span>
                 </div>
                 <Button variant="outline" onClick={loadOrders}>
                   <i className="fas fa-sync-alt mr-2"></i>
@@ -1323,15 +1323,15 @@ const OrderManagement = () => {
             </CardHeader>
             
             {/* Custom Loads Filter Bar - Single Line (Same as Sales/Business Development) */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
               <div className="flex items-end gap-2 overflow-x-auto">
                 {/* Load Number Filter */}
                 <div className="min-w-[100px] max-w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Load #</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Load #</label>
                   <select
                     value={loadsFilters.loadNumber}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, loadNumber: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueLoadNumbers.map(num => (
@@ -1342,11 +1342,11 @@ const OrderManagement = () => {
 
                 {/* Shipper Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Shipper</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Shipper</label>
                   <select
                     value={loadsFilters.shipper}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, shipper: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueShippers.map(shipper => (
@@ -1357,11 +1357,11 @@ const OrderManagement = () => {
 
                 {/* Pickup Location Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Pickup</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Pickup</label>
                   <select
                     value={loadsFilters.pickupLocation}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, pickupLocation: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueLoadPickups.map(loc => (
@@ -1372,11 +1372,11 @@ const OrderManagement = () => {
 
                 {/* Delivery Location Filter */}
                 <div className="min-w-[120px] max-w-[140px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Delivery</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Delivery</label>
                   <select
                     value={loadsFilters.deliveryLocation}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, deliveryLocation: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     {uniqueLoadDeliveries.map(loc => (
@@ -1387,7 +1387,7 @@ const OrderManagement = () => {
 
                 {/* Rate Range Filter */}
                 <div className="w-[120px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Rate ($)</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Rate ($)</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="number"
@@ -1396,7 +1396,7 @@ const OrderManagement = () => {
                       placeholder="Min"
                       className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="number"
                       value={loadsFilters.rateMax}
@@ -1409,11 +1409,11 @@ const OrderManagement = () => {
 
                 {/* Status Filter */}
                 <div className="w-[90px]">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
                   <select
                     value={loadsFilters.status}
                     onChange={(e) => setLoadsFilters({ ...loadsFilters, status: e.target.value })}
-                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
                   >
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
@@ -1427,7 +1427,7 @@ const OrderManagement = () => {
 
                 {/* Creation Date Range Filter */}
                 <div className="w-[170px] flex-shrink-0">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Creation Date</label>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Creation Date</label>
                   <div className="flex gap-0.5 items-center">
                     <input
                       type="date"
@@ -1435,7 +1435,7 @@ const OrderManagement = () => {
                       onChange={(e) => setLoadsFilters({ ...loadsFilters, dateFrom: e.target.value })}
                       className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
-                    <span className="text-gray-400 text-xs">-</span>
+                    <span className="text-muted-foreground text-xs">-</span>
                     <input
                       type="date"
                       value={loadsFilters.dateTo}
@@ -1474,35 +1474,35 @@ const OrderManagement = () => {
             <CardContent className="p-0">
               {filteredLoads.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-truck-loading text-gray-400 text-5xl mb-4"></i>
+                  <i className="fas fa-truck-loading text-muted-foreground text-5xl mb-4"></i>
                   <h3 className="text-xl font-semibold mb-2">{orders.length === 0 ? 'No Loads Yet' : 'No Loads Match Your Filters'}</h3>
-                  <p className="text-gray-600 mb-4">{orders.length === 0 ? 'Create loads from rate quotes in Sales/Business Development' : 'Try adjusting your filters'}</p>
+                  <p className="text-muted-foreground mb-4">{orders.length === 0 ? 'Create loads from rate quotes in Sales/Business Development' : 'Try adjusting your filters'}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Load #</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Status</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Driver</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Carrier</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Carrier Rate</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Location</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Planned</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual In</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Pickup Actual Out</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Location</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Planned</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual In</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Delivery Actual Out</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Source Quote</th>
-                        <th className="px-3 py-3 text-left font-semibold text-gray-700 whitespace-nowrap text-xs">Actions</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Load #</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Status</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Driver</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Carrier</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Carrier Rate</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Source Quote</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredLoads.map((load, index) => (
-                        <tr key={load.id} className={`hover:bg-gray-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                        <tr key={load.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
                           <td className="px-3 py-2 whitespace-nowrap font-medium text-blue-600 text-xs">
                             {load.order_number || load.id?.substring(0, 8).toUpperCase()}
                           </td>
@@ -1519,7 +1519,7 @@ const OrderManagement = () => {
                                 load.status === 'invoiced' ? 'bg-orange-100 text-orange-800' :
                                 load.status === 'payment_overdue' ? 'bg-red-100 text-red-800' :
                                 load.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
-                                'bg-gray-100 text-gray-800'
+                                'bg-muted text-gray-800'
                               }`}>
                                 <SelectValue placeholder="Status" />
                               </SelectTrigger>
@@ -1579,7 +1579,7 @@ const OrderManagement = () => {
                               {load.pickup_location || `${load.pickup_city || ''}, ${load.pickup_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.pickup_time_planned)}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
@@ -1603,7 +1603,7 @@ const OrderManagement = () => {
                               {load.delivery_location || `${load.delivery_city || ''}, ${load.delivery_state || ''}`}
                             </div>
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
                             {formatShortDateTime(load.delivery_time_planned)}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
@@ -1656,7 +1656,7 @@ const OrderManagement = () => {
               <div className="flex justify-between items-center">
                 <CardTitle>Active Loads</CardTitle>
                 <div className="flex space-x-2">
-                  <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-gray-400">Downloads disabled</div>}>
+                  <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-muted-foreground">Downloads disabled</div>}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="sm" disabled={activeOrders.length === 0}>
@@ -1666,7 +1666,7 @@ const OrderManagement = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
-                          <i className="fas fa-file-csv text-gray-600"></i>
+                          <i className="fas fa-file-csv text-muted-foreground"></i>
                           Export CSV
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
@@ -1686,44 +1686,44 @@ const OrderManagement = () => {
             <CardContent className="p-0">
               {activeOrders.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-clipboard-list text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">No active orders found</p>
+                  <i className="fas fa-clipboard-list text-muted-foreground text-5xl mb-4"></i>
+                  <p className="text-muted-foreground">No active orders found</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Order #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Confirmed Rate</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Address</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Commodity</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Weight (lbs)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Cubes (cu ft)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Tractor #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Trailer #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver ID</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Order #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Confirmed Rate</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Address</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Commodity</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Weight (lbs)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Cubes (cu ft)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Tractor #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Trailer #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver ID</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {activeOrders.map((order) => (
-                        <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                        <tr key={order.id} className="hover:bg-muted transition-colors">
                           <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
                             {order.order_number || order.id.substring(0, 8).toUpperCase()}
                           </td>
@@ -1814,7 +1814,7 @@ const OrderManagement = () => {
               <div className="flex justify-between items-center">
                 <CardTitle>Load History</CardTitle>
                 <div className="flex space-x-2">
-                  <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-gray-400">Downloads disabled</div>}>
+                  <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-muted-foreground">Downloads disabled</div>}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="sm" disabled={paidOrders.length === 0}>
@@ -1824,7 +1824,7 @@ const OrderManagement = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => exportToCSV(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
-                          <i className="fas fa-file-csv text-gray-600"></i>
+                          <i className="fas fa-file-csv text-muted-foreground"></i>
                           Export CSV
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => exportToExcel(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
@@ -1845,44 +1845,44 @@ const OrderManagement = () => {
             <CardContent className="p-0">
               {paidOrders.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-check-circle text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">No completed/paid orders yet</p>
+                  <i className="fas fa-check-circle text-muted-foreground text-5xl mb-4"></i>
+                  <p className="text-muted-foreground">No completed/paid orders yet</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Order #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Confirmed Rate</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Address</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Commodity</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Weight (lbs)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Cubes (cu ft)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Tractor #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Trailer #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver ID</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Order #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Confirmed Rate</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Address</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Commodity</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Weight (lbs)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Cubes (cu ft)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Tractor #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Trailer #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver ID</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {paidOrders.map((order) => (
-                        <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                        <tr key={order.id} className="hover:bg-muted transition-colors">
                           <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
                             {order.order_number || order.id.substring(0, 8).toUpperCase()}
                           </td>
@@ -1980,7 +1980,7 @@ const OrderManagement = () => {
 
             {/* Actual Pickup Times */}
             <div className="border-t pt-4">
-              <h4 className="text-sm font-semibold text-gray-700 mb-3">Actual Pickup Time</h4>
+              <h4 className="text-sm font-semibold text-foreground mb-3">Actual Pickup Time</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="pickup_time_actual_in">Time In</Label>
@@ -2005,7 +2005,7 @@ const OrderManagement = () => {
 
             {/* Actual Delivery Times */}
             <div className="border-t pt-4">
-              <h4 className="text-sm font-semibold text-gray-700 mb-3">Actual Delivery Time</h4>
+              <h4 className="text-sm font-semibold text-foreground mb-3">Actual Delivery Time</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="delivery_time_actual_in">Time In</Label>
