@@ -1414,7 +1414,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <Label className="text-xs text-muted-foreground">Date</Label>
+                          <Label className="text-xs text-muted-foreground">
+                            {parsedReceiptData.treatment === 'expense' ? 'Expense Date' : 'Invoice Date'}
+                          </Label>
                           <Input 
                             type="date"
                             value={parsedReceiptData.expense_date || ''} 
