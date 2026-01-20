@@ -1424,13 +1424,36 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                           />
                         </div>
                         <div>
-                          <Label className="text-xs text-muted-foreground">Receipt #</Label>
+                          <Label className="text-xs text-muted-foreground">
+                            {parsedReceiptData.treatment === 'expense' ? 'Receipt #' : 'Bill/Invoice #'}
+                          </Label>
                           <Input 
                             value={parsedReceiptData.receipt_number || ''} 
                             onChange={(e) => setParsedReceiptData({...parsedReceiptData, receipt_number: e.target.value})}
                           />
                         </div>
                       </div>
+                      
+                      {/* Due Date - only for Accounts Payable */}
+                      {parsedReceiptData.treatment === 'accounts_payable' && (
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <Label className="text-xs text-muted-foreground">Due Date</Label>
+                            <Input 
+                              type="date"
+                              value={parsedReceiptData.due_date || ''} 
+                              onChange={(e) => setParsedReceiptData({...parsedReceiptData, due_date: e.target.value})}
+                            />
+                          </div>
+                          <div className="flex items-end">
+                            <p className="text-xs text-muted-foreground pb-2">
+                              <i className="fas fa-info-circle mr-1"></i>
+                              If not set, defaults to 30 days from today
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <Label className="text-xs text-muted-foreground">Category</Label>
