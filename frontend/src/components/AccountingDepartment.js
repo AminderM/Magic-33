@@ -847,42 +847,55 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     }
 
     try {
-      // Always create an expense entry first (goes to Expenses Ledger for approval)
-      const expensePayload = {
+      // Use the new confirm-receipt endpoint with AI classification
+      const treatment = parsedReceiptData.treatment || 'expense';
+      
+      const confirmPayload = {
+        treatment: treatment,
         vendor_name: parsedReceiptData.vendor_name || 'Unknown Vendor',
-        expense_date: parsedReceiptData.expense_date || new Date().toISOString().split('T')[0],
         amount: parsedReceiptData.amount || 0,
-        category: parsedReceiptData.category || 'other',
+        expense_date: parsedReceiptData.expense_date || new Date().toISOString().split('T')[0],
+        due_date: parsedReceiptData.due_date || null,
         receipt_number: parsedReceiptData.receipt_number || `RCP-${Date.now()}`,
-        description: parsedReceiptData.description || 'Imported from receipt',
+        bill_number: parsedReceiptData.bill_number || null,
+        description: parsedReceiptData.description || 'Imported from receipt scan',
+        category: parsedReceiptData.category || 'other',
         payment_method: parsedReceiptData.payment_method || 'card',
+        payment_status: parsedReceiptData.payment_status || null,
+        line_items: parsedReceiptData.line_items || [],
+        load_reference: parsedReceiptData.load_reference || null,
         driver_name: parsedReceiptData.driver_name || null,
         vehicle_name: parsedReceiptData.vehicle_number || null,
-        line_items: parsedReceiptData.line_items || []
+        ai_treatment_reason: parsedReceiptData.treatment_reason || null
       };
 
-      const response = await fetchWithAuth(`${BACKEND_URL}/api/accounting/expenses`, {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/accounting/confirm-receipt`, {
         method: 'POST',
-        body: JSON.stringify(expensePayload)
+        body: JSON.stringify(confirmPayload)
       });
 
       if (response.ok) {
-        toast.success('Expense added to ledger for approval!');
+        const result = await response.json();
+        if (result.entry_type === 'expense') {
+          toast.success('Expense added to ledger for approval!');
+          setActiveTab('expenses');
+        } else {
+          toast.success('Bill added to Accounts Payable!');
+          setActiveTab('ap');
+        }
         // Reset receipt state
         setReceiptFile(null);
         setReceiptPreview(null);
         setParsedReceiptData(null);
         setReceiptType(null);
         loadData();
-        // Switch to expenses tab
-        setActiveTab('expenses');
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to create expense');
+        toast.error(error.detail || 'Failed to create entry');
       }
     } catch (error) {
       console.error('Error submitting receipt:', error);
-      toast.error('Failed to create expense');
+      toast.error('Failed to create entry');
     }
   };
 
