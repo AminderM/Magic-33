@@ -1332,6 +1332,50 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                   </div>
                 ) : (
                   <div className="space-y-4">
+                    {/* AI Classification Decision */}
+                    <div className={`p-4 rounded-lg border-2 ${
+                      parsedReceiptData.treatment === 'expense' 
+                        ? 'bg-green-50 dark:bg-green-950 border-green-300 dark:border-green-700' 
+                        : 'bg-orange-50 dark:bg-orange-950 border-orange-300 dark:border-orange-700'
+                    }`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <i className={`fas ${parsedReceiptData.treatment === 'expense' ? 'fa-receipt text-green-600' : 'fa-file-invoice-dollar text-orange-600'} text-xl`}></i>
+                          <span className="font-semibold text-foreground">
+                            AI Classification: {parsedReceiptData.treatment === 'expense' ? 'Pre-paid Expense' : 'Unpaid Bill (Accounts Payable)'}
+                          </span>
+                        </div>
+                        <Badge className={parsedReceiptData.treatment === 'expense' ? 'bg-green-600' : 'bg-orange-600'}>
+                          {parsedReceiptData.treatment === 'expense' ? 'EXPENSE' : 'ACCOUNTS PAYABLE'}
+                        </Badge>
+                      </div>
+                      {parsedReceiptData.treatment_reason && (
+                        <p className="text-sm text-muted-foreground mb-3">
+                          <i className="fas fa-robot mr-1"></i>
+                          {parsedReceiptData.treatment_reason}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">Change to:</span>
+                        <Button 
+                          size="sm" 
+                          variant={parsedReceiptData.treatment === 'expense' ? 'default' : 'outline'}
+                          onClick={() => setParsedReceiptData({...parsedReceiptData, treatment: 'expense'})}
+                          className={parsedReceiptData.treatment === 'expense' ? 'bg-green-600 hover:bg-green-700' : ''}
+                        >
+                          <i className="fas fa-receipt mr-1"></i> Expense
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={parsedReceiptData.treatment === 'accounts_payable' ? 'default' : 'outline'}
+                          onClick={() => setParsedReceiptData({...parsedReceiptData, treatment: 'accounts_payable'})}
+                          className={parsedReceiptData.treatment === 'accounts_payable' ? 'bg-orange-600 hover:bg-orange-700' : ''}
+                        >
+                          <i className="fas fa-file-invoice-dollar mr-1"></i> Accounts Payable
+                        </Button>
+                      </div>
+                    </div>
+
                     {/* Category Badge */}
                     <div className="flex items-center justify-between p-3 rounded-lg bg-muted border border-border">
                       <span className="font-medium text-foreground">Detected Category:</span>
@@ -1344,7 +1388,9 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     {/* Workflow Note */}
                     <div className="text-xs text-muted-foreground bg-muted p-2 rounded flex items-center gap-2">
                       <i className="fas fa-info-circle"></i>
-                      This expense will be added to the Expenses Ledger for approval before going to Accounts Payable.
+                      {parsedReceiptData.treatment === 'expense' 
+                        ? 'This will be added to the Expenses Ledger as a pre-paid expense for approval.'
+                        : 'This will be added to Accounts Payable as an unpaid bill to be paid later.'}
                     </div>
 
                     {/* Extracted Fields */}
