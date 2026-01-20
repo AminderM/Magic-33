@@ -1539,10 +1539,10 @@ const AccountingDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
                     <div className="flex gap-2 pt-4 border-t">
                       <Button 
                         onClick={submitParsedReceipt}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                        className={`flex-1 ${parsedReceiptData.treatment === 'expense' ? 'bg-green-600 hover:bg-green-700' : 'bg-orange-600 hover:bg-orange-700'}`}
                       >
-                        <i className="fas fa-plus-circle mr-2"></i>
-                        Add to Expenses Ledger
+                        <i className={`fas ${parsedReceiptData.treatment === 'expense' ? 'fa-plus-circle' : 'fa-file-invoice-dollar'} mr-2`}></i>
+                        {parsedReceiptData.treatment === 'expense' ? 'Add to Expenses Ledger' : 'Add to Accounts Payable'}
                       </Button>
                       <Button variant="outline" onClick={clearReceipt}>
                         Clear
