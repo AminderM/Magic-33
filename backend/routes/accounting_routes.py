@@ -1186,6 +1186,151 @@ async def parse_receipt(
         raise HTTPException(status_code=500, detail=f"Failed to process receipt: {str(e)}")
 
 
+class ReceiptConfirmation(BaseModel):
+    """Model for confirming AI-parsed receipt and creating entry"""
+    treatment: str  # 'expense' or 'accounts_payable'
+    vendor_name: str
+    amount: float
+    expense_date: Optional[str] = None
+    due_date: Optional[str] = None
+    receipt_number: Optional[str] = None
+    bill_number: Optional[str] = None
+    description: Optional[str] = None
+    category: str = "other"
+    payment_method: Optional[str] = None
+    payment_status: Optional[str] = None
+    line_items: Optional[List[dict]] = None
+    # Optional linking
+    load_reference: Optional[str] = None
+    driver_id: Optional[str] = None
+    driver_name: Optional[str] = None
+    vehicle_id: Optional[str] = None
+    vehicle_name: Optional[str] = None
+    # Receipt image
+    receipt_image_url: Optional[str] = None
+    # AI decision context
+    ai_treatment_reason: Optional[str] = None
+
+
+@router.post("/confirm-receipt")
+async def confirm_receipt_entry(
+    data: ReceiptConfirmation,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Confirm AI-parsed receipt and create appropriate entry.
+    Based on treatment, creates either:
+    - Expense entry (for paid receipts)
+    - Accounts Payable entry (for unpaid invoices/bills)
+    """
+    try:
+        now = datetime.now(timezone.utc).isoformat()
+        
+        if data.treatment == "expense":
+            # Create expense entry
+            expense = {
+                "id": str(uuid.uuid4()),
+                "company_id": current_user.id,
+                "vendor_name": data.vendor_name,
+                "expense_date": data.expense_date or now[:10],
+                "amount": data.amount,
+                "category": data.category if data.category in EXPENSE_CATEGORIES else "other",
+                "receipt_number": data.receipt_number,
+                "description": data.description,
+                "payment_method": data.payment_method,
+                "load_reference": data.load_reference,
+                "driver_id": data.driver_id,
+                "driver_name": data.driver_name,
+                "vehicle_id": data.vehicle_id,
+                "vehicle_name": data.vehicle_name,
+                "line_items": data.line_items or [],
+                "receipt_image_url": data.receipt_image_url,
+                "status": "pending",  # Starts as pending for approval workflow
+                "source": "ai_receipt_scan",
+                "ai_classification": {
+                    "treatment": data.treatment,
+                    "reason": data.ai_treatment_reason
+                },
+                "created_by": current_user.id,
+                "created_at": now,
+                "updated_at": now
+            }
+            
+            await db.expenses.insert_one(expense)
+            expense.pop("_id", None)
+            
+            return {
+                "success": True,
+                "entry_type": "expense",
+                "message": "Expense entry created successfully from receipt",
+                "entry": expense
+            }
+            
+        elif data.treatment == "accounts_payable":
+            # Generate bill number if not provided
+            bill_number = data.bill_number or data.receipt_number or f"BILL-{str(uuid.uuid4())[:8].upper()}"
+            
+            # Check for duplicate bill number
+            existing = await db.accounts_payable.find_one({
+                "bill_number": bill_number,
+                "company_id": current_user.id
+            })
+            if existing:
+                # Append random suffix to make unique
+                bill_number = f"{bill_number}-{str(uuid.uuid4())[:4].upper()}"
+            
+            # Calculate due date if not provided (default 30 days from now)
+            if not data.due_date:
+                due_date = (datetime.now(timezone.utc) + timedelta(days=30)).strftime("%Y-%m-%d")
+            else:
+                due_date = data.due_date
+            
+            payable = {
+                "id": str(uuid.uuid4()),
+                "company_id": current_user.id,
+                "vendor_name": data.vendor_name,
+                "vendor_email": None,
+                "bill_number": bill_number,
+                "amount": data.amount,
+                "amount_paid": 0,
+                "due_date": due_date,
+                "description": data.description,
+                "category": data.category if data.category in EXPENSE_CATEGORIES else "other",
+                "load_reference": data.load_reference,
+                "line_items": data.line_items or [],
+                "receipt_image_url": data.receipt_image_url,
+                "status": "pending",
+                "source": "ai_receipt_scan",
+                "ai_classification": {
+                    "treatment": data.treatment,
+                    "reason": data.ai_treatment_reason
+                },
+                "created_by": current_user.id,
+                "created_at": now,
+                "updated_at": now
+            }
+            
+            await db.accounts_payable.insert_one(payable)
+            payable.pop("_id", None)
+            
+            return {
+                "success": True,
+                "entry_type": "accounts_payable",
+                "message": "Accounts Payable entry created successfully from invoice",
+                "entry": payable
+            }
+        else:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid treatment type: {data.treatment}. Must be 'expense' or 'accounts_payable'"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create entry: {str(e)}")
+
+
 # ==================== NOTIFICATIONS & ALERTS ====================
 
 class NotificationAlert(BaseModel):
