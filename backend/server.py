@@ -83,17 +83,18 @@ async def vehicle_websocket_endpoint(websocket: WebSocket, vehicle_id: str):
     finally:
         manager.disconnect_vehicle(websocket, vehicle_id)
 
-# Include the API router in the main app
-app.include_router(api_router)
-
-# CORS Middleware
+# CORS Middleware - must be added before routes
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+# Include the API router in the main app
+app.include_router(api_router)
 
 # Configure logging
 logging.basicConfig(
