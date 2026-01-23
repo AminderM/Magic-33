@@ -2,190 +2,205 @@ import React, { useState, useEffect } from 'react';
 import { useDriverApp } from './DriverAppProvider';
 
 const STATUS_CONFIG = {
-  available: { label: 'Available', color: 'bg-green-600' },
-  assigned: { label: 'Assigned', color: 'bg-blue-600' },
-  accepted: { label: 'Accepted', color: 'bg-blue-600' },
-  en_route_pickup: { label: 'En Route', color: 'bg-blue-600' },
-  arrived_pickup: { label: 'At Pickup', color: 'bg-amber-600' },
-  loaded: { label: 'Loaded', color: 'bg-indigo-600' },
-  en_route_delivery: { label: 'En Route', color: 'bg-blue-600' },
-  arrived_delivery: { label: 'At Delivery', color: 'bg-amber-600' },
-  delivered: { label: 'Delivered', color: 'bg-green-600' },
-  rejected: { label: 'Rejected', color: 'bg-gray-600' },
+  available: { label: 'AVAILABLE', color: 'bg-green-600' },
+  assigned: { label: 'PENDING', color: 'bg-amber-600' },
+  pending: { label: 'PENDING', color: 'bg-amber-600' },
+  en_route_pickup: { label: 'EN ROUTE', color: 'bg-blue-600' },
+  arrived_pickup: { label: 'AT PICKUP', color: 'bg-amber-600' },
+  loaded: { label: 'LOADED', color: 'bg-indigo-600' },
+  en_route_delivery: { label: 'EN ROUTE', color: 'bg-blue-600' },
+  arrived_delivery: { label: 'AT DELIVERY', color: 'bg-amber-600' },
+  delivered: { label: 'DELIVERED', color: 'bg-green-600' },
+  rejected: { label: 'REJECTED', color: 'bg-red-600' },
 };
 
-// Uber-style Load Offer Card
-const LoadOfferCard = ({ load, onAccept, onReject, onViewRoute, accepting }) => {
+// Load Offer Card - Uber style with TMS theme
+const LoadOfferCard = ({ load, onAccept, onReject, onViewRoute, accepting, theme }) => {
+  const isDark = theme === 'dark';
   const estimatedMiles = load.estimated_miles || Math.floor(Math.random() * 300 + 100);
   const estimatedPay = load.rate || (estimatedMiles * 2.5).toFixed(0);
   const estimatedTime = load.estimated_hours || Math.ceil(estimatedMiles / 50);
 
   return (
-    <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden mb-4 animate-slideUp">
-      {/* Header with pulse animation for new loads */}
-      <div className="bg-gradient-to-r from-green-900/50 to-gray-900 px-4 py-3 flex items-center justify-between">
+    <div className={`border mb-4 animate-slideUp ${isDark ? 'bg-[#0a0a0a] border-[#262626]' : 'bg-white border-[#e5e5e5]'}`}>
+      {/* Header */}
+      <div className="bg-red-600 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
           </span>
-          <span className="text-green-400 font-semibold text-sm">NEW LOAD AVAILABLE</span>
+          <span className="text-white font-semibold text-sm tracking-wider">NEW LOAD</span>
         </div>
         <span className="text-white font-bold">{load.order_number || `#${load.id?.slice(0, 6)}`}</span>
       </div>
 
-      {/* Route visualization */}
+      {/* Route */}
       <div className="px-4 py-4">
         <div className="flex items-start gap-3">
-          {/* Timeline */}
           <div className="flex flex-col items-center">
-            <div className="w-4 h-4 rounded-full bg-green-500 border-2 border-green-300"></div>
-            <div className="w-0.5 h-16 bg-gradient-to-b from-green-500 to-red-500"></div>
-            <div className="w-4 h-4 rounded-full bg-red-500 border-2 border-red-300"></div>
+            <div className="w-4 h-4 bg-green-600"></div>
+            <div className="w-0.5 h-16 bg-gradient-to-b from-green-600 to-red-600"></div>
+            <div className="w-4 h-4 bg-red-600"></div>
           </div>
           
-          {/* Locations */}
           <div className="flex-1">
-            {/* Pickup */}
             <div className="mb-4">
-              <p className="text-gray-500 text-xs font-medium">PICKUP</p>
-              <p className="text-white font-semibold">{load.pickup_city || load.origin_city}, {load.pickup_state || load.origin_state}</p>
-              <p className="text-gray-400 text-sm truncate">{load.pickup_location || load.origin_address || 'Address TBD'}</p>
+              <p className={`text-xs font-medium tracking-wider ${isDark ? 'text-white/50' : 'text-black/50'}`}>PICKUP</p>
+              <p className={`font-semibold ${isDark ? 'text-white' : 'text-black'}`}>
+                {load.pickup_city || load.origin_city}, {load.pickup_state || load.origin_state}
+              </p>
+              <p className={`text-sm truncate ${isDark ? 'text-white/60' : 'text-black/60'}`}>
+                {load.pickup_location || 'Address TBD'}
+              </p>
             </div>
             
-            {/* Delivery */}
             <div>
-              <p className="text-gray-500 text-xs font-medium">DELIVERY</p>
-              <p className="text-white font-semibold">{load.delivery_city || load.destination_city}, {load.delivery_state || load.destination_state}</p>
-              <p className="text-gray-400 text-sm truncate">{load.delivery_location || load.destination_address || 'Address TBD'}</p>
+              <p className={`text-xs font-medium tracking-wider ${isDark ? 'text-white/50' : 'text-black/50'}`}>DELIVERY</p>
+              <p className={`font-semibold ${isDark ? 'text-white' : 'text-black'}`}>
+                {load.delivery_city || load.destination_city}, {load.delivery_state || load.destination_state}
+              </p>
+              <p className={`text-sm truncate ${isDark ? 'text-white/60' : 'text-black/60'}`}>
+                {load.delivery_location || 'Address TBD'}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Stats Row */}
+      {/* Stats */}
       <div className="px-4 pb-4 grid grid-cols-3 gap-3">
-        <div className="bg-gray-800 rounded-xl p-3 text-center">
-          <p className="text-gray-500 text-xs">DISTANCE</p>
-          <p className="text-white font-bold text-lg">{estimatedMiles} mi</p>
+        <div className={`p-3 text-center ${isDark ? 'bg-[#171717]' : 'bg-[#f5f5f5]'}`}>
+          <p className={`text-xs ${isDark ? 'text-white/50' : 'text-black/50'}`}>DISTANCE</p>
+          <p className={`font-bold text-lg ${isDark ? 'text-white' : 'text-black'}`}>{estimatedMiles} mi</p>
         </div>
-        <div className="bg-gray-800 rounded-xl p-3 text-center">
-          <p className="text-gray-500 text-xs">EST. TIME</p>
-          <p className="text-white font-bold text-lg">{estimatedTime}h</p>
+        <div className={`p-3 text-center ${isDark ? 'bg-[#171717]' : 'bg-[#f5f5f5]'}`}>
+          <p className={`text-xs ${isDark ? 'text-white/50' : 'text-black/50'}`}>EST. TIME</p>
+          <p className={`font-bold text-lg ${isDark ? 'text-white' : 'text-black'}`}>{estimatedTime}h</p>
         </div>
-        <div className="bg-green-900/50 rounded-xl p-3 text-center border border-green-600/30">
-          <p className="text-green-400 text-xs">PAY</p>
-          <p className="text-green-400 font-bold text-lg">${estimatedPay}</p>
+        <div className="bg-green-600/20 border border-green-600/50 p-3 text-center">
+          <p className="text-xs text-green-500">PAY</p>
+          <p className="text-green-500 font-bold text-lg">${estimatedPay}</p>
         </div>
       </div>
 
-      {/* Equipment & Commodity */}
+      {/* Tags */}
       {(load.equipment_type || load.commodity) && (
         <div className="px-4 pb-4 flex gap-2 flex-wrap">
           {load.equipment_type && (
-            <span className="bg-gray-800 text-gray-300 text-xs px-3 py-1 rounded-full">
+            <span className={`text-xs px-3 py-1 ${isDark ? 'bg-[#171717] text-white/70' : 'bg-[#f5f5f5] text-black/70'}`}>
               {load.equipment_type}
             </span>
           )}
           {load.commodity && (
-            <span className="bg-gray-800 text-gray-300 text-xs px-3 py-1 rounded-full">
+            <span className={`text-xs px-3 py-1 ${isDark ? 'bg-[#171717] text-white/70' : 'bg-[#f5f5f5] text-black/70'}`}>
               {load.commodity}
-            </span>
-          )}
-          {load.weight && (
-            <span className="bg-gray-800 text-gray-300 text-xs px-3 py-1 rounded-full">
-              {load.weight.toLocaleString()} lbs
             </span>
           )}
         </div>
       )}
 
-      {/* View Route Button */}
+      {/* View Route */}
       <div className="px-4 pb-3">
         <button
           onClick={() => onViewRoute(load)}
-          className="w-full bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl flex items-center justify-center gap-2 transition-colors"
+          className={`w-full py-3 flex items-center justify-center gap-2 transition-colors border ${
+            isDark 
+              ? 'bg-[#171717] hover:bg-[#262626] text-white border-[#262626]' 
+              : 'bg-[#f5f5f5] hover:bg-[#e5e5e5] text-black border-[#e5e5e5]'
+          }`}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
           </svg>
-          View Route on Map
+          VIEW ROUTE ON MAP
         </button>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex border-t border-gray-800">
+      {/* Actions */}
+      <div className={`flex border-t ${isDark ? 'border-[#262626]' : 'border-[#e5e5e5]'}`}>
         <button
           onClick={() => onReject(load)}
-          className="flex-1 py-4 text-red-400 font-semibold hover:bg-red-900/20 transition-colors flex items-center justify-center gap-2"
+          className={`flex-1 py-4 font-semibold transition-colors flex items-center justify-center gap-2 ${
+            isDark ? 'hover:bg-red-600/10' : 'hover:bg-red-50'
+          } text-red-600`}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
-          Reject
+          REJECT
         </button>
-        <div className="w-px bg-gray-800"></div>
+        <div className={`w-px ${isDark ? 'bg-[#262626]' : 'bg-[#e5e5e5]'}`}></div>
         <button
           onClick={() => onAccept(load)}
           disabled={accepting}
-          className="flex-1 py-4 text-green-400 font-semibold hover:bg-green-900/20 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+          className={`flex-1 py-4 font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-50 ${
+            isDark ? 'hover:bg-green-600/10' : 'hover:bg-green-50'
+          } text-green-600`}
         >
           {accepting ? (
-            <div className="w-5 h-5 border-2 border-green-400/30 border-t-green-400 rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-green-600/30 border-t-green-600 rounded-full animate-spin" />
           ) : (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           )}
-          Accept Load
+          ACCEPT
         </button>
       </div>
     </div>
   );
 };
 
-// Active Load Card (for loads already accepted)
-const ActiveLoadCard = ({ load, onViewRoute, onViewDetails }) => {
+// Active Load Card
+const ActiveLoadCard = ({ load, onViewRoute, onViewDetails, theme }) => {
+  const isDark = theme === 'dark';
   const status = STATUS_CONFIG[load.status] || STATUS_CONFIG.assigned;
   
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden mb-3">
+    <div className={`border mb-3 ${isDark ? 'bg-[#0a0a0a] border-[#262626]' : 'bg-white border-[#e5e5e5]'}`}>
       <div className="px-4 py-3 flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-white font-bold">{load.order_number || `#${load.id?.slice(0, 6)}`}</span>
-            <span className={`${status.color} text-white text-xs px-2 py-0.5 rounded-full`}>
+            <span className={`font-bold ${isDark ? 'text-white' : 'text-black'}`}>
+              {load.order_number || `#${load.id?.slice(0, 6)}`}
+            </span>
+            <span className={`${status.color} text-white text-xs px-2 py-0.5`}>
               {status.label}
             </span>
           </div>
-          <p className="text-gray-400 text-sm">
+          <p className={`text-sm ${isDark ? 'text-white/60' : 'text-black/60'}`}>
             {load.pickup_city}, {load.pickup_state} → {load.delivery_city}, {load.delivery_state}
           </p>
         </div>
-        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className={`w-5 h-5 ${isDark ? 'text-white/40' : 'text-black/40'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </div>
       
-      <div className="flex border-t border-gray-800">
+      <div className={`flex border-t ${isDark ? 'border-[#262626]' : 'border-[#e5e5e5]'}`}>
         <button
           onClick={() => onViewRoute(load)}
-          className="flex-1 py-3 text-blue-400 text-sm font-medium hover:bg-blue-900/20 transition-colors flex items-center justify-center gap-1"
+          className={`flex-1 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-1 text-red-600 ${
+            isDark ? 'hover:bg-red-600/10' : 'hover:bg-red-50'
+          }`}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
           </svg>
-          Navigate
+          NAVIGATE
         </button>
-        <div className="w-px bg-gray-800"></div>
+        <div className={`w-px ${isDark ? 'bg-[#262626]' : 'bg-[#e5e5e5]'}`}></div>
         <button
           onClick={() => onViewDetails(load)}
-          className="flex-1 py-3 text-gray-400 text-sm font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-1"
+          className={`flex-1 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-1 ${
+            isDark ? 'text-white/60 hover:bg-[#171717]' : 'text-black/60 hover:bg-[#f5f5f5]'
+          }`}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Details
+          DETAILS
         </button>
       </div>
     </div>
@@ -193,25 +208,24 @@ const ActiveLoadCard = ({ load, onViewRoute, onViewDetails }) => {
 };
 
 const MyLoadsScreen = ({ onNavigate, onSelectLoad, onViewMap }) => {
-  const { api, user } = useDriverApp();
+  const { api, user, theme, toggleTheme } = useDriverApp();
   const [availableLoads, setAvailableLoads] = useState([]);
   const [activeLoads, setActiveLoads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(null);
   const [tab, setTab] = useState('available');
 
+  const isDark = theme === 'dark';
+
   const fetchLoads = async () => {
     try {
       const data = await api('/loads');
-      
-      // Separate available vs active loads
       const available = data.filter(l => 
         l.status === 'available' || l.status === 'assigned' || l.status === 'pending'
       );
       const active = data.filter(l => 
         !['available', 'assigned', 'pending', 'delivered', 'rejected'].includes(l.status)
       );
-      
       setAvailableLoads(available);
       setActiveLoads(active);
     } catch (err) {
@@ -223,7 +237,7 @@ const MyLoadsScreen = ({ onNavigate, onSelectLoad, onViewMap }) => {
 
   useEffect(() => {
     fetchLoads();
-    const interval = setInterval(fetchLoads, 30000); // Poll every 30s
+    const interval = setInterval(fetchLoads, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -237,7 +251,6 @@ const MyLoadsScreen = ({ onNavigate, onSelectLoad, onViewMap }) => {
       await fetchLoads();
       setTab('active');
     } catch (err) {
-      // If accept endpoint doesn't exist, use status update
       try {
         await api(`/loads/${load.id}/status`, {
           method: 'POST',
@@ -261,66 +274,89 @@ const MyLoadsScreen = ({ onNavigate, onSelectLoad, onViewMap }) => {
       });
       await fetchLoads();
     } catch (err) {
-      // Just remove from local state if endpoint doesn't exist
       setAvailableLoads(prev => prev.filter(l => l.id !== load.id));
     }
   };
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-950">
-        <div className="animate-spin w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full" />
+      <div className={`flex-1 flex items-center justify-center ${isDark ? 'bg-black' : 'bg-white'}`}>
+        <div className="animate-spin w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-950">
+    <div className={`flex-1 flex flex-col font-['Oxanium'] ${isDark ? 'bg-black' : 'bg-white'}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-red-900/50 to-gray-950 px-4 py-4 flex items-center justify-between">
+      <div className={`px-4 py-4 flex items-center justify-between border-b ${isDark ? 'border-[#262626]' : 'border-[#e5e5e5]'}`}>
         <div>
-          <h1 className="text-xl font-bold text-white">My Loads</h1>
-          <p className="text-gray-400 text-sm">Hello, {user?.full_name?.split(' ')[0]}</p>
+          <h1 className={`text-xl font-bold tracking-wider ${isDark ? 'text-white' : 'text-black'}`}>MY LOADS</h1>
+          <p className={`text-sm ${isDark ? 'text-white/60' : 'text-black/60'}`}>Welcome, {user?.full_name?.split(' ')[0]}</p>
         </div>
-        <button
-          onClick={() => onNavigate('menu')}
-          className="w-10 h-10 flex items-center justify-center"
-        >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className={`w-10 h-10 flex items-center justify-center border ${
+              isDark ? 'border-[#262626] text-white' : 'border-[#e5e5e5] text-black'
+            }`}
+          >
+            {isDark ? (
+              <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+          </button>
+          {/* Menu */}
+          <button
+            onClick={() => onNavigate('menu')}
+            className={`w-10 h-10 flex items-center justify-center ${isDark ? 'text-white' : 'text-black'}`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-gray-900 border-b border-gray-800">
+      <div className={`flex border-b ${isDark ? 'border-[#262626]' : 'border-[#e5e5e5]'}`}>
         <button
           onClick={() => setTab('available')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            tab === 'available' ? 'text-green-400' : 'text-gray-500'
+          className={`flex-1 py-3 text-sm font-medium tracking-wider transition-colors relative ${
+            tab === 'available' 
+              ? 'text-red-600' 
+              : isDark ? 'text-white/50' : 'text-black/50'
           }`}
         >
-          Available
+          AVAILABLE
           {availableLoads.length > 0 && (
-            <span className="ml-1 bg-green-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+            <span className="ml-1 bg-red-600 text-white text-xs px-1.5 py-0.5">
               {availableLoads.length}
             </span>
           )}
-          {tab === 'available' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-400" />}
+          {tab === 'available' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600" />}
         </button>
         <button
           onClick={() => setTab('active')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            tab === 'active' ? 'text-blue-400' : 'text-gray-500'
+          className={`flex-1 py-3 text-sm font-medium tracking-wider transition-colors relative ${
+            tab === 'active' 
+              ? 'text-red-600' 
+              : isDark ? 'text-white/50' : 'text-black/50'
           }`}
         >
-          Active
+          ACTIVE
           {activeLoads.length > 0 && (
-            <span className="ml-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+            <span className="ml-1 bg-red-600 text-white text-xs px-1.5 py-0.5">
               {activeLoads.length}
             </span>
           )}
-          {tab === 'active' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-400" />}
+          {tab === 'active' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600" />}
         </button>
       </div>
 
@@ -329,13 +365,13 @@ const MyLoadsScreen = ({ onNavigate, onSelectLoad, onViewMap }) => {
         {tab === 'available' ? (
           availableLoads.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className={`w-16 h-16 flex items-center justify-center mx-auto mb-4 ${isDark ? 'bg-[#171717]' : 'bg-[#f5f5f5]'}`}>
+                <svg className={`w-8 h-8 ${isDark ? 'text-white/30' : 'text-black/30'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <h3 className="text-white font-medium mb-1">No Loads Available</h3>
-              <p className="text-gray-500 text-sm">New loads will appear here</p>
+              <h3 className={`font-medium mb-1 ${isDark ? 'text-white' : 'text-black'}`}>NO LOADS AVAILABLE</h3>
+              <p className={`text-sm ${isDark ? 'text-white/50' : 'text-black/50'}`}>New loads will appear here</p>
             </div>
           ) : (
             availableLoads.map(load => (
@@ -346,19 +382,20 @@ const MyLoadsScreen = ({ onNavigate, onSelectLoad, onViewMap }) => {
                 onReject={handleReject}
                 onViewRoute={(l) => onViewMap(l)}
                 accepting={accepting === load.id}
+                theme={theme}
               />
             ))
           )
         ) : (
           activeLoads.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className={`w-16 h-16 flex items-center justify-center mx-auto mb-4 ${isDark ? 'bg-[#171717]' : 'bg-[#f5f5f5]'}`}>
+                <svg className={`w-8 h-8 ${isDark ? 'text-white/30' : 'text-black/30'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <h3 className="text-white font-medium mb-1">No Active Loads</h3>
-              <p className="text-gray-500 text-sm">Accept a load to get started</p>
+              <h3 className={`font-medium mb-1 ${isDark ? 'text-white' : 'text-black'}`}>NO ACTIVE LOADS</h3>
+              <p className={`text-sm ${isDark ? 'text-white/50' : 'text-black/50'}`}>Accept a load to get started</p>
             </div>
           ) : (
             activeLoads.map(load => (
@@ -367,6 +404,7 @@ const MyLoadsScreen = ({ onNavigate, onSelectLoad, onViewMap }) => {
                 load={load}
                 onViewRoute={(l) => onViewMap(l)}
                 onViewDetails={(l) => onSelectLoad(l, 'route')}
+                theme={theme}
               />
             ))
           )
