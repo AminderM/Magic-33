@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { Smartphone, MapPin, AlertTriangle, Settings } from 'lucide-react';
 
 // Context for driver app state
 const DriverAppContext = createContext(null);
@@ -10,37 +9,28 @@ export const useDriverApp = () => {
   return context;
 };
 
-// Mobile detection - blocks desktop but allows mobile testing
+// Mobile detection - blocks large screens (desktop)
 const isMobileDevice = () => {
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i;
-  const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const isSmallScreen = window.innerWidth <= 768;
-  
-  // Allow if: small screen OR mobile user agent OR touch device
-  // This blocks desktop browsers but allows mobile browsers and emulators
-  return isSmallScreen || isMobileUA || isTouchDevice;
+  return isSmallScreen;
 };
 
 // Mobile Block Screen
 const MobileBlockScreen = () => (
-  <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
-    <div className="bg-slate-800 rounded-2xl p-8 max-w-md text-center border border-slate-700">
-      <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-        <Smartphone className="w-10 h-10 text-red-400" />
+  <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
+    <div className="bg-gray-900 rounded-2xl p-8 max-w-md text-center border border-gray-800">
+      <div className="w-20 h-20 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
       </div>
       <h1 className="text-2xl font-bold text-white mb-4">Mobile Only</h1>
-      <p className="text-slate-400 mb-6">
+      <p className="text-gray-400 mb-6">
         This driver app is designed for mobile devices only. Please open it on your smartphone to continue.
       </p>
-      <div className="bg-slate-700/50 rounded-lg p-4">
-        <p className="text-sm text-slate-300">
-          Scan the QR code or visit this URL on your phone:
-        </p>
-        <p className="text-blue-400 font-mono text-sm mt-2 break-all">
-          {window.location.href}
-        </p>
+      <div className="bg-gray-800/50 rounded-lg p-4">
+        <p className="text-sm text-gray-300">Visit this URL on your phone:</p>
+        <p className="text-red-400 font-mono text-sm mt-2 break-all">{window.location.href}</p>
       </div>
     </div>
   </div>
@@ -48,39 +38,30 @@ const MobileBlockScreen = () => (
 
 // Location Permission Screen
 const LocationPermissionScreen = ({ onRetry, error }) => (
-  <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
-    <div className="bg-slate-800 rounded-2xl p-8 max-w-md text-center border border-slate-700">
+  <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
+    <div className="bg-gray-900 rounded-2xl p-8 max-w-md text-center border border-gray-800">
       <div className="w-20 h-20 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-        <MapPin className="w-10 h-10 text-amber-400" />
+        <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
       </div>
       <h1 className="text-2xl font-bold text-white mb-4">Location Required</h1>
-      <p className="text-slate-400 mb-6">
-        Location access is required to use this driver app. Your location helps dispatch track deliveries and provide better support.
+      <p className="text-gray-400 mb-6">
+        Location access is required to use this driver app. Your location helps dispatch track deliveries.
       </p>
       
       {error && (
-        <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-6">
-          <div className="flex items-center gap-2 text-red-400 mb-2">
-            <AlertTriangle className="w-5 h-5" />
-            <span className="font-medium">Permission Denied</span>
-          </div>
-          <p className="text-sm text-slate-300">
-            Please enable location in your device settings:
-          </p>
-          <ol className="text-left text-sm text-slate-400 mt-2 space-y-1">
-            <li>1. Open device Settings</li>
-            <li>2. Go to Privacy → Location Services</li>
-            <li>3. Find your browser and enable location</li>
-            <li>4. Return here and tap "Enable Location"</li>
-          </ol>
+        <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-6 text-left">
+          <p className="text-red-400 font-medium mb-2">Permission Denied</p>
+          <p className="text-sm text-gray-300">Enable location in your device settings, then tap below.</p>
         </div>
       )}
       
       <button
         onClick={onRetry}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
+        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 px-6 rounded-xl transition-colors"
       >
-        <MapPin className="w-5 h-5" />
         Enable Location
       </button>
     </div>
@@ -94,18 +75,16 @@ export const DriverAppProvider = ({ children }) => {
   const [locationError, setLocationError] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isCheckingDevice, setIsCheckingDevice] = useState(true);
-  const [isCheckingLocation, setIsCheckingLocation] = useState(false);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [activeLoadId, setActiveLoadId] = useState(null);
 
-  // Check device type on mount and resize
+  // Check device type
   useEffect(() => {
     const checkDevice = () => {
       setIsMobile(isMobileDevice());
       setIsCheckingDevice(false);
     };
-    
     checkDevice();
     window.addEventListener('resize', checkDevice);
     return () => window.removeEventListener('resize', checkDevice);
@@ -123,9 +102,7 @@ export const DriverAppProvider = ({ children }) => {
 
   // Request location permission
   const requestLocation = async () => {
-    setIsCheckingLocation(true);
     setLocationError(null);
-    
     try {
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -134,44 +111,33 @@ export const DriverAppProvider = ({ children }) => {
           maximumAge: 0
         });
       });
-      
       setCurrentLocation({
         lat: position.coords.latitude,
         lng: position.coords.longitude,
-        accuracy_m: position.coords.accuracy,
-        speed_mps: position.coords.speed,
-        heading_deg: position.coords.heading
+        accuracy_m: position.coords.accuracy
       });
       setLocationGranted(true);
-      setLocationError(null);
     } catch (error) {
-      console.error('Location error:', error);
-      setLocationError(error.message || 'Location access denied');
+      setLocationError(error.message);
       setLocationGranted(false);
-    } finally {
-      setIsCheckingLocation(false);
     }
   };
 
-  // Start location tracking
+  // Location tracking
   useEffect(() => {
     if (!locationGranted || !user) return;
     
-    let watchId;
-    const interval = activeLoadId ? 30000 : 180000; // 30s with active load, 3min otherwise
+    const interval = activeLoadId ? 30000 : 180000;
     
     const updateLocation = async (position) => {
       const loc = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
         accuracy_m: position.coords.accuracy,
-        speed_mps: position.coords.speed,
-        heading_deg: position.coords.heading,
         load_id: activeLoadId
       };
       setCurrentLocation(loc);
       
-      // Send to server
       try {
         await fetch(`${process.env.REACT_APP_BACKEND_URL || ''}/api/driver-mobile/location/ping`, {
           method: 'POST',
@@ -182,23 +148,19 @@ export const DriverAppProvider = ({ children }) => {
           body: JSON.stringify(loc)
         });
       } catch (err) {
-        console.error('Failed to send location:', err);
+        console.error('Location ping failed:', err);
       }
     };
     
-    // Watch position
-    watchId = navigator.geolocation.watchPosition(
-      updateLocation,
-      (err) => console.error('Watch error:', err),
-      { enableHighAccuracy: true, maximumAge: interval, timeout: 10000 }
-    );
+    const watchId = navigator.geolocation.watchPosition(updateLocation, () => {}, {
+      enableHighAccuracy: true,
+      maximumAge: interval
+    });
     
-    return () => {
-      if (watchId) navigator.geolocation.clearWatch(watchId);
-    };
+    return () => navigator.geolocation.clearWatch(watchId);
   }, [locationGranted, user, token, activeLoadId]);
 
-  // Login function
+  // Login
   const login = async (email, password) => {
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || ''}/api/driver-mobile/login`, {
       method: 'POST',
@@ -219,10 +181,11 @@ export const DriverAppProvider = ({ children }) => {
     return data;
   };
 
-  // Logout function
+  // Logout
   const logout = () => {
     setToken(null);
     setUser(null);
+    setLocationGranted(false);
     localStorage.removeItem('driver_app_token');
     localStorage.removeItem('driver_app_user');
   };
@@ -247,39 +210,23 @@ export const DriverAppProvider = ({ children }) => {
   };
 
   const value = {
-    user,
-    token,
-    login,
-    logout,
-    api,
-    currentLocation,
-    activeLoadId,
-    setActiveLoadId,
-    locationGranted
+    user, token, login, logout, api,
+    currentLocation, activeLoadId, setActiveLoadId,
+    locationGranted, requestLocation
   };
 
-  // Loading state
   if (isCheckingDevice) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
-  // Block non-mobile devices
-  if (!isMobile) {
-    return <MobileBlockScreen />;
-  }
-
-  // Location permission gate (only after login)
+  if (!isMobile) return <MobileBlockScreen />;
+  
   if (user && !locationGranted) {
-    return (
-      <LocationPermissionScreen 
-        onRetry={requestLocation} 
-        error={locationError}
-      />
-    );
+    return <LocationPermissionScreen onRetry={requestLocation} error={locationError} />;
   }
 
   return (
