@@ -8,6 +8,7 @@ const MenuScreen = ({ onNavigate, onClose }) => {
   const menuItems = [
     { id: 'ai', label: 'AI ASSISTANT', sublabel: 'Ask me anything', icon: '🤖' },
     { id: 'loads', label: 'MY LOADS', sublabel: 'View assigned loads', icon: '📦' },
+    { id: 'analytics', label: 'MY ANALYTICS', sublabel: 'Earnings & performance', icon: '📊' },
     { id: 'profile', label: 'PROFILE', sublabel: 'Account details', icon: '👤' },
     { id: 'settings', label: 'SETTINGS', sublabel: 'App preferences', icon: '⚙️' },
   ];
