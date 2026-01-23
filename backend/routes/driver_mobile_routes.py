@@ -483,3 +483,101 @@ async def update_profile(
     
     updated_user = await db.users.find_one({"id": current_user.id}, {"_id": 0, "password_hash": 0})
     return updated_user
+
+# ============== LOAD ACCEPT/REJECT ==============
+
+@router.post("/loads/{load_id}/accept")
+async def accept_load(
+    load_id: str,
+    accept_data: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Accept a load offer"""
+    if current_user.role != UserRole.DRIVER:
+        raise HTTPException(status_code=403, detail="Driver access only")
+    
+    # Find load
+    load = await db.loads.find_one({"id": load_id, "assigned_driver_id": current_user.id})
+    collection = "loads"
+    
+    if not load:
+        load = await db.bookings.find_one({"id": load_id, "driver_id": current_user.id})
+        collection = "bookings"
+    
+    if not load:
+        raise HTTPException(status_code=404, detail="Load not found")
+    
+    # Update status to accepted/en_route_pickup
+    update_data = {
+        "status": "en_route_pickup",
+        "accepted_at": datetime.now(timezone.utc),
+        "accepted_by_driver": True
+    }
+    
+    if collection == "loads":
+        await db.loads.update_one({"id": load_id}, {"$set": update_data})
+    else:
+        await db.bookings.update_one({"id": load_id}, {"$set": update_data})
+    
+    # Log event
+    event = {
+        "id": str(uuid.uuid4()),
+        "load_id": load_id,
+        "driver_id": current_user.id,
+        "event_type": "load_accepted",
+        "previous_status": load.get("status"),
+        "new_status": "en_route_pickup",
+        "created_at": datetime.now(timezone.utc)
+    }
+    await db.load_status_events.insert_one(event)
+    
+    return {"message": "Load accepted", "status": "en_route_pickup"}
+
+@router.post("/loads/{load_id}/reject")
+async def reject_load(
+    load_id: str,
+    reject_data: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Reject a load offer"""
+    if current_user.role != UserRole.DRIVER:
+        raise HTTPException(status_code=403, detail="Driver access only")
+    
+    reason = reject_data.get("reason", "Driver declined")
+    
+    # Find load
+    load = await db.loads.find_one({"id": load_id, "assigned_driver_id": current_user.id})
+    collection = "loads"
+    
+    if not load:
+        load = await db.bookings.find_one({"id": load_id, "driver_id": current_user.id})
+        collection = "bookings"
+    
+    if not load:
+        raise HTTPException(status_code=404, detail="Load not found")
+    
+    # Update - remove assignment or mark as rejected
+    update_data = {
+        "status": "rejected",
+        "rejected_at": datetime.now(timezone.utc),
+        "rejection_reason": reason,
+        "assigned_driver_id": None
+    }
+    
+    if collection == "loads":
+        await db.loads.update_one({"id": load_id}, {"$set": update_data})
+    else:
+        await db.bookings.update_one({"id": load_id}, {"$set": update_data})
+    
+    # Log event
+    event = {
+        "id": str(uuid.uuid4()),
+        "load_id": load_id,
+        "driver_id": current_user.id,
+        "event_type": "load_rejected",
+        "reason": reason,
+        "created_at": datetime.now(timezone.utc)
+    }
+    await db.load_status_events.insert_one(event)
+    
+    return {"message": "Load rejected"}
