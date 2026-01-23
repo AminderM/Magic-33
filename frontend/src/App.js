@@ -14,6 +14,7 @@ import DriverPortalDashboard from './components/driver/DriverPortalDashboard';
 import DriverLoadDetails from './components/driver/DriverLoadDetails';
 import DriverNavigation from './components/driver/DriverNavigation';
 import DriverProfile from './components/driver/DriverProfile';
+import DriverMobileApp from './components/driver-app';
 
 // Protected route wrapper
 const ProtectedRoute = ({ children }) => {
