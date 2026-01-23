@@ -1,82 +1,101 @@
 import React, { useState } from 'react';
 import { DriverAppProvider, useDriverApp } from './DriverAppProvider';
 import DriverLogin from './DriverLogin';
-import LoadsList from './LoadsList';
-import LoadDetail from './LoadDetail';
-import DriverProfileTab from './DriverProfileTab';
-import { Package, User } from 'lucide-react';
+import MainDashboard from './MainDashboard';
+import MenuScreen from './MenuScreen';
+import AIAssistantScreen from './AIAssistantScreen';
+import DocumentsScreen from './DocumentsScreen';
+import ProfileScreen from './ProfileScreen';
+import SettingsScreen from './SettingsScreen';
+import RouteScreen from './RouteScreen';
 
-// Bottom Navigation
-const BottomNav = ({ activeTab, onTabChange }) => {
-  const tabs = [
-    { id: 'loads', label: 'Loads', icon: Package },
-    { id: 'profile', label: 'Profile', icon: User },
-  ];
-
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700 safe-area-bottom">
-      <div className="flex">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`flex-1 py-3 flex flex-col items-center gap-1 ${
-                isActive ? 'text-blue-400' : 'text-slate-500'
-              }`}
-            >
-              <Icon className="w-6 h-6" />
-              <span className="text-xs font-medium">{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-// Main App Content
+// Screen management
 const DriverAppContent = () => {
   const { user } = useDriverApp();
-  const [activeTab, setActiveTab] = useState('loads');
+  const [currentScreen, setCurrentScreen] = useState('dashboard');
   const [selectedLoad, setSelectedLoad] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
 
-  // Not logged in - show login
+  // Not logged in
   if (!user) {
     return <DriverLogin />;
   }
 
-  // Viewing load detail
-  if (selectedLoad) {
+  // Menu overlay
+  if (showMenu) {
     return (
-      <LoadDetail 
-        load={selectedLoad} 
-        onBack={() => setSelectedLoad(null)} 
+      <MenuScreen 
+        onNavigate={(screen) => {
+          setCurrentScreen(screen);
+          setShowMenu(false);
+        }}
+        onClose={() => setShowMenu(false)}
       />
     );
   }
 
-  // Main app with tabs
-  return (
-    <div className="min-h-screen bg-slate-900 flex flex-col">
-      {activeTab === 'loads' && (
-        <LoadsList onSelectLoad={setSelectedLoad} />
-      )}
-      {activeTab === 'profile' && (
-        <DriverProfileTab />
-      )}
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
-    </div>
-  );
+  // Screen router
+  const goBack = () => {
+    setCurrentScreen('dashboard');
+    setSelectedLoad(null);
+  };
+
+  switch (currentScreen) {
+    case 'ai':
+      return <AIAssistantScreen onBack={goBack} />;
+    
+    case 'profile':
+      return <ProfileScreen onBack={goBack} />;
+    
+    case 'settings':
+      return <SettingsScreen onBack={goBack} />;
+    
+    case 'route':
+      return selectedLoad ? (
+        <RouteScreen load={selectedLoad} onBack={goBack} />
+      ) : (
+        <MainDashboard 
+          onNavigate={(screen) => screen === 'menu' ? setShowMenu(true) : setCurrentScreen(screen)}
+          onSelectLoad={(load, type) => {
+            setSelectedLoad(load);
+            setCurrentScreen(type);
+          }}
+        />
+      );
+    
+    case 'docs':
+      return selectedLoad ? (
+        <DocumentsScreen load={selectedLoad} onBack={goBack} />
+      ) : (
+        <MainDashboard 
+          onNavigate={(screen) => screen === 'menu' ? setShowMenu(true) : setCurrentScreen(screen)}
+          onSelectLoad={(load, type) => {
+            setSelectedLoad(load);
+            setCurrentScreen(type);
+          }}
+        />
+      );
+    
+    case 'loads':
+    case 'dashboard':
+    default:
+      return (
+        <MainDashboard 
+          onNavigate={(screen) => screen === 'menu' ? setShowMenu(true) : setCurrentScreen(screen)}
+          onSelectLoad={(load, type) => {
+            setSelectedLoad(load);
+            setCurrentScreen(type);
+          }}
+        />
+      );
+  }
 };
 
-// Wrapper Component
+// Main wrapper
 const DriverMobileApp = () => {
   return (
     <DriverAppProvider>
-      <div className="min-h-screen bg-slate-900">
+      <div className="min-h-screen bg-gray-950">
         <DriverAppContent />
       </div>
     </DriverAppProvider>
