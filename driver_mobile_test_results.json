@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-01-23T19:31:00.637174",
+  "total_tests": 16,
+  "passed_tests": 16,
+  "success_rate": 100.0,
+  "test_details": [
+    {
+      "test": "Driver Login",
+      "success": true,
+      "details": "Token received, Driver ID: c15291dc-3e8b-4c05-8e8b-e8cfe95afa5c"
+    },
+    {
+      "test": "Get Driver Info",
+      "success": true,
+      "details": "Driver: Test Driver"
+    },
+    {
+      "test": "Get Driver Loads",
+      "success": true,
+      "details": "Found 3 loads"
+    },
+    {
+      "test": "Get Load Detail",
+      "success": true,
+      "details": "Load ID: 288cf531-6c37-4a3d-a8b7-77b1870e5cdd"
+    },
+    {
+      "test": "Update Load Status",
+      "success": true,
+      "details": "Status: en_route_pickup"
+    },
+    {
+      "test": "Get Status History",
+      "success": true,
+      "details": "Found 3 events"
+    },
+    {
+      "test": "AI Chat",
+      "success": true,
+      "details": "Response length: 646 chars"
+    },
+    {
+      "test": "AI Chat History",
+      "success": true,
+      "details": "Found 1 messages"
+    },
+    {
+      "test": "Get Load Documents",
+      "success": true,
+      "details": "Found 1 documents"
+    },
+    {
+      "test": "Upload Document",
+      "success": true,
+      "details": "Doc ID: 2832da83-7025-41aa-aff5-87c68f87842c"
+    },
+    {
+      "test": "Location Ping",
+      "success": true,
+      "details": "Location ID: a05e5114-c8c3-4bda-b1fb-9c1aaaec301d"
+    },
+    {
+      "test": "Get Latest Location",
+      "success": true,
+      "details": "Lat: 41.8781, Lng: -87.6298"
+    },
+    {
+      "test": "Get Load Messages",
+      "success": true,
+      "details": "Found 2 messages"
+    },
+    {
+      "test": "Send Message",
+      "success": true,
+      "details": "Message sent successfully"
+    },
+    {
+      "test": "Get Unread Count",
+      "success": true,
+      "details": "Unread: 0"
+    },
+    {
+      "test": "Update Profile",
+      "success": true,
+      "details": "Profile updated for Test Driver Updated"
+    }
+  ]
+}
