@@ -875,3 +875,146 @@ async def delete_driver(driver_id: str, current_user: User = Depends(get_current
     return {"message": "Driver deleted successfully"}
 
 # Location Tracking Routes
+
+# ============== TMS DRIVER LOCATION & MESSAGING (For Dispatch) ==============
+
+@router.get("/{driver_id}/location/latest")
+async def get_driver_latest_location(driver_id: str, current_user: User = Depends(get_current_user)):
+    """Get a driver's latest location - for dispatchers/fleet owners"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Verify driver belongs to fleet owner
+    driver = await db.users.find_one({"id": driver_id, "fleet_owner_id": current_user.id})
+    if not driver and current_user.role != UserRole.PLATFORM_ADMIN:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    location = await db.driver_locations.find_one(
+        {"driver_id": driver_id},
+        {"_id": 0},
+        sort=[("recorded_at", -1)]
+    )
+    
+    return location or {}
+
+@router.get("/{driver_id}/location/history")
+async def get_driver_location_history(
+    driver_id: str, 
+    hours: int = 24,
+    current_user: User = Depends(get_current_user)
+):
+    """Get driver's location history - for dispatchers/fleet owners"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    
+    locations = await db.driver_locations.find(
+        {"driver_id": driver_id, "recorded_at": {"$gte": since}},
+        {"_id": 0}
+    ).sort("recorded_at", -1).to_list(500)
+    
+    return locations
+
+@router.get("/loads/{load_id}/driver-location/latest")
+async def get_load_driver_location(load_id: str, current_user: User = Depends(get_current_user)):
+    """Get the assigned driver's latest location for a load"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Find load
+    load = await db.loads.find_one({"id": load_id})
+    if not load:
+        load = await db.bookings.find_one({"id": load_id})
+    if not load:
+        raise HTTPException(status_code=404, detail="Load not found")
+    
+    driver_id = load.get("assigned_driver_id") or load.get("driver_id")
+    if not driver_id:
+        return {"error": "No driver assigned to this load"}
+    
+    location = await db.driver_locations.find_one(
+        {"driver_id": driver_id, "load_id": load_id},
+        {"_id": 0},
+        sort=[("recorded_at", -1)]
+    )
+    
+    if not location:
+        # Fallback to any recent location
+        location = await db.driver_locations.find_one(
+            {"driver_id": driver_id},
+            {"_id": 0},
+            sort=[("recorded_at", -1)]
+        )
+    
+    return location or {}
+
+@router.get("/loads/{load_id}/messages")
+async def get_load_messages_dispatch(load_id: str, current_user: User = Depends(get_current_user)):
+    """Get all messages for a load - for dispatchers"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    messages = await db.load_messages.find(
+        {"load_id": load_id},
+        {"_id": 0}
+    ).sort("created_at", 1).to_list(500)
+    
+    # Mark as read by dispatch
+    await db.load_messages.update_many(
+        {"load_id": load_id, "sender_type": "driver", "read_by_dispatch": False},
+        {"$set": {"read_by_dispatch": True}}
+    )
+    
+    return messages
+
+@router.post("/loads/{load_id}/messages")
+async def send_message_to_driver(
+    load_id: str,
+    message_data: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Send a message to driver from dispatch"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    message = {
+        "id": str(uuid.uuid4()),
+        "load_id": load_id,
+        "sender_id": current_user.id,
+        "sender_name": current_user.full_name,
+        "sender_type": "dispatch",
+        "content": message_data.get("content", ""),
+        "read_by_dispatch": True,
+        "read_by_driver": False,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.load_messages.insert_one(message)
+    
+    return {"message": "Message sent", "data": {k: v for k, v in message.items() if k != "_id"}}
+
+@router.get("/loads/{load_id}/documents")
+async def get_load_documents_dispatch(load_id: str, current_user: User = Depends(get_current_user)):
+    """Get all documents for a load - for dispatchers"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    documents = await db.load_documents.find(
+        {"load_id": load_id},
+        {"_id": 0, "file_data": 0}  # Exclude file data for list view
+    ).sort("uploaded_at", -1).to_list(100)
+    
+    return documents
+
+@router.get("/documents/{doc_id}")
+async def get_document_dispatch(doc_id: str, current_user: User = Depends(get_current_user)):
+    """Get a specific document with file data - for dispatchers"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    doc = await db.load_documents.find_one({"id": doc_id}, {"_id": 0})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    return doc
