@@ -10,7 +10,12 @@ export const useDriverApp = () => {
 };
 
 // Mobile detection - blocks large screens (desktop)
+// Add ?preview=true to URL to bypass mobile check for testing
 const isMobileDevice = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isPreviewMode = urlParams.get('preview') === 'true';
+  if (isPreviewMode) return true; // Allow desktop preview for testing
+  
   const isSmallScreen = window.innerWidth <= 768;
   return isSmallScreen;
 };
