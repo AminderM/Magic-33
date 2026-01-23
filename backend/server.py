@@ -29,6 +29,7 @@ from routes import user_management_routes
 from routes import tms_chat_routes
 from routes import driver_app_routes
 from routes import driver_mobile_routes
+from routes import driver_ai_routes
 from routes import sales_routes
 from routes import fmcsa_routes
 from routes import bundle_routes
