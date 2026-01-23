@@ -10,6 +10,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import LiveTrackingMap from './LiveTrackingMap';
 
+import FeatureGate from './FeatureGate';
+
 const LocationTracking = ({ selectedEquipmentId }) => {
   const { user, fetchWithAuth } = useAuth();
   const [equipment, setEquipment] = useState([]);
@@ -354,7 +356,9 @@ const LocationTracking = ({ selectedEquipmentId }) => {
 
         {/* Live Map Tab */}
         <TabsContent value="live-map" className="mt-6">
-          <LiveTrackingMap />
+          <FeatureGate flag="live_tracking" fallback={<div className="p-6 border rounded text-center text-gray-600"><div className="text-lg font-semibold mb-2">Live Tracking is not enabled for your plan</div><div className="text-sm">Upgrade to TMS PRO or TMS Enterprise to enable live sockets and real-time map updates.</div></div>}>
+            <LiveTrackingMap />
+          </FeatureGate>
         </TabsContent>
 
         {/* Manual Tracking Tab */}
@@ -365,7 +369,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
               <Card className="dashboard-card">
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <i className="fas fa-map-pin mr-2 text-purple-600"></i>
+                    <i className="fas fa-map-pin mr-2 text-foreground"></i>
                     Manual Location Update
                   </CardTitle>
                   <p className="text-sm text-gray-600 mt-2">
@@ -427,7 +431,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                                 key={index}
                                 type="button"
                                 onClick={() => handleCitySelect(city)}
-                                className="w-full text-left px-4 py-2 hover:bg-blue-50 flex items-start justify-between border-b last:border-b-0"
+                                className="w-full text-left px-4 py-2 hover:bg-muted flex items-start justify-between border-b last:border-b-0"
                               >
                                 <div className="flex-1">
                                   <div className="font-medium text-sm text-gray-900">
@@ -437,7 +441,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                                     {city.display_name}
                                   </div>
                                 </div>
-                                <i className="fas fa-map-marker-alt text-blue-500 ml-2 mt-1"></i>
+                                <i className="fas fa-map-marker-alt text-foreground ml-2 mt-1"></i>
                               </button>
                             ))}
                           </div>
@@ -454,9 +458,9 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                       </div>
                       
                       {selectedCity && (
-                        <div className="flex items-center space-x-2 mt-2 p-2 bg-green-50 border border-green-200 rounded">
-                          <i className="fas fa-check-circle text-green-600"></i>
-                          <span className="text-sm text-green-800">
+                        <div className="flex items-center space-x-2 mt-2 p-2 bg-muted border border-border rounded">
+                          <i className="fas fa-check-circle text-foreground"></i>
+                          <span className="text-sm text-foreground">
                             Selected: {formatCityName(selectedCity)}
                           </span>
                         </div>
@@ -484,7 +488,7 @@ const LocationTracking = ({ selectedEquipmentId }) => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <span>
-                    <i className="fas fa-history mr-2 text-green-600"></i>
+                    <i className="fas fa-history mr-2 text-foreground"></i>
                     Location History
                   </span>
                   {selectedEquipment && (
@@ -533,11 +537,11 @@ const LocationTracking = ({ selectedEquipmentId }) => {
                     {locations.map((location, index) => (
                       <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg" data-testid={`location-entry-${index}`}>
                         <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i className="fas fa-map-marker-alt text-blue-600"></i>
+                          <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
+                            <i className="fas fa-map-marker-alt text-foreground"></i>
                           </div>
                           <div>
-                            <p className="font-mono text-sm text-gray-800">
+                            <p className="font-mono text-sm text-foreground">
                               {formatLocation(location.latitude, location.longitude)}
                             </p>
                             <p className="text-xs text-gray-600">

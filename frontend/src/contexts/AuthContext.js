@@ -1,45 +1,109 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  
+  // Initialize state synchronously from localStorage
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem('auth_token') || null;
+    } catch {
+      return null;
+    }
+  });
+  
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user_data');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  
+  const [loading, setLoading] = useState(false); // Set to false since we load synchronously
 
-  // Initialize auth state from localStorage
+  // Persist to localStorage whenever state changes
   useEffect(() => {
-    const initializeAuth = () => {
+    if (token) {
+      localStorage.setItem('auth_token', token);
+    } else {
+      localStorage.removeItem('auth_token');
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user_data', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user_data');
+    }
+  }, [user]);
+
+  // Apply company theme on load if present
+  useEffect(() => {
+    async function applyStoredTheme() {
       try {
-        const storedToken = localStorage.getItem('auth_token');
-        const storedUser = localStorage.getItem('user_data');
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const storedToken = token;
+        if (!storedToken || !user) return;
         
-        if (storedToken && storedUser) {
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
+        // Try to fetch company and apply theme
+        let res = await fetch(`${backendUrl}/api/companies/current`, {
+          headers: { 'Authorization': `Bearer ${storedToken}` }
+        });
+        if (!res.ok) {
+          // Fallback for fleet_owner route
+          res = await fetch(`${backendUrl}/api/companies/my`, {
+            headers: { 'Authorization': `Bearer ${storedToken}` }
+          });
         }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-        // Clear corrupted data
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_data');
-      } finally {
-        setLoading(false);
+        if (res.ok) {
+          const company = await res.json();
+          if (company?.theme) {
+            Object.entries(company.theme).forEach(([k, v]) => {
+              document.documentElement.style.setProperty(k, v);
+            });
+          }
+        }
+      } catch (e) {
+        console.error('Error applying theme:', e);
       }
+    }
+    
+    if (token && user) {
+      applyStoredTheme();
+    }
+  }, [token, user]);
+
+  const fetchWithAuth = async (url, options = {}) => {
+    console.log('fetchWithAuth: token exists?', !!token, 'token length:', token?.length);
+    if (!token) {
+      console.error('fetchWithAuth: No authentication token!');
+      throw new Error('No authentication token');
+    }
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      ...options.headers,
     };
 
-    initializeAuth();
-  }, []);
+    console.log('fetchWithAuth: Making request to', url, 'with token:', token.substring(0, 20) + '...');
+    const response = await fetch(url, { ...options, headers });
+    console.log('fetchWithAuth: Response status:', response.status, response.ok);
+    return response;
+  };
 
   const login = async (email, password) => {
     try {
@@ -56,13 +120,9 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         const { access_token, user: userData } = data;
         
-        // Store in state
+        // Update state (which will automatically update localStorage via useEffect)
         setToken(access_token);
         setUser(userData);
-        
-        // Store in localStorage
-        localStorage.setItem('auth_token', access_token);
-        localStorage.setItem('user_data', JSON.stringify(userData));
         
         return true;
       } else {
@@ -75,39 +135,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
     setToken(null);
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
-  };
-
-  const getAuthHeaders = () => {
-    return token ? {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    } : {
-      'Content-Type': 'application/json'
-    };
-  };
-
-  const fetchWithAuth = async (url, options = {}) => {
-    const authHeaders = getAuthHeaders();
-    
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        ...authHeaders,
-        ...options.headers
-      }
-    });
-
-    if (response.status === 401) {
-      // Token expired or invalid, logout user
-      logout();
-      throw new Error('Session expired. Please login again.');
-    }
-
-    return response;
+    setUser(null);
   };
 
   const value = {
@@ -116,13 +145,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     logout,
-    getAuthHeaders,
-    fetchWithAuth
+    fetchWithAuth,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

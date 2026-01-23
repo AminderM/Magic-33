@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -28,6 +29,8 @@ const AuthPage = () => {
     tax_id: ''
   });
   
+  const navigate = useNavigate();
+
   const { login } = useAuth();
 
   const handleInputChange = (field, value) => {
@@ -42,6 +45,23 @@ const AuthPage = () => {
       const success = await login(formData.email, formData.password);
       if (success) {
         toast.success('Login successful!');
+        
+        // Wait for localStorage to be updated, then check role
+        // Use a small delay to ensure useEffect in AuthContext has run
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+        const isAdmin = userData.role === 'platform_admin';
+        
+        console.log('AuthPage: Login successful, user role:', userData.role, 'isAdmin:', isAdmin);
+        
+        if (isAdmin) {
+          console.log('AuthPage: Redirecting to /admin');
+          navigate('/admin');
+        } else {
+          console.log('AuthPage: Redirecting to /dashboard');
+          navigate('/dashboard');
+        }
       }
     } catch (error) {
       toast.error(error.message || 'Login failed');
@@ -169,7 +189,7 @@ const AuthPage = () => {
       <div className="w-full max-w-md">
         <Card className="form-container">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-gray-900">
+            <CardTitle className="text-2xl font-bold text-foreground">
               {isLogin ? (
                 'Welcome Back'
               ) : step === 1 ? (
@@ -178,7 +198,7 @@ const AuthPage = () => {
                 'Company Information'
               )}
             </CardTitle>
-            <p className="text-gray-600 mt-2">
+            <p className="text-muted-foreground mt-2">
               {isLogin ? (
                 'Sign in to your Fleet Marketplace account'
               ) : step === 1 ? (
@@ -242,7 +262,7 @@ const AuthPage = () => {
                       setIsLogin(false);
                       resetForm();
                     }}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    className="text-primary hover:text-blue-800 text-sm"
                     data-testid="switch-to-register"
                   >
                     Don't have an account? Register here
@@ -342,7 +362,7 @@ const AuthPage = () => {
                       setIsLogin(true);
                       resetForm();
                     }}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    className="text-primary hover:text-blue-800 text-sm"
                     data-testid="switch-to-login"
                   >
                     Already have an account? Sign in here
@@ -467,7 +487,7 @@ const AuthPage = () => {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    className="text-primary hover:text-blue-800 text-sm"
                     data-testid="back-to-user-registration"
                   >
                     Back to User Information

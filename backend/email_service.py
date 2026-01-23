@@ -207,10 +207,11 @@ async def send_company_verification_email(
     company_name: str
 ):
     """Send company verification notification"""
+    app_url = os.environ.get('APP_URL', 'http://localhost:3000')
     template_data = {
         "name": name,
         "company_name": company_name,
-        "dashboard_url": "https://quick-view-28.preview.emergentagent.com/dashboard"
+        "dashboard_url": f"{app_url}/dashboard"
     }
     
     email_service.send_in_background(

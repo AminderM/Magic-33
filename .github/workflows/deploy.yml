@@ -1,0 +1,65 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+          USER: ${{ secrets.EC2_USER }}
+        run: |
+          # Save SSH key
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          
+          # Deploy to EC2
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER}@${HOST} << 'ENDSSH'
+            cd ~/fleet-management-app
+            git pull origin main || git pull origin master
+            
+            # Update environment file
+            echo "MONGO_URL=${{ secrets.MONGO_URL }}" > .env.production
+            echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.production
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.production
+            echo "CORS_ORIGINS=${{ secrets.CORS_ORIGINS }}" >> .env.production
+            echo "REACT_APP_BACKEND_URL=${{ secrets.REACT_APP_BACKEND_URL }}" >> .env.production
+            
+            # Deploy
+            chmod +x scripts/deploy-ec2.sh
+            ./scripts/deploy-ec2.sh
+          ENDSSH
+          
+          # Cleanup
+          rm -f private_key.pem
+
+      - name: Verify deployment
+        env:
+          HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          sleep 30
+          curl -f http://${HOST}/api/health || exit 1
+          echo "✅ Deployment successful!"
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "❌ Deployment failed! Check logs."

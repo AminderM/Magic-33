@@ -15,6 +15,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
   const [equipment, setEquipment] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'tile' - default set to list
   const [formData, setFormData] = useState({
     name: '',
     equipment_type: '',
@@ -44,7 +45,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
   ];
 
   useEffect(() => {
-    if (user?.role === 'fleet_owner') {
+    if (user?.role === 'fleet_owner' || user?.role === 'platform_admin') {
       loadMyEquipment();
     } else {
       loadAllEquipment();
@@ -156,7 +157,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
 
   const renderSpecifications = (specs) => {
     if (!specs || Object.keys(specs).length === 0) {
-      return <span className="text-gray-500">No specifications</span>;
+      return <span className="text-muted-foreground">No specifications</span>;
     }
     
     return (
@@ -183,20 +184,44 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
       {/* Header and Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Equipment Management</h2>
-          <p className="text-gray-600">
+          <h2 className="text-2xl font-bold text-foreground">Equipment Management</h2>
+          <p className="text-muted-foreground">
             {user?.role === 'fleet_owner' ? 'Manage your equipment fleet' : 'Browse available equipment'}
           </p>
         </div>
         
-        {user?.role === 'fleet_owner' && (
-          <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-            <DialogTrigger asChild>
-              <Button className="btn-primary" data-testid="add-equipment-btn">
-                <i className="fas fa-plus mr-2"></i>
-                Add Equipment
-              </Button>
-            </DialogTrigger>
+        <div className="flex items-center space-x-3">
+          {/* View Toggle */}
+          <div className="flex border rounded-md">
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className="rounded-r-none"
+            >
+              <i className="fas fa-list mr-2"></i>
+              List
+            </Button>
+            <Button
+              variant={viewMode === 'tile' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('tile')}
+              className="rounded-l-none"
+            >
+              <i className="fas fa-th-large mr-2"></i>
+              Tile
+            </Button>
+          </div>
+          
+          {/* Add Equipment Button */}
+          {(user?.role === 'fleet_owner' || user?.role === 'platform_admin') && (
+            <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
+              <DialogTrigger asChild>
+                <Button className="btn-primary" data-testid="add-equipment-btn">
+                  <i className="fas fa-plus mr-2"></i>
+                  Add Equipment
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Equipment</DialogTitle>
@@ -358,7 +383,8 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
               </form>
             </DialogContent>
           </Dialog>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Filters */}
@@ -394,18 +420,18 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
       {filteredEquipment.length === 0 ? (
         <Card className="dashboard-card">
           <CardContent className="p-8 text-center">
-            <div className="text-gray-400 text-5xl mb-4">
+            <div className="text-muted-foreground text-5xl mb-4">
               <i className="fas fa-truck"></i>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               {user?.role === 'fleet_owner' ? 'No Equipment Added Yet' : 'No Equipment Available'}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               {user?.role === 'fleet_owner' 
                 ? 'Start by adding your first piece of equipment to the marketplace.'
                 : 'Check back later for available equipment.'}
             </p>
-            {user?.role === 'fleet_owner' && (
+            {(user?.role === 'fleet_owner' || user?.role === 'platform_admin') && (
               <Button 
                 onClick={() => setShowAddForm(true)}
                 className="btn-primary"
@@ -417,7 +443,97 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
             )}
           </CardContent>
         </Card>
+      ) : viewMode === 'list' ? (
+        // List View - Table
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-muted border-b-2 border-border">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Name</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Type</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Location</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Hourly Rate</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Daily Rate</th>
+                    <th className="px-4 py-3 text-left font-semibold text-foreground">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredEquipment.map((item) => (
+                    <tr key={item.id} className="hover:bg-muted" data-testid={`equipment-row-${item.id}`}>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center">
+                          <i className={`fas ${getEquipmentIcon(item.equipment_type)} text-foreground mr-3 text-lg`}></i>
+                          <div>
+                            <p className="font-semibold">{item.name}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge className="bg-secondary text-secondary-foreground border border-border">
+                          {getEquipmentLabel(item.equipment_type)}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge className="bg-secondary text-secondary-foreground border border-border">
+                          {item.is_available ? 'Available' : 'Unavailable'}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <i className="fas fa-map-marker-alt mr-2"></i>
+                          {item.location_address}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-foreground">
+                        ${item.hourly_rate}/hr
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-foreground">
+                        ${item.daily_rate}/day
+                      </td>
+                      <td className="px-4 py-3">
+                        {user?.role !== 'fleet_owner' || item.owner_id !== user?.id ? (
+                          <Button 
+                            size="sm"
+                            className="btn-primary" 
+                            disabled={!item.is_available}
+                            data-testid={`book-equipment-btn-${item.id}`}
+                          >
+                            <i className="fas fa-calendar-plus mr-1"></i>
+                            {item.is_available ? 'Book' : 'Unavailable'}
+                          </Button>
+                        ) : (
+                          <div className="flex space-x-2">
+                            <Button 
+                              size="sm"
+                              variant="outline"
+                              data-testid={`edit-equipment-btn-${item.id}`}
+                            >
+                              <i className="fas fa-edit"></i>
+                            </Button>
+                            <Button 
+                              size="sm"
+                              variant="outline"
+                              onClick={() => onTrackEquipment && onTrackEquipment(item.id)}
+                              data-testid={`track-equipment-btn-${item.id}`}
+                            >
+                              <i className="fas fa-map-marker-alt"></i>
+                            </Button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       ) : (
+        // Tile View - Cards
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEquipment.map((item) => (
             <Card key={item.id} className="equipment-card" data-testid={`equipment-card-${item.id}`}>
@@ -427,10 +543,10 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
               
               <div className="equipment-details">
                 <div className="flex justify-between items-start mb-3">
-                  <Badge className="equipment-type">
+                  <Badge className="bg-secondary text-secondary-foreground border border-border">
                     {getEquipmentLabel(item.equipment_type)}
                   </Badge>
-                  <Badge className={item.is_available ? 'status-available' : 'status-booked'}>
+                  <Badge className="bg-secondary text-secondary-foreground border border-border">
                     {item.is_available ? 'Available' : 'Unavailable'}
                   </Badge>
                 </div>
@@ -439,7 +555,7 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                   {item.name}
                 </h3>
                 
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
                   {item.description}
                 </p>
                 
@@ -450,17 +566,17 @@ const EquipmentManagement = ({ onStatsUpdate, onTrackEquipment }) => {
                 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Hourly:</span>
-                    <span className="font-semibold text-green-600">${item.hourly_rate}/hr</span>
+                    <span className="text-muted-foreground">Hourly:</span>
+                    <span className="font-semibold text-foreground">${item.hourly_rate}/hr</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Daily:</span>
-                    <span className="font-semibold text-green-600">${item.daily_rate}/day</span>
+                    <span className="text-muted-foreground">Daily:</span>
+                    <span className="font-semibold text-foreground">${item.daily_rate}/day</span>
                   </div>
                 </div>
                 
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Specifications:</h4>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">Specifications:</h4>
                   {renderSpecifications(item.specifications)}
                 </div>
                 

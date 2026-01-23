@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 
-const CompanyProfile = () => {
+const CompanyProfileInner = () => {
   const { user, fetchWithAuth } = useAuth();
   const [company, setCompany] = useState(null);
   const [users, setUsers] = useState([]);
@@ -44,6 +44,79 @@ const CompanyProfile = () => {
     loadCompanyUsers();
     loadDrivers();
   }, []);
+
+
+  // Theme handler effect (must be registered before any early returns)
+  useEffect(() => {
+    function handleApplyTheme() {
+      if (!company?.logo_url) return;
+      (async () => {
+        try {
+          const VibrantMod = await import('node-vibrant');
+          const Vibrant = VibrantMod.default || VibrantMod;
+          const palette = await Vibrant.from(company.logo_url).getPalette();
+          const colordMod = await import('colord');
+          const mixMod = await import('colord/plugins/mix');
+          const labMod = await import('colord/plugins/lab');
+          const { colord, extend } = colordMod;
+          extend([mixMod.default || mixMod, labMod.default || labMod]);
+
+          const ensureContrast = (bgHex, fgHex, minRatio = 4.5) => {
+            let fg = colord(fgHex);
+            const bg = colord(bgHex);
+            if (!bg.isValid()) return fgHex;
+            if (!fg.isValid()) fg = colord('#111111');
+            let adjusted = fg;
+            const isBgDark = bg.isDark();
+            for (let i = 0; i < 20 && adjusted.contrast(bg) < minRatio; i++) {
+              adjusted = isBgDark ? adjusted.lighten(0.05) : adjusted.darken(0.05);
+            }
+            if (adjusted.contrast(bg) >= minRatio) return adjusted.toHex();
+            return isBgDark ? '#FFFFFF' : '#111111';
+          };
+
+          const primaryHex = palette.Vibrant?.hex || palette.Muted?.hex || '#2563eb';
+          const secondaryHex = palette.LightVibrant?.hex || colord(primaryHex).mix('#ffffff', 0.7).toHex();
+          const accentHex = palette.DarkVibrant?.hex || colord(primaryHex).mix('#000000', 0.7).toHex();
+
+          const toVar = (hex) => {
+            const hsl = colord(hex).toHsl();
+            return `${hsl.h} ${hsl.s}% ${hsl.l}%`;
+          };
+
+          const vars = {
+            '--primary': toVar(primaryHex),
+            '--primary-foreground': toVar(ensureContrast(primaryHex, '#ffffff')),
+            '--secondary': toVar(secondaryHex),
+            '--secondary-foreground': toVar(ensureContrast(secondaryHex, '#0a0a0a')),
+            '--accent': toVar(accentHex),
+            '--accent-foreground': toVar(ensureContrast(accentHex, '#ffffff')),
+            '--ring': toVar(primaryHex),
+          };
+
+          Object.entries(vars).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
+
+          const res = await fetchWithAuth(`${BACKEND_URL}/api/companies/my`, {
+            method: 'PUT',
+            body: JSON.stringify({ theme: vars })
+          });
+          if (res.ok) {
+            toast.success('Brand theme applied');
+            loadCompanyProfile();
+          } else {
+            const err = await res.json();
+            toast.error(err.detail || 'Failed to save theme');
+          }
+        } catch (e) {
+          console.error('Theme apply error', e);
+          toast.error('Failed to adapt theme from logo');
+        }
+      })();
+    }
+
+    window.addEventListener('tc:applyThemeFromLogo', handleApplyTheme);
+    return () => window.removeEventListener('tc:applyThemeFromLogo', handleApplyTheme);
+  }, [company, BACKEND_URL, fetchWithAuth]);
 
   const loadCompanyProfile = async () => {
     try {
@@ -142,6 +215,8 @@ const CompanyProfile = () => {
         setCompany(prev => ({ ...prev, logo_url: result.logo_url }));
         toast.success('Logo uploaded successfully');
         loadCompanyProfile();
+        // Auto-trigger brand theme adaptation after successful logo upload
+        window.dispatchEvent(new CustomEvent('tc:applyThemeFromLogo'));
       } else {
         const error = await response.json();
         toast.error(error.detail || 'Failed to upload logo');
@@ -380,6 +455,7 @@ const CompanyProfile = () => {
     );
   }
 
+
   if (!company) {
     return (
       <div className="text-center py-12">
@@ -389,6 +465,7 @@ const CompanyProfile = () => {
   }
 
   return (
+
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -436,9 +513,66 @@ const CompanyProfile = () => {
                     <Button size="sm" variant="outline" onClick={() => document.getElementById('logo-upload').click()}>
                       <i className="fas fa-upload mr-1 text-xs"></i>
                       Upload Logo
+                {/* Gate docs_versioning panel elsewhere; this section is only brand theming */}
+
                     </Button>
                   </div>
                 )}
+
+              {/* Theme Preview and Actions */}
+              <div className="space-y-3 pt-4 border-t">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs text-gray-500">Brand Theme</Label>
+                  {company.theme ? (
+                    <span className="text-xs text-gray-500">Applied</span>
+                  ) : (
+                    <span className="text-xs text-gray-400">Default</span>
+                  )}
+                </div>
+                {company.theme && (
+                  <div className="flex items-center gap-2">
+                    {Object.entries(company.theme).slice(0,6).map(([k,v]) => (
+                      <div key={k} className="w-6 h-6 rounded border" style={{ backgroundColor: `hsl(${v})` }} title={k}></div>
+                    ))}
+                  </div>
+                )}
+                {/* Gate brand theming under feature flag */}
+
+                {isAdmin && company.logo_url && (
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('tc:applyThemeFromLogo'))}>
+                      <i className="fas fa-palette mr-1"></i>
+                      Adapt from Logo
+                    </Button>
+                    {company.theme && (
+                      <Button size="sm" variant="ghost" onClick={async () => {
+                        // Reset to defaults by clearing theme field
+                        try {
+                          const response = await fetchWithAuth(`${BACKEND_URL}/api/companies/my`, {
+                            method: 'PUT',
+                            body: JSON.stringify({ theme: null })
+                          });
+                          if (response.ok) {
+                            toast.success('Theme reset to default');
+                            // reset CSS vars by removing inline styles for vars we set
+                            Object.keys(company.theme || {}).forEach(k => document.documentElement.style.removeProperty(k));
+                            loadCompanyProfile();
+                          } else {
+                            const err = await response.json();
+                            toast.error(err.detail || 'Failed to reset theme');
+                          }
+                        } catch(e) {
+                          toast.error('Error resetting theme');
+                        }
+                      }}>
+                        <i className="fas fa-undo mr-1"></i>
+                        Reset Theme
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+
               </div>
 
               {/* Company Details */}
@@ -538,7 +672,7 @@ const CompanyProfile = () => {
                   ) : (
                     <p className="text-sm mt-1">
                       {company.website ? (
-                        <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">
                           {company.website}
                         </a>
                       ) : 'N/A'}
@@ -705,14 +839,14 @@ const CompanyProfile = () => {
                             <td className="px-4 py-3">{user.email}</td>
                             <td className="px-4 py-3">{formatRole(user.role)}</td>
                             <td className="px-4 py-3">
-                              <Badge className="bg-green-100 text-green-800">Active</Badge>
+                              <Badge className="bg-muted text-foreground">Active</Badge>
                             </td>
                             {isAdmin && (
                               <td className="px-4 py-3">
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="text-red-600 hover:bg-red-50"
+                                  className="text-foreground hover:bg-muted"
                                   onClick={() => handleDeleteUser(user.id)}
                                 >
                                   <i className="fas fa-trash"></i>
@@ -824,7 +958,7 @@ const CompanyProfile = () => {
                             <td className="px-4 py-3">{driver.email || 'N/A'}</td>
                             <td className="px-4 py-3">{driver.phone || 'N/A'}</td>
                             <td className="px-4 py-3">
-                              <Badge className="bg-green-100 text-green-800">Active</Badge>
+                              <Badge className="bg-muted text-foreground">Active</Badge>
                             </td>
                             {isAdmin && (
                               <td className="px-4 py-3">
@@ -835,7 +969,7 @@ const CompanyProfile = () => {
                                   <Button 
                                     size="sm" 
                                     variant="outline" 
-                                    className="text-red-600 hover:bg-red-50"
+                                    className="text-foreground hover:bg-muted"
                                     onClick={() => handleDeleteDriver(driver.id)}
                                   >
                                     <i className="fas fa-trash"></i>
@@ -915,7 +1049,7 @@ const CompanyProfile = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">MC/NSC Authority</h3>
                     {company.company_documents?.mc_authority?.length > 0 && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-muted text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.mc_authority.length} Version(s)
                       </Badge>
@@ -964,7 +1098,7 @@ const CompanyProfile = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">Certificate of Insurance</h3>
                     {company.company_documents?.insurance_certificate?.length > 0 && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-muted text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.insurance_certificate.length} Version(s)
                       </Badge>
@@ -1013,7 +1147,7 @@ const CompanyProfile = () => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-lg">W-9 Form</h3>
                     {company.company_documents?.w9?.length > 0 && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-muted text-foreground">
                         <i className="fas fa-check-circle mr-1"></i>
                         {company.company_documents.w9.length} Version(s)
                       </Badge>
@@ -1065,4 +1199,34 @@ const CompanyProfile = () => {
   );
 };
 
+// moved to the bottom with ErrorBoundary wrapper
+
+// Wrapper to catch any unexpected runtime errors in CompanyProfileInner
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  componentDidCatch(error, info) { console.error('CompanyProfile error:', error, info); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 text-center text-foreground">
+          <p className="font-semibold">Something went wrong in Company Profile.</p>
+          <p className="text-sm mt-2">{String(this.state.error)}</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+const CompanyProfile = (props) => (
+  <ErrorBoundary>
+    <CompanyProfileInner {...props} />
+  </ErrorBoundary>
+);
+
 export default CompanyProfile;
+

@@ -8,9 +8,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
+
+import FeatureGate from './FeatureGate';
 
 const OrderManagement = () => {
   const { user, fetchWithAuth } = useAuth();
@@ -19,12 +22,38 @@ const OrderManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [activeTab, setActiveTab] = useState('active-loads');
+  const [activeTab, setActiveTab] = useState('loads');
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [showRateConfirmation, setShowRateConfirmation] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [parsingDocument, setParsingDocument] = useState(false);
   const [editingOrder, setEditingOrder] = useState(null);
+  
+  // Dispatch edit modal state
+  const [showDispatchModal, setShowDispatchModal] = useState(false);
+  const [dispatchingLoad, setDispatchingLoad] = useState(null);
+  const [dispatchData, setDispatchData] = useState({
+    assigned_carrier: '',
+    assigned_driver: '',
+    pickup_time_actual_in: '',
+    pickup_time_actual_out: '',
+    delivery_time_actual_in: '',
+    delivery_time_actual_out: ''
+  });
+  
+  // Loads filter state (synced with Sales/Business Development)
+  const [loadsFilters, setLoadsFilters] = useState({
+    loadNumber: 'all',
+    shipper: 'all',
+    pickupLocation: 'all',
+    deliveryLocation: 'all',
+    rateMin: '',
+    rateMax: '',
+    status: 'all',
+    dateFrom: '',
+    dateTo: ''
+  });
+  
   const [formData, setFormData] = useState({
     equipment_id: '',
     shipper_name: '',
@@ -63,7 +92,7 @@ const OrderManagement = () => {
     try {
       let endpoint = `${BACKEND_URL}/api/bookings/my`;
       
-      if (user?.role === 'fleet_owner') {
+      if (user?.role === 'fleet_owner' || user?.role === 'platform_admin') {
         endpoint = `${BACKEND_URL}/api/bookings/requests`;
       }
       
@@ -179,28 +208,28 @@ const OrderManagement = () => {
       };
 
       // Determine if we're creating or updating
-      const isEditing = editingOrder !== null;
-      const url = isEditing 
+      const isEditingOrder = editingOrder !== null;
+      const url = isEditingOrder 
         ? `${BACKEND_URL}/api/bookings/${editingOrder.id}`
         : `${BACKEND_URL}/api/bookings`;
       
       const response = await fetchWithAuth(url, {
-        method: isEditing ? 'PUT' : 'POST',
+        method: isEditingOrder ? 'PUT' : 'POST',
         body: JSON.stringify(orderData)
       });
 
       if (response.ok) {
-        toast.success(isEditing ? 'Order updated successfully!' : 'Order created successfully!');
+        toast.success(isEditingOrder ? 'Order updated successfully!' : 'Order created successfully!');
         setShowOrderForm(false);
         setEditingOrder(null);
         resetForm();
         loadOrders();
       } else {
         const error = await response.json();
-        toast.error(error.detail || (isEditing ? 'Failed to update order' : 'Failed to create order'));
+        toast.error(error.detail || (isEditingOrder ? 'Failed to update order' : 'Failed to create order'));
       }
     } catch (error) {
-      toast.error(isEditing ? 'Error updating order' : 'Error creating order');
+      toast.error(editingOrder ? 'Error updating order' : 'Error creating order');
     }
   };
 
@@ -271,16 +300,16 @@ const OrderManagement = () => {
 
   const getStatusColor = (status) => {
     const statusColors = {
-      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      planned: 'bg-blue-100 text-blue-800 border-blue-300',
-      in_transit_pickup: 'bg-purple-100 text-purple-800 border-purple-300',
-      at_pickup: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-      in_transit_delivery: 'bg-purple-100 text-purple-800 border-purple-300',
-      at_delivery: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-      delivered: 'bg-green-100 text-green-800 border-green-300',
+      pending: 'bg-muted text-foreground border-yellow-300',
+      planned: 'bg-muted text-foreground border-blue-300',
+      in_transit_pickup: 'bg-muted text-foreground border-purple-300',
+      at_pickup: 'bg-muted text-foreground border-indigo-300',
+      in_transit_delivery: 'bg-muted text-foreground border-purple-300',
+      at_delivery: 'bg-muted text-foreground border-indigo-300',
+      delivered: 'bg-muted text-foreground border-green-300',
       invoiced: 'bg-cyan-100 text-cyan-800 border-cyan-300',
-      payment_overdue: 'bg-red-100 text-red-800 border-red-300',
-      paid: 'bg-emerald-100 text-emerald-800 border-emerald-300'
+      payment_overdue: 'bg-muted text-foreground border-red-300',
+      paid: 'bg-muted text-emerald-800 border-emerald-300'
     };
     return statusColors[status] || statusColors.pending;
   };
@@ -307,6 +336,106 @@ const OrderManagement = () => {
       toast.error('Error updating status');
     }
   };
+
+  // Open dispatch edit modal
+  const openDispatchModal = (load) => {
+    setDispatchingLoad(load);
+    setDispatchData({
+      assigned_carrier: load.assigned_carrier || '',
+      assigned_driver: load.assigned_driver || '',
+      pickup_time_actual_in: load.pickup_time_actual_in ? load.pickup_time_actual_in.slice(0, 16) : '',
+      pickup_time_actual_out: load.pickup_time_actual_out ? load.pickup_time_actual_out.slice(0, 16) : '',
+      delivery_time_actual_in: load.delivery_time_actual_in ? load.delivery_time_actual_in.slice(0, 16) : '',
+      delivery_time_actual_out: load.delivery_time_actual_out ? load.delivery_time_actual_out.slice(0, 16) : ''
+    });
+    setShowDispatchModal(true);
+  };
+
+  // Save dispatch info
+  const handleSaveDispatch = async () => {
+    if (!dispatchingLoad) return;
+    
+    try {
+      const payload = {};
+      // Only include non-empty values
+      if (dispatchData.assigned_carrier) payload.assigned_carrier = dispatchData.assigned_carrier;
+      if (dispatchData.assigned_driver) payload.assigned_driver = dispatchData.assigned_driver;
+      if (dispatchData.pickup_time_actual_in) payload.pickup_time_actual_in = new Date(dispatchData.pickup_time_actual_in).toISOString();
+      if (dispatchData.pickup_time_actual_out) payload.pickup_time_actual_out = new Date(dispatchData.pickup_time_actual_out).toISOString();
+      if (dispatchData.delivery_time_actual_in) payload.delivery_time_actual_in = new Date(dispatchData.delivery_time_actual_in).toISOString();
+      if (dispatchData.delivery_time_actual_out) payload.delivery_time_actual_out = new Date(dispatchData.delivery_time_actual_out).toISOString();
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${dispatchingLoad.id}/dispatch`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        toast.success('Dispatch info updated successfully');
+        setShowDispatchModal(false);
+        setDispatchingLoad(null);
+        loadOrders();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update dispatch info');
+      }
+    } catch (error) {
+      console.error('Error updating dispatch info:', error);
+      toast.error('Error updating dispatch info');
+    }
+  };
+
+  // Format short datetime for display
+  const formatShortDateTime = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  // Format datetime for input
+  const formatDateTimeForInput = (dateTime) => {
+    if (!dateTime) return '';
+    const date = new Date(dateTime);
+    return date.toISOString().slice(0, 16);
+  };
+
+  // Handle inline field update for dispatch info
+  const handleInlineDispatchUpdate = async (loadId, field, value) => {
+    try {
+      const payload = {};
+      if (field.includes('time')) {
+        // It's a datetime field
+        payload[field] = value ? new Date(value).toISOString() : null;
+      } else {
+        payload[field] = value || null;
+      }
+
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${loadId}/dispatch`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        toast.success('Updated successfully');
+        loadOrders();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to update');
+      }
+    } catch (error) {
+      console.error('Error updating field:', error);
+      toast.error('Error updating field');
+    }
+  };
+
+  // Get unique drivers and carriers for dropdowns
+  const uniqueDrivers = [...new Set(orders.map(o => o.assigned_driver).filter(Boolean))];
+  const uniqueCarriers = [...new Set(orders.map(o => o.assigned_carrier).filter(Boolean))];
 
   const formatDateTime = (dateTime) => {
     if (!dateTime) return 'N/A';
@@ -420,6 +549,29 @@ const OrderManagement = () => {
     }
   };
 
+  // Export to JSON
+  const exportToJSON = (data, filename) => {
+    if (!data || data.length === 0) {
+      toast.error('No data to export');
+      return;
+    }
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = `${filename}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast.success(`Exported ${data.length} orders to JSON`);
+    } catch (e) {
+      console.error('Export JSON error', e);
+      toast.error('Failed to export JSON');
+    }
+  };
+
   // Export to CSV
   const exportToCSV = (data, filename) => {
     if (!data || data.length === 0) {
@@ -489,12 +641,12 @@ const OrderManagement = () => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.csv`);
-    link.style.visibility = 'hidden';
+    link.href = url;
+    link.download = `${filename}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 
     toast.success(`Exported ${data.length} orders to CSV`);
   };
@@ -569,9 +721,13 @@ const OrderManagement = () => {
     ws['!cols'] = colWidths;
 
     // Generate Excel file
-    XLSX.writeFile(wb, `${filename}.xlsx`);
-
-    toast.success(`Exported ${data.length} orders to Excel`);
+    try {
+      XLSX.writeFile(wb, `${filename}.xlsx`);
+      toast.success(`Exported ${data.length} orders to Excel`);
+    } catch (e) {
+      console.error('Export Excel error', e);
+      toast.error('Failed to export Excel');
+    }
   };
 
   const filteredOrders = orders.filter(order => {
@@ -590,6 +746,63 @@ const OrderManagement = () => {
   const activeOrders = filteredOrders.filter(order => order.status !== 'paid');
   const paidOrders = filteredOrders.filter(order => order.status === 'paid');
 
+  // Filtered loads for the new Loads tab (synced with Sales/Business Development)
+  const filteredLoads = orders.filter(load => {
+    // Load Number filter
+    if (loadsFilters.loadNumber !== 'all' && load.order_number !== loadsFilters.loadNumber) return false;
+    // Shipper filter
+    if (loadsFilters.shipper !== 'all' && load.shipper_name !== loadsFilters.shipper) return false;
+    // Pickup Location filter
+    if (loadsFilters.pickupLocation !== 'all' && load.pickup_location !== loadsFilters.pickupLocation) return false;
+    // Delivery Location filter
+    if (loadsFilters.deliveryLocation !== 'all' && load.delivery_location !== loadsFilters.deliveryLocation) return false;
+    // Rate range filter
+    if (loadsFilters.rateMin && (load.confirmed_rate || load.total_cost || 0) < parseFloat(loadsFilters.rateMin)) return false;
+    if (loadsFilters.rateMax && (load.confirmed_rate || load.total_cost || 0) > parseFloat(loadsFilters.rateMax)) return false;
+    // Status filter
+    if (loadsFilters.status !== 'all' && load.status !== loadsFilters.status) return false;
+    // Date filter
+    if (loadsFilters.dateFrom || loadsFilters.dateTo) {
+      const createdDate = new Date(load.created_at);
+      if (loadsFilters.dateFrom && createdDate < new Date(loadsFilters.dateFrom)) return false;
+      if (loadsFilters.dateTo && createdDate > new Date(loadsFilters.dateTo + 'T23:59:59')) return false;
+    }
+    return true;
+  }).sort((a, b) => {
+    // Sort by created_at descending (most recent first)
+    const dateA = new Date(a.created_at || 0);
+    const dateB = new Date(b.created_at || 0);
+    return dateB - dateA;
+  });
+
+  // Format date for display (date only)
+  const formatCreationDate = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  // Format time for display (time only)
+  const formatCreationTime = (dateTime) => {
+    if (!dateTime) return '-';
+    const date = new Date(dateTime);
+    return date.toLocaleTimeString('en-US', { 
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  // Get unique values for Loads filters
+  const uniqueLoadNumbers = [...new Set(orders.map(l => l.order_number).filter(Boolean))];
+  const uniqueShippers = [...new Set(orders.map(l => l.shipper_name).filter(Boolean))];
+  const uniqueLoadPickups = [...new Set(orders.map(l => l.pickup_location).filter(Boolean))];
+  const uniqueLoadDeliveries = [...new Set(orders.map(l => l.delivery_location).filter(Boolean))];
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -603,8 +816,8 @@ const OrderManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Order Management</h2>
-          <p className="text-gray-600">Track and manage all shipment orders</p>
+          <h2 className="text-2xl font-bold text-foreground">Order Management</h2>
+          <p className="text-muted-foreground">Track and manage all shipment orders</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" onClick={loadOrders}>
@@ -625,7 +838,7 @@ const OrderManagement = () => {
                 <DialogTitle>Upload Rate Confirmation</DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted-foreground">
                   Upload a rate confirmation document (PDF or image) and our AI will automatically extract order details.
                 </div>
                 
@@ -639,19 +852,19 @@ const OrderManagement = () => {
                     disabled={parsingDocument}
                   />
                   {uploadedFile && (
-                    <div className="text-sm text-green-600 flex items-center">
+                    <div className="text-sm text-foreground flex items-center">
                       <i className="fas fa-check-circle mr-2"></i>
                       {uploadedFile.name}
                     </div>
                   )}
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
+                <div className="bg-muted border border-border rounded-lg p-3 text-sm">
                   <div className="flex items-start">
-                    <i className="fas fa-info-circle text-blue-600 mt-0.5 mr-2"></i>
+                    <i className="fas fa-info-circle text-foreground mt-0.5 mr-2"></i>
                     <div>
                       <p className="font-semibold text-blue-900">AI-Powered Extraction</p>
-                      <p className="text-blue-700 mt-1">
+                      <p className="text-foreground mt-1">
                         Our AI will extract shipper details, pickup/delivery locations, commodity info, and more from your document.
                       </p>
                     </div>
@@ -953,7 +1166,7 @@ const OrderManagement = () => {
                     <div className="space-y-2">
                       <Label htmlFor="confirmed_rate">Confirmed Rate ($)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                         <Input
                           id="confirmed_rate"
                           type="text"
@@ -978,7 +1191,7 @@ const OrderManagement = () => {
                           className="pl-8"
                         />
                       </div>
-                      <p className="text-xs text-gray-500">Enter numeric value only (e.g., 1250.50)</p>
+                      <p className="text-xs text-muted-foreground">Enter numeric value only (e.g., 1250.50)</p>
                     </div>
                     <div className="space-y-2 col-span-2">
                       <Label htmlFor="notes">Notes</Label>
@@ -1073,9 +1286,13 @@ const OrderManagement = () => {
         </CardContent>
       </Card>
 
-      {/* Tabs for Active Loads and Load History */}
+      {/* Tabs for Loads, Active Loads and Load History */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
+        <TabsList className="grid w-full max-w-lg grid-cols-3 mb-6">
+          <TabsTrigger value="loads">
+            <i className="fas fa-truck-loading mr-2"></i>
+            Loads ({filteredLoads.length})
+          </TabsTrigger>
           <TabsTrigger value="active-loads">
             <i className="fas fa-truck mr-2"></i>
             Active Loads ({activeOrders.length})
@@ -1086,6 +1303,352 @@ const OrderManagement = () => {
           </TabsTrigger>
         </TabsList>
 
+        {/* Loads Tab (Synced with Sales/Business Development) */}
+        <TabsContent value="loads">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <CardTitle>
+                    <i className="fas fa-truck-loading mr-2 text-foreground"></i>
+                    Loads ({filteredLoads.length})
+                  </CardTitle>
+                  <span className="text-xs text-muted-foreground">{orders.length} total</span>
+                </div>
+                <Button variant="outline" onClick={loadOrders}>
+                  <i className="fas fa-sync-alt mr-2"></i>
+                  Refresh
+                </Button>
+              </div>
+            </CardHeader>
+            
+            {/* Custom Loads Filter Bar - Single Line (Same as Sales/Business Development) */}
+            <div className="px-4 py-3 bg-muted border-b border-border overflow-hidden">
+              <div className="flex items-end gap-2 overflow-x-auto">
+                {/* Load Number Filter */}
+                <div className="min-w-[100px] max-w-[120px]">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Load #</label>
+                  <select
+                    value={loadsFilters.loadNumber}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, loadNumber: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
+                  >
+                    <option value="all">All</option>
+                    {uniqueLoadNumbers.map(num => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Shipper Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Shipper</label>
+                  <select
+                    value={loadsFilters.shipper}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, shipper: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
+                  >
+                    <option value="all">All</option>
+                    {uniqueShippers.map(shipper => (
+                      <option key={shipper} value={shipper}>{shipper.length > 15 ? shipper.substring(0, 15) + '...' : shipper}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Pickup Location Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Pickup</label>
+                  <select
+                    value={loadsFilters.pickupLocation}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, pickupLocation: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
+                  >
+                    <option value="all">All</option>
+                    {uniqueLoadPickups.map(loc => (
+                      <option key={loc} value={loc}>{loc.length > 15 ? loc.substring(0, 15) + '...' : loc}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Delivery Location Filter */}
+                <div className="min-w-[120px] max-w-[140px]">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Delivery</label>
+                  <select
+                    value={loadsFilters.deliveryLocation}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, deliveryLocation: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
+                  >
+                    <option value="all">All</option>
+                    {uniqueLoadDeliveries.map(loc => (
+                      <option key={loc} value={loc}>{loc.length > 15 ? loc.substring(0, 15) + '...' : loc}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Rate Range Filter */}
+                <div className="w-[120px]">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Rate ($)</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="number"
+                      value={loadsFilters.rateMin}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, rateMin: e.target.value })}
+                      placeholder="Min"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-muted-foreground text-xs">-</span>
+                    <input
+                      type="number"
+                      value={loadsFilters.rateMax}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, rateMax: e.target.value })}
+                      placeholder="Max"
+                      className="w-full px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Status Filter */}
+                <div className="w-[90px]">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
+                  <select
+                    value={loadsFilters.status}
+                    onChange={(e) => setLoadsFilters({ ...loadsFilters, status: e.target.value })}
+                    className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-card"
+                  >
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="planned">Planned</option>
+                    <option value="in_transit">In Transit</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="invoiced">Invoiced</option>
+                    <option value="paid">Paid</option>
+                  </select>
+                </div>
+
+                {/* Creation Date Range Filter */}
+                <div className="w-[170px] flex-shrink-0">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">Creation Date</label>
+                  <div className="flex gap-0.5 items-center">
+                    <input
+                      type="date"
+                      value={loadsFilters.dateFrom}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, dateFrom: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <span className="text-muted-foreground text-xs">-</span>
+                    <input
+                      type="date"
+                      value={loadsFilters.dateTo}
+                      onChange={(e) => setLoadsFilters({ ...loadsFilters, dateTo: e.target.value })}
+                      className="w-[75px] px-1 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Filters Button */}
+                {(loadsFilters.loadNumber !== 'all' || loadsFilters.shipper !== 'all' || 
+                  loadsFilters.pickupLocation !== 'all' || loadsFilters.deliveryLocation !== 'all' ||
+                  loadsFilters.rateMin || loadsFilters.rateMax || loadsFilters.status !== 'all' ||
+                  loadsFilters.dateFrom || loadsFilters.dateTo) && (
+                  <button
+                    onClick={() => setLoadsFilters({
+                      loadNumber: 'all',
+                      shipper: 'all',
+                      pickupLocation: 'all',
+                      deliveryLocation: 'all',
+                      rateMin: '',
+                      rateMax: '',
+                      status: 'all',
+                      dateFrom: '',
+                      dateTo: ''
+                    })}
+                    className="px-2 py-1.5 text-xs text-foreground hover:text-foreground hover:bg-muted rounded transition-colors whitespace-nowrap"
+                  >
+                    <i className="fas fa-times mr-1"></i>
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+            
+            <CardContent className="p-0">
+              {filteredLoads.length === 0 ? (
+                <div className="text-center py-12">
+                  <i className="fas fa-truck-loading text-muted-foreground text-5xl mb-4"></i>
+                  <h3 className="text-xl font-semibold mb-2">{orders.length === 0 ? 'No Loads Yet' : 'No Loads Match Your Filters'}</h3>
+                  <p className="text-muted-foreground mb-4">{orders.length === 0 ? 'Create loads from rate quotes in Sales/Business Development' : 'Try adjusting your filters'}</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted border-b-2 border-border">
+                      <tr>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Load #</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Status</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Driver</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Carrier</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Carrier Rate</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Pickup Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Location</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Planned</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Actual In</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Delivery Actual Out</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Source Quote</th>
+                        <th className="px-3 py-3 text-left font-semibold text-foreground whitespace-nowrap text-xs">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {filteredLoads.map((load, index) => (
+                        <tr key={load.id} className={`hover:bg-muted ${index % 2 === 0 ? 'bg-card' : 'bg-muted/50'}`}>
+                          <td className="px-3 py-2 whitespace-nowrap font-medium text-foreground text-xs">
+                            {load.order_number || load.id?.substring(0, 8).toUpperCase()}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <Select value={load.status || 'pending'} onValueChange={(value) => handleStatusChange(load.id, value)}>
+                              <SelectTrigger className={`h-7 w-[120px] text-xs border-0 ${
+                                load.status === 'pending' ? 'bg-muted text-foreground' :
+                                load.status === 'planned' ? 'bg-muted text-foreground' :
+                                load.status === 'in_transit_pickup' || load.status === 'in_transit' ? 'bg-muted text-foreground' :
+                                load.status === 'at_pickup' ? 'bg-muted text-foreground' :
+                                load.status === 'in_transit_delivery' ? 'bg-muted text-foreground' :
+                                load.status === 'at_delivery' ? 'bg-muted text-foreground' :
+                                load.status === 'delivered' ? 'bg-muted text-foreground' :
+                                load.status === 'invoiced' ? 'bg-muted text-foreground' :
+                                load.status === 'payment_overdue' ? 'bg-muted text-foreground' :
+                                load.status === 'paid' ? 'bg-muted text-emerald-800' :
+                                'bg-muted text-foreground'
+                              }`}>
+                                <SelectValue placeholder="Status" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="planned">Planned</SelectItem>
+                                <SelectItem value="in_transit_pickup">In-Transit Pickup</SelectItem>
+                                <SelectItem value="at_pickup">At Pickup</SelectItem>
+                                <SelectItem value="in_transit_delivery">In-Transit Delivery</SelectItem>
+                                <SelectItem value="at_delivery">At Delivery</SelectItem>
+                                <SelectItem value="delivered">Delivered</SelectItem>
+                                <SelectItem value="invoiced">Invoiced</SelectItem>
+                                <SelectItem value="payment_overdue">Payment Overdue</SelectItem>
+                                <SelectItem value="paid">Paid</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <Select 
+                              value={load.assigned_driver || 'none'} 
+                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_driver', value === 'none' ? '' : value)}
+                            >
+                              <SelectTrigger className="h-7 w-[110px] text-xs">
+                                <SelectValue placeholder="Select Driver" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">None</SelectItem>
+                                {uniqueDrivers.map(driver => (
+                                  <SelectItem key={driver} value={driver}>{driver}</SelectItem>
+                                ))}
+                                <SelectItem value="__new__">+ Add New</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <Select 
+                              value={load.assigned_carrier || 'none'} 
+                              onValueChange={(value) => handleInlineDispatchUpdate(load.id, 'assigned_carrier', value === 'none' ? '' : value)}
+                            >
+                              <SelectTrigger className="h-7 w-[110px] text-xs">
+                                <SelectValue placeholder="Select Carrier" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">None</SelectItem>
+                                {uniqueCarriers.map(carrier => (
+                                  <SelectItem key={carrier} value={carrier}>{carrier}</SelectItem>
+                                ))}
+                                <SelectItem value="__new__">+ Add New</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap font-semibold text-foreground text-xs">
+                            ${load.confirmed_rate?.toFixed(2) || load.total_cost?.toFixed(2) || '0.00'}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <div className="max-w-[120px] truncate text-xs" title={load.pickup_location}>
+                              {load.pickup_location || `${load.pickup_city || ''}, ${load.pickup_state || ''}`}
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
+                            {formatShortDateTime(load.pickup_time_planned)}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.pickup_time_actual_in)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'pickup_time_actual_in', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.pickup_time_actual_out)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'pickup_time_actual_out', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <div className="max-w-[120px] truncate text-xs" title={load.delivery_location}>
+                              {load.delivery_location || `${load.delivery_city || ''}, ${load.delivery_state || ''}`}
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-xs text-muted-foreground">
+                            {formatShortDateTime(load.delivery_time_planned)}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.delivery_time_actual_in)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'delivery_time_actual_in', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <input
+                              type="datetime-local"
+                              className="h-7 w-[140px] text-xs border rounded px-1"
+                              value={formatDateTimeForInput(load.delivery_time_actual_out)}
+                              onChange={(e) => handleInlineDispatchUpdate(load.id, 'delivery_time_actual_out', e.target.value)}
+                            />
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            {load.source_quote_number ? (
+                              <Badge variant="outline" className="text-xs">
+                                {load.source_quote_number}
+                              </Badge>
+                            ) : '-'}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <div className="flex gap-1">
+                              <Button variant="outline" size="sm" className="h-7 px-2" onClick={() => openDispatchModal(load)} title="Edit Dispatch Info">
+                                <i className="fas fa-truck text-foreground"></i>
+                              </Button>
+                              <Button variant="outline" size="sm" className="h-7 px-2" onClick={() => handleEditOrder(load)} title="Edit Order">
+                                <i className="fas fa-edit text-foreground"></i>
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Active Loads Tab */}
         <TabsContent value="active-loads">
           <Card>
@@ -1093,69 +1656,75 @@ const OrderManagement = () => {
               <div className="flex justify-between items-center">
                 <CardTitle>Active Loads</CardTitle>
                 <div className="flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}
-                    disabled={activeOrders.length === 0}
-                  >
-                    <i className="fas fa-file-csv mr-2"></i>
-                    Export CSV
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}
-                    disabled={activeOrders.length === 0}
-                  >
-                    <i className="fas fa-file-excel mr-2"></i>
-                    Export Excel
-                  </Button>
+                  <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-muted-foreground">Downloads disabled</div>}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" disabled={activeOrders.length === 0}>
+                          <i className="fas fa-download mr-2"></i>
+                          Download
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => exportToCSV(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-file-csv text-muted-foreground"></i>
+                          Export CSV
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportToExcel(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-file-excel text-foreground"></i>
+                          Export Excel
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportToJSON(activeOrders, `active-loads-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-code text-foreground"></i>
+                          Export JSON
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FeatureGate>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="p-0">
               {activeOrders.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-clipboard-list text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">No active orders found</p>
+                  <i className="fas fa-clipboard-list text-muted-foreground text-5xl mb-4"></i>
+                  <p className="text-muted-foreground">No active orders found</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Order #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Confirmed Rate</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Address</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Commodity</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Weight (lbs)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Cubes (cu ft)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Tractor #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Trailer #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver ID</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Order #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Confirmed Rate</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Address</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Commodity</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Weight (lbs)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Cubes (cu ft)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Tractor #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Trailer #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver ID</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {activeOrders.map((order) => (
-                        <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
+                        <tr key={order.id} className="hover:bg-muted transition-colors">
+                          <td className="px-4 py-3 whitespace-nowrap font-medium text-foreground">
                             {order.order_number || order.id.substring(0, 8).toUpperCase()}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
@@ -1177,7 +1746,7 @@ const OrderManagement = () => {
                               </SelectContent>
                             </Select>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-green-700">
+                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-foreground">
                             {order.confirmed_rate ? `$${order.confirmed_rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'N/A'}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.shipper_name || 'N/A'}</td>
@@ -1194,9 +1763,7 @@ const OrderManagement = () => {
                           <td className="px-4 py-3 whitespace-nowrap text-right">
                             {order.weight ? order.weight.toLocaleString() : 'N/A'}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-right">
-                            {order.cubes ? order.cubes.toLocaleString() : 'N/A'}
-                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-right">{order.cubes || 'N/A'}</td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.tractor_number || 'N/A'}</td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.trailer_number || 'N/A'}</td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.driver_name || 'N/A'}</td>
@@ -1243,48 +1810,80 @@ const OrderManagement = () => {
         {/* Load History Tab */}
         <TabsContent value="load-history">
           <Card>
+            <CardHeader className="border-b">
+              <div className="flex justify-between items-center">
+                <CardTitle>Load History</CardTitle>
+                <div className="flex space-x-2">
+                  <FeatureGate flag="export_downloads" fallback={<div className="text-xs text-muted-foreground">Downloads disabled</div>}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" disabled={paidOrders.length === 0}>
+                          <i className="fas fa-download mr-2"></i>
+                          Download
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => exportToCSV(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-file-csv text-muted-foreground"></i>
+                          Export CSV
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportToExcel(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-file-excel text-foreground"></i>
+                          Export Excel
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => exportToJSON(paidOrders, `load-history-${new Date().toISOString().split('T')[0]}`)}>
+                          <i className="fas fa-code text-foreground"></i>
+                          Export JSON
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FeatureGate>
+                </div>
+              </div>
+            </CardHeader>
+
             <CardContent className="p-0">
               {paidOrders.length === 0 ? (
                 <div className="text-center py-12">
-                  <i className="fas fa-check-circle text-gray-400 text-5xl mb-4"></i>
-                  <p className="text-gray-600">No completed/paid orders yet</p>
+                  <i className="fas fa-check-circle text-muted-foreground text-5xl mb-4"></i>
+                  <p className="text-muted-foreground">No completed/paid orders yet</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b-2 border-gray-200">
+                    <thead className="bg-muted border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Order #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Status</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Confirmed Rate</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Shipper Address</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Location</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery City</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery State</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Country</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Commodity</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Weight (lbs)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Cubes (cu ft)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Tractor #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Trailer #</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver Name</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Driver ID</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Pickup Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Planned)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Delivery Time (Actual)</th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">Actions</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Order #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Status</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Confirmed Rate</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Shipper Address</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Location</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery City</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery State</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Country</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Commodity</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Weight (lbs)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Cubes (cu ft)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Tractor #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Trailer #</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver Name</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Driver ID</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Pickup Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Planned)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Delivery Time (Actual)</th>
+                        <th className="px-4 py-3 text-left font-semibold text-foreground whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {paidOrders.map((order) => (
-                        <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 whitespace-nowrap font-medium text-blue-600">
+                        <tr key={order.id} className="hover:bg-muted transition-colors">
+                          <td className="px-4 py-3 whitespace-nowrap font-medium text-foreground">
                             {order.order_number || order.id.substring(0, 8).toUpperCase()}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
@@ -1293,7 +1892,7 @@ const OrderManagement = () => {
                               {getStatusLabel(order.status)}
                             </Badge>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-green-700">
+                          <td className="px-4 py-3 whitespace-nowrap text-right font-semibold text-foreground">
                             {order.confirmed_rate ? `$${order.confirmed_rate.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'N/A'}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">{order.shipper_name || 'N/A'}</td>
@@ -1347,39 +1946,106 @@ const OrderManagement = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Total Orders</div>
-            <div className="text-2xl font-bold text-blue-600">{orders.length}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Pending</div>
-            <div className="text-2xl font-bold text-yellow-600">
-              {orders.filter(o => o.status === 'pending').length}
+      {/* Dispatch Edit Modal */}
+      <Dialog open={showDispatchModal} onOpenChange={setShowDispatchModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <i className="fas fa-truck text-foreground"></i>
+              Edit Dispatch Info - {dispatchingLoad?.order_number || 'Load'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {/* Driver/Carrier Assignment */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="assigned_driver">Assigned Driver</Label>
+                <Input
+                  id="assigned_driver"
+                  value={dispatchData.assigned_driver}
+                  onChange={(e) => setDispatchData({ ...dispatchData, assigned_driver: e.target.value })}
+                  placeholder="Enter driver name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="assigned_carrier">Assigned Carrier</Label>
+                <Input
+                  id="assigned_carrier"
+                  value={dispatchData.assigned_carrier}
+                  onChange={(e) => setDispatchData({ ...dispatchData, assigned_carrier: e.target.value })}
+                  placeholder="Enter carrier name"
+                />
+              </div>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Approved</div>
-            <div className="text-2xl font-bold text-blue-600">
-              {orders.filter(o => o.status === 'approved').length}
+
+            {/* Actual Pickup Times */}
+            <div className="border-t pt-4">
+              <h4 className="text-sm font-semibold text-foreground mb-3">Actual Pickup Time</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="pickup_time_actual_in">Time In</Label>
+                  <Input
+                    id="pickup_time_actual_in"
+                    type="datetime-local"
+                    value={dispatchData.pickup_time_actual_in}
+                    onChange={(e) => setDispatchData({ ...dispatchData, pickup_time_actual_in: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pickup_time_actual_out">Time Out</Label>
+                  <Input
+                    id="pickup_time_actual_out"
+                    type="datetime-local"
+                    value={dispatchData.pickup_time_actual_out}
+                    onChange={(e) => setDispatchData({ ...dispatchData, pickup_time_actual_out: e.target.value })}
+                  />
+                </div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-sm text-gray-600">Completed</div>
-            <div className="text-2xl font-bold text-green-600">
-              {orders.filter(o => o.status === 'completed').length}
+
+            {/* Actual Delivery Times */}
+            <div className="border-t pt-4">
+              <h4 className="text-sm font-semibold text-foreground mb-3">Actual Delivery Time</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="delivery_time_actual_in">Time In</Label>
+                  <Input
+                    id="delivery_time_actual_in"
+                    type="datetime-local"
+                    value={dispatchData.delivery_time_actual_in}
+                    onChange={(e) => setDispatchData({ ...dispatchData, delivery_time_actual_in: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="delivery_time_actual_out">Time Out</Label>
+                  <Input
+                    id="delivery_time_actual_out"
+                    type="datetime-local"
+                    value={dispatchData.delivery_time_actual_out}
+                    onChange={(e) => setDispatchData({ ...dispatchData, delivery_time_actual_out: e.target.value })}
+                  />
+                </div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+
+            {/* Form Actions */}
+            <div className="flex justify-end space-x-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => {
+                setShowDispatchModal(false);
+                setDispatchingLoad(null);
+              }}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveDispatch} className="bg-purple-600 hover:bg-purple-700">
+                <i className="fas fa-save mr-2"></i>
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Summary Stats - Removed per user request */}
     </div>
   );
 };

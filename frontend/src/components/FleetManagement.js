@@ -119,84 +119,7 @@ const FleetManagement = () => {
         </div>
       </div>
 
-      {/* Fleet Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="dashboard-card">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Equipment</p>
-                <p className="text-3xl font-bold text-blue-600" data-testid="total-equipment-count">
-                  {fleetStats.totalEquipment}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {fleetStats.availableEquipment} available
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <i className="fas fa-truck text-blue-600 text-xl"></i>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="dashboard-card">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Fleet Utilization</p>
-                <p className="text-3xl font-bold text-green-600" data-testid="utilization-rate">
-                  {fleetStats.utilizationRate}%
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {fleetStats.onDutyEquipment} units on duty
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <i className="fas fa-chart-line text-green-600 text-xl"></i>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="dashboard-card">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Bookings</p>
-                <p className="text-3xl font-bold text-orange-600" data-testid="active-bookings-count">
-                  {fleetStats.activeBookings}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Current reservations
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                <i className="fas fa-calendar-check text-orange-600 text-xl"></i>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="dashboard-card">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-3xl font-bold text-purple-600" data-testid="total-revenue">
-                  {formatCurrency(fleetStats.totalRevenue)}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Generated to date
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <i className="fas fa-dollar-sign text-purple-600 text-xl"></i>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Fleet Statistics Cards - Removed per user request */}
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -225,7 +148,7 @@ const FleetManagement = () => {
             <Card className="dashboard-card">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <i className="fas fa-bolt mr-2 text-yellow-600"></i>
+                  <i className="fas fa-bolt mr-2 text-foreground"></i>
                   Quick Actions
                 </CardTitle>
               </CardHeader>
@@ -233,7 +156,7 @@ const FleetManagement = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <Button 
                     onClick={() => setActiveTab('equipment')} 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-700 border-blue-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-card hover:from-blue-100 hover:to-blue-200 text-foreground border-border"
                     variant="outline"
                     data-testid="quick-add-equipment-btn"
                   >
@@ -243,7 +166,7 @@ const FleetManagement = () => {
                   
                   <Button 
                     onClick={() => setActiveTab('drivers')} 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-700 border-purple-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-card hover:from-purple-100 hover:to-purple-200 text-foreground border-border"
                     variant="outline"
                     data-testid="quick-add-driver-btn"
                   >
@@ -253,7 +176,7 @@ const FleetManagement = () => {
                   
                   <Button 
                     onClick={() => setActiveTab('tracking')} 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 text-green-700 border-green-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-card hover:from-green-100 hover:to-green-200 text-foreground border-border"
                     variant="outline"
                     data-testid="quick-track-fleet-btn"
                   >
@@ -262,7 +185,7 @@ const FleetManagement = () => {
                   </Button>
                   
                   <Button 
-                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-gradient-to-br from-orange-50 to-orange-100 hover:from-orange-100 hover:to-orange-200 text-orange-700 border-orange-200"
+                    className="flex flex-col items-center p-6 h-auto space-y-2 bg-card hover:from-orange-100 hover:to-orange-200 text-foreground border-border"
                     variant="outline"
                     data-testid="view-analytics-btn"
                   >
@@ -273,35 +196,7 @@ const FleetManagement = () => {
               </CardContent>
             </Card>
 
-            <Card className="dashboard-card">
-              <CardHeader>
-                <CardTitle>Fleet Performance Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center p-6 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600 mb-2">
-                      {fleetStats.utilizationRate}%
-                    </div>
-                    <p className="text-sm text-gray-600">Fleet Utilization</p>
-                  </div>
-                  
-                  <div className="text-center p-6 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600 mb-2">
-                      {formatCurrency(fleetStats.totalRevenue)}
-                    </div>
-                    <p className="text-sm text-gray-600">Revenue Generated</p>
-                  </div>
-                  
-                  <div className="text-center p-6 bg-purple-50 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600 mb-2">
-                      {fleetStats.totalEquipment > 0 ? formatCurrency(fleetStats.totalRevenue / fleetStats.totalEquipment) : '$0'}
-                    </div>
-                    <p className="text-sm text-gray-600">Average per Equipment</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Fleet Performance Summary - Removed per user request */}
           </div>
         </TabsContent>
 

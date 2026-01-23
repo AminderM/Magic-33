@@ -45,10 +45,14 @@ function MapUpdater({ vehicles }) {
   return null;
 }
 
+import { useFeatures } from '@/contexts/FeaturesContext';
+
 const LiveTrackingMap = () => {
   const [vehicles, setVehicles] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const flags = useFeatures ? useFeatures() : {};
+
   const mapRef = useRef(null);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -92,7 +96,8 @@ const LiveTrackingMap = () => {
     return `${wsProtocol}://${wsUrl}/ws/fleet-tracking`;
   };
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(getWebSocketUrl(), {
+  const wsDisabled = flags && flags.live_tracking === false;
+  const { sendMessage, lastMessage, readyState } = useWebSocket(wsDisabled ? null : getWebSocketUrl(), {
     onOpen: () => {
       console.log('WebSocket connection established');
       setIsConnected(true);
@@ -239,7 +244,7 @@ const LiveTrackingMap = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <i className="fas fa-map-marked-alt mr-2 text-blue-600"></i>
+            <i className="fas fa-map-marked-alt mr-2 text-foreground"></i>
             Live Fleet Map
           </CardTitle>
         </CardHeader>
@@ -359,7 +364,7 @@ const LiveTrackingMap = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <i className="fas fa-list mr-2 text-green-600"></i>
+            <i className="fas fa-list mr-2 text-foreground"></i>
             Active Vehicles
           </CardTitle>
         </CardHeader>
@@ -408,10 +413,10 @@ const LiveTrackingMap = () => {
                   
                   <div className="mt-2 space-y-1 text-sm text-gray-600">
                     {vehicle.speed !== undefined && (
-                      <p><i className="fas fa-tachometer-alt mr-2 text-blue-600"></i>{formatSpeed(vehicle.speed)}</p>
+                      <p><i className="fas fa-tachometer-alt mr-2 text-foreground"></i>{formatSpeed(vehicle.speed)}</p>
                     )}
                     {vehicle.timestamp && (
-                      <p><i className="fas fa-clock mr-2 text-green-600"></i>{formatTimestamp(vehicle.timestamp)}</p>
+                      <p><i className="fas fa-clock mr-2 text-foreground"></i>{formatTimestamp(vehicle.timestamp)}</p>
                     )}
                   </div>
                 </div>

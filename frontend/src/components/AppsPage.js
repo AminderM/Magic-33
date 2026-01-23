@@ -167,7 +167,7 @@ const AppsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-card">
       {/* Header with Logo */}
       <div className="bg-white shadow-md">
         <div className="container mx-auto px-4 py-6">
@@ -276,7 +276,7 @@ const AppsPage = () => {
                   <ul className="space-y-1">
                     {app.features.slice(0, 4).map((feature, index) => (
                       <li key={index} className="text-sm text-gray-600 flex items-start">
-                        <i className="fas fa-check text-green-600 mr-2 mt-1"></i>
+                        <i className="fas fa-check text-foreground mr-2 mt-1"></i>
                         <span>{feature}</span>
                       </li>
                     ))}
