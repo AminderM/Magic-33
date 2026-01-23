@@ -65,6 +65,7 @@ api_router.include_router(user_management_routes.router, prefix="/admin", tags=[
 api_router.include_router(tms_chat_routes.router)
 api_router.include_router(driver_app_routes.router)
 api_router.include_router(driver_mobile_routes.router)
+api_router.include_router(driver_ai_routes.router)
 api_router.include_router(sales_routes.router)
 api_router.include_router(fmcsa_routes.router)
 api_router.include_router(bundle_routes.router)
