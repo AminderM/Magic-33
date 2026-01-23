@@ -51,6 +51,9 @@ const DriverAppContent = () => {
     case 'ai':
       return <AIAssistantScreen onBack={goBack} />;
     
+    case 'analytics':
+      return <AnalyticsScreen onBack={goBack} />;
+    
     case 'profile':
       return <ProfileScreen onBack={goBack} />;
     
