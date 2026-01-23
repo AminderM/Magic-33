@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { DriverAppProvider, useDriverApp } from './DriverAppProvider';
 import DriverLogin from './DriverLogin';
-import MainDashboard from './MainDashboard';
+import MyLoadsScreen from './MyLoadsScreen';
 import MenuScreen from './MenuScreen';
 import AIAssistantScreen from './AIAssistantScreen';
 import DocumentsScreen from './DocumentsScreen';
 import ProfileScreen from './ProfileScreen';
 import SettingsScreen from './SettingsScreen';
 import RouteScreen from './RouteScreen';
+import MapScreen from './MapScreen';
 
 // Screen management
 const DriverAppContent = () => {
   const { user } = useDriverApp();
-  const [currentScreen, setCurrentScreen] = useState('dashboard');
+  const [currentScreen, setCurrentScreen] = useState('loads');
   const [selectedLoad, setSelectedLoad] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
 
@@ -36,7 +37,12 @@ const DriverAppContent = () => {
 
   // Screen router
   const goBack = () => {
-    setCurrentScreen('dashboard');
+    setCurrentScreen('loads');
+    setSelectedLoad(null);
+  };
+
+  const goToLoads = () => {
+    setCurrentScreen('loads');
     setSelectedLoad(null);
   };
 
@@ -50,28 +56,57 @@ const DriverAppContent = () => {
     case 'settings':
       return <SettingsScreen onBack={goBack} />;
     
-    case 'route':
+    case 'map':
       return selectedLoad ? (
-        <RouteScreen load={selectedLoad} onBack={goBack} />
+        <MapScreen load={selectedLoad} onBack={goBack} />
       ) : (
-        <MainDashboard 
+        <MyLoadsScreen 
           onNavigate={(screen) => screen === 'menu' ? setShowMenu(true) : setCurrentScreen(screen)}
           onSelectLoad={(load, type) => {
             setSelectedLoad(load);
             setCurrentScreen(type);
+          }}
+          onViewMap={(load) => {
+            setSelectedLoad(load);
+            setCurrentScreen('map');
+          }}
+        />
+      );
+    
+    case 'route':
+      return selectedLoad ? (
+        <RouteScreen 
+          load={selectedLoad} 
+          onBack={goToLoads}
+          onViewMap={() => setCurrentScreen('map')}
+        />
+      ) : (
+        <MyLoadsScreen 
+          onNavigate={(screen) => screen === 'menu' ? setShowMenu(true) : setCurrentScreen(screen)}
+          onSelectLoad={(load, type) => {
+            setSelectedLoad(load);
+            setCurrentScreen(type);
+          }}
+          onViewMap={(load) => {
+            setSelectedLoad(load);
+            setCurrentScreen('map');
           }}
         />
       );
     
     case 'docs':
       return selectedLoad ? (
-        <DocumentsScreen load={selectedLoad} onBack={goBack} />
+        <DocumentsScreen load={selectedLoad} onBack={goToLoads} />
       ) : (
-        <MainDashboard 
+        <MyLoadsScreen 
           onNavigate={(screen) => screen === 'menu' ? setShowMenu(true) : setCurrentScreen(screen)}
           onSelectLoad={(load, type) => {
             setSelectedLoad(load);
             setCurrentScreen(type);
+          }}
+          onViewMap={(load) => {
+            setSelectedLoad(load);
+            setCurrentScreen('map');
           }}
         />
       );
@@ -80,11 +115,15 @@ const DriverAppContent = () => {
     case 'dashboard':
     default:
       return (
-        <MainDashboard 
+        <MyLoadsScreen 
           onNavigate={(screen) => screen === 'menu' ? setShowMenu(true) : setCurrentScreen(screen)}
           onSelectLoad={(load, type) => {
             setSelectedLoad(load);
             setCurrentScreen(type);
+          }}
+          onViewMap={(load) => {
+            setSelectedLoad(load);
+            setCurrentScreen('map');
           }}
         />
       );
