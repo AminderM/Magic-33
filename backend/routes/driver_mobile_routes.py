@@ -581,3 +581,81 @@ async def reject_load(
     await db.load_status_events.insert_one(event)
     
     return {"message": "Load rejected"}
+
+# ============== DRIVER ANALYTICS ==============
+
+@router.get("/analytics")
+async def get_driver_analytics(current_user: User = Depends(get_current_user)):
+    """Get driver work analytics - earnings, miles, hours"""
+    if current_user.role != UserRole.DRIVER:
+        raise HTTPException(status_code=403, detail="Driver access only")
+    
+    now = datetime.now(timezone.utc)
+    last_24h = now - timedelta(hours=24)
+    last_7d = now - timedelta(days=7)
+    week_start = now - timedelta(days=now.weekday())  # Monday
+    
+    # Get completed loads
+    all_loads = await db.loads.find(
+        {"assigned_driver_id": current_user.id},
+        {"_id": 0}
+    ).to_list(500)
+    
+    # Also check bookings
+    bookings = await db.bookings.find(
+        {"driver_id": current_user.id},
+        {"_id": 0}
+    ).to_list(500)
+    
+    all_loads.extend(bookings)
+    
+    # Calculate metrics
+    def calculate_metrics(loads, start_time=None):
+        filtered = loads
+        if start_time:
+            filtered = [l for l in loads if l.get("actual_delivery_time") and 
+                       datetime.fromisoformat(str(l["actual_delivery_time"]).replace('Z', '+00:00')) >= start_time]
+        
+        total_earnings = sum(float(l.get("rate", 0) or l.get("price", 0) or 0) for l in filtered)
+        total_miles = sum(int(l.get("estimated_miles", 0) or l.get("distance", 0) or 0) for l in filtered)
+        total_hours = sum(float(l.get("estimated_hours", 0) or 0) for l in filtered)
+        completed = len([l for l in filtered if l.get("status") == "delivered"])
+        
+        return {
+            "earnings": round(total_earnings, 2),
+            "miles": total_miles,
+            "hours": round(total_hours, 1),
+            "loads_completed": completed
+        }
+    
+    # Get delivered loads for time-based calculations
+    delivered_loads = [l for l in all_loads if l.get("status") == "delivered"]
+    
+    # Calculate for different periods
+    last_24h_metrics = calculate_metrics(delivered_loads, last_24h)
+    last_7d_metrics = calculate_metrics(delivered_loads, last_7d)
+    weekly_metrics = calculate_metrics(delivered_loads, week_start)
+    all_time_metrics = calculate_metrics(delivered_loads)
+    
+    # Get active loads count
+    active_statuses = ['en_route_pickup', 'arrived_pickup', 'loaded', 'en_route_delivery', 'arrived_delivery']
+    active_loads = len([l for l in all_loads if l.get("status") in active_statuses])
+    
+    # Calculate averages
+    avg_miles_per_load = round(all_time_metrics["miles"] / max(all_time_metrics["loads_completed"], 1), 1)
+    avg_earnings_per_load = round(all_time_metrics["earnings"] / max(all_time_metrics["loads_completed"], 1), 2)
+    avg_earnings_per_mile = round(all_time_metrics["earnings"] / max(all_time_metrics["miles"], 1), 2)
+    
+    return {
+        "last_24h": last_24h_metrics,
+        "last_7d": last_7d_metrics,
+        "weekly": weekly_metrics,
+        "all_time": all_time_metrics,
+        "active_loads": active_loads,
+        "averages": {
+            "miles_per_load": avg_miles_per_load,
+            "earnings_per_load": avg_earnings_per_load,
+            "earnings_per_mile": avg_earnings_per_mile
+        },
+        "generated_at": now.isoformat()
+    }
