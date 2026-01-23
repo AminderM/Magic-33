@@ -32,22 +32,6 @@ const MenuScreen = ({ onNavigate, onClose }) => {
         </button>
       </div>
 
-      {/* Theme Toggle */}
-      <div className={`mx-4 mt-4 p-4 border flex items-center justify-between ${isDark ? 'border-[#262626]' : 'border-[#e5e5e5]'}`}>
-        <div>
-          <p className={`font-medium ${isDark ? 'text-white' : 'text-black'}`}>THEME</p>
-          <p className={`text-sm ${isDark ? 'text-white/60' : 'text-black/60'}`}>
-            {isDark ? 'Dark Mode' : 'Light Mode'}
-          </p>
-        </div>
-        <button
-          onClick={toggleTheme}
-          className={`w-14 h-8 rounded-full relative transition-colors ${isDark ? 'bg-red-600' : 'bg-[#e5e5e5]'}`}
-        >
-          <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform ${isDark ? 'right-1' : 'left-1'}`} />
-        </button>
-      </div>
-
       {/* Menu Items */}
       <div className="flex-1 px-4 py-4 space-y-2">
         {menuItems.map((item) => (
