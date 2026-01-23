@@ -9,6 +9,7 @@ import ProfileScreen from './ProfileScreen';
 import SettingsScreen from './SettingsScreen';
 import RouteScreen from './RouteScreen';
 import MapScreen from './MapScreen';
+import AnalyticsScreen from './AnalyticsScreen';
 
 // Screen management
 const DriverAppContent = () => {
