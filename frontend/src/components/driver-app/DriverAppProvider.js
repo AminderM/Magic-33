@@ -10,14 +10,17 @@ export const useDriverApp = () => {
   return context;
 };
 
-// Mobile detection
+// Mobile detection - blocks desktop but allows mobile testing
 const isMobileDevice = () => {
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+  const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i;
   const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const isSmallScreen = window.innerWidth <= 768;
-  return (isMobileUA || isTouchDevice) && isSmallScreen;
+  
+  // Allow if: small screen OR mobile user agent OR touch device
+  // This blocks desktop browsers but allows mobile browsers and emulators
+  return isSmallScreen || isMobileUA || isTouchDevice;
 };
 
 // Mobile Block Screen
