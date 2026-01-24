@@ -14,36 +14,40 @@ import {
   DollarSign,
   FileText,
 } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const HomePage: React.FC = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   return (
-    <div className="bg-dark">
+    <div className={isDark ? 'bg-dark' : 'bg-white'}>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
         {/* Background Effects */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-600/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary-600/10 rounded-full blur-[120px]" />
+        <div className={`absolute inset-0 bg-grid-pattern ${isDark ? 'opacity-30' : 'opacity-10'}`} />
+        <div className={`absolute top-1/4 left-1/4 w-96 h-96 ${isDark ? 'bg-primary-600/20' : 'bg-primary-600/10'} rounded-full blur-[120px]`} />
+        <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 ${isDark ? 'bg-primary-600/10' : 'bg-primary-600/5'} rounded-full blur-[120px]`} />
 
         <div className="container-custom relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-in">
+            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 animate-in ${isDark ? 'bg-white/5 border border-white/10' : 'bg-gray-100 border border-gray-200'}`}>
               <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-              <span className="text-sm text-zinc-300">
+              <span className={`text-sm ${isDark ? 'text-zinc-300' : 'text-gray-600'}`}>
                 Now Available: TMS v2.0 with AI-Powered Routing
               </span>
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight mb-6 animate-in animate-delay-100">
+            <h1 className={`text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6 animate-in animate-delay-100 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Transform Your{' '}
               <span className="text-gradient-primary">Logistics</span>{' '}
               Operations
             </h1>
 
             {/* Subheading */}
-            <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 animate-in animate-delay-200">
+            <p className={`text-lg md:text-xl max-w-2xl mx-auto mb-10 animate-in animate-delay-200 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
               Our Transportation Management System helps freight brokers, fleet
               owners, and dispatchers streamline operations, reduce costs, and
               deliver exceptional service.
