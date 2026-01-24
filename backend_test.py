@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
 class FleetMarketplaceAPITester:
-    def __init__(self, base_url="https://shipment-hub-145.preview.emergentagent.com"):
+    def __init__(self, base_url="https://dispatch-pro-33.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.user_id = None

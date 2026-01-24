@@ -13,7 +13,7 @@ import os
 import time
 
 class DriverMobileAPITester:
-    def __init__(self, base_url="https://quick-view-28.preview.emergentagent.com"):
+    def __init__(self, base_url="https://dispatch-pro-33.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.driver_id = None
