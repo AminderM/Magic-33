@@ -11,7 +11,7 @@ import './index.css';
 
 function App() {
   return (
-    <Router basename="/marketing">
+    <Router basename="/api/site">
       <div className="min-h-screen bg-dark flex flex-col">
         <Navbar />
         <main className="flex-grow">
