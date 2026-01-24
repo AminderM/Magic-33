@@ -126,10 +126,10 @@ async def get_website_content(section: str):
 @router.get("/admin/demo-requests", response_model=List[DemoRequestResponse])
 async def get_demo_requests(
     status: Optional[str] = None,
-    current_user: dict = Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
     """Get all demo requests (admin only)"""
-    if current_user.get("role") != "platform_admin":
+    if current_user.role != "platform_admin":
         raise HTTPException(status_code=403, detail="Not authorized")
     
     query = {}
@@ -162,10 +162,10 @@ async def update_demo_request(
     request_id: str,
     status: Optional[str] = None,
     notes: Optional[str] = None,
-    current_user: dict = Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
     """Update a demo request status/notes (admin only)"""
-    if current_user.get("role") != "platform_admin":
+    if current_user.role != "platform_admin":
         raise HTTPException(status_code=403, detail="Not authorized")
     
     from bson import ObjectId
