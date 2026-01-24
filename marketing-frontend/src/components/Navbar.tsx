@@ -112,7 +112,11 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden absolute top-full left-0 right-0 bg-dark-300/98 backdrop-blur-lg border-b border-white/10 transition-all duration-300 ${
+        className={`md:hidden absolute top-full left-0 right-0 backdrop-blur-lg border-b transition-all duration-300 ${
+          isDark 
+            ? 'bg-dark-300/98 border-white/10' 
+            : 'bg-white/98 border-gray-200'
+        } ${
           isMobileMenuOpen
             ? 'opacity-100 visible'
             : 'opacity-0 invisible'
@@ -125,8 +129,8 @@ const Navbar: React.FC = () => {
               to={link.path}
               className={`block text-base font-medium py-2 transition-colors ${
                 location.pathname === link.path
-                  ? 'text-white'
-                  : 'text-zinc-400 hover:text-white'
+                  ? isDark ? 'text-white' : 'text-gray-900'
+                  : isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               {link.name}
