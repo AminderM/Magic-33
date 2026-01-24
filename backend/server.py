@@ -104,12 +104,12 @@ app.add_middleware(
 # Include the API router in the main app
 app.include_router(api_router)
 
-# Serve marketing website static files
+# Serve marketing website static files under /api/site
 MARKETING_DIR = ROOT_DIR / "marketing-static"
 if MARKETING_DIR.exists():
-    app.mount("/marketing/static", StaticFiles(directory=str(MARKETING_DIR / "static")), name="marketing-static")
+    app.mount("/api/site/static", StaticFiles(directory=str(MARKETING_DIR / "static")), name="marketing-static")
     
-    @app.get("/marketing/{full_path:path}")
+    @app.get("/api/site/{full_path:path}")
     async def serve_marketing_site(full_path: str = ""):
         """Serve marketing website - SPA fallback to index.html"""
         file_path = MARKETING_DIR / full_path
@@ -117,7 +117,7 @@ if MARKETING_DIR.exists():
             return FileResponse(file_path)
         return FileResponse(MARKETING_DIR / "index.html")
     
-    @app.get("/marketing")
+    @app.get("/api/site")
     async def serve_marketing_root():
         """Serve marketing website root"""
         return FileResponse(MARKETING_DIR / "index.html")
