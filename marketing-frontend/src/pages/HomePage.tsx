@@ -81,10 +81,10 @@ const HomePage: React.FC = () => {
                 { value: '24/7', label: 'Support' },
               ].map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  <div className={`text-3xl md:text-4xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                     {stat.value}
                   </div>
-                  <div className="text-sm text-zinc-500">{stat.label}</div>
+                  <div className={`text-sm ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -93,20 +93,20 @@ const HomePage: React.FC = () => {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-zinc-600 flex items-start justify-center p-2">
-            <div className="w-1 h-2 bg-zinc-400 rounded-full" />
+          <div className={`w-6 h-10 rounded-full border-2 flex items-start justify-center p-2 ${isDark ? 'border-zinc-600' : 'border-gray-400'}`}>
+            <div className={`w-1 h-2 rounded-full ${isDark ? 'bg-zinc-400' : 'bg-gray-400'}`} />
           </div>
         </div>
       </section>
 
       {/* Who It's For Section */}
-      <section className="section bg-dark-50">
+      <section className={`section ${isDark ? 'bg-dark-50' : 'bg-gray-50'}`}>
         <div className="container-custom">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Built For Your Business
             </h2>
-            <p className="text-zinc-400 max-w-2xl mx-auto">
+            <p className={`max-w-2xl mx-auto ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
               Whether you're managing a fleet, brokering loads, or dispatching
               independently, our TMS adapts to your workflow.
             </p>
