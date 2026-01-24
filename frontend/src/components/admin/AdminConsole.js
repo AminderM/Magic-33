@@ -201,6 +201,7 @@ const AdminConsole = () => {
       items: [
         { id: 'products', label: 'Products', icon: Package },
         { id: 'integrations', label: 'Integrations', icon: Zap },
+        { id: 'website-cms', label: 'Website CMS', icon: Globe },
       ]
     }
   ];
