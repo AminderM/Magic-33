@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Truck } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +34,9 @@ const Navbar: React.FC = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-dark-300/95 backdrop-blur-lg border-b border-white/10'
+          ? isDark 
+            ? 'bg-dark-300/95 backdrop-blur-lg border-b border-white/10'
+            : 'bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-sm'
           : 'bg-transparent'
       }`}
     >
@@ -46,10 +52,10 @@ const Navbar: React.FC = () => {
               <Truck className="w-6 h-6 text-white" />
             </div>
             <div className="hidden sm:block">
-              <span className="text-lg font-bold text-white">
+              <span className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 Integrated Supply Chain
               </span>
-              <span className="text-xs text-zinc-500 block -mt-1">
+              <span className={`text-xs block -mt-1 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>
                 Technologies
               </span>
             </div>
@@ -61,10 +67,10 @@ const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-white ${
+                className={`text-sm font-medium transition-colors ${
                   location.pathname === link.path
-                    ? 'text-white'
-                    : 'text-zinc-400'
+                    ? isDark ? 'text-white' : 'text-gray-900'
+                    : isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                 }`}
                 data-testid={`nav-${link.name.toLowerCase().replace(' ', '-')}`}
               >
@@ -73,8 +79,9 @@ const Navbar: React.FC = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* CTA Button + Theme Toggle */}
           <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             <Link
               to="/contact"
               className="btn-primary text-sm"
@@ -85,18 +92,21 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-white"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            data-testid="mobile-menu-toggle"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              className={`p-2 ${isDark ? 'text-white' : 'text-gray-900'}`}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              data-testid="mobile-menu-toggle"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
