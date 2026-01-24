@@ -255,6 +255,8 @@ const AdminConsole = () => {
         return <RouteMateApp onClose={handleBackToProducts} BACKEND_URL={BACKEND_URL} />;
       case 'integrations':
         return <IntegrationsView fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
+      case 'website-cms':
+        return <WebsiteCMS fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       case 'crm':
         return <CRMView fetchWithAuth={fetchWithAuth} BACKEND_URL={BACKEND_URL} />;
       default:
