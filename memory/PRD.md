@@ -8,11 +8,51 @@ Fleet Marketplace is a B2B SaaS platform connecting manufacturers, fleet owners,
 - **Backend**: FastAPI (Python) with async MongoDB
 - **Database**: MongoDB (multi-tenant)
 - **AI**: OpenAI GPT-5.2 via Emergent LLM Key
+- **Marketing Website**: Separate React app at `/marketing-frontend`
 
 ## User Personas
 1. **Platform Admin**: Full system access
 2. **Fleet Owner**: Manage drivers, equipment, loads
 3. **Driver**: Mobile app for load management
+
+---
+
+## Marketing Website (Completed Jan 24, 2026)
+
+### Brand: Integrated Supply Chain Technologies
+
+### Structure
+- **Separate frontend** at `/marketing-frontend` (port 3001)
+- **Dark theme** inspired by colabsoftware.com
+- **Target audience**: Freight Brokers, Fleet Owners, Independent Dispatchers
+
+### Pages
+1. **Homepage** - Hero, stats, "Who it's for" cards, benefits, product preview, CTA
+2. **Product** - TMS overview, features grid, audience tabs, integrations, pricing ($299/month)
+3. **Use Cases** - Specific examples for brokers, fleet owners, dispatchers with stats
+4. **About** - Mission, values, milestones timeline, leadership team
+5. **Contact** - Demo request form (connected to backend)
+
+### Admin Console Integration
+- **Website CMS** under DEVELOPERS section
+- View demo requests/leads with status management
+- Stats dashboard (Total, New, Contacted, Converted)
+- Update lead status and notes
+
+### API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/marketing/demo-request` | POST | Submit demo request (public) |
+| `/api/marketing/content/{section}` | GET | Get website content (public) |
+| `/api/marketing/admin/demo-requests` | GET | List all leads (admin) |
+| `/api/marketing/admin/demo-requests/{id}` | PUT | Update lead status (admin) |
+| `/api/marketing/admin/stats` | GET | Marketing statistics (admin) |
+| `/api/marketing/admin/content` | GET/PUT | Manage website content (admin) |
+
+### Test Results (Jan 24, 2026)
+- **Backend**: 15/15 tests passed (100%)
+- **Frontend**: All UI tests passed (100%)
+- Form submission, lead management, status updates verified
 
 ---
 
@@ -72,9 +112,12 @@ The AI Assistant is architected to be replaced by an AI Agent that can perform a
 
 ## Prioritized Backlog
 ### P0
+- [ ] Email notification integration for demo requests (SendGrid)
 - [ ] Stripe billing for SaaS customers
 
 ### P1  
+- [ ] Apply TMS theme to remaining driver app screens (AIAssistant, Documents, Profile)
+- [ ] Full CMS content editor for marketing website
 - [ ] Push notifications
 - [ ] WebSocket real-time messaging
 - [ ] Offline mode with sync
@@ -83,3 +126,4 @@ The AI Assistant is architected to be replaced by an AI Agent that can perform a
 - [ ] ELD integration
 - [ ] Document OCR
 - [ ] Route optimization
+- [ ] Extract Driver Web App to separate Emergent project
