@@ -23,16 +23,16 @@ const HomePage: React.FC = () => {
   return (
     <div className={isDark ? 'bg-dark' : 'bg-white'}>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+      <section className={`relative min-h-screen flex items-center pt-20 overflow-hidden ${isDark ? '' : 'bg-gradient-to-b from-gray-50 to-white'}`}>
         {/* Background Effects */}
-        <div className={`absolute inset-0 bg-grid-pattern ${isDark ? 'opacity-30' : 'opacity-10'}`} />
+        <div className={`absolute inset-0 bg-grid-pattern ${isDark ? 'opacity-30' : 'opacity-5'}`} />
         <div className={`absolute top-1/4 left-1/4 w-96 h-96 ${isDark ? 'bg-primary-600/20' : 'bg-primary-600/10'} rounded-full blur-[120px]`} />
         <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 ${isDark ? 'bg-primary-600/10' : 'bg-primary-600/5'} rounded-full blur-[120px]`} />
 
         <div className="container-custom relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 animate-in ${isDark ? 'bg-white/5 border border-white/10' : 'bg-gray-100 border border-gray-200'}`}>
+            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 animate-in ${isDark ? 'bg-white/5 border border-white/10' : 'bg-white border border-gray-200 shadow-sm'}`}>
               <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
               <span className={`text-sm ${isDark ? 'text-zinc-300' : 'text-gray-600'}`}>
                 Now Available: TMS v2.0 with AI-Powered Routing
@@ -155,15 +155,15 @@ const HomePage: React.FC = () => {
                 <div className="w-14 h-14 rounded-xl bg-primary-600/20 flex items-center justify-center mb-6 group-hover:bg-primary-600/30 transition-colors">
                   <card.icon className="w-7 h-7 text-primary-500" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">
+                <h3 className={`text-xl font-semibold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {card.title}
                 </h3>
-                <p className="text-zinc-400 mb-6">{card.description}</p>
+                <p className={`mb-6 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>{card.description}</p>
                 <ul className="space-y-2">
                   {card.features.map((feature, idx) => (
                     <li
                       key={idx}
-                      className="flex items-center gap-2 text-sm text-zinc-300"
+                      className={`flex items-center gap-2 text-sm ${isDark ? 'text-zinc-300' : 'text-gray-700'}`}
                     >
                       <CheckCircle className="w-4 h-4 text-primary-500" />
                       {feature}
@@ -177,15 +177,15 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Core Benefits Section */}
-      <section className="section">
+      <section className={`section ${isDark ? '' : 'bg-white'}`}>
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              <h2 className={`text-3xl md:text-4xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 Everything You Need to{' '}
                 <span className="text-gradient-primary">Scale</span>
               </h2>
-              <p className="text-zinc-400 mb-8">
+              <p className={`mb-8 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
                 Our TMS brings together all the tools you need to manage your
                 logistics operations efficiently. From load tracking to
                 accounting, everything works seamlessly together.
@@ -219,14 +219,14 @@ const HomePage: React.FC = () => {
                   },
                 ].map((benefit, index) => (
                   <div key={index} className="flex gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-white/5' : 'bg-gray-100'}`}>
                       <benefit.icon className="w-6 h-6 text-primary-500" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-white mb-1">
+                      <h3 className={`text-lg font-semibold mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         {benefit.title}
                       </h3>
-                      <p className="text-zinc-400 text-sm">
+                      <p className={`text-sm ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
                         {benefit.description}
                       </p>
                     </div>
@@ -237,13 +237,13 @@ const HomePage: React.FC = () => {
 
             {/* Product Preview */}
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary-600/20 to-transparent rounded-3xl blur-2xl" />
-              <div className="relative bg-dark-100 rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
-                <div className="bg-dark-200 px-4 py-3 border-b border-white/10 flex items-center gap-2">
+              <div className={`absolute inset-0 rounded-3xl blur-2xl ${isDark ? 'bg-gradient-to-tr from-primary-600/20 to-transparent' : 'bg-gradient-to-tr from-primary-600/10 to-transparent'}`} />
+              <div className={`relative rounded-2xl border overflow-hidden shadow-2xl ${isDark ? 'bg-dark-100 border-white/10' : 'bg-white border-gray-200'}`}>
+                <div className={`px-4 py-3 border-b flex items-center gap-2 ${isDark ? 'bg-dark-200 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="w-3 h-3 rounded-full bg-red-500/80" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                   <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  <span className="text-xs text-zinc-500 ml-2">
+                  <span className={`text-xs ml-2 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>
                     TMS Dashboard
                   </span>
                 </div>
@@ -256,12 +256,12 @@ const HomePage: React.FC = () => {
                     ].map((stat, idx) => (
                       <div
                         key={idx}
-                        className="bg-white/5 rounded-lg p-4 text-center"
+                        className={`rounded-lg p-4 text-center ${isDark ? 'bg-white/5' : 'bg-gray-50'}`}
                       >
-                        <div className="text-2xl font-bold text-white">
+                        <div className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                           {stat.value}
                         </div>
-                        <div className="text-xs text-zinc-500">{stat.label}</div>
+                        <div className={`text-xs ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>{stat.label}</div>
                       </div>
                     ))}
                   </div>
@@ -288,15 +288,15 @@ const HomePage: React.FC = () => {
                     ].map((load, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
+                        className={`flex items-center justify-between p-3 rounded-lg ${isDark ? 'bg-white/5' : 'bg-gray-50'}`}
                       >
                         <div className="flex items-center gap-3">
-                          <Truck className="w-5 h-5 text-zinc-500" />
+                          <Truck className={`w-5 h-5 ${isDark ? 'text-zinc-500' : 'text-gray-400'}`} />
                           <div>
-                            <div className="text-sm text-white font-medium">
+                            <div className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
                               {load.id}
                             </div>
-                            <div className="text-xs text-zinc-500">
+                            <div className={`text-xs ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>
                               {load.route}
                             </div>
                           </div>
@@ -315,13 +315,13 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="section bg-dark-50">
+      <section className={`section ${isDark ? 'bg-dark-50' : 'bg-gray-50'}`}>
         <div className="container-custom">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
               Why Choose Our TMS?
             </h2>
-            <p className="text-zinc-400 max-w-2xl mx-auto">
+            <p className={`max-w-2xl mx-auto ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
               We've built our platform with the unique challenges of the
               logistics industry in mind.
             </p>
@@ -368,13 +368,13 @@ const HomePage: React.FC = () => {
             ].map((feature, index) => (
               <div
                 key={index}
-                className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-primary-600/50 transition-all"
+                className={`p-6 rounded-2xl border transition-all ${isDark ? 'bg-white/5 border-white/10 hover:border-primary-600/50' : 'bg-white border-gray-200 hover:border-primary-600/50 shadow-sm'}`}
               >
                 <feature.icon className="w-10 h-10 text-primary-500 mb-4" />
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {feature.title}
                 </h3>
-                <p className="text-zinc-400 text-sm">{feature.description}</p>
+                <p className={`text-sm ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>{feature.description}</p>
               </div>
             ))}
           </div>
@@ -382,16 +382,16 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="section">
+      <section className={`section ${isDark ? '' : 'bg-white'}`}>
         <div className="container-custom">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-900/50 to-dark-100 border border-primary-600/30 p-12 md:p-16 text-center">
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[600px] h-[600px] bg-primary-600/20 rounded-full blur-[150px]" />
+          <div className={`relative overflow-hidden rounded-3xl p-12 md:p-16 text-center ${isDark ? 'bg-gradient-to-br from-primary-900/50 to-dark-100 border border-primary-600/30' : 'bg-gradient-to-br from-primary-50 to-white border border-primary-200'}`}>
+            <div className={`absolute top-0 left-1/2 transform -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[150px] ${isDark ? 'bg-primary-600/20' : 'bg-primary-600/10'}`} />
 
             <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 Ready to Transform Your Operations?
               </h2>
-              <p className="text-zinc-300 max-w-xl mx-auto mb-8">
+              <p className={`max-w-xl mx-auto mb-8 ${isDark ? 'text-zinc-300' : 'text-gray-600'}`}>
                 Join hundreds of logistics companies who have already streamlined
                 their operations with our TMS.
               </p>
