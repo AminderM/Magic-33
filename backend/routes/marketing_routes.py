@@ -229,9 +229,9 @@ async def update_website_content(
 
 
 @router.get("/admin/stats")
-async def get_marketing_stats(current_user: dict = Depends(get_current_user)):
+async def get_marketing_stats(current_user = Depends(get_current_user)):
     """Get marketing statistics (admin only)"""
-    if current_user.get("role") != "platform_admin":
+    if current_user.role != "platform_admin":
         raise HTTPException(status_code=403, detail="Not authorized")
     
     # Count demo requests by status
