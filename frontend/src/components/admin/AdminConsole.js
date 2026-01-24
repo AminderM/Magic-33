@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Home, Users, TrendingUp, Package, LogOut, Zap, Truck } from 'lucide-react';
+import { Home, Users, TrendingUp, Package, LogOut, Zap, Truck, Globe } from 'lucide-react';
 import SubscriptionManager from './SubscriptionManager';
 import SalesAnalyticsNew from './SalesAnalyticsNew';
 import CRMView from './CRMView';
@@ -16,6 +16,7 @@ import IntegrationsView from './IntegrationsView';
 import RouteMateApp from '../route-mate/RouteMateApp';
 import PlatformUserManagement from './PlatformUserManagement';
 import CarrierLookup from './CarrierLookup';
+import WebsiteCMS from './WebsiteCMS';
 import ThemeToggle from '../ThemeToggle';
 
 const AdminConsole = () => {
