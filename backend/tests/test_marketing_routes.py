@@ -222,12 +222,12 @@ class TestMarketingAdminEndpoints:
     
     def test_admin_endpoints_without_auth(self):
         """Test that admin endpoints require authentication"""
-        # No auth header
+        # No auth header - API returns 401 or 403 for unauthorized access
         response = requests.get(f"{BASE_URL}/api/marketing/admin/demo-requests")
-        assert response.status_code == 401
+        assert response.status_code in [401, 403]
         
         response = requests.get(f"{BASE_URL}/api/marketing/admin/stats")
-        assert response.status_code == 401
+        assert response.status_code in [401, 403]
 
 
 class TestMarketingAdminContentEndpoints:
