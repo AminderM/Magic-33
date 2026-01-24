@@ -188,9 +188,9 @@ async def update_demo_request(
 
 
 @router.get("/admin/content")
-async def get_all_website_content(current_user: dict = Depends(get_current_user)):
+async def get_all_website_content(current_user = Depends(get_current_user)):
     """Get all website content sections (admin only)"""
-    if current_user.get("role") != "platform_admin":
+    if current_user.role != "platform_admin":
         raise HTTPException(status_code=403, detail="Not authorized")
     
     content = await db.website_content.find({}, {"_id": 0}).to_list(100)
@@ -206,10 +206,10 @@ async def get_all_website_content(current_user: dict = Depends(get_current_user)
 async def update_website_content(
     section: str,
     update: WebsiteContentUpdate,
-    current_user: dict = Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
     """Update website content for a section (admin only)"""
-    if current_user.get("role") != "platform_admin":
+    if current_user.role != "platform_admin":
         raise HTTPException(status_code=403, detail="Not authorized")
     
     await db.website_content.update_one(
@@ -219,7 +219,7 @@ async def update_website_content(
                 "section": section,
                 "content": update.content,
                 "updated_at": datetime.now(timezone.utc).isoformat(),
-                "updated_by": current_user.get("email")
+                "updated_by": current_user.email
             }
         },
         upsert=True
