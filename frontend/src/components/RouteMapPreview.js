@@ -25,6 +25,7 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated, calculat
     const renderer = new window.google.maps.DirectionsRenderer({
       map: map,
       suppressMarkers: false,
+      preserveViewport: false,
       polylineOptions: {
         strokeColor: '#F7B501',
         strokeWeight: 4,
