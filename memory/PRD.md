@@ -112,26 +112,20 @@ The AI Assistant is architected to be replaced by an AI Agent that can perform a
 
 ## Recent Updates (Jan 31, 2026)
 
-### Google Maps API Configuration ✅
-- **Issue**: FreightCalculator showed "Google Maps not configured" message
-- **Root Cause**: No company record existed in database to store integrations
-- **Fix**: Created company record and configured Google Maps integration with user's API key
-- **Result**: Map now displays correctly with route preview, Places autocomplete working
-- **API Key**: AIzaSyDsJ-7H-UUKvYSPQd7bzJ4A6JTcCvX-EaE (stored in DB)
-- **Location**: Sales/Business Development → FreightCalculator tab
+### Replaced Google Maps with OpenStreetMap (100% Free) ✅
+- **Map Display**: Leaflet.js with OpenStreetMap tiles
+- **Route Calculation**: OSRM (Open Source Routing Machine)
+- **Address Autocomplete**: Nominatim API
+- **Components Created**: `OSMMapPreview.js`, `OSMAutocomplete.js`
+- **Packages Added**: leaflet, react-leaflet, leaflet-routing-machine
+- **Google Maps removed**: No more API costs!
 
-### Marketing Website Enhancements
-- **Light/Dark Mode Toggle**: Full theme toggle implemented with localStorage persistence
-- **FMCSA Carrier Lookup**: API key integrated, phone number UI fixed with SAFER website link
-- **Demo Request Form**: Connected to backend, leads visible in Admin Console CMS
-
-### Bug Fixes
-- FMCSA API: Fixed data parsing for null responses and nested structures
-- Carrier Lookup UI: Shows "N/A - Check SAFER for details" with link when phone unavailable
-
-### API Connection Plan
-- Created `/app/memory/MARKETING_API_PLAN.md` documenting all APIs needed
-- Recommended: Implement `/api/marketing/platform-stats` for dynamic homepage stats
+### Previous Fixes (Same Session)
+- Google Maps API configuration (now replaced)
+- Add Stop button with visible "+" symbol (black color)
+- Push to Rate Quotes button
+- Calculate button functioning
+- Places autocomplete selection (now using Nominatim)
 
 ---
 
