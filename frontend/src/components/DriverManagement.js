@@ -427,15 +427,9 @@ const DriverManagement = ({ onStatsUpdate }) => {
             </h3>
             <p className="text-muted-foreground mb-4">
               {drivers.length === 0 
-                ? 'Add your first driver to get started with dispatch operations'
+                ? 'Create driver accounts in Admin Console → User Management to add drivers'
                 : 'Try adjusting your search or filter criteria'}
             </p>
-            {drivers.length === 0 && (
-              <Button onClick={() => setShowAddModal(true)}>
-                <i className="fas fa-plus mr-2"></i>
-                Add First Driver
-              </Button>
-            )}
           </CardContent>
         </Card>
       ) : (
