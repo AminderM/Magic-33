@@ -90,6 +90,7 @@ const OrderManagement = () => {
   useEffect(() => {
     loadOrders();
     loadEquipment();
+    loadAvailableDrivers();
   }, [user]);
 
   const loadOrders = async () => {
@@ -121,6 +122,18 @@ const OrderManagement = () => {
       }
     } catch (error) {
       console.error('Error loading equipment:', error);
+    }
+  };
+
+  const loadAvailableDrivers = async () => {
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/drivers/all`);
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableDrivers(data);
+      }
+    } catch (error) {
+      console.error('Error loading drivers:', error);
     }
   };
 
