@@ -10,6 +10,7 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated, calculat
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
   const [lastCalculatedRoute, setLastCalculatedRoute] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [lastTrigger, setLastTrigger] = useState(0);
 
   // Reset last calculated route when calculateTrigger changes to force recalculation
   useEffect(() => {
