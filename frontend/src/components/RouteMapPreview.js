@@ -103,7 +103,7 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated, calculat
       }
       setIsCalculating(false);
     });
-  }, [directionsService, directionsRenderer, pickup, destination, stops, onRouteCalculated, lastCalculatedRoute, isCalculating]);
+  }, [directionsService, directionsRenderer, pickup, destination, stops, onRouteCalculated, lastCalculatedRoute, isCalculating, calculateTrigger]);
 
   return null;
 };
