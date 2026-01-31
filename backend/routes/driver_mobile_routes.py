@@ -71,7 +71,7 @@ async def get_driver_loads(current_user: User = Depends(get_current_user)):
     driver_id = driver.get("id") if driver else current_user.id
     
     all_loads = []
-    seen_ids = set()
+    seen_booking_ids = set()
     
     # Check driver_loads collection (created when push-to-driver is used)
     driver_loads = await db.driver_loads.find(
@@ -83,17 +83,17 @@ async def get_driver_loads(current_user: User = Depends(get_current_user)):
     ).sort("assigned_at", -1).to_list(100)
     
     for load in driver_loads:
-        load_id = load.get("id") or load.get("booking_id")
-        if load_id not in seen_ids:
-            seen_ids.add(load_id)
+        booking_id = load.get("booking_id")
+        if booking_id and booking_id not in seen_booking_ids:
+            seen_booking_ids.add(booking_id)
             all_loads.append({
                 **load,
-                "id": load_id,
+                "id": load.get("id"),
                 "pickup_city": load.get("pickup_location", "").split(",")[0] if load.get("pickup_location") else "",
                 "delivery_city": load.get("delivery_location", "").split(",")[0] if load.get("delivery_location") else ""
             })
     
-    # Check loads collection
+    # Check loads collection (skip if booking_id already seen)
     loads = await db.loads.find(
         {"$or": [
             {"assigned_driver_id": current_user.id},
@@ -103,11 +103,12 @@ async def get_driver_loads(current_user: User = Depends(get_current_user)):
     ).sort("created_at", -1).to_list(100)
     
     for load in loads:
-        if load.get("id") not in seen_ids:
-            seen_ids.add(load.get("id"))
+        load_id = load.get("id")
+        if load_id and load_id not in seen_booking_ids:
+            seen_booking_ids.add(load_id)
             all_loads.append(load)
     
-    # Check bookings collection
+    # Check bookings collection (skip if already seen)
     bookings = await db.bookings.find(
         {"$or": [
             {"driver_id": current_user.id},
@@ -118,8 +119,9 @@ async def get_driver_loads(current_user: User = Depends(get_current_user)):
     ).sort("created_at", -1).to_list(100)
     
     for booking in bookings:
-        if booking.get("id") not in seen_ids:
-            seen_ids.add(booking.get("id"))
+        booking_id = booking.get("id")
+        if booking_id and booking_id not in seen_booking_ids:
+            seen_booking_ids.add(booking_id)
             all_loads.append({
                 **booking,
                 "pickup_city": booking.get("pickup_location", "").split(",")[0] if booking.get("pickup_location") else "",
