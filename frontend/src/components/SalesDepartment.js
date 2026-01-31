@@ -621,8 +621,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
   const [activeTabId, setActiveTabId] = useState(1);
   const [nextTabId, setNextTabId] = useState(2);
 
-  // Google Maps integration
-  const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
+  // Route calculation trigger (for OSM maps)
   const [calculateTrigger, setCalculateTrigger] = useState(0);
 
   // Get active quote tab
@@ -654,7 +653,6 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   useEffect(() => {
     loadSalesData();
-    loadGoogleMapsKey();
     loadRateQuotes();
     loadLoads();
   }, [fetchWithAuth, BACKEND_URL]);
