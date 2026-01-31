@@ -232,12 +232,10 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                       </div>
                       {/* Phone and Email */}
                       <div className="flex flex-wrap gap-3 text-sm">
-                        {carrier.phone && (
-                          <span className="flex items-center gap-1 text-muted-foreground">
-                            <Phone className="w-3 h-3" />
-                            {carrier.phone}
-                          </span>
-                        )}
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Phone className="w-3 h-3" />
+                          {carrier.phone || 'N/A'}
+                        </span>
                         {carrier.email && (
                           <span className="flex items-center gap-1 text-muted-foreground">
                             <Mail className="w-3 h-3" />
@@ -302,15 +300,26 @@ const CarrierLookup = ({ BACKEND_URL, fetchWithAuth }) => {
                             </div>
                           </div>
                         )}
-                        {carrierDetails.phone && (
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-muted-foreground" />
-                            <div>
-                              <p className="text-sm font-medium text-muted-foreground">Phone</p>
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Phone</p>
+                            {carrierDetails.phone ? (
                               <p className="text-foreground">{carrierDetails.phone}</p>
-                            </div>
+                            ) : (
+                              <p className="text-muted-foreground text-sm">
+                                N/A - <a 
+                                  href={`https://safer.fmcsa.dot.gov/query.asp?query_param=USDOT&query_string=${carrierDetails.dot_number}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline"
+                                >
+                                  Check SAFER for details
+                                </a>
+                              </p>
+                            )}
                           </div>
-                        )}
+                        </div>
                         {carrierDetails.email && (
                           <div className="flex items-center gap-2">
                             <Mail className="w-4 h-4 text-muted-foreground" />
