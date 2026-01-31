@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 
 const PlacesAutocomplete = ({ 
@@ -12,7 +12,13 @@ const PlacesAutocomplete = ({
 }) => {
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
+  const onChangeRef = useRef(onChange);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // Keep onChange ref updated
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   // Add CSS to control pac-container z-index
   useEffect(() => {
@@ -24,13 +30,15 @@ const PlacesAutocomplete = ({
     `;
     document.head.appendChild(style);
     return () => {
-      document.head.removeChild(style);
+      if (style.parentNode) {
+        document.head.removeChild(style);
+      }
     };
   }, []);
 
   useEffect(() => {
     if (!apiKey || !window.google || !window.google.maps) {
-      console.log('PlacesAutocomplete: Google Maps not ready yet');
+      console.log('PlacesAutocomplete: Google Maps not ready yet, apiKey:', !!apiKey);
       return;
     }
 
@@ -45,21 +53,35 @@ const PlacesAutocomplete = ({
       console.log('PlacesAutocomplete: Places library loaded successfully');
       setIsLoaded(true);
 
+      // Clear any existing autocomplete
+      if (autocompleteRef.current) {
+        window.google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+
       // Initialize autocomplete after library is loaded
       try {
         const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
           types: ['geocode', 'establishment'],
-          // Support all countries including Canada, US, and worldwide locations
-          fields: ['formatted_address', 'geometry', 'name']
+          fields: ['formatted_address', 'geometry', 'name', 'address_components']
         });
 
         autocomplete.addListener('place_changed', () => {
           const place = autocomplete.getPlace();
+          console.log('PlacesAutocomplete: Place selected:', place);
           
+          let selectedValue = '';
           if (place.formatted_address) {
-            onChange(place.formatted_address);
+            selectedValue = place.formatted_address;
           } else if (place.name) {
-            onChange(place.name);
+            selectedValue = place.name;
+          } else if (inputRef.current) {
+            // Fallback to input value if place data is incomplete
+            selectedValue = inputRef.current.value;
+          }
+          
+          if (selectedValue && onChangeRef.current) {
+            console.log('PlacesAutocomplete: Updating value to:', selectedValue);
+            onChangeRef.current(selectedValue);
           }
         });
 
@@ -77,21 +99,21 @@ const PlacesAutocomplete = ({
         window.google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
-  }, [apiKey, onChange]);
+  }, [apiKey]); // Only depend on apiKey, not onChange
 
   const handleChange = (e) => {
     onChange(e.target.value);
   };
 
   const handleBlur = (e) => {
-    // Hide autocomplete dropdown on blur after a short delay
-    // This allows clicking on autocomplete suggestions to work
+    // Hide autocomplete dropdown on blur after a delay
+    // Delay allows clicking on autocomplete suggestions to work
     setTimeout(() => {
       const pacContainers = document.querySelectorAll('.pac-container');
       pacContainers.forEach(container => {
         container.style.display = 'none';
       });
-    }, 200);
+    }, 300);
     
     if (onBlur) {
       onBlur(e);
