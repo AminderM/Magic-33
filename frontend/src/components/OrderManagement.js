@@ -35,11 +35,15 @@ const OrderManagement = () => {
   const [dispatchData, setDispatchData] = useState({
     assigned_carrier: '',
     assigned_driver: '',
+    assigned_driver_id: '',
     pickup_time_actual_in: '',
     pickup_time_actual_out: '',
     delivery_time_actual_in: '',
     delivery_time_actual_out: ''
   });
+  
+  // Available drivers for assignment
+  const [availableDrivers, setAvailableDrivers] = useState([]);
   
   // Loads filter state (synced with Sales/Business Development)
   const [loadsFilters, setLoadsFilters] = useState({
