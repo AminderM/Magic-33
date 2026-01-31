@@ -2181,17 +2181,15 @@ Body:
 
                 {/* Right Column - Map + Unit Converter + Route Calculator */}
                 <div className="space-y-4 flex-1">
-                  {/* Map Display with Google Maps Integration - Bigger */}
-                  <RouteMapPreview
+                  {/* Map Display with OpenStreetMap Integration */}
+                  <OSMMapPreview
                     pickup={quoteData.pickupLocation}
                     destination={quoteData.destination}
                     stops={quoteData.stops}
-                    apiKey={googleMapsApiKey}
                     calculateTrigger={calculateTrigger}
                     onRouteCalculated={(data) => {
                       setRouteData(data);
                       setQuoteData({...quoteData, distance: data.distanceValue});
-                      toast.success(`Route calculated: ${data.distance} in ${data.duration}`);
                     }}
                   />
 
@@ -2215,11 +2213,10 @@ Body:
                           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
                             <i className="fas fa-map-marker-alt text-foreground"></i>
                           </div>
-                          <PlacesAutocomplete
+                          <OSMAutocomplete
                             placeholder="Pickup location"
                             value={quoteData.pickupLocation}
                             onChange={(value) => setQuoteData({...quoteData, pickupLocation: value})}
-                            apiKey={googleMapsApiKey}
                             className="pl-10 h-9 border-border focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                           />
                         </div>
