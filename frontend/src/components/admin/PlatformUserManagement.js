@@ -45,6 +45,19 @@ const USER_TYPES = [
   { value: 'other', label: 'Other' }
 ];
 
+// System roles that control access to the TMS Web App and Driver Mobile App
+const USER_ROLES = [
+  { value: 'platform_admin', label: 'Platform Admin', description: 'Full system access', app: 'TMS Web App' },
+  { value: 'company_admin', label: 'Company Admin', description: 'Company-level admin access', app: 'TMS Web App' },
+  { value: 'manager', label: 'Manager', description: 'Team management access', app: 'TMS Web App' },
+  { value: 'dispatcher', label: 'Dispatcher', description: 'Load dispatch & tracking', app: 'TMS Web App' },
+  { value: 'accountant', label: 'Accountant', description: 'Financial & billing access', app: 'TMS Web App' },
+  { value: 'hr_manager', label: 'HR Manager', description: 'Employee management', app: 'TMS Web App' },
+  { value: 'sales_manager', label: 'Sales Manager', description: 'Sales & CRM access', app: 'TMS Web App' },
+  { value: 'fleet_manager', label: 'Fleet Manager', description: 'Fleet & vehicle management', app: 'TMS Web App' },
+  { value: 'driver', label: 'Driver', description: 'Driver mobile app access', app: 'Driver Mobile App' },
+];
+
 const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
