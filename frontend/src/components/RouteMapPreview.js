@@ -101,7 +101,7 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated }) => {
   return null;
 };
 
-const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey }) => {
+const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey, calculateTrigger }) => {
   const [mapCenter, setMapCenter] = useState({ lat: 39.8283, lng: -98.5795 }); // Center of US
   const [mapZoom, setMapZoom] = useState(4);
   const [lastGeocodedPickup, setLastGeocodedPickup] = useState(null);
