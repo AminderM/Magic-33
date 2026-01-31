@@ -2282,9 +2282,9 @@ Body:
                                 }
                               }}
                               size="sm"
-                              className="h-9 w-9 p-0 bg-primary hover:bg-primary/90 text-white"
+                              className="h-7 w-7 p-0 bg-primary hover:bg-primary/90 text-white rounded-md"
                             >
-                              <i className="fas fa-plus"></i>
+                              <i className="fas fa-plus text-xs"></i>
                             </Button>
                           </div>
                           
