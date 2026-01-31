@@ -360,6 +360,7 @@ const OrderManagement = () => {
     setDispatchData({
       assigned_carrier: load.assigned_carrier || '',
       assigned_driver: load.assigned_driver || '',
+      assigned_driver_id: load.assigned_driver_id || '',
       pickup_time_actual_in: load.pickup_time_actual_in ? load.pickup_time_actual_in.slice(0, 16) : '',
       pickup_time_actual_out: load.pickup_time_actual_out ? load.pickup_time_actual_out.slice(0, 16) : '',
       delivery_time_actual_in: load.delivery_time_actual_in ? load.delivery_time_actual_in.slice(0, 16) : '',
@@ -377,6 +378,7 @@ const OrderManagement = () => {
       // Only include non-empty values
       if (dispatchData.assigned_carrier) payload.assigned_carrier = dispatchData.assigned_carrier;
       if (dispatchData.assigned_driver) payload.assigned_driver = dispatchData.assigned_driver;
+      if (dispatchData.assigned_driver_id) payload.assigned_driver_id = dispatchData.assigned_driver_id;
       if (dispatchData.pickup_time_actual_in) payload.pickup_time_actual_in = new Date(dispatchData.pickup_time_actual_in).toISOString();
       if (dispatchData.pickup_time_actual_out) payload.pickup_time_actual_out = new Date(dispatchData.pickup_time_actual_out).toISOString();
       if (dispatchData.delivery_time_actual_in) payload.delivery_time_actual_in = new Date(dispatchData.delivery_time_actual_in).toISOString();
@@ -399,6 +401,37 @@ const OrderManagement = () => {
     } catch (error) {
       console.error('Error updating dispatch info:', error);
       toast.error('Error updating dispatch info');
+    }
+  };
+
+  // Push load to driver's mobile app
+  const handlePushToDriver = async () => {
+    if (!dispatchingLoad || !dispatchData.assigned_driver_id) {
+      toast.error('Please select a driver first');
+      return;
+    }
+    
+    try {
+      const response = await fetchWithAuth(`${BACKEND_URL}/api/bookings/${dispatchingLoad.id}/push-to-driver`, {
+        method: 'POST',
+        body: JSON.stringify({
+          driver_id: dispatchData.assigned_driver_id,
+          driver_name: dispatchData.assigned_driver
+        })
+      });
+
+      if (response.ok) {
+        toast.success(`Load pushed to ${dispatchData.assigned_driver}'s mobile app!`);
+        setShowDispatchModal(false);
+        setDispatchingLoad(null);
+        loadOrders();
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Failed to push load to driver');
+      }
+    } catch (error) {
+      console.error('Error pushing load to driver:', error);
+      toast.error('Error pushing load to driver');
     }
   };
 
