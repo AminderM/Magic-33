@@ -744,6 +744,30 @@ const PlatformUserManagement = ({ BACKEND_URL, fetchWithAuth }) => {
                 </SelectContent>
               </Select>
             </div>
+            <div className="col-span-2">
+              <Label className="text-sm font-medium">System Role *</Label>
+              <Select 
+                value={newUser.role} 
+                onValueChange={(value) => setNewUser({...newUser, role: value})}
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {USER_ROLES.map(role => (
+                    <SelectItem key={role.value} value={role.value}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{role.label}</span>
+                        <span className="text-xs text-muted-foreground ml-2">({role.app})</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                {USER_ROLES.find(r => r.value === newUser.role)?.description || 'Select a role to see description'}
+              </p>
+            </div>
             <div>
               <Label className="text-sm font-medium">Password *</Label>
               <div className="flex gap-2 mt-1">
