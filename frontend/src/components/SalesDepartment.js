@@ -2292,29 +2292,18 @@ Body:
                           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
                             <i className="fas fa-map-marker-alt text-foreground"></i>
                           </div>
-                          <PlacesAutocomplete
+                          <OSMAutocomplete
                             placeholder="Destination"
                             value={quoteData.destination}
                             onChange={(value) => setQuoteData({...quoteData, destination: value})}
-                            apiKey={googleMapsApiKey}
                             className="pl-10 h-9 border-border focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                           />
                         </div>
 
                         <Button 
                           onClick={() => {
-                            // Hide any open autocomplete dropdowns first
-                            const pacContainers = document.querySelectorAll('.pac-container');
-                            pacContainers.forEach(container => {
-                              container.style.display = 'none';
-                            });
-                            
                             if (!quoteData.pickupLocation || !quoteData.destination) {
                               toast.error('Please enter both pickup and destination locations');
-                              return;
-                            }
-                            if (!googleMapsApiKey) {
-                              toast.error('Google Maps not configured. Please add API key in Admin Console.');
                               return;
                             }
                             // Trigger route calculation
