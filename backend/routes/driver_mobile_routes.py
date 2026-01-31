@@ -60,19 +60,72 @@ async def get_driver_loads(current_user: User = Depends(get_current_user)):
     if current_user.role != UserRole.DRIVER:
         raise HTTPException(status_code=403, detail="Driver access only")
     
+    # First, find the driver record to get driver_id
+    driver = await db.drivers.find_one({
+        "$or": [
+            {"user_id": current_user.id},
+            {"email": current_user.email}
+        ]
+    })
+    
+    driver_id = driver.get("id") if driver else current_user.id
+    
+    all_loads = []
+    seen_ids = set()
+    
+    # Check driver_loads collection (created when push-to-driver is used)
+    driver_loads = await db.driver_loads.find(
+        {"$or": [
+            {"driver_id": driver_id},
+            {"driver_user_id": current_user.id}
+        ]},
+        {"_id": 0}
+    ).sort("assigned_at", -1).to_list(100)
+    
+    for load in driver_loads:
+        load_id = load.get("id") or load.get("booking_id")
+        if load_id not in seen_ids:
+            seen_ids.add(load_id)
+            all_loads.append({
+                **load,
+                "id": load_id,
+                "pickup_city": load.get("pickup_location", "").split(",")[0] if load.get("pickup_location") else "",
+                "delivery_city": load.get("delivery_location", "").split(",")[0] if load.get("delivery_location") else ""
+            })
+    
+    # Check loads collection
     loads = await db.loads.find(
-        {"assigned_driver_id": current_user.id},
+        {"$or": [
+            {"assigned_driver_id": current_user.id},
+            {"assigned_driver_id": driver_id}
+        ]},
         {"_id": 0}
     ).sort("created_at", -1).to_list(100)
     
-    # Also check bookings collection for backward compatibility
+    for load in loads:
+        if load.get("id") not in seen_ids:
+            seen_ids.add(load.get("id"))
+            all_loads.append(load)
+    
+    # Check bookings collection
     bookings = await db.bookings.find(
-        {"driver_id": current_user.id},
+        {"$or": [
+            {"driver_id": current_user.id},
+            {"assigned_driver_id": current_user.id},
+            {"assigned_driver_id": driver_id}
+        ]},
         {"_id": 0}
     ).sort("created_at", -1).to_list(100)
     
-    # Merge and return
-    all_loads = loads + bookings
+    for booking in bookings:
+        if booking.get("id") not in seen_ids:
+            seen_ids.add(booking.get("id"))
+            all_loads.append({
+                **booking,
+                "pickup_city": booking.get("pickup_location", "").split(",")[0] if booking.get("pickup_location") else "",
+                "delivery_city": booking.get("delivery_location", "").split(",")[0] if booking.get("delivery_location") else ""
+            })
+    
     return all_loads
 
 @router.get("/loads/{load_id}")
