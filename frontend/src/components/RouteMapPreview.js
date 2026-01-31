@@ -4,12 +4,19 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 // Component to handle route rendering
-const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated }) => {
+const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated, calculateTrigger }) => {
   const map = useMap();
   const [directionsService, setDirectionsService] = useState(null);
   const [directionsRenderer, setDirectionsRenderer] = useState(null);
   const [lastCalculatedRoute, setLastCalculatedRoute] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
+
+  // Reset last calculated route when calculateTrigger changes to force recalculation
+  useEffect(() => {
+    if (calculateTrigger) {
+      setLastCalculatedRoute(null);
+    }
+  }, [calculateTrigger]);
 
   useEffect(() => {
     if (!map) return;
