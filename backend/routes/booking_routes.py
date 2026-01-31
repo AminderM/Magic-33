@@ -301,7 +301,9 @@ async def update_dispatch_info(
     
     # Check if user has permission to update
     if booking["requester_id"] != current_user.id and booking["equipment_owner_id"] != current_user.id:
-        raise HTTPException(status_code=403, detail="Not authorized to update this booking")
+        # Also allow platform admin and company admin
+        if current_user.role not in ["platform_admin", "company_admin"]:
+            raise HTTPException(status_code=403, detail="Not authorized to update this booking")
     
     # Build update data, only including non-None values
     update_data = {}
@@ -319,6 +321,76 @@ async def update_dispatch_info(
         )
     
     return {"message": "Dispatch info updated successfully", "updated_fields": list(update_data.keys())}
+
+@router.post("/{booking_id}/push-to-driver", response_model=dict)
+async def push_load_to_driver(
+    booking_id: str,
+    push_data: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Push a load to a driver's mobile app"""
+    # Find the booking
+    booking = await db.bookings.find_one({"id": booking_id})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    driver_id = push_data.get("driver_id")
+    driver_name = push_data.get("driver_name", "")
+    
+    if not driver_id:
+        raise HTTPException(status_code=400, detail="Driver ID is required")
+    
+    # Verify driver exists
+    driver = await db.drivers.find_one({"id": driver_id})
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    
+    # Update booking with driver assignment and status
+    update_data = {
+        "assigned_driver_id": driver_id,
+        "assigned_driver": driver_name or driver.get("full_name", ""),
+        "status": "dispatched",
+        "dispatched_at": datetime.now(timezone.utc).isoformat(),
+        "dispatched_by": current_user.id
+    }
+    
+    await db.bookings.update_one(
+        {"id": booking_id},
+        {"$set": update_data}
+    )
+    
+    # Create a driver load assignment record (for driver mobile app to pick up)
+    driver_load = {
+        "id": str(uuid.uuid4()),
+        "booking_id": booking_id,
+        "driver_id": driver_id,
+        "driver_user_id": driver.get("user_id"),
+        "order_number": booking.get("order_number", ""),
+        "pickup_location": booking.get("pickup_location", ""),
+        "delivery_location": booking.get("delivery_location", ""),
+        "pickup_date": booking.get("pickup_date"),
+        "delivery_date": booking.get("delivery_date"),
+        "commodity": booking.get("commodity", ""),
+        "weight": booking.get("weight"),
+        "rate": booking.get("rate"),
+        "status": "assigned",
+        "assigned_at": datetime.now(timezone.utc).isoformat(),
+        "assigned_by": current_user.id
+    }
+    
+    await db.driver_loads.insert_one(driver_load)
+    
+    # Update driver status to on_trip
+    await db.drivers.update_one(
+        {"id": driver_id},
+        {"$set": {"status": "on_trip", "current_load_id": booking_id}}
+    )
+    
+    return {
+        "message": f"Load pushed to {driver_name or driver.get('full_name', 'driver')} successfully",
+        "driver_load_id": driver_load["id"],
+        "booking_id": booking_id
+    }
 
 @router.put("/{booking_id}", response_model=Booking)
 async def update_booking(
