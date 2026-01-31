@@ -907,11 +907,16 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
     const quoteNumber = `RQ-${String(quoteCounter).padStart(4, '0')}`;
     
     // Prepare quote data for backend
+    // Transform stops from string array to StopLocation objects
+    const formattedStops = (quoteData.stops || []).map(stop => ({
+      address: stop
+    }));
+    
     const quotePayload = {
       quote_number: quoteNumber,
       pickup: quoteData.pickupLocation || 'Not specified',
       destination: quoteData.destination || 'Not specified',
-      stops: quoteData.stops || [],
+      stops: formattedStops,
       distance: quoteData.distance || 0,
       base_rate: (quoteData.distance * quoteData.ratePerMile) || 0,
       fuel_surcharge: quoteData.fuelSurcharge || 0,
