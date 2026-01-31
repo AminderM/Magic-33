@@ -183,6 +183,7 @@ const RouteMapPreview = ({ pickup, destination, stops, onRouteCalculated, apiKey
                 destination={destination}
                 stops={stops}
                 onRouteCalculated={onRouteCalculated}
+                calculateTrigger={calculateTrigger}
               />
             )}
           </Map>
