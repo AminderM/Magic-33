@@ -110,19 +110,38 @@ Fleet Marketplace is a B2B SaaS platform connecting manufacturers, fleet owners,
 ## Future: AI Agent Upgrade
 The AI Assistant is architected to be replaced by an AI Agent that can perform actual tasks (not just Q&A).
 
+## Recent Updates (Jan 31, 2026)
+
+### Marketing Website Enhancements
+- **Light/Dark Mode Toggle**: Full theme toggle implemented with localStorage persistence
+- **FMCSA Carrier Lookup**: API key integrated, phone number UI fixed with SAFER website link
+- **Demo Request Form**: Connected to backend, leads visible in Admin Console CMS
+
+### Bug Fixes
+- FMCSA API: Fixed data parsing for null responses and nested structures
+- Carrier Lookup UI: Shows "N/A - Check SAFER for details" with link when phone unavailable
+
+### API Connection Plan
+- Created `/app/memory/MARKETING_API_PLAN.md` documenting all APIs needed
+- Recommended: Implement `/api/marketing/platform-stats` for dynamic homepage stats
+
+---
+
 ## Prioritized Backlog
 ### P0
+- [ ] Platform Stats API (`/api/marketing/platform-stats`) for dynamic homepage data
 - [ ] Email notification integration for demo requests (SendGrid)
 - [ ] Stripe billing for SaaS customers
 
 ### P1  
 - [ ] Apply TMS theme to remaining driver app screens (AIAssistant, Documents, Profile)
-- [ ] Full CMS content editor for marketing website
+- [ ] Testimonials API for marketing website
+- [ ] Pricing API with CMS management
 - [ ] Push notifications
 - [ ] WebSocket real-time messaging
-- [ ] Offline mode with sync
 
 ### P2
+- [ ] Blog/News API for marketing website
 - [ ] ELD integration
 - [ ] Document OCR
 - [ ] Route optimization
