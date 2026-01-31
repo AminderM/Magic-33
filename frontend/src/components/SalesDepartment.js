@@ -623,6 +623,7 @@ const SalesDepartment = ({ BACKEND_URL, fetchWithAuth }) => {
 
   // Google Maps integration
   const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
+  const [calculateTrigger, setCalculateTrigger] = useState(0);
 
   // Get active quote tab
   const activeQuoteTab = quoteTabs.find(tab => tab.id === activeTabId) || quoteTabs[0];
