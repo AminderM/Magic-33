@@ -2214,6 +2214,7 @@ Body:
                     destination={quoteData.destination}
                     stops={quoteData.stops}
                     apiKey={googleMapsApiKey}
+                    calculateTrigger={calculateTrigger}
                     onRouteCalculated={(data) => {
                       setRouteData(data);
                       setQuoteData({...quoteData, distance: data.distanceValue});
