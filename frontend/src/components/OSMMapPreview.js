@@ -49,19 +49,28 @@ const RoutingControl = ({ pickup, destination, stops, onRouteCalculated, calcula
   const map = useMap();
   const routingControlRef = useRef(null);
   const lastRouteRef = useRef(null);
+  const isCalculatingRef = useRef(false);
 
   useEffect(() => {
-    if (!pickup || !destination) return;
+    if (!pickup || !destination || !map) return;
 
     const routeKey = `${pickup}|${destination}|${(stops || []).join('|')}|${calculateTrigger}`;
     
-    // Don't recalculate same route
-    if (routeKey === lastRouteRef.current) return;
+    // Don't recalculate same route or if already calculating
+    if (routeKey === lastRouteRef.current || isCalculatingRef.current) return;
+    
     lastRouteRef.current = routeKey;
+    isCalculatingRef.current = true;
 
-    // Remove existing routing control
+    // Safely remove existing routing control
     if (routingControlRef.current) {
-      map.removeControl(routingControlRef.current);
+      try {
+        routingControlRef.current.setWaypoints([]);
+        map.removeControl(routingControlRef.current);
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+      routingControlRef.current = null;
     }
 
     // Geocode addresses to coordinates
@@ -90,6 +99,7 @@ const RoutingControl = ({ pickup, destination, stops, onRouteCalculated, calcula
       
       if (!pickupCoords || !destCoords) {
         toast.error('Could not geocode addresses');
+        isCalculatingRef.current = false;
         return;
       }
 
@@ -105,74 +115,92 @@ const RoutingControl = ({ pickup, destination, stops, onRouteCalculated, calcula
       // Build waypoints array
       const waypoints = [pickupCoords, ...stopCoords, destCoords];
 
-      // Create routing control
-      const routingControl = L.Routing.control({
-        waypoints: waypoints,
-        router: L.Routing.osrmv1({
-          serviceUrl: 'https://router.project-osrm.org/route/v1',
-          profile: 'driving'
-        }),
-        lineOptions: {
-          styles: [{ color: '#F7B501', weight: 5, opacity: 0.8 }],
-          extendToWaypoints: true,
-          missingRouteTolerance: 0
-        },
-        show: false,
-        addWaypoints: false,
-        routeWhileDragging: false,
-        fitSelectedRoutes: true,
-        showAlternatives: false,
-        createMarker: (i, waypoint, n) => {
-          const isStart = i === 0;
-          const isEnd = i === n - 1;
-          const label = isStart ? 'A' : isEnd ? 'B' : String(i);
-          const color = isStart ? '#22c55e' : isEnd ? '#ef4444' : '#3b82f6';
-          
-          return L.marker(waypoint.latLng, {
-            icon: createCustomIcon(color, label)
-          });
-        }
-      });
+      // Check if map is still available
+      if (!map || !map._container) {
+        isCalculatingRef.current = false;
+        return;
+      }
 
-      routingControl.on('routesfound', (e) => {
-        const routes = e.routes;
-        if (routes && routes.length > 0) {
-          const route = routes[0];
-          const distanceMiles = (route.summary.totalDistance / 1609.34).toFixed(2);
-          const durationHours = (route.summary.totalTime / 3600).toFixed(2);
-          
-          console.log('OSMMapPreview: Route found', { distanceMiles, durationHours });
-          
-          if (onRouteCalculated) {
-            onRouteCalculated({
-              distance: `${distanceMiles} miles`,
-              duration: `${durationHours} hours`,
-              distanceValue: parseFloat(distanceMiles),
-              durationValue: parseFloat(durationHours)
+      // Create routing control
+      try {
+        const routingControl = L.Routing.control({
+          waypoints: waypoints,
+          router: L.Routing.osrmv1({
+            serviceUrl: 'https://router.project-osrm.org/route/v1',
+            profile: 'driving'
+          }),
+          lineOptions: {
+            styles: [{ color: '#F7B501', weight: 5, opacity: 0.8 }],
+            extendToWaypoints: true,
+            missingRouteTolerance: 0
+          },
+          show: false,
+          addWaypoints: false,
+          routeWhileDragging: false,
+          fitSelectedRoutes: true,
+          showAlternatives: false,
+          createMarker: (i, waypoint, n) => {
+            const isStart = i === 0;
+            const isEnd = i === n - 1;
+            const label = isStart ? 'A' : isEnd ? 'B' : String(i);
+            const color = isStart ? '#22c55e' : isEnd ? '#ef4444' : '#3b82f6';
+            
+            return L.marker(waypoint.latLng, {
+              icon: createCustomIcon(color, label)
             });
           }
-          toast.success(`Route calculated: ${distanceMiles} miles`);
-        }
-      });
+        });
 
-      routingControl.on('routingerror', (e) => {
-        console.error('OSMMapPreview: Routing error', e);
-        toast.error('Could not calculate route');
-      });
+        routingControl.on('routesfound', (e) => {
+          const routes = e.routes;
+          if (routes && routes.length > 0) {
+            const route = routes[0];
+            const distanceMiles = (route.summary.totalDistance / 1609.34).toFixed(2);
+            const durationHours = (route.summary.totalTime / 3600).toFixed(2);
+            
+            console.log('OSMMapPreview: Route found', { distanceMiles, durationHours });
+            
+            if (onRouteCalculated) {
+              onRouteCalculated({
+                distance: `${distanceMiles} miles`,
+                duration: `${durationHours} hours`,
+                distanceValue: parseFloat(distanceMiles),
+                durationValue: parseFloat(durationHours)
+              });
+            }
+            toast.success(`Route calculated: ${distanceMiles} miles`);
+          }
+          isCalculatingRef.current = false;
+        });
 
-      routingControl.addTo(map);
-      routingControlRef.current = routingControl;
+        routingControl.on('routingerror', (e) => {
+          console.error('OSMMapPreview: Routing error', e);
+          toast.error('Could not calculate route');
+          isCalculatingRef.current = false;
+        });
+
+        routingControl.addTo(map);
+        routingControlRef.current = routingControl;
+      } catch (e) {
+        console.error('OSMMapPreview: Error creating routing control', e);
+        isCalculatingRef.current = false;
+      }
     };
 
     setupRoute();
 
+    // Cleanup function
     return () => {
-      if (routingControlRef.current) {
+      if (routingControlRef.current && map) {
         try {
-          map.removeControl(routingControlRef.current);
+          routingControlRef.current.setWaypoints([]);
+          if (map._container) {
+            map.removeControl(routingControlRef.current);
+          }
         } catch (e) {
           // Ignore cleanup errors
         }
+        routingControlRef.current = null;
       }
     };
   }, [pickup, destination, stops, calculateTrigger, map, onRouteCalculated]);
