@@ -43,6 +43,49 @@ async def get_my_drivers(current_user: User = Depends(get_current_user)):
     drivers = await db.users.find({"fleet_owner_id": current_user.id, "role": UserRole.DRIVER}, {"_id": 0}).to_list(length=None)
     return drivers
 
+@router.get("/all", response_model=list)
+async def get_all_drivers(current_user: User = Depends(get_current_user)):
+    """Get all drivers from the drivers collection (for dispatch operations)"""
+    if current_user.role not in [UserRole.FLEET_OWNER, UserRole.PLATFORM_ADMIN, UserRole.COMPANY_ADMIN]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Get drivers from the drivers collection (created via User Management)
+    drivers_from_collection = await db.drivers.find({}, {"_id": 0}).to_list(length=None)
+    
+    # Also get drivers from users collection (legacy/direct creation)
+    drivers_from_users = await db.users.find({"role": UserRole.DRIVER}, {"_id": 0, "password_hash": 0}).to_list(length=None)
+    
+    # Combine both sources, avoiding duplicates by email
+    seen_emails = set()
+    all_drivers = []
+    
+    # Add drivers from drivers collection first (preferred)
+    for driver in drivers_from_collection:
+        email = driver.get('email')
+        if email and email not in seen_emails:
+            seen_emails.add(email)
+            all_drivers.append(driver)
+    
+    # Add remaining drivers from users collection
+    for driver in drivers_from_users:
+        email = driver.get('email')
+        if email and email not in seen_emails:
+            seen_emails.add(email)
+            # Map user fields to driver fields
+            all_drivers.append({
+                'id': driver.get('id'),
+                'user_id': driver.get('id'),
+                'full_name': driver.get('full_name'),
+                'email': email,
+                'phone': driver.get('phone', ''),
+                'status': driver.get('driver_status', 'available'),
+                'license_type': driver.get('license_type', 'CDL_A'),
+                'license_number': driver.get('license_number', ''),
+                'created_at': driver.get('created_at')
+            })
+    
+    return all_drivers
+
 @router.put("/{driver_id}/status")
 async def update_driver_status(driver_id: str, status_data: dict, current_user: User = Depends(get_current_user)):
     """Update driver status (available, on_route, off_duty, on_break, inactive)"""
