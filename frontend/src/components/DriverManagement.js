@@ -75,21 +75,21 @@ const DriverManagement = ({ onStatsUpdate }) => {
   const loadDrivers = async () => {
     setLoading(true);
     try {
-      const res = await fetchWithAuth(`${BACKEND_URL}/api/drivers/my`);
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/drivers/all`);
       if (res.ok) {
         const data = await res.json();
         // Enrich driver data with additional fields
         const enrichedDrivers = data.map(driver => ({
           ...driver,
-          status: driver.driver_status || 'available',
+          status: driver.status || driver.driver_status || 'available',
           license_type: driver.license_type || 'CDL_A',
           license_number: driver.license_number || '',
           license_expiry: driver.license_expiry || '',
           medical_card_expiry: driver.medical_card_expiry || '',
           endorsements: driver.endorsements || [],
-          loads_completed: driver.loads_completed || Math.floor(Math.random() * 100),
-          on_time_rate: driver.on_time_rate || (85 + Math.floor(Math.random() * 15)),
-          miles_driven: driver.miles_driven || Math.floor(Math.random() * 50000),
+          loads_completed: driver.loads_completed || 0,
+          on_time_rate: driver.on_time_rate || 0,
+          miles_driven: driver.miles_driven || 0,
           current_load: driver.current_load || null,
           hire_date: driver.hire_date || driver.created_at
         }));
