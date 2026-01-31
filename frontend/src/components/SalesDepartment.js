@@ -2341,6 +2341,8 @@ Body:
                               toast.error('Google Maps not configured. Please add API key in Admin Console.');
                               return;
                             }
+                            // Trigger route calculation
+                            setCalculateTrigger(prev => prev + 1);
                             toast.info('Calculating route...');
                           }}
                           className="w-full bg-primary hover:bg-primary/90 text-white rounded-lg shadow-sm h-10"
