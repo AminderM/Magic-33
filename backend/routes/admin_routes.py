@@ -830,8 +830,9 @@ async def create_user_admin(user_data: UserCreateAdmin, current_user: User = Dep
     hashed_password = hash_password(user_data.password)
     
     # Create user object
+    user_id = str(uuid.uuid4())
     user_dict = {
-        "id": str(uuid.uuid4()),
+        "id": user_id,
         "email": user_data.email,
         "full_name": user_data.full_name,
         "password_hash": hashed_password,
@@ -856,10 +857,37 @@ async def create_user_admin(user_data: UserCreateAdmin, current_user: User = Dep
     # Insert user
     await db.users.insert_one(user_dict)
     
+    # If user role is 'driver', also create a driver record in the drivers collection
+    driver_id = None
+    if user_data.role == "driver":
+        driver_dict = {
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "full_name": user_data.full_name,
+            "email": user_data.email,
+            "phone": user_data.phone or "",
+            "status": "available",
+            "license_type": "CDL_A",
+            "license_number": "",
+            "license_state": "",
+            "license_expiry": None,
+            "hire_date": datetime.now(timezone.utc).isoformat(),
+            "current_location": None,
+            "assigned_vehicle_id": None,
+            "assigned_trailer_id": None,
+            "certifications": [],
+            "notes": f"Driver account created via Admin Console by {current_user.email}",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "created_by": current_user.id
+        }
+        await db.drivers.insert_one(driver_dict)
+        driver_id = driver_dict["id"]
+    
     return {
         "message": "User created successfully",
         "user_id": user_dict["id"],
-        "email": user_dict["email"]
+        "email": user_dict["email"],
+        "driver_id": driver_id
     }
 
 @router.get('/users/{user_id}', response_model=dict)
