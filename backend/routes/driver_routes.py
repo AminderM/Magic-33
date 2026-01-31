@@ -86,6 +86,93 @@ async def get_all_drivers(current_user: User = Depends(get_current_user)):
     
     return all_drivers
 
+@router.get("/my-loads", response_model=list)
+async def get_my_assigned_loads(current_user: User = Depends(get_current_user)):
+    """Get loads assigned to the current driver (for driver mobile app)"""
+    # Find driver record by user_id or email
+    driver = await db.drivers.find_one({
+        "$or": [
+            {"user_id": current_user.id},
+            {"email": current_user.email}
+        ]
+    })
+    
+    if not driver:
+        # Check if user is a driver by role
+        if current_user.role != UserRole.DRIVER:
+            raise HTTPException(status_code=403, detail="Only drivers can access this endpoint")
+        driver_id = current_user.id
+    else:
+        driver_id = driver.get("id")
+    
+    # Get loads from driver_loads collection
+    driver_loads = await db.driver_loads.find(
+        {"driver_id": driver_id},
+        {"_id": 0}
+    ).to_list(length=100)
+    
+    # Also get bookings directly assigned to this driver
+    bookings = await db.bookings.find(
+        {"$or": [
+            {"assigned_driver_id": driver_id},
+            {"assigned_driver_id": current_user.id}
+        ]},
+        {"_id": 0}
+    ).to_list(length=100)
+    
+    # Combine and format loads for the mobile app
+    all_loads = []
+    seen_booking_ids = set()
+    
+    # Add loads from driver_loads collection
+    for load in driver_loads:
+        booking_id = load.get("booking_id")
+        if booking_id not in seen_booking_ids:
+            seen_booking_ids.add(booking_id)
+            all_loads.append({
+                "id": load.get("id"),
+                "booking_id": booking_id,
+                "order_number": load.get("order_number"),
+                "pickup_location": load.get("pickup_location"),
+                "delivery_location": load.get("delivery_location"),
+                "pickup_city": load.get("pickup_location", "").split(",")[0] if load.get("pickup_location") else "",
+                "pickup_state": load.get("pickup_location", "").split(",")[-1].strip() if load.get("pickup_location") else "",
+                "delivery_city": load.get("delivery_location", "").split(",")[0] if load.get("delivery_location") else "",
+                "delivery_state": load.get("delivery_location", "").split(",")[-1].strip() if load.get("delivery_location") else "",
+                "pickup_date": load.get("pickup_date"),
+                "delivery_date": load.get("delivery_date"),
+                "commodity": load.get("commodity"),
+                "weight": load.get("weight"),
+                "rate": load.get("rate"),
+                "status": load.get("status", "assigned"),
+                "assigned_at": load.get("assigned_at")
+            })
+    
+    # Add bookings that weren't in driver_loads
+    for booking in bookings:
+        if booking.get("id") not in seen_booking_ids:
+            seen_booking_ids.add(booking.get("id"))
+            all_loads.append({
+                "id": booking.get("id"),
+                "booking_id": booking.get("id"),
+                "order_number": booking.get("order_number"),
+                "pickup_location": booking.get("pickup_location"),
+                "delivery_location": booking.get("delivery_location"),
+                "pickup_city": booking.get("pickup_location", "").split(",")[0] if booking.get("pickup_location") else "",
+                "pickup_state": booking.get("pickup_location", "").split(",")[-1].strip() if booking.get("pickup_location") else "",
+                "delivery_city": booking.get("delivery_location", "").split(",")[0] if booking.get("delivery_location") else "",
+                "delivery_state": booking.get("delivery_location", "").split(",")[-1].strip() if booking.get("delivery_location") else "",
+                "pickup_date": booking.get("pickup_date"),
+                "delivery_date": booking.get("delivery_date"),
+                "commodity": booking.get("commodity"),
+                "weight": booking.get("weight"),
+                "rate": booking.get("rate"),
+                "status": booking.get("status", "assigned"),
+                "assigned_at": booking.get("dispatched_at")
+            })
+    
+    return all_loads
+
 @router.put("/{driver_id}/status")
 async def update_driver_status(driver_id: str, status_data: dict, current_user: User = Depends(get_current_user)):
     """Update driver status (available, on_route, off_duty, on_break, inactive)"""
