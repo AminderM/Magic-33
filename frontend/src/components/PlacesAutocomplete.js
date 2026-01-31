@@ -7,11 +7,26 @@ const PlacesAutocomplete = ({
   placeholder, 
   apiKey,
   className = "",
-  onKeyDown
+  onKeyDown,
+  onBlur
 }) => {
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // Add CSS to control pac-container z-index
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .pac-container {
+        z-index: 9999 !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   useEffect(() => {
     if (!apiKey || !window.google || !window.google.maps) {
@@ -68,6 +83,21 @@ const PlacesAutocomplete = ({
     onChange(e.target.value);
   };
 
+  const handleBlur = (e) => {
+    // Hide autocomplete dropdown on blur after a short delay
+    // This allows clicking on autocomplete suggestions to work
+    setTimeout(() => {
+      const pacContainers = document.querySelectorAll('.pac-container');
+      pacContainers.forEach(container => {
+        container.style.display = 'none';
+      });
+    }, 200);
+    
+    if (onBlur) {
+      onBlur(e);
+    }
+  };
+
   return (
     <Input
       ref={inputRef}
@@ -75,6 +105,7 @@ const PlacesAutocomplete = ({
       value={value}
       onChange={handleChange}
       onKeyDown={onKeyDown}
+      onBlur={handleBlur}
       placeholder={placeholder}
       className={className}
     />
