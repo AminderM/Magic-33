@@ -2002,20 +2002,50 @@ const OrderManagement = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <i className="fas fa-truck text-foreground"></i>
-              Edit Dispatch Info - {dispatchingLoad?.order_number || 'Load'}
+              Dispatch Load - {dispatchingLoad?.order_number || 'Load'}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             {/* Driver/Carrier Assignment */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="assigned_driver">Assigned Driver</Label>
-                <Input
-                  id="assigned_driver"
-                  value={dispatchData.assigned_driver}
-                  onChange={(e) => setDispatchData({ ...dispatchData, assigned_driver: e.target.value })}
-                  placeholder="Enter driver name"
-                />
+                <Label htmlFor="assigned_driver">Assign Driver *</Label>
+                <Select 
+                  value={dispatchData.assigned_driver_id}
+                  onValueChange={(value) => {
+                    const driver = availableDrivers.find(d => d.id === value);
+                    setDispatchData({
+                      ...dispatchData,
+                      assigned_driver_id: value,
+                      assigned_driver: driver?.full_name || ''
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a driver" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableDrivers.length === 0 ? (
+                      <SelectItem value="none" disabled>No drivers available</SelectItem>
+                    ) : (
+                      availableDrivers.map(driver => (
+                        <SelectItem key={driver.id} value={driver.id}>
+                          <div className="flex items-center gap-2">
+                            <span>{driver.full_name}</span>
+                            <Badge variant="outline" className="text-xs">
+                              {driver.status || 'available'}
+                            </Badge>
+                          </div>
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+                {dispatchData.assigned_driver && (
+                  <p className="text-xs text-muted-foreground">
+                    Selected: {dispatchData.assigned_driver}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="assigned_carrier">Assigned Carrier</Label>
@@ -2079,17 +2109,28 @@ const OrderManagement = () => {
             </div>
 
             {/* Form Actions */}
-            <div className="flex justify-end space-x-2 pt-4 border-t">
-              <Button variant="outline" onClick={() => {
-                setShowDispatchModal(false);
-                setDispatchingLoad(null);
-              }}>
-                Cancel
+            <div className="flex justify-between items-center pt-4 border-t">
+              <Button 
+                variant="default" 
+                onClick={handlePushToDriver}
+                disabled={!dispatchData.assigned_driver_id}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <i className="fas fa-paper-plane mr-2"></i>
+                Push to Driver App
               </Button>
-              <Button onClick={handleSaveDispatch} className="bg-purple-600 hover:bg-purple-700">
-                <i className="fas fa-save mr-2"></i>
-                Save Changes
-              </Button>
+              <div className="flex space-x-2">
+                <Button variant="outline" onClick={() => {
+                  setShowDispatchModal(false);
+                  setDispatchingLoad(null);
+                }}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveDispatch} className="bg-purple-600 hover:bg-purple-700">
+                  <i className="fas fa-save mr-2"></i>
+                  Save Changes
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
