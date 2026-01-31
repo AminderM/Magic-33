@@ -83,7 +83,17 @@ class CarrierFullInfo(CarrierBasicInfo):
 
 def parse_carrier_basic(data: dict) -> CarrierBasicInfo:
     """Parse FMCSA response into basic carrier info"""
-    carrier = data.get("content", {}).get("carrier", {}) if "content" in data else data.get("carrier", data)
+    # Handle null content
+    if data is None:
+        return CarrierBasicInfo()
+    
+    content = data.get("content")
+    if content is None:
+        return CarrierBasicInfo()
+    
+    carrier = content.get("carrier", {}) if isinstance(content, dict) else {}
+    if not carrier:
+        return CarrierBasicInfo()
     
     # Build physical address
     phy_address_parts = [
