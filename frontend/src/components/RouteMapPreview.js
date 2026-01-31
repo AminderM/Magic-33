@@ -47,16 +47,26 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated, calculat
   }, [map]);
 
   useEffect(() => {
-    if (!directionsService || !directionsRenderer || !pickup || !destination) return;
+    if (!directionsService || !directionsRenderer || !pickup || !destination) {
+      console.log('RouteRenderer: Missing required deps', { 
+        hasService: !!directionsService, 
+        hasRenderer: !!directionsRenderer, 
+        pickup, 
+        destination 
+      });
+      return;
+    }
     
     // Create a unique key for this route
     const routeKey = `${pickup}|${destination}|${(stops || []).join('|')}`;
     
     // Don't recalculate if it's the same route or already calculating
     if (routeKey === lastCalculatedRoute || isCalculating) {
+      console.log('RouteRenderer: Skipping calculation', { routeKey, lastCalculatedRoute, isCalculating });
       return;
     }
     
+    console.log('RouteRenderer: Calculating route', { pickup, destination, stops });
     setIsCalculating(true);
 
     const waypoints = (stops || []).map(stop => ({
@@ -73,8 +83,10 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated, calculat
     };
 
     directionsService.route(request, (result, status) => {
+      console.log('RouteRenderer: Direction result', { status });
       if (status === 'OK') {
         directionsRenderer.setDirections(result);
+        console.log('RouteRenderer: Route rendered successfully');
         
         // Calculate total distance and duration
         const route = result.routes[0];
