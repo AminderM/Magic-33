@@ -2228,7 +2228,7 @@ Body:
                               <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">
                                 <i className="fas fa-map-pin text-muted-foreground"></i>
                               </div>
-                              <PlacesAutocomplete
+                              <OSMAutocomplete
                                 placeholder="Add stop (optional)"
                                 value={currentStop}
                                 onChange={(value) => setCurrentStop(value)}
@@ -2243,7 +2243,6 @@ Body:
                                     toast.success('Stop added to route');
                                   }
                                 }}
-                                apiKey={googleMapsApiKey}
                                 className="pl-10 h-9 border-border focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
                               />
                             </div>
