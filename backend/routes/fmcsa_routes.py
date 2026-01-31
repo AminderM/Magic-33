@@ -256,6 +256,10 @@ async def lookup_by_dot(
             
             data = response.json()
             
+            # Check if content is null (carrier not found)
+            if data.get("content") is None:
+                raise HTTPException(status_code=404, detail=f"No carrier found with DOT# {dot_number}")
+            
             if full_details:
                 return {"carrier": parse_carrier_full(data).dict(exclude_none=True)}
             else:
