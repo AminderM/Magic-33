@@ -14,10 +14,12 @@ const RouteRenderer = ({ pickup, destination, stops, onRouteCalculated, calculat
 
   // Reset last calculated route when calculateTrigger changes to force recalculation
   useEffect(() => {
-    if (calculateTrigger) {
+    if (calculateTrigger && calculateTrigger !== lastTrigger) {
+      console.log('Calculate trigger changed, forcing recalculation');
       setLastCalculatedRoute(null);
+      setLastTrigger(calculateTrigger);
     }
-  }, [calculateTrigger]);
+  }, [calculateTrigger, lastTrigger]);
 
   useEffect(() => {
     if (!map) return;
