@@ -2289,9 +2289,9 @@ Body:
                                 }
                               }}
                               size="sm"
-                              className="h-7 w-7 p-0 bg-primary hover:bg-primary/90 text-white rounded-md"
+                              className="h-9 w-9 p-0 bg-primary hover:bg-primary/90 text-white rounded-md flex items-center justify-center"
                             >
-                              <i className="fas fa-plus text-xs"></i>
+                              <span className="text-lg font-bold">+</span>
                             </Button>
                           </div>
                           
