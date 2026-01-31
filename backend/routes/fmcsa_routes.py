@@ -347,14 +347,54 @@ async def search_by_name(
             data = response.json()
             content = data.get("content", [])
             
+            if content is None:
+                return {"carriers": [], "total": 0}
+            
             # Parse results - for search, each item has a 'carrier' key
             carriers = []
             for item in content:
-                carrier_data = item.get("carrier", item)  # Get carrier from item or use item itself
+                if item is None:
+                    continue
+                # Each search result is wrapped in {"carrier": {...}}
+                carrier_info = item.get("carrier", {})
+                if not carrier_info:
+                    continue
+                    
+                # Build physical address
+                phy_address_parts = [
+                    carrier_info.get("phyStreet", ""),
+                    carrier_info.get("phyCity", ""),
+                    carrier_info.get("phyState", ""),
+                    carrier_info.get("phyZipcode", "")
+                ]
+                physical_address = ", ".join([p for p in phy_address_parts if p])
+                
+                carrier_result = {
+                    "dot_number": str(carrier_info.get("dotNumber", "")) if carrier_info.get("dotNumber") else None,
+                    "mc_number": str(carrier_info.get("mcNumber", "")) if carrier_info.get("mcNumber") else None,
+                    "legal_name": carrier_info.get("legalName"),
+                    "dba_name": carrier_info.get("dbaName"),
+                    "physical_address": physical_address or None,
+                    "phone": carrier_info.get("telephone"),
+                    "allow_to_operate": carrier_info.get("allowedToOperate"),
+                    "out_of_service": carrier_info.get("oosDate") is not None
+                }
+                
                 if full_details:
-                    carriers.append(parse_carrier_full({"carrier": carrier_data}).dict(exclude_none=True))
-                else:
-                    carriers.append(parse_carrier_basic({"carrier": carrier_data}).dict(exclude_none=True))
+                    carrier_result.update({
+                        "entity_type": carrier_info.get("carrierOperation", {}).get("carrierOperationDesc") if carrier_info.get("carrierOperation") else None,
+                        "operating_status": carrier_info.get("statusCode"),
+                        "total_drivers": carrier_info.get("totalDrivers"),
+                        "total_power_units": carrier_info.get("totalPowerUnits"),
+                        "fatal_crashes": carrier_info.get("fatalCrash"),
+                        "injury_crashes": carrier_info.get("injCrash"),
+                        "tow_crashes": carrier_info.get("towawayCrash"),
+                        "total_crashes": carrier_info.get("crashTotal"),
+                    })
+                
+                # Filter out None values
+                carrier_result = {k: v for k, v in carrier_result.items() if v is not None}
+                carriers.append(carrier_result)
             
             return {
                 "carriers": carriers,
