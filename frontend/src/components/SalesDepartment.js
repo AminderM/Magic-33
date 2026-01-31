@@ -2334,6 +2334,12 @@ Body:
 
                         <Button 
                           onClick={() => {
+                            // Hide any open autocomplete dropdowns first
+                            const pacContainers = document.querySelectorAll('.pac-container');
+                            pacContainers.forEach(container => {
+                              container.style.display = 'none';
+                            });
+                            
                             if (!quoteData.pickupLocation || !quoteData.destination) {
                               toast.error('Please enter both pickup and destination locations');
                               return;
