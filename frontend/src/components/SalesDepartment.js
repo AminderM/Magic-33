@@ -2550,9 +2550,6 @@ Body:
                               </h4>
                               <Badge className="bg-muted text-foreground text-xs">Rate Quote</Badge>
                             </div>
-                            <h4 className="font-semibold text-foreground">
-                              {quote.pickupLocation} → {quote.destination}
-                            </h4>
                             <p className="text-sm text-muted-foreground">
                               Created {new Date(quote.createdAt).toLocaleDateString()}
                             </p>
@@ -2566,23 +2563,23 @@ Body:
                         </div>
                       </div>
                       
-                      {/* Required Info Section */}
+                      {/* Consignor, Consignee, Customer Section */}
                       <div className="grid grid-cols-3 gap-3 text-sm mb-3 p-3 bg-muted rounded-lg">
                         <div>
-                          <span className="text-muted-foreground block">Consignor:</span>
-                          <span className={`font-semibold ${quote.consignor ? 'text-foreground' : 'text-foreground'}`}>
+                          <span className="text-muted-foreground block text-xs">Consignor</span>
+                          <span className="font-semibold text-foreground">
                             {quote.consignor || 'Not specified'}
                           </span>
                         </div>
                         <div>
-                          <span className="text-muted-foreground block">Consignee:</span>
-                          <span className={`font-semibold ${quote.consignee ? 'text-foreground' : 'text-foreground'}`}>
+                          <span className="text-muted-foreground block text-xs">Consignee</span>
+                          <span className="font-semibold text-foreground">
                             {quote.consignee || 'Not specified'}
                           </span>
                         </div>
                         <div>
-                          <span className="text-muted-foreground block">Customer:</span>
-                          <span className={`font-semibold ${quote.customer ? 'text-foreground' : 'text-foreground'}`}>
+                          <span className="text-muted-foreground block text-xs">Customer</span>
+                          <span className="font-semibold text-foreground">
                             {quote.customer || 'Not specified'}
                           </span>
                         </div>
