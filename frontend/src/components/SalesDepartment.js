@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import RouteMapPreview from './RouteMapPreview';
-import PlacesAutocomplete from './PlacesAutocomplete';
+import OSMMapPreview from './OSMMapPreview';
+import OSMAutocomplete from './OSMAutocomplete';
 import DraggableFreightCalculator from './DraggableFreightCalculator';
 
 // Unified Converter Component
