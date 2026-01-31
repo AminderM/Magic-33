@@ -13,7 +13,7 @@ import base64
 import io
 
 class DriverMobileAPITester:
-    def __init__(self, base_url="https://dispatch-pro-33.preview.emergentagent.com"):
+    def __init__(self, base_url="https://scms-project.preview.emergentagent.com"):
         self.base_url = base_url
         self.driver_token = None
         self.admin_token = None
